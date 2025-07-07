@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-black: #000000;
+  --color-white: var(--color-white);
+}
+
+@layer base {
+  * {
+    @variant dark {
+      --color-black: #eeeeee;
+      --color-white: #000000;
+    }
+  }
+}
+
+body {
+  @apply text-black bg-white;
+}

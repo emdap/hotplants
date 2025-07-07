@@ -1,0 +1,41 @@
+import { useEffect, useState } from "react";
+import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { useLocalStorage } from "react-use";
+
+const DarkModeToggle = () => {
+  const [storedDarkMode, setStoredDarkMode] = useLocalStorage<
+    boolean | undefined
+  >("DARK_MODE");
+  const deviceDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
+  const [isDarkMode, setIsDarkMode] = useState(
+    storedDarkMode ?? deviceDarkMode.matches
+  );
+
+  useEffect(() => {
+    const syncDarkMode = (mediaQuery: MediaQueryListEvent) =>
+      setIsDarkMode(mediaQuery.matches);
+
+    if (storedDarkMode === undefined) {
+      deviceDarkMode.addEventListener("change", syncDarkMode);
+    } else {
+      setIsDarkMode(storedDarkMode);
+    }
+
+    return () => deviceDarkMode.removeEventListener("change", syncDarkMode);
+  }, [storedDarkMode, deviceDarkMode]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDarkMode);
+  }, [isDarkMode]);
+
+  return (
+    <div
+      className="cursor-pointer"
+      onClick={() => setStoredDarkMode(!isDarkMode)}
+    >
+      {isDarkMode ? <MdDarkMode /> : <MdLightMode />}
+    </div>
+  );
+};
+
+export default DarkModeToggle;
