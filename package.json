@@ -8,10 +8,13 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-gbif-types": "npx openapi-typescript src/schemas/gbif-schema.json -o src/schemas/gbif.d.ts"
+    "generate-gbif-types": "npx openapi-typescript src/schemas/gbif-schema.json -o src/schemas/gbif.d.ts",
+    "generate-nominatim-types": "npx openapi-typescript src/schemas/nominatim-schema.json -o src/schemas/nominatim.d.ts",
+    "generate-openapi-types": "pnpm generate-nominatim-types && pnpm generate-gbif-types"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "@tanstack/react-query": "^5.81.5",
     "openapi-fetch": "^0.14.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -31,6 +34,7 @@
     "openapi-typescript": "^7.8.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.34.1",
-    "vite": "^7.0.0"
+    "vite": "^7.0.0",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
