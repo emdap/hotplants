@@ -1,26 +1,19 @@
-import createClient from "openapi-fetch";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DarkModeToggle from "./components/DarkModeToggle";
-import type { paths } from "./schemas/gbif";
+import PlantSearch from "./components/PlantSearch/PlantSearch";
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+});
 
 const App = () => {
-  const client = createClient<paths>({ baseUrl: "https://api.gbif.org/v1/" });
-  client.GET("/occurrence/search", {
-    params: {
-      query: {
-        geometry: [
-          "POLYGON((-124.48 32.53,-124.48 42.01,-114.13 42.01,-114.13 32.53,-124.48 32.53))",
-        ],
-        establishmentMeans: ["native"],
-        limit: 10,
-      },
-    },
-  });
-
   return (
-    <>
-      <DarkModeToggle />
-      <div className=" text-black">hey</div>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <div className="h-dvh flex flex-col">
+        <DarkModeToggle />
+        <PlantSearch />
+      </div>
+    </QueryClientProvider>
   );
 };
 
