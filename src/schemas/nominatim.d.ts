@@ -29,7 +29,10 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         OSMGeocodeJson: {
+            /** @enum {string} */
+            addresstype?: "country";
             address?: {
+                country_code?: string;
                 country?: string;
                 province?: string;
                 state?: string;

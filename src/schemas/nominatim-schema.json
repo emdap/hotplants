@@ -258,9 +258,14 @@
                     "items": {
                       "type": "object",
                       "properties": {
+                        "addresstype": {
+                          "type": "string",
+                          "enum": ["country"]
+                        },
                         "address": {
                           "type": "object",
                           "properties": {
+                            "country_code": { "type": "string" },
                             "country": { "type": "string" },
                             "province": { "type": "string" },
                             "state": { "type": "string" }
