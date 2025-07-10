@@ -61,7 +61,6 @@ const LocationSearchInput = ({
         locationFilter.geometry = [result.geotext];
       }
 
-      console.log(locationFilter);
       setLocationFilter(locationFilter);
       return result.display_name;
     },

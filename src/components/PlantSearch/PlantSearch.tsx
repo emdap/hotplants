@@ -37,7 +37,7 @@ const PlantSearch = () => {
       <PlantSearchFilterBar applyFilters={setSearchFilters} />
       {plantSearchResult.isLoading && "Loading"}
       {plantSearchResult.isError && "Error"}
-      <div className="space-y-4 flex-grow min-h-0 overflow-auto p-4">
+      <div className="space-y-4 flex-grow min-h-0 overflow-auto p-4 -mx-4">
         {plantSearchResult.data?.results?.map(
           ({ key, media, genericName, ...rest }) => (
             <Card key={key} className="flex flex-col gap-1 !p-4">
