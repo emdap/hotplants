@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Card from "designSystem/Card";
-import createClient from "openapi-fetch/dist/index.cjs";
+import createClient from "openapi-fetch";
 import { useState } from "react";
 import type { paths } from "schemas/gbif";
 import type { PlantSearchFiltersNormalized } from "schemas/gbif-custom-types";
@@ -21,6 +21,11 @@ const PlantSearch = () => {
         params: {
           query: {
             kingdomKey: [6],
+            basisOfRecord: [
+              "HUMAN_OBSERVATION",
+              "OBSERVATION",
+              "MACHINE_OBSERVATION",
+            ],
             // @ts-expect-error TODO: Passing string rather than serializing nested object into string -- default serialization not accepted by API
             mediaType: "StillImage",
             limit: 10,
