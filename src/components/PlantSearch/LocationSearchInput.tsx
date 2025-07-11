@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import createClient from "openapi-fetch/dist/index.cjs";
+import createClient from "openapi-fetch";
 import { useState } from "react";
 import { useDebounce } from "react-use";
 import type { PlantSearchFiltersNormalized } from "schemas/gbif-custom-types";
@@ -26,6 +26,17 @@ const LocationSearchInput = ({
   const locationResult = useQuery({
     queryKey: ["location-search", debouncedInput],
     queryFn: async () => {
+      const locationFilter: LocationFilter = {
+        country: undefined,
+        stateProvince: undefined,
+        geometry: undefined,
+      };
+
+      if (!debouncedInput) {
+        setLocationFilter(locationFilter);
+        return "";
+      }
+
       const { data } = await locationClient.GET("/search", {
         params: {
           query: {
@@ -43,28 +54,23 @@ const LocationSearchInput = ({
       }
       const result = data[0];
 
-      const locationFilter: LocationFilter = {
-        country: undefined,
-        stateProvince: undefined,
-        geometry: undefined,
-      };
-
       if (result?.addresstype === "country" && result.address?.country_code) {
         locationFilter.country = [
           result.address.country_code.toUpperCase(),
         ] as PlantSearchFiltersNormalized["country"];
       }
-      if (result?.address?.state || result?.address?.province) {
-        const { state, province } = result.address;
-        locationFilter.stateProvince = [(state || province) as string];
-      } else if (result?.geotext) {
+      // TODO: stateProvince filter returns no results. Get bounding box of state instead?
+      // if (result?.address?.state || result?.address?.province) {
+      //   const { state, province } = result.address;
+      //   locationFilter.stateProvince = [(state || province) as string];
+      // } else
+      if (result?.geotext) {
         locationFilter.geometry = [result.geotext];
       }
 
       setLocationFilter(locationFilter);
       return result.display_name;
     },
-    enabled: !!debouncedInput,
   });
 
   return (
