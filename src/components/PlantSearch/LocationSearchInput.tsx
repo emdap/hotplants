@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDebounce } from "react-use";
 import type { PlantSearchFiltersNormalized } from "schemas/gbif-custom-types";
 import type { paths } from "schemas/nominatim";
+import { stringify } from "wkt";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
@@ -42,8 +43,8 @@ const LocationSearchInput = ({
           query: {
             q: debouncedInput,
             format: "json",
-            polygon_text: 1,
             addressdetails: 1,
+            polygon_geojson: 1,
             polygon_threshold: 0.5,
           },
         },
@@ -58,14 +59,8 @@ const LocationSearchInput = ({
         locationFilter.country = [
           result.address.country_code.toUpperCase(),
         ] as PlantSearchFiltersNormalized["country"];
-      }
-      // TODO: stateProvince filter returns no results. Get bounding box of state instead?
-      // if (result?.address?.state || result?.address?.province) {
-      //   const { state, province } = result.address;
-      //   locationFilter.stateProvince = [(state || province) as string];
-      // } else
-      if (result?.geotext) {
-        locationFilter.geometry = [result.geotext];
+      } else if (result?.geojson) {
+        locationFilter.geometry = [stringify(result.geojson)];
       }
 
       setLocationFilter(locationFilter);

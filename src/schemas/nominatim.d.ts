@@ -38,6 +38,60 @@ export interface components {
                 state?: string;
             };
             geotext?: string;
+            geojson?: {
+                /** @enum {string} */
+                type: "Point";
+                coordinates: number[];
+            } | {
+                /** @enum {string} */
+                type: "LineString";
+                coordinates: number[][];
+            } | {
+                /** @enum {string} */
+                type: "Polygon";
+                coordinates: number[][][];
+            } | {
+                /** @enum {string} */
+                type: "MultiPoint";
+                coordinates: number[][];
+            } | {
+                /** @enum {string} */
+                type: "MultiLineString";
+                coordinates: number[][][];
+            } | {
+                /** @enum {string} */
+                type: "MultiPolygon";
+                coordinates: number[][][][];
+            } | {
+                /** @enum {string} */
+                type: "GeometryCollection";
+                geometries: ({
+                    /** @enum {string} */
+                    type: "Point";
+                    coordinates: number[];
+                } | {
+                    /** @enum {string} */
+                    type: "LineString";
+                    coordinates: number[][];
+                } | {
+                    /** @enum {string} */
+                    type: "Polygon";
+                    coordinates: number[][][];
+                } | {
+                    /** @enum {string} */
+                    type: "MultiPoint";
+                    coordinates: number[][];
+                } | {
+                    /** @enum {string} */
+                    type: "MultiLineString";
+                    coordinates: number[][][];
+                } | {
+                    /** @enum {string} */
+                    type: "MultiPolygon";
+                    coordinates: number[][][][];
+                })[];
+                boundingbox?: number[];
+            };
             display_name?: string;
             lat?: number;
             lon?: number;
