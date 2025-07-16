@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { bboxPolygon } from "@turf/turf";
 import createClient from "openapi-fetch";
 import { useState } from "react";
 import { useDebounce } from "react-use";
@@ -59,8 +60,15 @@ const LocationSearchInput = ({
         locationFilter.country = [
           result.address.country_code.toUpperCase(),
         ] as PlantSearchFiltersNormalized["country"];
-      } else if (result?.geojson) {
-        locationFilter.geometry = [stringify(result.geojson)];
+      } else if (result?.boundingbox) {
+        const bboxNumbers = result.boundingbox.map(Number);
+        const bbox = bboxPolygon([
+          bboxNumbers[2],
+          bboxNumbers[0],
+          bboxNumbers[3],
+          bboxNumbers[1],
+        ]);
+        locationFilter.geometry = [stringify(bbox)];
       }
 
       setLocationFilter(locationFilter);

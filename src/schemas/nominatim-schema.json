@@ -544,7 +544,7 @@
                                 "boundingbox": {
                                   "type": "array",
                                   "minItems": 4,
-                                  "items": { "type": "number" }
+                                  "items": { "type": "string" }
                                 }
                               }
                             }
@@ -556,7 +556,7 @@
                         "boundingbox": {
                           "type": "array",
                           "minItems": 4,
-                          "items": { "type": "number" }
+                          "items": { "type": "string" }
                         }
                       }
                     }

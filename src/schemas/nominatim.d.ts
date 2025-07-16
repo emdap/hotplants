@@ -90,12 +90,12 @@ export interface components {
                     type: "MultiPolygon";
                     coordinates: number[][][][];
                 })[];
-                boundingbox?: number[];
+                boundingbox?: string[];
             };
             display_name?: string;
             lat?: number;
             lon?: number;
-            boundingbox?: number[];
+            boundingbox?: string[];
         }[];
         StatusResponse: {
             /** @example [
