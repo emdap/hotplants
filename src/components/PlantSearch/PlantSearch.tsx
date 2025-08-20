@@ -17,6 +17,25 @@ const PlantSearch = () => {
   const plantSearchResult = useQuery({
     queryKey: ["plant-search", searchFilters],
     queryFn: async () => {
+      const { q, ...filters } = searchFilters ?? {};
+      let taxonKey: number[] = [];
+
+      if (q) {
+        const { data } = await plantClient.GET("/species/search", {
+          params: {
+            query: {
+              higherTaxonKey: "6",
+              limit: 100,
+              q,
+            },
+          },
+        });
+
+        if (data?.results) {
+          taxonKey = data?.results?.flatMap(({ key }) => key ?? []);
+        }
+      }
+
       const { data: result } = await plantClient.GET("/occurrence/search", {
         params: {
           query: {
@@ -29,7 +48,8 @@ const PlantSearch = () => {
             // @ts-expect-error TODO: Passing string rather than serializing nested object into string -- default serialization not accepted by API
             mediaType: "StillImage",
             limit: 10,
-            ...searchFilters,
+            taxonKey,
+            ...filters,
           },
         },
       });
