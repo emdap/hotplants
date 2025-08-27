@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -28,6 +28,8 @@ export type PlantData = {
   isPerennial?: Maybe<Scalars['Boolean']['output']>;
   lightLevels?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   maturityTime?: Maybe<Scalars['String']['output']>;
+  mediaUrls?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  occurrenceCoords?: Maybe<Array<Maybe<Array<Maybe<Scalars['Int']['output']>>>>>;
   scientificName: Scalars['String']['output'];
   soilTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   spread?: Maybe<PlantSize>;
@@ -59,35 +61,10 @@ export type QueryPlantsArgs = {
   where?: InputMaybe<Scalars['JSON']['input']>;
 };
 
-export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetPlantsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TestQuery = { __typename?: 'Query', plants?: Array<{ __typename?: 'PlantData', scientificName: string, bloomTimes?: Array<string | null> | null } | null> | null };
+export type GetPlantsQuery = { __typename?: 'Query', plants?: Array<{ __typename?: 'PlantData', scientificName: string, commonNames?: Array<string | null> | null, mediaUrls?: Array<string | null> | null } | null> | null };
 
-export class TypedDocumentString<TResult, TVariables>
-  extends String
-  implements DocumentTypeDecoration<TResult, TVariables>
-{
-  __apiType?: NonNullable<DocumentTypeDecoration<TResult, TVariables>['__apiType']>;
-  private value: string;
-  public __meta__?: Record<string, any> | undefined;
 
-  constructor(value: string, __meta__?: Record<string, any> | undefined) {
-    super(value);
-    this.value = value;
-    this.__meta__ = __meta__;
-  }
-
-  override toString(): string & DocumentTypeDecoration<TResult, TVariables> {
-    return this.value;
-  }
-}
-
-export const TestDocument = new TypedDocumentString(`
-    query test {
-  plants(limit: 3) {
-    scientificName
-    bloomTimes
-  }
-}
-    `) as unknown as TypedDocumentString<TestQuery, TestQueryVariables>;
+export const GetPlantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPlants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"plants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"3"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"mediaUrls"}}]}}]}}]} as unknown as DocumentNode<GetPlantsQuery, GetPlantsQueryVariables>;

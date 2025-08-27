@@ -14,6 +14,8 @@ type PlantData {
   isPerennial: Boolean
   lightLevels: [String]
   maturityTime: String
+  mediaUrls: [String]
+  occurrenceCoords: [[Int]]
   scientificName: String!
   soilTypes: [String]
   spread: PlantSize
