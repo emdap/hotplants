@@ -89,11 +89,19 @@ const LocationSearchInput = ({
     },
   });
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter" || !(e.target instanceof HTMLInputElement)) {
+      return;
+    }
+    setDebouncedInput(e.target.value);
+  };
+
   return (
     <div className="flex flex-col">
       <input
         value={locationInput}
         onBlur={() => setDebouncedInput(locationInput)}
+        onKeyDown={handleKeyDown}
         onChange={(e) => setLocationInput(e.target.value)}
         placeholder="Enter a location"
       />
