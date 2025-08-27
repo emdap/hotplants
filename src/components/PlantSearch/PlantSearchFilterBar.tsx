@@ -1,6 +1,6 @@
 import Card from "designSystem/Card";
+import type { PlantSearchFiltersNormalized } from "generated/schemas/gbif-custom-types";
 import { useState } from "react";
-import type { PlantSearchFiltersNormalized } from "schemas/gbif-custom-types";
 import LocationSearchInput from "./LocationSearchInput";
 
 type RawPlantSearchFilters = PlantSearchFiltersNormalized & {

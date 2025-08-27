@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import Card from "designSystem/Card";
+import type { paths } from "generated/schemas/gbif";
+import type { PlantSearchFiltersNormalized } from "generated/schemas/gbif-custom-types";
 import createClient from "openapi-fetch";
 import { useState } from "react";
-import type { paths } from "schemas/gbif";
-import type { PlantSearchFiltersNormalized } from "schemas/gbif-custom-types";
 import PlantSearchFilterBar from "./PlantSearchFilterBar";
 
 const PlantSearch = () => {
