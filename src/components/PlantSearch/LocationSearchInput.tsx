@@ -1,11 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 import { bboxPolygon } from "@turf/turf";
+import { graphql } from "graphql";
+import { execute } from "graphql/execute";
 import createClient from "openapi-fetch";
 import { useState } from "react";
 import { useDebounce } from "react-use";
 import type { PlantSearchFiltersNormalized } from "schemas/gbif-custom-types";
 import type { paths } from "schemas/nominatim";
 import { stringify } from "wkt";
+
+const Query = graphql(`
+  query test {
+    plants(limit: 3) {
+      scientificName
+      bloomTimes
+    }
+  }
+`);
+
+execute(Query).then(console.log);
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
