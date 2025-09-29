@@ -17,5 +17,13 @@
 }
 
 body {
+  scrollbar-width: thin;
+  scrollbar-color: #009999 transparent;
   @apply text-black bg-white;
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
 }
