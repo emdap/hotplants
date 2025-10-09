@@ -5,7 +5,7 @@ const config: CodegenConfig = {
   documents: ["src/**/*.tsx"],
   ignoreNoDocuments: true,
   generates: {
-    "./src/generated/graphql/": {
+    ".": {
       preset: "client",
     },
     "./schema.graphql": {

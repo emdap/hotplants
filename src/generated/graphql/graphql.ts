@@ -14,32 +14,62 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  JSON: { input: any; output: any; }
 };
 
 export type PlantData = {
   __typename?: 'PlantData';
-  bloomColors?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  bloomTimes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  commonNames?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  addedTimestamp: Scalars['Int']['output'];
+  bloomColors?: Maybe<Array<Scalars['String']['output']>>;
+  bloomTimes?: Maybe<Array<Scalars['String']['output']>>;
+  commonNames?: Maybe<Array<Scalars['String']['output']>>;
   habitat?: Maybe<Scalars['String']['output']>;
-  hardiness?: Maybe<Array<Maybe<Scalars['Int']['output']>>>;
+  hardiness?: Maybe<Array<Scalars['Int']['output']>>;
   height?: Maybe<PlantSize>;
   isPerennial?: Maybe<Scalars['Boolean']['output']>;
-  lightLevels?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  lightLevels?: Maybe<Array<Scalars['String']['output']>>;
   maturityTime?: Maybe<Scalars['String']['output']>;
-  mediaUrls?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  occurrenceCoords?: Maybe<Array<Maybe<Array<Maybe<Scalars['Int']['output']>>>>>;
+  mediaUrls: Array<Scalars['String']['output']>;
+  occurrenceCoords: Array<Array<Scalars['Float']['output']>>;
+  occurrenceIds: Array<Scalars['Int']['output']>;
   scientificName: Scalars['String']['output'];
-  soilTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  scrapeSources: Array<Scalars['String']['output']>;
+  soilTypes?: Maybe<Array<Scalars['String']['output']>>;
   spread?: Maybe<PlantSize>;
-  uses?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  updatedTimestamp: Scalars['Int']['output'];
+  uses?: Maybe<Array<Scalars['String']['output']>>;
+};
+
+export type PlantDataInput = {
+  addedTimestamp?: InputMaybe<Scalars['Int']['input']>;
+  bloomColors?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  bloomTimes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  boundingBox?: InputMaybe<Array<Scalars['Float']['input']>>;
+  commonName?: InputMaybe<Scalars['String']['input']>;
+  habitat?: InputMaybe<Scalars['String']['input']>;
+  hardiness?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  height?: InputMaybe<PlantSizeInput>;
+  isPerennial?: InputMaybe<Scalars['Boolean']['input']>;
+  lightLevels?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  maturityTime?: InputMaybe<Scalars['String']['input']>;
+  mediaUrls?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  occurrenceIds?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  scientificName?: InputMaybe<Scalars['String']['input']>;
+  scrapeSources?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  soilTypes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  spread?: InputMaybe<PlantSizeInput>;
+  updatedTimestamp?: InputMaybe<Scalars['Int']['input']>;
+  uses?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type PlantSize = {
   __typename?: 'PlantSize';
   amount?: Maybe<Scalars['Int']['output']>;
   unit?: Maybe<PlantSizeUnit>;
+};
+
+export type PlantSizeInput = {
+  amount?: InputMaybe<Scalars['Int']['input']>;
+  unit?: InputMaybe<PlantSizeUnit>;
 };
 
 export enum PlantSizeUnit {
@@ -52,19 +82,52 @@ export enum PlantSizeUnit {
 export type Query = {
   __typename?: 'Query';
   plants?: Maybe<Array<Maybe<PlantData>>>;
+  searchRecords?: Maybe<SearchRecord>;
 };
 
 
 export type QueryPlantsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<Scalars['JSON']['input']>;
+  sort?: InputMaybe<SortInput>;
+  where?: InputMaybe<PlantDataInput>;
+};
+
+
+export type QuerySearchRecordsArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type SearchRecord = {
+  __typename?: 'SearchRecord';
+  endOfRecords?: Maybe<Scalars['Boolean']['output']>;
+  jsonStringSearch: Scalars['String']['output'];
+  lastAddedCount?: Maybe<Scalars['Int']['output']>;
+  status: SearchRecordStatus;
+  totalOccurrences: Scalars['Int']['output'];
+  uniqueOccurrences: Scalars['Int']['output'];
+};
+
+export enum SearchRecordStatus {
+  Done = 'DONE',
+  Scraping = 'SCRAPING'
+}
+
+export enum SortDirection {
+  Asc = 'asc',
+  Desc = 'desc'
+}
+
+export type SortInput = {
+  addedTimestamp?: InputMaybe<SortDirection>;
+  scientificName?: InputMaybe<SortDirection>;
+  updatedTimestamp?: InputMaybe<SortDirection>;
 };
 
 export type GetPlantsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPlantsQuery = { __typename?: 'Query', plants?: Array<{ __typename?: 'PlantData', scientificName: string, commonNames?: Array<string | null> | null, mediaUrls?: Array<string | null> | null } | null> | null };
+export type GetPlantsQuery = { __typename?: 'Query', plants?: Array<{ __typename?: 'PlantData', scientificName: string, commonNames?: Array<string> | null, mediaUrls: Array<string> } | null> | null };
 
 
 export const GetPlantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPlants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"plants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"3"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"mediaUrls"}}]}}]}}]} as unknown as DocumentNode<GetPlantsQuery, GetPlantsQueryVariables>;

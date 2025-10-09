@@ -1,0 +1,94 @@
+schema {
+  query: Query
+}
+
+type PlantData {
+  addedTimestamp: Int!
+  bloomColors: [String!]
+  bloomTimes: [String!]
+  commonNames: [String!]
+  habitat: String
+  hardiness: [Int!]
+  height: PlantSize
+  isPerennial: Boolean
+  lightLevels: [String!]
+  maturityTime: String
+  mediaUrls: [String!]!
+  occurrenceCoords: [[Float!]!]!
+  occurrenceIds: [Int!]!
+  scientificName: String!
+  scrapeSources: [String!]!
+  soilTypes: [String!]
+  spread: PlantSize
+  updatedTimestamp: Int!
+  uses: [String!]
+}
+
+input PlantDataInput {
+  addedTimestamp: Int
+  bloomColors: [String]
+  bloomTimes: [String]
+  boundingBox: [Float!]
+  commonName: String
+  habitat: String
+  hardiness: [Int]
+  height: PlantSizeInput
+  isPerennial: Boolean
+  lightLevels: [String]
+  maturityTime: String
+  mediaUrls: [String]
+  occurrenceIds: [Int]
+  scientificName: String
+  scrapeSources: [String]
+  soilTypes: [String]
+  spread: PlantSizeInput
+  updatedTimestamp: Int
+  uses: [String]
+}
+
+type PlantSize {
+  amount: Int
+  unit: PlantSizeUnit
+}
+
+input PlantSizeInput {
+  amount: Int
+  unit: PlantSizeUnit
+}
+
+enum PlantSizeUnit {
+  cm
+  ft
+  in
+  m
+}
+
+type Query {
+  plants(limit: Int, skip: Int, sort: SortInput, where: PlantDataInput): [PlantData]
+  searchRecords(id: String!): SearchRecord
+}
+
+type SearchRecord {
+  endOfRecords: Boolean
+  jsonStringSearch: String!
+  lastAddedCount: Int
+  status: SearchRecordStatus!
+  totalOccurrences: Int!
+  uniqueOccurrences: Int!
+}
+
+enum SearchRecordStatus {
+  DONE
+  SCRAPING
+}
+
+enum SortDirection {
+  asc
+  desc
+}
+
+input SortInput {
+  addedTimestamp: SortDirection
+  scientificName: SortDirection
+  updatedTimestamp: SortDirection
+}
