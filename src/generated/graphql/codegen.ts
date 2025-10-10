@@ -5,10 +5,10 @@ const config: CodegenConfig = {
   documents: ["src/**/*.tsx"],
   ignoreNoDocuments: true,
   generates: {
-    ".": {
+    "src/generated/graphql/": {
       preset: "client",
     },
-    "./schema.graphql": {
+    "src/generated/graphql/schema.graphql": {
       plugins: ["schema-ast"],
       config: {
         includeDirectives: true,
