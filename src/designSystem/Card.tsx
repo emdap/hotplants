@@ -6,7 +6,7 @@ const Card = ({
   ...props
 }: { children: ReactNode } & HTMLProps<HTMLDivElement>) => (
   <div
-    className={`rounded border border-gray-200 shadow-sm dark:border-gray-400 dark:bg-gray-800 p-6 ${className}`}
+    className={`rounded border border-gray-200 shadow-sm dark:border-gray-400 bg-white dark:bg-gray-800 p-6 ${className}`}
     {...props}
   >
     {children}

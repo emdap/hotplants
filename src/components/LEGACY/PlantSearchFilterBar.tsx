@@ -1,7 +1,7 @@
 import Card from "designSystem/Card";
 import type { PlantSearchFiltersNormalized } from "generated/schemas/gbif-custom-types";
 import { useState } from "react";
-import LocationSearchInput from "./LocationSearchInput";
+import LocationSearch from "../plantFilters/LocationSearch";
 
 type RawPlantSearchFilters = PlantSearchFiltersNormalized & {
   onlyNative?: boolean;
@@ -32,7 +32,7 @@ const PlantSearchFilterBar = ({
   return (
     <Card>
       <div className="flex flex-col space-3">
-        <LocationSearchInput setLocationFilter={updateFilters} />
+        <LocationSearch setLocation={updateFilters} />
         <div className="flex gap-2">
           <input
             type="checkbox"

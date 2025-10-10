@@ -1,8 +1,7 @@
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import DarkModeToggle from "./components/DarkModeToggle";
-import PlantSearch from "./components/PlantSearch/PlantSearch2";
+import PlantSearch from "pages/PlantSearch";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -17,8 +16,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ApolloProvider client={apolloClient}>
-        <div className="h-dvh flex flex-col">
-          <DarkModeToggle />
+        <div className="h-dvh">
           <PlantSearch />
         </div>
       </ApolloProvider>

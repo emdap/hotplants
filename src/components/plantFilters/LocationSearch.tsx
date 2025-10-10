@@ -11,15 +11,15 @@ const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
 });
 
-type LocationFilter = Pick<
+export type LocationFilter = Pick<
   PlantSearchFiltersNormalized,
   "stateProvince" | "geometry" | "country"
 >;
 
-const LocationSearchInput = ({
-  setLocationFilter,
+const LocationSearch = ({
+  setLocation: setLocation,
 }: {
-  setLocationFilter: (data: LocationFilter) => void;
+  setLocation: (data: LocationFilter) => void;
 }) => {
   const [locationInput, setLocationInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
@@ -35,7 +35,7 @@ const LocationSearchInput = ({
       };
 
       if (!debouncedInput) {
-        setLocationFilter(locationFilter);
+        setLocation(locationFilter);
         return "";
       }
 
@@ -71,7 +71,7 @@ const LocationSearchInput = ({
         locationFilter.geometry = [stringify(bbox)];
       }
 
-      setLocationFilter(locationFilter);
+      setLocation(locationFilter);
       return result.display_name;
     },
   });
@@ -99,4 +99,4 @@ const LocationSearchInput = ({
   );
 };
 
-export default LocationSearchInput;
+export default LocationSearch;
