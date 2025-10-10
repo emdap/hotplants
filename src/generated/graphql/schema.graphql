@@ -64,7 +64,7 @@ enum PlantSizeUnit {
 }
 
 type Query {
-  plants(limit: Int, skip: Int, sort: SortInput, where: PlantDataInput): [PlantData]
+  plants(limit: Int, skip: Int, sort: SortInput, where: PlantDataInput): [PlantData!]!
   searchRecords(id: String!): SearchRecord
 }
 

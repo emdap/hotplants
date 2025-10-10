@@ -17,7 +17,6 @@ export type Scalars = {
 };
 
 export type PlantData = {
-  __typename?: 'PlantData';
   addedTimestamp: Scalars['Int']['output'];
   bloomColors?: Maybe<Array<Scalars['String']['output']>>;
   bloomTimes?: Maybe<Array<Scalars['String']['output']>>;
@@ -62,7 +61,6 @@ export type PlantDataInput = {
 };
 
 export type PlantSize = {
-  __typename?: 'PlantSize';
   amount?: Maybe<Scalars['Int']['output']>;
   unit?: Maybe<PlantSizeUnit>;
 };
@@ -80,8 +78,7 @@ export enum PlantSizeUnit {
 }
 
 export type Query = {
-  __typename?: 'Query';
-  plants?: Maybe<Array<Maybe<PlantData>>>;
+  plants: Array<PlantData>;
   searchRecords?: Maybe<SearchRecord>;
 };
 
@@ -99,7 +96,6 @@ export type QuerySearchRecordsArgs = {
 };
 
 export type SearchRecord = {
-  __typename?: 'SearchRecord';
   endOfRecords?: Maybe<Scalars['Boolean']['output']>;
   jsonStringSearch: Scalars['String']['output'];
   lastAddedCount?: Maybe<Scalars['Int']['output']>;
@@ -127,7 +123,18 @@ export type SortInput = {
 export type GetPlantsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPlantsQuery = { __typename?: 'Query', plants?: Array<{ __typename?: 'PlantData', scientificName: string, commonNames?: Array<string> | null, mediaUrls: Array<string> } | null> | null };
+export type GetPlantsQuery = { plants: Array<{ scientificName: string, commonNames?: Array<string> | null, mediaUrls: Array<string> }> };
+
+export type SearchPlantsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<SortInput>;
+  where?: InputMaybe<PlantDataInput>;
+}>;
+
+
+export type SearchPlantsQuery = { plants: Array<{ scientificName: string, commonNames?: Array<string> | null, mediaUrls: Array<string>, bloomColors?: Array<string> | null, bloomTimes?: Array<string> | null }> };
 
 
 export const GetPlantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPlants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"plants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"3"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"mediaUrls"}}]}}]}}]} as unknown as DocumentNode<GetPlantsQuery, GetPlantsQueryVariables>;
+export const SearchPlantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"searchPlants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SortInput"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"plants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"mediaUrls"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}}]}}]}}]} as unknown as DocumentNode<SearchPlantsQuery, SearchPlantsQueryVariables>;
