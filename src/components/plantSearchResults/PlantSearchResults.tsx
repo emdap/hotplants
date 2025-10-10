@@ -25,7 +25,7 @@ const PlantSearchResults = ({
                 onClickCapture={() => setActivePlant(plant)}
                 className="flex gap-2 cursor-pointer"
               >
-                <PlantImageViewer />
+                <PlantImageViewer plant={plant} />
                 <PlantInfo plant={plant} />
               </Card>
             )

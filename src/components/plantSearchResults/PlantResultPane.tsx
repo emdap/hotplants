@@ -17,9 +17,6 @@ const PlantResultPane = ({
 }) => {
   const paneRef = useRef<HTMLDivElement>(null);
   useClickAway(paneRef, onClose, ["mouseup"]);
-  console.log("click", plant);
-
-  console.log("Plant pane:", plant);
 
   return (
     <AnimatePresence>
@@ -30,24 +27,19 @@ const PlantResultPane = ({
           className="h-full absolute top-0"
           initial={{ right: "-100%" }}
           animate={{ right: 0 }}
-          exit={{ right: "-100%", opacity: 0.7 }}
+          exit={{ right: "-100%" }}
         >
-          <Card className="h-full flex flex-col gap-2">
+          <Card className="h-full flex flex-col gap-2 bg-white/80! dark:bg-gray-800/80 backdrop-blur-xs">
             <div onClick={onClose} className="-mt-2 cursor-pointer">
               <MdClose />
             </div>
-            <motion.div
-              className="flex-grow flex flex-col gap-4"
-              key={plant.scientificName}
-              initial={{ opacity: 0.7 }}
-              animate={{ opacity: 1 }}
-            >
+            <div className="flex-grow flex flex-col gap-4">
               <div className="flex gap-2">
-                <PlantImageViewer />
+                <PlantImageViewer plant={plant} />
                 <LocationMap />
               </div>
               <PlantInfo plant={plant} />
-            </motion.div>
+            </div>
           </Card>
         </motion.div>
       )}
