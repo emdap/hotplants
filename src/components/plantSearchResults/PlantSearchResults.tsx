@@ -23,9 +23,9 @@ const PlantSearchResults = ({
                 key={plant.scientificName}
                 id={plant.scientificName}
                 onClickCapture={() => setActivePlant(plant)}
-                className="flex gap-2 cursor-pointer"
+                className="flex gap-2 cursor-pointer h-40"
               >
-                <PlantImageViewer plant={plant} />
+                <PlantImageViewer mode="thumbnail" plant={plant} />
                 <PlantInfo plant={plant} />
               </Card>
             )
