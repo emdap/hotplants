@@ -5,6 +5,8 @@
 @theme {
   --color-black: #000;
   --color-white: #fff;
+  --color-primary: #009999;
+  --color-secondary: #bebebe;
 }
 
 @layer base {
@@ -12,13 +14,15 @@
     @variant dark {
       --color-black: #eee;
       --color-white: #000;
+      --color-primary: #005757;
+      --color-secondary: #868686;
     }
   }
 }
 
 body {
   scrollbar-width: thin;
-  scrollbar-color: #009999 transparent;
+  scrollbar-color: var(--color-primary) transparent;
   @apply text-black bg-white;
 }
 

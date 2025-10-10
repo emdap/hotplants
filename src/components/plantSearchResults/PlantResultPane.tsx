@@ -1,4 +1,5 @@
 import LocationMap from "components/LocationMap";
+import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { PlantResult } from "graphqlQueries/plantQueries";
 import { AnimatePresence, motion } from "motion/react";
@@ -30,9 +31,9 @@ const PlantResultPane = ({
           exit={{ right: "-100%" }}
         >
           <Card className="h-full flex flex-col gap-2 bg-white/80! dark:bg-gray-800/80 backdrop-blur-xs">
-            <div onClick={onClose} className="-mt-2 cursor-pointer">
+            <Button onClick={onClose} className="-mt-2 cursor-pointer">
               <MdClose />
-            </div>
+            </Button>
             <div className="flex-grow flex flex-col gap-4">
               <div className="flex gap-4 justify-between">
                 <PlantImageViewer mode="carousel" plant={plant} />
