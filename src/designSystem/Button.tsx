@@ -10,12 +10,12 @@ const Button = ({
 } & ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     className={classNames(
-      "hover:opacity-80 cursor-pointer rounded-sm max-w-fit",
+      "cursor-pointer rounded-sm max-w-fit hover:shadow-sm",
       className,
       {
-        "bg-primary": variant === "primary",
-        "bg-secondary": variant === "secondary",
-        "hover:bg-secondary/30 hover:shadow-sm": !variant,
+        "bg-primary/80 hover:bg-primary": variant === "primary",
+        "bg-secondary/80 hover:bg-secondary": variant === "secondary",
+        "hover:bg-secondary/10": !variant,
       }
     )}
     {...buttonProps}
