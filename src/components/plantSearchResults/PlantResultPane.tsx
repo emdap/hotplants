@@ -36,7 +36,11 @@ const PlantResultPane = ({
             </Button>
             <div className="flex-grow flex flex-col gap-4">
               <div className="flex gap-4 justify-between">
-                <PlantImageViewer mode="carousel" plant={plant} />
+                <PlantImageViewer
+                  mode="carousel"
+                  plant={plant}
+                  parentRef={paneRef}
+                />
                 <LocationMap />
               </div>
               <PlantInfo plant={plant} />
