@@ -1,0 +1,68 @@
+import classNames from "classnames";
+import { AnimatePresence, motion } from "motion/react";
+import { HTMLProps, RefObject } from "react";
+import { createPortal } from "react-dom";
+import { MdClose } from "react-icons/md";
+import Button from "./Button";
+import Card from "./Card";
+import { CUSTOM_MOTION_FADE_IN, MOTION_FADE_IN } from "./motionTransitions";
+
+export type ModalProps = {
+  isOpen?: boolean;
+  onClose?: () => void;
+  headerProps?: HTMLProps<HTMLDivElement>;
+  parentRef?: RefObject<HTMLElement | null>;
+} & HTMLProps<HTMLDivElement>;
+
+const MODAL_BODY_FADE_IN = CUSTOM_MOTION_FADE_IN({
+  initial: { top: "55%" },
+  animate: { top: "50%" },
+  exit: { top: "55%" },
+});
+
+const Modal = ({
+  isOpen,
+  onClose,
+  headerProps,
+  children,
+  className,
+  parentRef,
+  ...bodyProps
+}: ModalProps) =>
+  // Using a portal for safety
+  // First usecase - modal ancestor had backdrop effects, causing
+  // the fixed positioning to be relative to that parent
+  createPortal(
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            key="mask"
+            className="fixed top-0 left-0 h-dvh w-dvw bg-black/10"
+            {...MOTION_FADE_IN}
+          />
+          <motion.div
+            key="body"
+            className="fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 min-w-fit max-w-full"
+            {...MODAL_BODY_FADE_IN}
+          >
+            <Card
+              {...bodyProps}
+              className={classNames("flex flex-col gap-2", className)}
+            >
+              <div {...headerProps}>
+                <Button>
+                  <MdClose onClick={onClose} />
+                </Button>
+              </div>
+
+              {children}
+            </Card>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>,
+    parentRef?.current ?? document.body
+  );
+
+export default Modal;
