@@ -1,16 +1,14 @@
-import type { HTMLProps, ReactNode } from "react";
+import classNames from "classnames";
+import type { HTMLProps } from "react";
 
-const Card = ({
-  children,
-  className,
-  ...props
-}: { children: ReactNode } & HTMLProps<HTMLDivElement>) => (
+const Card = ({ className, ...props }: HTMLProps<HTMLDivElement>) => (
   <div
-    className={`rounded border border-gray-200 shadow-sm dark:border-gray-400 bg-white dark:bg-gray-800 p-6 ${className}`}
     {...props}
-  >
-    {children}
-  </div>
+    className={classNames(
+      "rounded border border-gray-200 shadow-sm dark:border-gray-400 bg-white dark:bg-gray-800 p-6",
+      className
+    )}
+  />
 );
 
 export default Card;
