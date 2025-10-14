@@ -1,7 +1,8 @@
+import classNames from "classnames";
 import Card from "designSystem/Card";
 import { SearchPlantsQuery } from "generated/graphql/graphql";
-import { PlantResult } from "graphqlQueries/plantQueries";
-import { useState } from "react";
+import { useDocumentListener } from "hooks/useDocumentListener";
+import { useCallback, useMemo, useRef, useState } from "react";
 import PlantImageViewer from "./PlantImageViewer";
 import PlantInfo from "./PlantInfo";
 import PlantResultPane from "./PlantResultPane";
@@ -11,19 +12,59 @@ const PlantSearchResults = ({
 }: {
   searchResults: SearchPlantsQuery;
 }) => {
-  const [activePlant, setActivePlant] = useState<null | PlantResult>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const [activePlantIndex, setActivePlantIndex] = useState<null | number>(null);
+  const activePlant = useMemo(
+    () =>
+      activePlantIndex === null ? null : searchResults.plants[activePlantIndex],
+    [searchResults.plants, activePlantIndex]
+  );
+
+  const iteratePlants = useCallback(
+    (e: KeyboardEvent) => {
+      if (activePlantIndex === null) {
+        return;
+      }
+
+      let newActiveIndex: null | number = null;
+      if (e.code === "ArrowUp" && activePlantIndex !== 0) {
+        newActiveIndex = activePlantIndex - 1;
+      } else if (
+        e.code === "ArrowDown" &&
+        activePlantIndex < searchResults.plants.length - 1
+      ) {
+        newActiveIndex = activePlantIndex + 1;
+      }
+
+      if (newActiveIndex !== null) {
+        e.preventDefault();
+        setActivePlantIndex(newActiveIndex);
+        const childNode = containerRef.current?.childNodes[newActiveIndex];
+        childNode instanceof HTMLElement && childNode.scrollIntoView();
+      }
+    },
+    [activePlantIndex, setActivePlantIndex, searchResults.plants.length]
+  );
+
+  useDocumentListener("keydown", iteratePlants, activePlantIndex !== null);
 
   return (
     <>
-      <div className="space-y-4 flex-grow overflow-auto p-2">
+      <div
+        ref={containerRef}
+        className="space-y-4 flex-grow overflow-auto p-2 relative scroll-smooth"
+      >
         {searchResults.plants.map(
-          (plant) =>
+          (plant, index) =>
             plant && (
               <Card
                 key={plant.scientificName}
                 id={plant.scientificName}
-                onClickCapture={() => setActivePlant(plant)}
-                className="flex gap-2 cursor-pointer h-40"
+                onClick={() => setActivePlantIndex(index)}
+                className={classNames("flex gap-2 cursor-pointer h-40", {
+                  "bg-secondary/20!": activePlantIndex === index,
+                })}
               >
                 <PlantImageViewer mode="thumbnail" plant={plant} />
                 <PlantInfo plant={plant} />
@@ -34,7 +75,7 @@ const PlantSearchResults = ({
 
       <PlantResultPane
         plant={activePlant}
-        onClose={() => setActivePlant(null)}
+        onClose={() => setActivePlantIndex(null)}
       />
     </>
   );
