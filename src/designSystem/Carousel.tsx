@@ -43,7 +43,7 @@ const Carousel = ({
     [disableButtons.next, disableButtons.prev, setActiveIndex]
   );
 
-  useDocumentListener(iterateCarousel, "keydown", !!enableKeyboardEvents);
+  useDocumentListener("keydown", iterateCarousel, !!enableKeyboardEvents);
 
   const getChildStyle = (childIndex: number) => {
     const renderChild = Math.abs(activeIndex - childIndex) < childrenInDom;

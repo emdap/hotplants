@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 
 export const useDocumentListener = <T extends keyof DocumentEventMap>(
-  onEvent: (e: DocumentEventMap[T]) => void,
   eventKey: T,
+  onEventCallback: (e: DocumentEventMap[T]) => void,
   enabled = true
 ) => {
   useEffect(() => {
     if (enabled) {
-      document.addEventListener(eventKey, onEvent);
+      document.addEventListener(eventKey, onEventCallback);
     }
-    return () => document.removeEventListener(eventKey, onEvent);
-  }, [onEvent, eventKey, enabled]);
+    return () => document.removeEventListener(eventKey, onEventCallback);
+  }, [onEventCallback, eventKey, enabled]);
 };
