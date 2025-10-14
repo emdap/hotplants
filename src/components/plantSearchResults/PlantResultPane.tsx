@@ -1,13 +1,20 @@
 import LocationMap from "components/LocationMap";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
+import { CUSTOM_MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlQueries/plantQueries";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import { useRef } from "react";
 import { MdClose } from "react-icons/md";
 import { useClickAway } from "react-use";
 import PlantImageViewer from "./PlantImageViewer";
 import PlantInfo from "./PlantInfo";
+
+const CARD_FADE_IN = CUSTOM_MOTION_FADE_IN({
+  initial: { right: "-100%" },
+  animate: { right: 0 },
+  exit: { right: "-100%" },
+});
 
 const PlantResultPane = ({
   plant,
@@ -22,15 +29,12 @@ const PlantResultPane = ({
   return (
     <AnimatePresence>
       {plant && (
-        <motion.div
-          ref={paneRef}
-          key="plant-pane"
-          className="h-full absolute top-0 w-full sm:max-w-3/5"
-          initial={{ right: "-100%" }}
-          animate={{ right: 0 }}
-          exit={{ right: "-100%" }}
-        >
-          <Card className="h-full flex flex-col gap-2 bg-white/80! dark:bg-gray-800/80 backdrop-blur-xs">
+        <div ref={paneRef}>
+          <Card
+            key="plant-pane"
+            className="h-full w-full absolute top-0 sm:max-w-3/5 flex flex-col gap-2 bg-white/80! dark:bg-gray-800/80 backdrop-blur-xs"
+            {...CARD_FADE_IN}
+          >
             <Button onClick={onClose} className="-mt-2 cursor-pointer">
               <MdClose />
             </Button>
@@ -46,7 +50,7 @@ const PlantResultPane = ({
               <PlantInfo plant={plant} />
             </div>
           </Card>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
