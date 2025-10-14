@@ -14,12 +14,10 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  query getPlants {\n    plants(limit: 3) {\n      scientificName\n      commonNames\n      mediaUrls\n    }\n  }\n": typeof types.GetPlantsDocument,
-    "\n  query searchPlants(\n    $limit: Int\n    $skip: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plants(limit: $limit, skip: $skip, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n": typeof types.SearchPlantsDocument,
+    "\n  query searchPlants(\n    $searchId: String!\n    $limit: Int\n    $skip: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    searchRecords(id: $searchId) {\n      status\n    }\n\n    plants(limit: $limit, skip: $skip, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n": typeof types.SearchPlantsDocument,
 };
 const documents: Documents = {
-    "\n  query getPlants {\n    plants(limit: 3) {\n      scientificName\n      commonNames\n      mediaUrls\n    }\n  }\n": types.GetPlantsDocument,
-    "\n  query searchPlants(\n    $limit: Int\n    $skip: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plants(limit: $limit, skip: $skip, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n": types.SearchPlantsDocument,
+    "\n  query searchPlants(\n    $searchId: String!\n    $limit: Int\n    $skip: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    searchRecords(id: $searchId) {\n      status\n    }\n\n    plants(limit: $limit, skip: $skip, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n": types.SearchPlantsDocument,
 };
 
 /**
@@ -39,11 +37,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getPlants {\n    plants(limit: 3) {\n      scientificName\n      commonNames\n      mediaUrls\n    }\n  }\n"): (typeof documents)["\n  query getPlants {\n    plants(limit: 3) {\n      scientificName\n      commonNames\n      mediaUrls\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query searchPlants(\n    $limit: Int\n    $skip: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plants(limit: $limit, skip: $skip, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n"): (typeof documents)["\n  query searchPlants(\n    $limit: Int\n    $skip: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plants(limit: $limit, skip: $skip, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n"];
+export function graphql(source: "\n  query searchPlants(\n    $searchId: String!\n    $limit: Int\n    $skip: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    searchRecords(id: $searchId) {\n      status\n    }\n\n    plants(limit: $limit, skip: $skip, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n"): (typeof documents)["\n  query searchPlants(\n    $searchId: String!\n    $limit: Int\n    $skip: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    searchRecords(id: $searchId) {\n      status\n    }\n\n    plants(limit: $limit, skip: $skip, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

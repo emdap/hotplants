@@ -5,57 +5,76 @@ import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteris
 import PlantSearchResults from "components/plantSearchResults/PlantSearchResults";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
 import Card from "designSystem/Card";
+import { PlantDataInput, SearchRecordStatus } from "generated/graphql/graphql";
 import { paths } from "generated/schemas/hotplants";
-import { BBox } from "geojson";
 import { SEARCH_PLANTS } from "graphqlQueries/plantQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const hotplantsClient = createClient<paths>({
   baseUrl: import.meta.env.VITE_HOTPLANTS_SERVER,
 });
 
+const DEFAULT_POLL_INTERVAL = 1000;
+
 const PlantSearch = () => {
-  const [boundingBox, setBoundingBox] = useState<BBox | null>(null);
+  const [searchPollInterval, setSearchPollInterval] = useState(0);
+  const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
 
-  console.log("location:", boundingBox);
-
-  const plantSearchResult = useApolloQuery(SEARCH_PLANTS, {
-    variables: {
-      limit: 10,
-      where: { boundingBox },
-    },
-  });
-
-  const scrapeSearch = useQuery({
-    queryKey: ["plant-search", boundingBox],
+  const scrapeSearchQuery = useQuery({
+    queryKey: ["plant-search", plantFilters],
     queryFn: async () => {
       // TODO: Sync types with server -- nulls/undefineds
       const { data } = await hotplantsClient.POST("/plants/scrapeOccurrences", {
-        body: { boundingBox: boundingBox ?? undefined },
+        body: { boundingBox: plantFilters?.boundingBox ?? undefined },
       });
       return data;
     },
+    enabled: !!plantFilters,
   });
+
+  const { data: { searchRecords, plants } = {}, ..._plantSearchQuery } =
+    useApolloQuery(SEARCH_PLANTS, {
+      skip: !scrapeSearchQuery.data,
+      pollInterval: searchPollInterval,
+      variables: {
+        searchId: scrapeSearchQuery.data!,
+        limit: 10,
+        where: plantFilters,
+      },
+    });
+
+  useEffect(() => {
+    if (
+      !scrapeSearchQuery.data ||
+      searchRecords?.status === SearchRecordStatus.Done
+    ) {
+      setSearchPollInterval(0);
+    } else {
+      setSearchPollInterval(DEFAULT_POLL_INTERVAL);
+    }
+  }, [scrapeSearchQuery.data, searchRecords?.status]);
 
   return (
     <main className="h-full relative overflow-hidden flex flex-col">
       <div className="flex flex-col gap-2 p-4">
         <div className="flex gap-4">
           <Card>
-            <LocationSearch setBoundingBox={setBoundingBox} />
+            <LocationSearch
+              setBoundingBox={(boundingBox) =>
+                setPlantFilters({ ...plantFilters, boundingBox })
+              }
+            />
             <PlantCharacteristicsFilter />
           </Card>
           <LocationMap />
         </div>
 
-        <ScrapeStatusBar />
+        <ScrapeStatusBar status={searchRecords?.status} />
       </div>
 
-      {plantSearchResult.data && (
-        <PlantSearchResults searchResults={plantSearchResult.data} />
-      )}
+      {plants && <PlantSearchResults searchResults={plants} />}
     </main>
   );
 };

@@ -10,15 +10,14 @@ import PlantResultPane from "./PlantResultPane";
 const PlantSearchResults = ({
   searchResults,
 }: {
-  searchResults: SearchPlantsQuery;
+  searchResults: SearchPlantsQuery["plants"];
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [activePlantIndex, setActivePlantIndex] = useState<null | number>(null);
   const activePlant = useMemo(
-    () =>
-      activePlantIndex === null ? null : searchResults.plants[activePlantIndex],
-    [searchResults.plants, activePlantIndex]
+    () => (activePlantIndex === null ? null : searchResults[activePlantIndex]),
+    [searchResults, activePlantIndex]
   );
 
   const iteratePlants = useCallback(
@@ -32,7 +31,7 @@ const PlantSearchResults = ({
         newActiveIndex = activePlantIndex - 1;
       } else if (
         e.code === "ArrowDown" &&
-        activePlantIndex < searchResults.plants.length - 1
+        activePlantIndex < searchResults.length - 1
       ) {
         newActiveIndex = activePlantIndex + 1;
       }
@@ -44,7 +43,7 @@ const PlantSearchResults = ({
         childNode instanceof HTMLElement && childNode.scrollIntoView();
       }
     },
-    [activePlantIndex, setActivePlantIndex, searchResults.plants.length]
+    [activePlantIndex, setActivePlantIndex, searchResults.length]
   );
 
   useDocumentListener("keydown", iteratePlants, activePlantIndex !== null);
@@ -55,7 +54,7 @@ const PlantSearchResults = ({
         ref={containerRef}
         className="space-y-4 flex-grow overflow-auto p-2 relative scroll-smooth"
       >
-        {searchResults.plants.map(
+        {searchResults.map(
           (plant, index) =>
             plant && (
               <Card
