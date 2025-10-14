@@ -4,7 +4,7 @@ import { HTMLProps, RefObject } from "react";
 import { createPortal } from "react-dom";
 import { MdClose } from "react-icons/md";
 import Button from "./Button";
-import Card from "./Card";
+import Card, { CardProps } from "./Card";
 import { CUSTOM_MOTION_FADE_IN, MOTION_FADE_IN } from "./motionTransitions";
 
 export type ModalProps = {
@@ -12,7 +12,7 @@ export type ModalProps = {
   onClose?: () => void;
   headerProps?: HTMLProps<HTMLDivElement>;
   parentRef?: RefObject<HTMLElement | null>;
-} & HTMLProps<HTMLDivElement>;
+} & CardProps;
 
 const MODAL_BODY_FADE_IN = CUSTOM_MOTION_FADE_IN({
   initial: { top: "55%" },
@@ -23,7 +23,7 @@ const MODAL_BODY_FADE_IN = CUSTOM_MOTION_FADE_IN({
 const Modal = ({
   isOpen,
   onClose,
-  headerProps,
+  headerProps: { className: headerClassName, ...headerProps } = {},
   children,
   className,
   parentRef,
@@ -39,26 +39,31 @@ const Modal = ({
           <motion.div
             key="mask"
             className="fixed top-0 left-0 h-dvh w-dvw bg-black/10"
+            onClick={onClose}
             {...MOTION_FADE_IN}
           />
-          <motion.div
+          <Card
             key="body"
-            className="fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 min-w-fit max-w-full"
+            className={classNames(
+              "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 max-h-fit h-5/6 flex flex-col gap-2 overflow-auto",
+              className
+            )}
             {...MODAL_BODY_FADE_IN}
+            {...bodyProps}
           >
-            <Card
-              {...bodyProps}
-              className={classNames("flex flex-col gap-2", className)}
+            <div
+              className={classNames(
+                "sticky bg-inherit -top-6 pt-6 -mt-6",
+                headerClassName
+              )}
+              {...headerProps}
             >
-              <div {...headerProps}>
-                <Button>
-                  <MdClose onClick={onClose} />
-                </Button>
-              </div>
-
-              {children}
-            </Card>
-          </motion.div>
+              <Button>
+                <MdClose onClick={onClose} />
+              </Button>
+            </div>
+            {children}
+          </Card>
         </>
       )}
     </AnimatePresence>,
