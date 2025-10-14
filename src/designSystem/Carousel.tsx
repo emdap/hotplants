@@ -55,25 +55,27 @@ const Carousel = ({
         })}
       </div>
 
-      <div className={"flex gap-8 justify-center"}>
-        {[-1, 1].map((incremenet) => {
-          const isNextButton = incremenet === 1;
-          return (
-            <Button
-              key={incremenet}
-              className={classNames({ "text-xl p-4": bigButtons })}
-              disabled={
-                isNextButton
-                  ? activeIndex === children.length - 1
-                  : activeIndex === 0
-              }
-              onClick={() => setActiveIndex(activeIndex + incremenet)}
-            >
-              {isNextButton ? <MdArrowForward /> : <MdArrowBack />}
-            </Button>
-          );
-        })}
-      </div>
+      {children.length > 1 && (
+        <div className={"flex gap-8 justify-center"}>
+          {[-1, 1].map((incremenet) => {
+            const isNextButton = incremenet === 1;
+            return (
+              <Button
+                key={incremenet}
+                className={classNames({ "text-xl p-4": bigButtons })}
+                disabled={
+                  isNextButton
+                    ? activeIndex === children.length - 1
+                    : activeIndex === 0
+                }
+                onClick={() => setActiveIndex(activeIndex + incremenet)}
+              >
+                {isNextButton ? <MdArrowForward /> : <MdArrowBack />}
+              </Button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
