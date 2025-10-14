@@ -1,21 +1,49 @@
 import classNames from "classnames";
-import { ReactNode, useEffect, useState } from "react";
+import { useDocumentListener } from "hooks/useDocumentListener";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { MdArrowBack, MdArrowForward } from "react-icons/md";
 import Button from "./Button";
 
 const Carousel = ({
   carouselIndex = 0,
   maxRenderedChildren = 5,
+  enableKeyboardEvents,
   bigButtons,
   children,
 }: {
   carouselIndex?: number;
   maxRenderedChildren?: number;
+  enableKeyboardEvents?: boolean;
   bigButtons?: boolean;
   children: ReactNode[];
 }) => {
   const [activeIndex, setActiveIndex] = useState(carouselIndex);
   const childrenInDom = Math.ceil(maxRenderedChildren / 2);
+
+  useEffect(() => {
+    setActiveIndex(carouselIndex);
+  }, [carouselIndex]);
+
+  const disableButtons = useMemo(
+    () => ({
+      next: activeIndex === children.length - 1,
+      prev: activeIndex === 0,
+    }),
+    [children.length, activeIndex]
+  );
+
+  const iterateCarousel = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight" && !disableButtons.next) {
+        setActiveIndex((prev) => prev + 1);
+      } else if (e.key === "ArrowLeft" && !disableButtons.prev) {
+        setActiveIndex((prev) => prev - 1);
+      }
+    },
+    [disableButtons.next, disableButtons.prev, setActiveIndex]
+  );
+
+  useDocumentListener(iterateCarousel, "keydown", !!enableKeyboardEvents);
 
   const getChildStyle = (childIndex: number) => {
     const renderChild = Math.abs(activeIndex - childIndex) < childrenInDom;
@@ -29,10 +57,6 @@ const Carousel = ({
           : "100%",
     };
   };
-
-  useEffect(() => {
-    setActiveIndex(carouselIndex);
-  }, [carouselIndex]);
 
   return (
     <div className="flex flex-col gap-2 justify-center h-full w-full overflow-hidden py-2 relative">
@@ -64,9 +88,7 @@ const Carousel = ({
                 key={incremenet}
                 className={classNames({ "text-xl p-4": bigButtons })}
                 disabled={
-                  isNextButton
-                    ? activeIndex === children.length - 1
-                    : activeIndex === 0
+                  isNextButton ? disableButtons.next : disableButtons.prev
                 }
                 onClick={() => setActiveIndex(activeIndex + incremenet)}
               >

@@ -48,7 +48,9 @@ const PlantImageViewer = ({
         onClose={() => setShowFullScreen(false)}
         parentRef={parentRef}
       >
-        <Carousel bigButtons>{plantImages}</Carousel>
+        <Carousel bigButtons enableKeyboardEvents>
+          {plantImages}
+        </Carousel>
       </Modal>
     </div>
   );
