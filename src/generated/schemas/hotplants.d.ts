@@ -13,7 +13,26 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** @description Initiate a new scrape of occurrences from GBIF and combine with PFAF data.
+         *     Return the searchRecord, which can be queried against in graphQL to check
+         *     the status of the scrape. */
         post: operations["ScrapeOccurrences"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plants/scrapeOccurrencesLegacy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ScrapeOccurrencesLegacy"];
         delete?: never;
         options?: never;
         head?: never;
@@ -24,58 +43,12 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** Format: double */
-        "Maybe_Scalars-at-Int_91_output_93__": number | null;
-        /** @enum {string} */
-        PlantSizeUnit: "cm" | "ft" | "in" | "m";
-        Maybe_PlantSizeUnit_: components["schemas"]["PlantSizeUnit"] | null;
-        PlantSize: {
-            unit?: components["schemas"]["Maybe_PlantSizeUnit_"];
-            amount?: components["schemas"]["Maybe_Scalars-at-Int_91_output_93__"];
-            /** @enum {string} */
-            __typename?: "PlantSize";
-        };
-        /** @description Construct a type with a set of properties K of type T */
-        "Record_string.string_": {
-            [key: string]: string;
-        };
-        /** @description From T, pick a set of properties whose keys are in the union K */
-        "Pick_PlantDataDocument.Exclude_keyofPlantDataDocument._id__": {
-            occurrenceCoords?: number[][];
-            mediaUrls?: string[];
-            occurrenceIds?: number[];
-            /** @enum {string} */
-            __typename?: "PlantData";
-            bloomColors?: string[];
-            bloomTimes?: string[];
-            commonNames?: string[];
-            habitat?: string;
-            hardiness?: number[];
-            height?: components["schemas"]["PlantSize"];
-            isPerennial?: boolean;
-            lightLevels?: string[];
-            maturityTime?: string;
-            scientificName: string;
-            soilTypes?: string[];
-            spread?: components["schemas"]["PlantSize"];
-            uses?: string[];
-            otherTraits?: components["schemas"]["Record_string.string_"];
-            scrapeSources?: string[];
-        };
-        /** @description Construct a type with the properties of T except for those in type K. */
-        "Omit_PlantDataDocument._id_": components["schemas"]["Pick_PlantDataDocument.Exclude_keyofPlantDataDocument._id__"];
-        OccurrenceScrapeResponse: {
-            results: components["schemas"]["Omit_PlantDataDocument._id_"][];
-            /** Format: double */
-            occurrencesFound: number;
-            /** Format: double */
-            count: number;
-        };
+        /** @description A class representation of the BSON ObjectId type. */
+        ObjectId: string;
         /** @description Construct a type with a set of properties K of type T */
         "Record_string.never_": Record<string, never>;
         /** @description From T, pick a set of properties whose keys are in the union K */
         "Pick_GbifOccurrenceSearchParams.Exclude_keyofGbifOccurrenceSearchParams.geometry-or-limit__": {
-            scientificName?: string[];
             /** @example 2476674 */
             acceptedTaxonKey?: number[];
             associatedSequences?: string[];
@@ -218,6 +191,7 @@ export interface components {
             sampleSizeValue?: number[];
             samplingProtocol?: string[];
             sex?: string[];
+            scientificName?: string[];
             /** @example 2476674 */
             speciesKey?: number[];
             /** @example 5 */
@@ -258,6 +232,56 @@ export interface components {
         PlantSearchParams: components["schemas"]["Omit_GbifOccurrenceSearchParams.geometry-or-limit_"] & {
             boundingBox?: number[];
         };
+        /** Format: double */
+        "Maybe_Scalars-at-Int_91_output_93__": number | null;
+        /** @enum {string} */
+        PlantSizeUnit: "cm" | "ft" | "in" | "m";
+        Maybe_PlantSizeUnit_: components["schemas"]["PlantSizeUnit"] | null;
+        PlantSize: {
+            unit?: components["schemas"]["Maybe_PlantSizeUnit_"];
+            amount?: components["schemas"]["Maybe_Scalars-at-Int_91_output_93__"];
+            /** @enum {string} */
+            __typename?: "PlantSize";
+        };
+        /** @description Construct a type with a set of properties K of type T */
+        "Record_string.string_": {
+            [key: string]: string;
+        };
+        /** @description From T, pick a set of properties whose keys are in the union K */
+        "Pick_PlantDataDocument.Exclude_keyofPlantDataDocument.addedTimestamp-or-updatedTimestamp__": {
+            scientificName: string;
+            /** @enum {string} */
+            __typename?: "PlantData";
+            bloomColors?: string[];
+            bloomTimes?: string[];
+            commonNames?: string[];
+            habitat?: string;
+            hardiness?: number[];
+            height?: components["schemas"]["PlantSize"];
+            isPerennial?: boolean;
+            lightLevels?: string[];
+            maturityTime?: string;
+            mediaUrls: string[];
+            occurrenceCoords: number[][];
+            occurrenceIds: number[];
+            scrapeSources: string[];
+            soilTypes?: string[];
+            spread?: components["schemas"]["PlantSize"];
+            uses?: string[];
+            _id?: components["schemas"]["ObjectId"];
+            otherTraits?: components["schemas"]["Record_string.string_"];
+        };
+        /** @description Construct a type with the properties of T except for those in type K. */
+        "Omit_PlantDataDocument.addedTimestamp-or-updatedTimestamp_": components["schemas"]["Pick_PlantDataDocument.Exclude_keyofPlantDataDocument.addedTimestamp-or-updatedTimestamp__"];
+        PartialPlantData: components["schemas"]["Omit_PlantDataDocument.addedTimestamp-or-updatedTimestamp_"];
+        OccurrenceScrapeResponse: {
+            endOfRecords: boolean;
+            /** Format: double */
+            totalOccurrencesScraped: number;
+            results: components["schemas"]["PartialPlantData"][];
+            /** Format: double */
+            count: number;
+        };
     };
     responses: never;
     parameters: never;
@@ -286,7 +310,47 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    "application/json": components["schemas"]["ObjectId"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+        };
+    };
+    ScrapeOccurrencesLegacy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PlantSearchParams"];
+            };
+        };
+        responses: {
+            /** @description Ok */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
                     "application/json": components["schemas"]["OccurrenceScrapeResponse"] | unknown;
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
                 };
             };
         };

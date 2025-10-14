@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { bboxPolygon } from "@turf/turf";
 import type { PlantSearchFiltersNormalized } from "generated/schemas/gbif-custom-types";
 import type { paths } from "generated/schemas/nominatim";
+import { BBox } from "geojson";
 import createClient from "openapi-fetch";
 import { useState } from "react";
 import { useDebounce } from "react-use";
-import { stringify } from "wkt";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
@@ -17,9 +16,9 @@ export type LocationFilter = Pick<
 >;
 
 const LocationSearch = ({
-  setLocation: setLocation,
+  setBoundingBox,
 }: {
-  setLocation: (data: LocationFilter) => void;
+  setBoundingBox: (bbox: BBox | null) => void;
 }) => {
   const [locationInput, setLocationInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
@@ -28,14 +27,8 @@ const LocationSearch = ({
   const locationResult = useQuery({
     queryKey: ["location-search", debouncedInput],
     queryFn: async () => {
-      const locationFilter: LocationFilter = {
-        country: undefined,
-        stateProvince: undefined,
-        geometry: undefined,
-      };
-
       if (!debouncedInput) {
-        setLocation(locationFilter);
+        setBoundingBox(null);
         return "";
       }
 
@@ -56,22 +49,16 @@ const LocationSearch = ({
       }
       const result = data[0];
 
-      if (result?.addresstype === "country" && result.address?.country_code) {
-        locationFilter.country = [
-          result.address.country_code.toUpperCase(),
-        ] as PlantSearchFiltersNormalized["country"];
-      } else if (result?.boundingbox) {
+      if (result?.boundingbox) {
         const bboxNumbers = result.boundingbox.map(Number);
-        const bbox = bboxPolygon([
+        setBoundingBox([
           bboxNumbers[2],
           bboxNumbers[0],
           bboxNumbers[3],
           bboxNumbers[1],
         ]);
-        locationFilter.geometry = [stringify(bbox)];
       }
 
-      setLocation(locationFilter);
       return result.display_name;
     },
   });
