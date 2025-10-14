@@ -33,7 +33,10 @@ const PlantImageViewer = ({
       {mode === "thumbnail" ? (
         plantImages[0]
       ) : (
-        <Carousel {...{ carouselIndex, setCarouselIndex }}>
+        <Carousel
+          enableKeyboardEvents={!showFullScreen}
+          {...{ carouselIndex, setCarouselIndex }}
+        >
           {plantImages}
         </Carousel>
       )}
