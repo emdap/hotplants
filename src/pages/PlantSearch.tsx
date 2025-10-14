@@ -5,10 +5,10 @@ import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteris
 import PlantSearchResults from "components/plantSearchResults/PlantSearchResults";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
 import Card from "designSystem/Card";
-import { useApolloQuery } from "generated/graphql/useApollo";
 import { paths } from "generated/schemas/hotplants";
 import { BBox } from "geojson";
 import { SEARCH_PLANTS } from "graphqlQueries/plantQueries";
+import { useApolloQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useState } from "react";
 

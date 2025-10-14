@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import type { PlantSearchFiltersNormalized } from "generated/schemas/gbif-custom-types";
 import type { paths } from "generated/schemas/nominatim";
 import { BBox } from "geojson";
+import { useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useState } from "react";
 import { useDebounce } from "react-use";
@@ -24,7 +24,7 @@ const LocationSearch = ({
   const [debouncedInput, setDebouncedInput] = useState("");
   useDebounce(() => setDebouncedInput(locationInput), 2000, [locationInput]);
 
-  const locationResult = useQuery({
+  const locationResult = useReactQuery({
     queryKey: ["location-search", debouncedInput],
     queryFn: async () => {
       if (!debouncedInput) {
