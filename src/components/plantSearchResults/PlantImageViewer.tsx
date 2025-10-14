@@ -6,6 +6,9 @@ import { PlantResult } from "graphqlQueries/plantQueries";
 import { useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
 
+// TODO: Add a context, state to track whether image viewer is fullscreen
+// when it's fullscreen, block keyboard nav events for setting active plant
+// Then can re-enabled keyboard controls on non-fullscreen carousel
 const PlantImageViewer = ({
   plant,
   mode,
@@ -33,10 +36,7 @@ const PlantImageViewer = ({
       {mode === "thumbnail" ? (
         plantImages[0]
       ) : (
-        <Carousel
-          enableKeyboardEvents={!showFullScreen}
-          {...{ carouselIndex, setCarouselIndex }}
-        >
+        <Carousel {...{ carouselIndex, setCarouselIndex }}>
           {plantImages}
         </Carousel>
       )}
