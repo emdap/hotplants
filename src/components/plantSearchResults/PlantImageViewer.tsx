@@ -28,7 +28,11 @@ const PlantImageViewer = ({
         "w-1/2 max-h-70 flex-col relative": mode === "carousel",
       })}
     >
-      <Carousel>{plantImages}</Carousel>
+      {mode === "thumbnail" ? (
+        plantImages[0]
+      ) : (
+        <Carousel>{plantImages}</Carousel>
+      )}
       {mode === "carousel" && (
         <Button variant="secondary" className="absolute top-1 right-1">
           <MdFullscreen
