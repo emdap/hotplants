@@ -6,12 +6,14 @@ import Button from "./Button";
 
 const Carousel = ({
   carouselIndex = 0,
+  setCarouselIndex,
   maxRenderedChildren = 5,
   enableKeyboardEvents,
   bigButtons,
   children,
 }: {
   carouselIndex?: number;
+  setCarouselIndex?: (newIndex: number) => void;
   maxRenderedChildren?: number;
   enableKeyboardEvents?: boolean;
   bigButtons?: boolean;
@@ -24,6 +26,10 @@ const Carousel = ({
     setActiveIndex(carouselIndex);
   }, [carouselIndex]);
 
+  useEffect(() => {
+    setCarouselIndex && setCarouselIndex(activeIndex);
+  }, [activeIndex, setCarouselIndex]);
+
   const disableButtons = useMemo(
     () => ({
       next: activeIndex === children.length - 1,
@@ -34,16 +40,19 @@ const Carousel = ({
 
   const iterateCarousel = useCallback(
     (e: KeyboardEvent) => {
+      e.stopPropagation();
+      let increment = 0;
       if (e.key === "ArrowRight" && !disableButtons.next) {
-        setActiveIndex((prev) => prev + 1);
+        increment = 1;
       } else if (e.key === "ArrowLeft" && !disableButtons.prev) {
-        setActiveIndex((prev) => prev - 1);
+        increment = -1;
       }
+      setActiveIndex((prev) => prev + increment);
     },
     [disableButtons.next, disableButtons.prev, setActiveIndex]
   );
 
-  useDocumentListener("keydown", iterateCarousel, !!enableKeyboardEvents);
+  useDocumentListener("keydown", iterateCarousel, !!enableKeyboardEvents, true);
 
   const getChildStyle = (childIndex: number) => {
     const renderChild = Math.abs(activeIndex - childIndex) < childrenInDom;
@@ -53,8 +62,8 @@ const Carousel = ({
         childIndex === activeIndex
           ? "0"
           : childIndex < activeIndex
-          ? "-100%"
-          : "100%",
+          ? "-110%"
+          : "110%",
     };
   };
 

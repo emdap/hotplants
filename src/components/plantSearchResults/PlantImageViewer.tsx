@@ -15,6 +15,8 @@ const PlantImageViewer = ({
   mode: "thumbnail" | "carousel";
 } & Pick<ModalProps, "parentRef">) => {
   const [showFullScreen, setShowFullScreen] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [largeCarouselIndex, setLargeCarouselIndex] = useState(0);
 
   const plantImages = useMemo(
     () => plant.mediaUrls.map((url, index) => <img key={index} src={url} />),
@@ -31,7 +33,9 @@ const PlantImageViewer = ({
       {mode === "thumbnail" ? (
         plantImages[0]
       ) : (
-        <Carousel>{plantImages}</Carousel>
+        <Carousel {...{ carouselIndex, setCarouselIndex }}>
+          {plantImages}
+        </Carousel>
       )}
       {mode === "carousel" && (
         <Button variant="secondary" className="absolute top-1 right-1">
@@ -45,10 +49,18 @@ const PlantImageViewer = ({
 
       <Modal
         isOpen={showFullScreen}
-        onClose={() => setShowFullScreen(false)}
+        onClose={() => {
+          setShowFullScreen(false);
+          setCarouselIndex(largeCarouselIndex);
+        }}
         parentRef={parentRef}
       >
-        <Carousel bigButtons enableKeyboardEvents>
+        <Carousel
+          carouselIndex={carouselIndex}
+          setCarouselIndex={setLargeCarouselIndex}
+          bigButtons
+          enableKeyboardEvents
+        >
           {plantImages}
         </Carousel>
       </Modal>
