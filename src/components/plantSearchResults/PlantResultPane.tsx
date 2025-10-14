@@ -3,6 +3,7 @@ import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { CUSTOM_MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlQueries/plantQueries";
+import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence } from "motion/react";
 import { useRef } from "react";
 import { MdClose } from "react-icons/md";
@@ -25,6 +26,9 @@ const PlantResultPane = ({
 }) => {
   const paneRef = useRef<HTMLDivElement>(null);
   useClickAway(paneRef, onClose, ["mouseup"]);
+
+  const closeOnEscape = (e: KeyboardEvent) => e.code === "Escape" && onClose();
+  useDocumentListener("keydown", closeOnEscape, !!plant);
 
   return (
     <AnimatePresence>

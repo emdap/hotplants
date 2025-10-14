@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence, motion } from "motion/react";
 import { HTMLProps, RefObject } from "react";
 import { createPortal } from "react-dom";
@@ -28,11 +29,20 @@ const Modal = ({
   className,
   parentRef,
   ...bodyProps
-}: ModalProps) =>
+}: ModalProps) => {
+  const closeOnEscape = (e: KeyboardEvent) => {
+    if (onClose && e.code === "Escape") {
+      e.stopPropagation();
+      onClose();
+    }
+  };
+
+  useDocumentListener("keydown", closeOnEscape, isOpen, true);
+
   // Using a portal for safety
   // First usecase - modal ancestor had backdrop effects, causing
   // the fixed positioning to be relative to that parent
-  createPortal(
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -69,5 +79,6 @@ const Modal = ({
     </AnimatePresence>,
     parentRef?.current ?? document.body
   );
+};
 
 export default Modal;

@@ -10,6 +10,7 @@ export const useDocumentListener = <T extends keyof DocumentEventMap>(
     if (enabled) {
       document.addEventListener(eventKey, onEventCallback, onCapture);
     }
-    return () => document.removeEventListener(eventKey, onEventCallback);
+    return () =>
+      document.removeEventListener(eventKey, onEventCallback, onCapture);
   }, [onEventCallback, eventKey, enabled, onCapture]);
 };
