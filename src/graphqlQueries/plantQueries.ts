@@ -5,7 +5,7 @@ export const SEARCH_PLANTS = graphql(`
   query searchPlants(
     $searchId: String!
     $limit: Int
-    $skip: Int
+    $offset: Int
     $sort: SortInput
     $where: PlantDataInput
   ) {
@@ -13,7 +13,7 @@ export const SEARCH_PLANTS = graphql(`
       status
     }
 
-    plants(limit: $limit, skip: $skip, sort: $sort, where: $where) {
+    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {
       scientificName
       commonNames
       mediaUrls

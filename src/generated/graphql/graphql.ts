@@ -29,7 +29,7 @@ export type PlantData = {
   maturityTime?: Maybe<Scalars['String']['output']>;
   mediaUrls: Array<Scalars['String']['output']>;
   occurrenceCoords: Array<Array<Scalars['Float']['output']>>;
-  occurrenceIds: Array<Scalars['Int']['output']>;
+  occurrenceIds: Array<Scalars['Float']['output']>;
   scientificName: Scalars['String']['output'];
   scrapeSources: Array<Scalars['String']['output']>;
   soilTypes?: Maybe<Array<Scalars['String']['output']>>;
@@ -40,24 +40,24 @@ export type PlantData = {
 
 export type PlantDataInput = {
   addedTimestamp?: InputMaybe<Scalars['Int']['input']>;
-  bloomColors?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  bloomTimes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  bloomColors?: InputMaybe<Array<Scalars['String']['input']>>;
+  bloomTimes?: InputMaybe<Array<Scalars['String']['input']>>;
   boundingBox?: InputMaybe<Array<Scalars['Float']['input']>>;
   commonName?: InputMaybe<Scalars['String']['input']>;
   habitat?: InputMaybe<Scalars['String']['input']>;
-  hardiness?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  hardiness?: InputMaybe<Array<Scalars['Int']['input']>>;
   height?: InputMaybe<PlantSizeInput>;
   isPerennial?: InputMaybe<Scalars['Boolean']['input']>;
-  lightLevels?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  lightLevels?: InputMaybe<Array<Scalars['String']['input']>>;
   maturityTime?: InputMaybe<Scalars['String']['input']>;
-  mediaUrls?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  occurrenceIds?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  mediaUrls?: InputMaybe<Array<Scalars['String']['input']>>;
+  occurrenceIds?: InputMaybe<Array<Scalars['Float']['input']>>;
   scientificName?: InputMaybe<Scalars['String']['input']>;
-  scrapeSources?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  soilTypes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  scrapeSources?: InputMaybe<Array<Scalars['String']['input']>>;
+  soilTypes?: InputMaybe<Array<Scalars['String']['input']>>;
   spread?: InputMaybe<PlantSizeInput>;
   updatedTimestamp?: InputMaybe<Scalars['Int']['input']>;
-  uses?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  uses?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type PlantSize = {
@@ -85,7 +85,7 @@ export type Query = {
 
 export type QueryPlantsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SortInput>;
   where?: InputMaybe<PlantDataInput>;
 };
@@ -123,7 +123,7 @@ export type SortInput = {
 export type SearchPlantsQueryVariables = Exact<{
   searchId: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<SortInput>;
   where?: InputMaybe<PlantDataInput>;
 }>;
@@ -132,4 +132,4 @@ export type SearchPlantsQueryVariables = Exact<{
 export type SearchPlantsQuery = { searchRecords?: { status: SearchRecordStatus } | null, plants: Array<{ scientificName: string, commonNames?: Array<string> | null, mediaUrls: Array<string>, bloomColors?: Array<string> | null, bloomTimes?: Array<string> | null }> };
 
 
-export const SearchPlantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"searchPlants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SortInput"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchRecords"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"plants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"skip"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"mediaUrls"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}}]}}]}}]} as unknown as DocumentNode<SearchPlantsQuery, SearchPlantsQueryVariables>;
+export const SearchPlantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"searchPlants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SortInput"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchRecords"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"plants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"mediaUrls"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}}]}}]}}]} as unknown as DocumentNode<SearchPlantsQuery, SearchPlantsQueryVariables>;

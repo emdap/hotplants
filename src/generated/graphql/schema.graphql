@@ -15,7 +15,7 @@ type PlantData {
   maturityTime: String
   mediaUrls: [String!]!
   occurrenceCoords: [[Float!]!]!
-  occurrenceIds: [Int!]!
+  occurrenceIds: [Float!]!
   scientificName: String!
   scrapeSources: [String!]!
   soilTypes: [String!]
@@ -26,24 +26,24 @@ type PlantData {
 
 input PlantDataInput {
   addedTimestamp: Int
-  bloomColors: [String]
-  bloomTimes: [String]
+  bloomColors: [String!]
+  bloomTimes: [String!]
   boundingBox: [Float!]
   commonName: String
   habitat: String
-  hardiness: [Int]
+  hardiness: [Int!]
   height: PlantSizeInput
   isPerennial: Boolean
-  lightLevels: [String]
+  lightLevels: [String!]
   maturityTime: String
-  mediaUrls: [String]
-  occurrenceIds: [Int]
+  mediaUrls: [String!]
+  occurrenceIds: [Float!]
   scientificName: String
-  scrapeSources: [String]
-  soilTypes: [String]
+  scrapeSources: [String!]
+  soilTypes: [String!]
   spread: PlantSizeInput
   updatedTimestamp: Int
-  uses: [String]
+  uses: [String!]
 }
 
 type PlantSize {
@@ -64,7 +64,7 @@ enum PlantSizeUnit {
 }
 
 type Query {
-  plants(limit: Int, skip: Int, sort: SortInput, where: PlantDataInput): [PlantData!]!
+  plants(limit: Int, offset: Int, sort: SortInput, where: PlantDataInput): [PlantData!]!
   searchRecords(id: String!): SearchRecord
 }
 
