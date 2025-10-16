@@ -34,32 +34,40 @@ const PlantSearch = () => {
     enabled: !!plantFilters,
   });
 
-  const { data: { searchRecords, plants } = {}, ...plantSearchQuery } =
-    useApolloQuery(SEARCH_PLANTS, {
-      skip: !scrapeSearchQuery.data,
-      variables: {
-        searchId: scrapeSearchQuery.data!,
-        limit: 10,
-        sort: { addedTimestamp: "desc" },
-        where: plantFilters,
-      },
-    });
+  const {
+    data: { searchRecords, plants } = {},
+    error: plantSearchError,
+    startPolling,
+    stopPolling,
+    ..._plantSearchQuery
+  } = useApolloQuery(SEARCH_PLANTS, {
+    skip: !scrapeSearchQuery.data,
+    variables: {
+      searchId: scrapeSearchQuery.data!,
+      limit: 10,
+      sort: { addedTimestamp: "desc" },
+      where: plantFilters,
+    },
+  });
 
   useEffect(() => {
     if (
-      plantSearchQuery.error ||
+      plantSearchError ||
       !scrapeSearchQuery.data ||
       searchRecords?.status === "DONE"
     ) {
-      plantSearchQuery.stopPolling();
+      stopPolling();
     } else {
-      plantSearchQuery.startPolling(DEFAULT_POLL_INTERVAL);
-      setTimeout(
-        () => plantSearchQuery.stopPolling(),
-        DEFAULT_POLL_INTERVAL * MAX_POLLS
-      );
+      startPolling(DEFAULT_POLL_INTERVAL);
+      setTimeout(() => stopPolling(), DEFAULT_POLL_INTERVAL * MAX_POLLS);
     }
-  }, [scrapeSearchQuery.data, searchRecords?.status, plantSearchQuery]);
+  }, [
+    scrapeSearchQuery.data,
+    searchRecords?.status,
+    plantSearchError,
+    startPolling,
+    stopPolling,
+  ]);
 
   return (
     <main className="h-full relative overflow-hidden flex flex-col">
