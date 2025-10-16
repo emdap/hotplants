@@ -1,4 +1,5 @@
 declare module "wkt" {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export const stringify = (geoJson: import("geojson").GeoJsonObject) => string;
 }
 
