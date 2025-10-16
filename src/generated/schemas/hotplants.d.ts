@@ -48,7 +48,7 @@ export interface components {
         /** @description Construct a type with a set of properties K of type T */
         "Record_string.never_": Record<string, never>;
         /** @description From T, pick a set of properties whose keys are in the union K */
-        "Pick_GbifOccurrenceSearchParams.Exclude_keyofGbifOccurrenceSearchParams.geometry-or-limit__": {
+        "Pick_GbifOccurrenceSearchParams.Exclude_keyofGbifOccurrenceSearchParams.geometry-or-scientificName__": {
             /** @example 2476674 */
             acceptedTaxonKey?: number[];
             associatedSequences?: string[];
@@ -191,7 +191,6 @@ export interface components {
             sampleSizeValue?: number[];
             samplingProtocol?: string[];
             sex?: string[];
-            scientificName?: string[];
             /** @example 2476674 */
             speciesKey?: number[];
             /** @example 5 */
@@ -215,7 +214,8 @@ export interface components {
             shuffle?: string;
             /** @example true */
             hl?: boolean;
-            q?: string;
+            /** Format: double */
+            limit?: number;
             /** Format: double */
             offset?: number;
             facet?: string;
@@ -228,46 +228,88 @@ export interface components {
             facetOffset?: number;
         };
         /** @description Construct a type with the properties of T except for those in type K. */
-        "Omit_GbifOccurrenceSearchParams.geometry-or-limit_": components["schemas"]["Pick_GbifOccurrenceSearchParams.Exclude_keyofGbifOccurrenceSearchParams.geometry-or-limit__"];
-        PlantSearchParams: components["schemas"]["Omit_GbifOccurrenceSearchParams.geometry-or-limit_"] & {
-            boundingBox?: number[];
-        };
+        "Omit_GbifOccurrenceSearchParams.geometry-or-scientificName_": components["schemas"]["Pick_GbifOccurrenceSearchParams.Exclude_keyofGbifOccurrenceSearchParams.geometry-or-scientificName__"];
+        Maybe_string_: string | null;
+        InputMaybe_string_: components["schemas"]["Maybe_string_"];
         /** Format: double */
-        "Maybe_Scalars-at-Int_91_output_93__": number | null;
+        Maybe_number_: number | null;
+        InputMaybe_number_: components["schemas"]["Maybe_number_"];
+        "Maybe_string-Array_": string[] | null;
+        "InputMaybe_string-Array_": components["schemas"]["Maybe_string-Array_"];
+        "Maybe_number-Array_": number[] | null;
+        "InputMaybe_number-Array_": components["schemas"]["Maybe_number-Array_"];
+        /** Format: double */
+        "Maybe_Scalars-at-Int_91_input_93__": number | null;
+        "InputMaybe_Scalars-at-Int_91_input_93__": components["schemas"]["Maybe_Scalars-at-Int_91_input_93__"];
         /** @enum {string} */
         PlantSizeUnit: "cm" | "ft" | "in" | "m";
         Maybe_PlantSizeUnit_: components["schemas"]["PlantSizeUnit"] | null;
+        InputMaybe_PlantSizeUnit_: components["schemas"]["Maybe_PlantSizeUnit_"];
+        PlantSizeInput: {
+            unit?: components["schemas"]["InputMaybe_PlantSizeUnit_"];
+            amount?: components["schemas"]["InputMaybe_Scalars-at-Int_91_input_93__"];
+        };
+        Maybe_PlantSizeInput_: components["schemas"]["PlantSizeInput"] | null;
+        InputMaybe_PlantSizeInput_: components["schemas"]["Maybe_PlantSizeInput_"];
+        Maybe_boolean_: boolean | null;
+        InputMaybe_boolean_: components["schemas"]["Maybe_boolean_"];
+        /** @description From T, pick a set of properties whose keys are in the union K */
+        "Pick_PlantDataInput.Exclude_keyofPlantDataInput.__": {
+            scientificName?: components["schemas"]["InputMaybe_string_"];
+            addedTimestamp?: components["schemas"]["InputMaybe_number_"];
+            bloomColors?: components["schemas"]["InputMaybe_string-Array_"];
+            bloomTimes?: components["schemas"]["InputMaybe_string-Array_"];
+            boundingBox?: components["schemas"]["InputMaybe_number-Array_"];
+            commonName?: components["schemas"]["InputMaybe_string_"];
+            habitat?: components["schemas"]["InputMaybe_string_"];
+            hardiness?: components["schemas"]["InputMaybe_number-Array_"];
+            height?: components["schemas"]["InputMaybe_PlantSizeInput_"];
+            isPerennial?: components["schemas"]["InputMaybe_boolean_"];
+            lightLevels?: components["schemas"]["InputMaybe_string-Array_"];
+            maturityTime?: components["schemas"]["InputMaybe_string_"];
+            mediaUrls?: components["schemas"]["InputMaybe_string-Array_"];
+            occurrenceIds?: components["schemas"]["InputMaybe_number-Array_"];
+            scrapeSources?: components["schemas"]["InputMaybe_string-Array_"];
+            soilTypes?: components["schemas"]["InputMaybe_string-Array_"];
+            spread?: components["schemas"]["InputMaybe_PlantSizeInput_"];
+            updatedTimestamp?: components["schemas"]["InputMaybe_number_"];
+            uses?: components["schemas"]["InputMaybe_string-Array_"];
+        };
+        /** @description Construct a type with the properties of T except for those in type K. */
+        "Omit_PlantDataInput._": components["schemas"]["Pick_PlantDataInput.Exclude_keyofPlantDataInput.__"];
+        PlantSearchParams: components["schemas"]["Omit_GbifOccurrenceSearchParams.geometry-or-scientificName_"] & components["schemas"]["Omit_PlantDataInput._"];
+        /** Format: double */
+        "Maybe_Scalars-at-Int_91_output_93__": number | null;
         PlantSize: {
             unit?: components["schemas"]["Maybe_PlantSizeUnit_"];
             amount?: components["schemas"]["Maybe_Scalars-at-Int_91_output_93__"];
             /** @enum {string} */
             __typename?: "PlantSize";
         };
+        Maybe_PlantSize_: components["schemas"]["PlantSize"] | null;
         /** @description Construct a type with a set of properties K of type T */
-        "Record_string.string_": {
-            [key: string]: string;
-        };
+        "Record_string.string_": Record<string, never>;
         /** @description From T, pick a set of properties whose keys are in the union K */
         "Pick_PlantDataDocument.Exclude_keyofPlantDataDocument.addedTimestamp-or-updatedTimestamp__": {
             scientificName: string;
-            /** @enum {string} */
-            __typename?: "PlantData";
-            bloomColors?: string[];
-            bloomTimes?: string[];
-            commonNames?: string[];
-            habitat?: string;
-            hardiness?: number[];
-            height?: components["schemas"]["PlantSize"];
-            isPerennial?: boolean;
-            lightLevels?: string[];
-            maturityTime?: string;
+            bloomColors?: components["schemas"]["Maybe_string-Array_"];
+            bloomTimes?: components["schemas"]["Maybe_string-Array_"];
+            habitat?: components["schemas"]["Maybe_string_"];
+            hardiness?: components["schemas"]["Maybe_number-Array_"];
+            height?: components["schemas"]["Maybe_PlantSize_"];
+            isPerennial?: components["schemas"]["Maybe_boolean_"];
+            lightLevels?: components["schemas"]["Maybe_string-Array_"];
+            maturityTime?: components["schemas"]["Maybe_string_"];
             mediaUrls: string[];
-            occurrenceCoords: number[][];
             occurrenceIds: number[];
             scrapeSources: string[];
-            soilTypes?: string[];
-            spread?: components["schemas"]["PlantSize"];
-            uses?: string[];
+            soilTypes?: components["schemas"]["Maybe_string-Array_"];
+            spread?: components["schemas"]["Maybe_PlantSize_"];
+            uses?: components["schemas"]["Maybe_string-Array_"];
+            /** @enum {string} */
+            __typename?: "PlantData";
+            commonNames?: components["schemas"]["Maybe_string-Array_"];
+            occurrenceCoords: number[][];
             _id?: components["schemas"]["ObjectId"];
             otherTraits?: components["schemas"]["Record_string.string_"];
         };
