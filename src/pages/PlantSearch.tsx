@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
-const _MIN_RESULTS = 50;
+const MIN_RESULTS = 50;
 
 const hotplantsClient = createClient<paths>({
   baseUrl: import.meta.env.VITE_HOTPLANTS_SERVER,
@@ -23,14 +23,29 @@ const hotplantsClient = createClient<paths>({
 const PlantSearch = () => {
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
-  const [enableScraping, _setEnableScraping] = useState(false);
+
+  const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
+    SEARCH_PLANTS,
+    {
+      skip: !plantFilters?.boundingBox,
+      variables: {
+        limit: 10,
+        sort: { addedTimestamp: "desc" },
+        where: plantFilters,
+      },
+    }
+  );
+
+  const enableScraping = Boolean(
+    plantSearch && plantSearch.count < MIN_RESULTS
+  );
 
   const { data: searchRecordId, ..._scrapeSearchQuery } = useQuery({
     queryKey: ["plant-search", plantFilters],
     queryFn: async () => {
       // TODO: Sync types with server -- nulls/undefineds
       const { data } = await hotplantsClient.POST("/plants/scrapeOccurrences", {
-        body: plantFilters,
+        body: plantFilters ?? {},
       });
       return data;
     },
@@ -43,18 +58,6 @@ const PlantSearch = () => {
       skip: !searchRecordId,
       variables: {
         searchId: searchRecordId!,
-      },
-    }
-  );
-
-  const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
-    SEARCH_PLANTS,
-    {
-      skip: !plantFilters?.boundingBox,
-      variables: {
-        limit: 10,
-        sort: { addedTimestamp: "desc" },
-        where: plantFilters,
       },
     }
   );

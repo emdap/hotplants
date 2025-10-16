@@ -342,7 +342,7 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": components["schemas"]["PlantSearchParams"] | null;
+                "application/json": components["schemas"]["PlantSearchParams"];
             };
         };
         responses: {
