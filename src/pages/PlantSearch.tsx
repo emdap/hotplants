@@ -47,7 +47,7 @@ const PlantSearch = () => {
     }
   );
 
-  const { data: { plants } = {}, ...plantSearchQuery } = useApolloQuery(
+  const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
     SEARCH_PLANTS,
     {
       skip: !plantFilters?.boundingBox,
@@ -105,7 +105,7 @@ const PlantSearch = () => {
         <ScrapeStatusBar status={searchRecord?.status} />
       </div>
 
-      {plants && <PlantQueryResults searchResults={plants.results} />}
+      {plantSearch && <PlantQueryResults searchResults={plantSearch.results} />}
     </main>
   );
 };

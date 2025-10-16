@@ -8,7 +8,7 @@ export const SEARCH_PLANTS = graphql(`
     $sort: SortInput
     $where: PlantDataInput
   ) {
-    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {
+    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {
       count
       results {
         scientificName
@@ -32,5 +32,5 @@ export const GET_SEARCH_RECORD = graphql(`
   }
 `);
 
-export type PlantQueryResults = SearchPlantsQuery["plants"]["results"];
+export type PlantQueryResults = SearchPlantsQuery["plantSearch"]["results"];
 export type PlantResult = PlantQueryResults[number];
