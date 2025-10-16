@@ -46,6 +46,11 @@ input PlantDataInput {
   uses: [String!]
 }
 
+type PlantSearchResults {
+  count: Float!
+  results: [PlantData!]!
+}
+
 type PlantSize {
   amount: Int
   unit: PlantSizeUnit
@@ -64,8 +69,8 @@ enum PlantSizeUnit {
 }
 
 type Query {
-  plants(limit: Int, offset: Int, sort: SortInput, where: PlantDataInput): [PlantData!]!
-  searchRecords(id: String!): SearchRecord
+  plants(limit: Int, offset: Int, sort: SortInput, where: PlantDataInput): PlantSearchResults!
+  searchRecord(id: String!): SearchRecord
 }
 
 type SearchRecord {

@@ -14,10 +14,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  query searchPlants(\n    $searchId: String!\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    searchRecords(id: $searchId) {\n      status\n    }\n\n    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n": typeof types.SearchPlantsDocument,
+    "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        scientificName\n        commonNames\n        mediaUrls\n        bloomColors\n        bloomTimes\n      }\n    }\n  }\n": typeof types.SearchPlantsDocument,
+    "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      uniqueOccurrences\n      endOfRecords\n    }\n  }\n": typeof types.GetSearchRecordDocument,
 };
 const documents: Documents = {
-    "\n  query searchPlants(\n    $searchId: String!\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    searchRecords(id: $searchId) {\n      status\n    }\n\n    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n": types.SearchPlantsDocument,
+    "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        scientificName\n        commonNames\n        mediaUrls\n        bloomColors\n        bloomTimes\n      }\n    }\n  }\n": types.SearchPlantsDocument,
+    "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      uniqueOccurrences\n      endOfRecords\n    }\n  }\n": types.GetSearchRecordDocument,
 };
 
 /**
@@ -37,7 +39,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query searchPlants(\n    $searchId: String!\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    searchRecords(id: $searchId) {\n      status\n    }\n\n    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n"): (typeof documents)["\n  query searchPlants(\n    $searchId: String!\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    searchRecords(id: $searchId) {\n      status\n    }\n\n    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      scientificName\n      commonNames\n      mediaUrls\n      bloomColors\n      bloomTimes\n    }\n  }\n"];
+export function graphql(source: "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        scientificName\n        commonNames\n        mediaUrls\n        bloomColors\n        bloomTimes\n      }\n    }\n  }\n"): (typeof documents)["\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plants(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        scientificName\n        commonNames\n        mediaUrls\n        bloomColors\n        bloomTimes\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      uniqueOccurrences\n      endOfRecords\n    }\n  }\n"): (typeof documents)["\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      uniqueOccurrences\n      endOfRecords\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

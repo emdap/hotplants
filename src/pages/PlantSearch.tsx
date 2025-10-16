@@ -2,72 +2,90 @@ import { useQuery } from "@tanstack/react-query";
 import LocationMap from "components/LocationMap";
 import LocationSearch from "components/plantFilters/LocationSearch";
 import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteristicsFilter";
-import PlantSearchResults from "components/plantSearchResults/PlantSearchResults";
+import PlantQueryResults from "components/plantSearchResults/PlantSearchResults";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
 import Card from "designSystem/Card";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { paths } from "generated/schemas/hotplants";
-import { SEARCH_PLANTS } from "graphqlQueries/plantQueries";
+import { GET_SEARCH_RECORD, SEARCH_PLANTS } from "graphqlQueries/plantQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
+const _MIN_RESULTS = 50;
 
 const hotplantsClient = createClient<paths>({
   baseUrl: import.meta.env.VITE_HOTPLANTS_SERVER,
 });
 
 const PlantSearch = () => {
+  const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
+  const [enableScraping, _setEnableScraping] = useState(false);
 
-  const scrapeSearchQuery = useQuery({
+  const { data: searchRecordId, ..._scrapeSearchQuery } = useQuery({
     queryKey: ["plant-search", plantFilters],
     queryFn: async () => {
       // TODO: Sync types with server -- nulls/undefineds
       const { data } = await hotplantsClient.POST("/plants/scrapeOccurrences", {
-        body: plantFilters!,
+        body: plantFilters,
       });
       return data;
     },
-    enabled: !!plantFilters,
+    enabled: enableScraping,
   });
 
-  const {
-    data: { searchRecords, plants } = {},
-    error: plantSearchError,
-    startPolling,
-    stopPolling,
-    ..._plantSearchQuery
-  } = useApolloQuery(SEARCH_PLANTS, {
-    skip: !scrapeSearchQuery.data,
-    variables: {
-      searchId: scrapeSearchQuery.data!,
-      limit: 10,
-      sort: { addedTimestamp: "desc" },
-      where: plantFilters,
-    },
-  });
+  const { data: { searchRecord } = {}, ...searchRecordQuery } = useApolloQuery(
+    GET_SEARCH_RECORD,
+    {
+      skip: !searchRecordId,
+      variables: {
+        searchId: searchRecordId!,
+      },
+    }
+  );
+
+  const { data: { plants } = {}, ...plantSearchQuery } = useApolloQuery(
+    SEARCH_PLANTS,
+    {
+      skip: !plantFilters?.boundingBox,
+      variables: {
+        limit: 10,
+        sort: { addedTimestamp: "desc" },
+        where: plantFilters,
+      },
+    }
+  );
 
   useEffect(() => {
+    const startPolling = (interval: number) => {
+      searchRecordQuery.startPolling(interval);
+      plantSearchQuery.startPolling(interval);
+
+      stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
+      stopPollingTimeout.current = setTimeout(
+        () => stopPolling(),
+        DEFAULT_POLL_INTERVAL * MAX_POLLS
+      );
+    };
+
+    const stopPolling = () => {
+      searchRecordQuery.stopPolling();
+      plantSearchQuery.stopPolling();
+    };
+
     if (
-      plantSearchError ||
-      !scrapeSearchQuery.data ||
-      searchRecords?.status === "DONE"
+      plantSearchQuery.error ||
+      !searchRecordId ||
+      searchRecord?.status === "DONE"
     ) {
       stopPolling();
     } else {
       startPolling(DEFAULT_POLL_INTERVAL);
-      setTimeout(() => stopPolling(), DEFAULT_POLL_INTERVAL * MAX_POLLS);
     }
-  }, [
-    scrapeSearchQuery.data,
-    searchRecords?.status,
-    plantSearchError,
-    startPolling,
-    stopPolling,
-  ]);
+  }, [searchRecordId, searchRecord, searchRecordQuery, plantSearchQuery]);
 
   return (
     <main className="h-full relative overflow-hidden flex flex-col">
@@ -84,10 +102,10 @@ const PlantSearch = () => {
           <LocationMap />
         </div>
 
-        <ScrapeStatusBar status={searchRecords?.status} />
+        <ScrapeStatusBar status={searchRecord?.status} />
       </div>
 
-      {plants && <PlantSearchResults searchResults={plants} />}
+      {plants && <PlantQueryResults searchResults={plants.results} />}
     </main>
   );
 };

@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import Card from "designSystem/Card";
-import { SearchPlantsQuery } from "generated/graphql/graphql";
+import { PlantQueryResults } from "graphqlQueries/plantQueries";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { useCallback, useMemo, useRef, useState } from "react";
 import PlantImageViewer from "./PlantImageViewer";
@@ -10,7 +10,7 @@ import PlantResultPane from "./PlantResultPane";
 const PlantSearchResults = ({
   searchResults,
 }: {
-  searchResults: SearchPlantsQuery["plants"];
+  searchResults: PlantQueryResults;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
