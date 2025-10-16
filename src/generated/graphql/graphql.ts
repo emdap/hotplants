@@ -70,12 +70,11 @@ export type PlantSizeInput = {
   unit?: InputMaybe<PlantSizeUnit>;
 };
 
-export enum PlantSizeUnit {
-  Cm = 'cm',
-  Ft = 'ft',
-  In = 'in',
-  M = 'm'
-}
+export type PlantSizeUnit =
+  | 'cm'
+  | 'ft'
+  | 'in'
+  | 'm';
 
 export type Query = {
   plants: Array<PlantData>;
@@ -104,15 +103,13 @@ export type SearchRecord = {
   uniqueOccurrences: Scalars['Int']['output'];
 };
 
-export enum SearchRecordStatus {
-  Done = 'DONE',
-  Scraping = 'SCRAPING'
-}
+export type SearchRecordStatus =
+  | 'DONE'
+  | 'SCRAPING';
 
-export enum SortDirection {
-  Asc = 'asc',
-  Desc = 'desc'
-}
+export type SortDirection =
+  | 'asc'
+  | 'desc';
 
 export type SortInput = {
   addedTimestamp?: InputMaybe<SortDirection>;

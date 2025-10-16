@@ -5,7 +5,6 @@ const config: CodegenConfig = {
   documents: ["src/**/*.tsx", "src/**/*.ts"],
   ignoreNoDocuments: true,
   config: {
-    maybeValue: "T | null",
     skipTypename: true,
     nullability: false,
   },
@@ -13,6 +12,9 @@ const config: CodegenConfig = {
   generates: {
     "src/generated/graphql/": {
       preset: "client",
+      config: {
+        enumsAsTypes: true,
+      },
       presetConfig: {
         fragmentMasking: false,
       },
