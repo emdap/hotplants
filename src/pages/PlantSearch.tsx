@@ -12,16 +12,16 @@ import { useApolloQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useState } from "react";
 
+const DEFAULT_POLL_INTERVAL = 3000;
+const MAX_POLLS = 10;
+
 const hotplantsClient = createClient<paths>({
   baseUrl: import.meta.env.VITE_HOTPLANTS_SERVER,
 });
 
-const DEFAULT_POLL_INTERVAL = 1000;
-
 const PlantSearch = () => {
-  const [searchPollInterval, setSearchPollInterval] = useState(0);
   const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
-  plantFilters?.scientificName;
+
   const scrapeSearchQuery = useQuery({
     queryKey: ["plant-search", plantFilters],
     queryFn: async () => {
@@ -34,12 +34,9 @@ const PlantSearch = () => {
     enabled: !!plantFilters,
   });
 
-  console.log(plantFilters);
-
   const { data: { searchRecords, plants } = {}, ...plantSearchQuery } =
     useApolloQuery(SEARCH_PLANTS, {
       skip: !scrapeSearchQuery.data,
-      pollInterval: searchPollInterval,
       variables: {
         searchId: scrapeSearchQuery.data!,
         limit: 10,
@@ -54,11 +51,15 @@ const PlantSearch = () => {
       !scrapeSearchQuery.data ||
       searchRecords?.status === "DONE"
     ) {
-      setSearchPollInterval(0);
+      plantSearchQuery.stopPolling();
     } else {
-      setSearchPollInterval(DEFAULT_POLL_INTERVAL);
+      plantSearchQuery.startPolling(DEFAULT_POLL_INTERVAL);
+      setTimeout(
+        () => plantSearchQuery.stopPolling(),
+        DEFAULT_POLL_INTERVAL * MAX_POLLS
+      );
     }
-  }, [scrapeSearchQuery.data, searchRecords?.status, plantSearchQuery.error]);
+  }, [scrapeSearchQuery.data, searchRecords?.status, plantSearchQuery]);
 
   return (
     <main className="h-full relative overflow-hidden flex flex-col">
