@@ -15,11 +15,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 type Documents = {
     "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        scientificName\n        commonNames\n        mediaUrls\n        bloomColors\n        bloomTimes\n        physicalCharactersticsDump\n      }\n    }\n  }\n": typeof types.SearchPlantsDocument,
-    "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      uniqueOccurrences\n      endOfRecords\n    }\n  }\n": typeof types.GetSearchRecordDocument,
+    "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n": typeof types.GetSearchRecordDocument,
 };
 const documents: Documents = {
     "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        scientificName\n        commonNames\n        mediaUrls\n        bloomColors\n        bloomTimes\n        physicalCharactersticsDump\n      }\n    }\n  }\n": types.SearchPlantsDocument,
-    "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      uniqueOccurrences\n      endOfRecords\n    }\n  }\n": types.GetSearchRecordDocument,
+    "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n": types.GetSearchRecordDocument,
 };
 
 /**
@@ -43,7 +43,7 @@ export function graphql(source: "\n  query searchPlants(\n    $limit: Int\n    $
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      uniqueOccurrences\n      endOfRecords\n    }\n  }\n"): (typeof documents)["\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      uniqueOccurrences\n      endOfRecords\n    }\n  }\n"];
+export function graphql(source: "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n"): (typeof documents)["\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

@@ -23,22 +23,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/plants/scrapeOccurrencesLegacy": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ScrapeOccurrencesLegacy"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -279,53 +263,6 @@ export interface components {
         /** @description Construct a type with the properties of T except for those in type K. */
         "Omit_PlantDataInput._": components["schemas"]["Pick_PlantDataInput.Exclude_keyofPlantDataInput.__"];
         PlantSearchParams: components["schemas"]["Omit_GbifOccurrenceSearchParams.geometry-or-scientificName_"] & components["schemas"]["Omit_PlantDataInput._"];
-        /** Format: double */
-        "Maybe_Scalars-at-Int_91_output_93__": number | null;
-        PlantSize: {
-            unit?: components["schemas"]["Maybe_PlantSizeUnit_"];
-            amount?: components["schemas"]["Maybe_Scalars-at-Int_91_output_93__"];
-            /** @enum {string} */
-            __typename?: "PlantSize";
-        };
-        Maybe_PlantSize_: components["schemas"]["PlantSize"] | null;
-        /** @description Construct a type with a set of properties K of type T */
-        "Record_string.string_": Record<string, never>;
-        /** @description From T, pick a set of properties whose keys are in the union K */
-        "Pick_PlantDataDocument.Exclude_keyofPlantDataDocument.addedTimestamp-or-updatedTimestamp__": {
-            scientificName: string;
-            bloomColors?: components["schemas"]["Maybe_string-Array_"];
-            bloomTimes?: components["schemas"]["Maybe_string-Array_"];
-            habitat?: components["schemas"]["Maybe_string_"];
-            hardiness?: components["schemas"]["Maybe_number-Array_"];
-            height?: components["schemas"]["Maybe_PlantSize_"];
-            isPerennial?: components["schemas"]["Maybe_boolean_"];
-            lightLevels?: components["schemas"]["Maybe_string-Array_"];
-            maturityTime?: components["schemas"]["Maybe_string_"];
-            mediaUrls: string[];
-            occurrenceIds: number[];
-            physicalCharactersticsDump?: components["schemas"]["Maybe_string_"];
-            scrapeSources: string[];
-            soilTypes?: components["schemas"]["Maybe_string-Array_"];
-            spread?: components["schemas"]["Maybe_PlantSize_"];
-            uses?: components["schemas"]["Maybe_string-Array_"];
-            /** @enum {string} */
-            __typename?: "PlantData";
-            commonNames?: components["schemas"]["Maybe_string-Array_"];
-            occurrenceCoords: number[][];
-            _id?: components["schemas"]["ObjectId"];
-            otherTraits?: components["schemas"]["Record_string.string_"];
-        };
-        /** @description Construct a type with the properties of T except for those in type K. */
-        "Omit_PlantDataDocument.addedTimestamp-or-updatedTimestamp_": components["schemas"]["Pick_PlantDataDocument.Exclude_keyofPlantDataDocument.addedTimestamp-or-updatedTimestamp__"];
-        PartialPlantData: components["schemas"]["Omit_PlantDataDocument.addedTimestamp-or-updatedTimestamp_"];
-        OccurrenceScrapeResponse: {
-            endOfRecords: boolean;
-            /** Format: double */
-            totalOccurrencesScraped: number;
-            results: components["schemas"]["PartialPlantData"][];
-            /** Format: double */
-            count: number;
-        };
     };
     responses: never;
     parameters: never;
@@ -355,38 +292,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ObjectId"];
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string;
-                };
-            };
-        };
-    };
-    ScrapeOccurrencesLegacy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["PlantSearchParams"];
-            };
-        };
-        responses: {
-            /** @description Ok */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["OccurrenceScrapeResponse"] | unknown;
                 };
             };
             500: {

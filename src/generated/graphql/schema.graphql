@@ -78,10 +78,8 @@ type Query {
 type SearchRecord {
   endOfRecords: Boolean
   jsonStringSearch: String!
-  lastAddedCount: Int
   status: SearchRecordStatus!
   totalOccurrences: Int!
-  uniqueOccurrences: Int!
 }
 
 enum SearchRecordStatus {

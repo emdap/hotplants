@@ -27,7 +27,6 @@ export const GET_SEARCH_RECORD = graphql(`
     searchRecord(id: $searchId) {
       status
       totalOccurrences
-      uniqueOccurrences
       endOfRecords
     }
   }
