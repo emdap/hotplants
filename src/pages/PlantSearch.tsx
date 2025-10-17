@@ -21,7 +21,7 @@ const MAX_POLLS = 10;
 const MIN_RESULTS = 50;
 
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
-  limit: 1,
+  limit: 20,
   sort: { addedTimestamp: "desc" },
 };
 
@@ -31,6 +31,7 @@ const hotplantsClient = createClient<paths>({
 
 const PlantSearch = () => {
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [pollInterval, setPollInterval] = useState(0);
   const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
   const [enableScraping, setEnableScraping] = useState(false);
 
@@ -61,6 +62,7 @@ const PlantSearch = () => {
     ...plantSearchQuery
   } = useApolloQuery(SEARCH_PLANTS, {
     skip: !(plantFilters?.boundingBox || enableScraping || searchRecordId),
+    pollInterval,
     variables: plantSearchVars,
   });
 
@@ -68,6 +70,7 @@ const PlantSearch = () => {
     GET_SEARCH_RECORD,
     {
       skip: !searchRecordId,
+      pollInterval,
       variables: {
         searchId: searchRecordId!,
       },
@@ -86,33 +89,33 @@ const PlantSearch = () => {
     }
   }, [plantSearch?.count, searchRecord?.endOfRecords]);
 
+  const startPolling = (interval: number) => {
+    setPollInterval(interval);
+
+    stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
+    stopPollingTimeout.current = setTimeout(
+      () => setPollInterval(0),
+      DEFAULT_POLL_INTERVAL * MAX_POLLS
+    );
+  };
+
   useEffect(() => {
-    const startPolling = (interval: number) => {
-      searchRecordQuery.startPolling(interval);
-      plantSearchQuery.startPolling(interval);
-
-      stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
-      stopPollingTimeout.current = setTimeout(
-        () => stopPolling(),
-        DEFAULT_POLL_INTERVAL * MAX_POLLS
-      );
-    };
-
-    const stopPolling = () => {
-      searchRecordQuery.stopPolling();
-      plantSearchQuery.stopPolling();
-    };
-
     if (
+      searchRecordQuery.error ||
       plantSearchQuery.error ||
       !searchRecordId ||
       searchRecord?.status === "DONE"
     ) {
-      stopPolling();
+      setPollInterval(0);
     } else {
       startPolling(DEFAULT_POLL_INTERVAL);
     }
-  }, [searchRecordId, searchRecord, searchRecordQuery, plantSearchQuery]);
+  }, [
+    searchRecordId,
+    searchRecord?.status,
+    searchRecordQuery.error,
+    plantSearchQuery.error,
+  ]);
 
   const getMorePlants = () => {
     if (plantSearch && plantSearch.results.length < plantSearch.count) {
@@ -147,7 +150,7 @@ const PlantSearch = () => {
           <LocationMap />
         </div>
 
-        <ScrapeStatusBar status={searchRecord?.status} />
+        <ScrapeStatusBar searchRecord={searchRecord} />
       </div>
       <Button variant="primary" onClick={getMorePlants}>
         fetch more
