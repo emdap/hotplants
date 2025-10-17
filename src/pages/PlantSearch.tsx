@@ -4,17 +4,26 @@ import LocationSearch from "components/plantFilters/LocationSearch";
 import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteristicsFilter";
 import PlantQueryResults from "components/plantSearchResults/PlantSearchResults";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
+import Button from "designSystem/Button";
 import Card from "designSystem/Card";
-import { PlantDataInput } from "generated/graphql/graphql";
+import {
+  PlantDataInput,
+  QueryPlantSearchArgs,
+} from "generated/graphql/graphql";
 import { paths } from "generated/schemas/hotplants";
-import { GET_SEARCH_RECORD, SEARCH_PLANTS } from "graphqlQueries/plantQueries";
+import { GET_SEARCH_RECORD, SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
 const MIN_RESULTS = 50;
+
+const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
+  limit: 1,
+  sort: { addedTimestamp: "desc" },
+};
 
 const hotplantsClient = createClient<paths>({
   baseUrl: import.meta.env.VITE_HOTPLANTS_SERVER,
@@ -23,24 +32,18 @@ const hotplantsClient = createClient<paths>({
 const PlantSearch = () => {
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
+  const [enableScraping, setEnableScraping] = useState(false);
 
-  const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
-    SEARCH_PLANTS,
-    {
-      skip: !plantFilters?.boundingBox,
-      variables: {
-        limit: 10,
-        sort: { addedTimestamp: "desc" },
-        where: plantFilters,
-      },
-    }
+  const plantSearchVars = useMemo(
+    () => ({ ...DEFAULT_PLANT_SEARCH_GQL_VARS, where: plantFilters }),
+    [plantFilters]
   );
 
-  const enableScraping = Boolean(
-    plantSearch && plantSearch.count < MIN_RESULTS
-  );
-
-  const { data: searchRecordId, ..._scrapeSearchQuery } = useQuery({
+  const {
+    data: searchRecordId,
+    refetch: scrapeAgain,
+    ..._scrapeSearchQuery
+  } = useQuery({
     queryKey: ["plant-search", plantFilters],
     queryFn: async () => {
       // TODO: Sync types with server -- nulls/undefineds
@@ -52,6 +55,15 @@ const PlantSearch = () => {
     enabled: enableScraping,
   });
 
+  const {
+    data: { plantSearch } = {},
+    fetchMore: fetchMorePlants,
+    ...plantSearchQuery
+  } = useApolloQuery(SEARCH_PLANTS, {
+    skip: !(plantFilters?.boundingBox || enableScraping || searchRecordId),
+    variables: plantSearchVars,
+  });
+
   const { data: { searchRecord } = {}, ...searchRecordQuery } = useApolloQuery(
     GET_SEARCH_RECORD,
     {
@@ -61,6 +73,18 @@ const PlantSearch = () => {
       },
     }
   );
+
+  useEffect(() => {
+    if (
+      searchRecord?.endOfRecords ||
+      plantSearch?.count === undefined ||
+      plantSearch.count >= MIN_RESULTS
+    ) {
+      setEnableScraping(false);
+    } else {
+      setEnableScraping(true);
+    }
+  }, [plantSearch?.count, searchRecord?.endOfRecords]);
 
   useEffect(() => {
     const startPolling = (interval: number) => {
@@ -90,6 +114,24 @@ const PlantSearch = () => {
     }
   }, [searchRecordId, searchRecord, searchRecordQuery, plantSearchQuery]);
 
+  const getMorePlants = () => {
+    if (plantSearch && plantSearch.results.length < plantSearch.count) {
+      fetchMorePlants({
+        variables: { offset: plantSearch.results.length },
+      });
+    }
+  };
+
+  const scrapeMorePlants = () => {
+    if (!searchRecord || !searchRecord.endOfRecords) {
+      if (!enableScraping) {
+        setEnableScraping(true);
+      } else {
+        scrapeAgain();
+      }
+    }
+  };
+
   return (
     <main className="h-full relative overflow-hidden flex flex-col">
       <div className="flex flex-col gap-2 p-4">
@@ -107,6 +149,12 @@ const PlantSearch = () => {
 
         <ScrapeStatusBar status={searchRecord?.status} />
       </div>
+      <Button variant="primary" onClick={getMorePlants}>
+        fetch more
+      </Button>
+      <Button variant="primary" onClick={scrapeMorePlants}>
+        scrape more
+      </Button>
 
       {plantSearch && <PlantQueryResults searchResults={plantSearch.results} />}
     </main>

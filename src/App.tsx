@@ -1,6 +1,7 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, HttpLink } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { cache } from "graphqlHelpers/cacheConfig";
 import PlantSearch from "pages/PlantSearch";
 
 const queryClient = new QueryClient({
@@ -9,7 +10,7 @@ const queryClient = new QueryClient({
 
 const apolloClient = new ApolloClient({
   link: new HttpLink({ uri: import.meta.env.VITE_GRAPHQL_SERVER }),
-  cache: new InMemoryCache(),
+  cache,
 });
 
 const App = () => {

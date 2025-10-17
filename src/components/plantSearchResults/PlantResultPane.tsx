@@ -2,7 +2,7 @@ import LocationMap from "components/LocationMap";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { CUSTOM_MOTION_FADE_IN } from "designSystem/motionTransitions";
-import { PlantResult } from "graphqlQueries/plantQueries";
+import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence } from "motion/react";
 import { useRef } from "react";

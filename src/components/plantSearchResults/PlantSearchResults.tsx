@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import Card from "designSystem/Card";
-import { PlantQueryResults } from "graphqlQueries/plantQueries";
+import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { useCallback, useMemo, useRef, useState } from "react";
 import PlantImageViewer from "./PlantImageViewer";

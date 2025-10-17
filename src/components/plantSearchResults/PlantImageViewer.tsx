@@ -2,7 +2,7 @@ import classNames from "classnames";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal, { ModalProps } from "designSystem/Modal";
-import { PlantResult } from "graphqlQueries/plantQueries";
+import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
 

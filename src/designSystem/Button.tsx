@@ -10,7 +10,7 @@ const Button = ({
 } & ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     className={classNames(
-      "rounded-sm max-w-fit flex items-center justify-center",
+      "rounded-sm max-w-fit flex items-center justify-center p-1",
       className,
       {
         "bg-primary/80 hover:bg-primary": variant === "primary",
