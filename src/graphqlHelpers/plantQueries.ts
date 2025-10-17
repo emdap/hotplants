@@ -16,6 +16,7 @@ export const SEARCH_PLANTS = graphql(`
         mediaUrls
         bloomColors
         bloomTimes
+        physicalCharactersticsDump
       }
     }
   }

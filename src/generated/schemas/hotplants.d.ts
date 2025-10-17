@@ -269,6 +269,7 @@ export interface components {
             maturityTime?: components["schemas"]["InputMaybe_string_"];
             mediaUrls?: components["schemas"]["InputMaybe_string-Array_"];
             occurrenceIds?: components["schemas"]["InputMaybe_number-Array_"];
+            physicalCharactersticsDump?: components["schemas"]["InputMaybe_string_"];
             scrapeSources?: components["schemas"]["InputMaybe_string-Array_"];
             soilTypes?: components["schemas"]["InputMaybe_string-Array_"];
             spread?: components["schemas"]["InputMaybe_PlantSizeInput_"];
@@ -302,6 +303,7 @@ export interface components {
             maturityTime?: components["schemas"]["Maybe_string_"];
             mediaUrls: string[];
             occurrenceIds: number[];
+            physicalCharactersticsDump?: components["schemas"]["Maybe_string_"];
             scrapeSources: string[];
             soilTypes?: components["schemas"]["Maybe_string-Array_"];
             spread?: components["schemas"]["Maybe_PlantSize_"];

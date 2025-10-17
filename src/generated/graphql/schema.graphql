@@ -16,6 +16,7 @@ type PlantData {
   mediaUrls: [String!]!
   occurrenceCoords: [[Float!]!]!
   occurrenceIds: [Float!]!
+  physicalCharactersticsDump: String
   scientificName: String!
   scrapeSources: [String!]!
   soilTypes: [String!]
@@ -38,6 +39,7 @@ input PlantDataInput {
   maturityTime: String
   mediaUrls: [String!]
   occurrenceIds: [Float!]
+  physicalCharactersticsDump: String
   scientificName: String
   scrapeSources: [String!]
   soilTypes: [String!]
