@@ -4,6 +4,7 @@ import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal, { ModalProps } from "designSystem/Modal";
 import { PlantResult } from "graphqlHelpers/plantQueries";
+import md5Hex from "md5-hex";
 import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
 
@@ -20,18 +21,24 @@ const PlantImageViewer = ({
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(0);
 
-  // Plant with bad images - quercus rubra in Idaho
+  const [proxyUrls, setProxyUrls] = useState<Record<number, string>>({});
+
+  const createProxyUrl = async (url: string, occurenceId: number) => {
+    const md5Url = md5Hex(url);
+    const proxyUrl = `https://api.gbif.org/v1/image/cache/occurrence/${occurenceId}/media/${md5Url}`;
+    setProxyUrls((prev) => ({ ...prev, [occurenceId]: proxyUrl }));
+  };
 
   const plantImages = useMemo(
     () =>
       plant.mediaUrls.map(({ url, occurrenceId }, index) => (
         <img
           key={index}
-          src={url}
-          onError={() => console.log(url, occurrenceId)}
+          src={proxyUrls[occurrenceId] ?? url}
+          onError={() => createProxyUrl(url, occurrenceId)}
         />
       )),
-    [plant.mediaUrls]
+    [plant.mediaUrls, proxyUrls]
   );
 
   useEffect(() => {
