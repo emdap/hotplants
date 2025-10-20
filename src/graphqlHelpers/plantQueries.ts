@@ -13,10 +13,14 @@ export const SEARCH_PLANTS = graphql(`
       results {
         scientificName
         commonNames
-        mediaUrls
         bloomColors
         bloomTimes
         physicalCharactersticsDump
+
+        mediaUrls {
+          url
+          occurrenceId
+        }
       }
     }
   }

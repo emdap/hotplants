@@ -13,7 +13,7 @@ type PlantData {
   isPerennial: Boolean
   lightLevels: [String!]
   maturityTime: String
-  mediaUrls: [String!]!
+  mediaUrls: [PlantMedia!]!
   occurrenceCoords: [[Float!]!]!
   occurrenceIds: [Float!]!
   physicalCharactersticsDump: String
@@ -37,7 +37,6 @@ input PlantDataInput {
   isPerennial: Boolean
   lightLevels: [String!]
   maturityTime: String
-  mediaUrls: [String!]
   occurrenceIds: [Float!]
   physicalCharactersticsDump: String
   scientificName: String
@@ -46,6 +45,11 @@ input PlantDataInput {
   spread: PlantSizeInput
   updatedTimestamp: Float
   uses: [String!]
+}
+
+type PlantMedia {
+  occurrenceId: Float!
+  url: String!
 }
 
 type PlantSearchResults {

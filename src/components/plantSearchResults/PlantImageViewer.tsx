@@ -20,8 +20,17 @@ const PlantImageViewer = ({
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(0);
 
+  // Plant with bad images - quercus rubra in Idaho
+
   const plantImages = useMemo(
-    () => plant.mediaUrls.map((url, index) => <img key={index} src={url} />),
+    () =>
+      plant.mediaUrls.map(({ url, occurrenceId }, index) => (
+        <img
+          key={index}
+          src={url}
+          onError={() => console.log(url, occurrenceId)}
+        />
+      )),
     [plant.mediaUrls]
   );
 
