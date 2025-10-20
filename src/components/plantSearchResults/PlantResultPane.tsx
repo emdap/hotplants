@@ -42,7 +42,10 @@ const PlantResultPane = ({
             <Button onClick={onClose} className="-mt-2 cursor-pointer">
               <MdClose />
             </Button>
-            <div className="flex-grow flex flex-col gap-4">
+            <div
+              key={plant.scientificName}
+              className="flex-grow flex flex-col gap-4"
+            >
               <div className="flex gap-4 justify-between">
                 <PlantImageViewer
                   mode="carousel"
