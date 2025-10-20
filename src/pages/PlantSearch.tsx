@@ -37,6 +37,7 @@ const PlantSearch = () => {
   const [fullScreenElement, setFullScreenElement] =
     useState<FullScreenElement | null>(null);
 
+  const loadMoreScrape = useRef(false);
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pollInterval, setPollInterval] = useState(0);
   const [plantFilterInput, setPlantFilterInput] =
@@ -48,7 +49,7 @@ const PlantSearch = () => {
     SEARCH_PLANTS,
     {
       pollInterval,
-      skip: !appliedPlantFilters?.boundingBox && !pollInterval,
+      skip: !appliedPlantFilters,
       variables: {
         ...DEFAULT_PLANT_SEARCH_GQL_VARS,
         where: appliedPlantFilters,
@@ -62,7 +63,6 @@ const PlantSearch = () => {
       const { data } = await hotplantsClient.POST("/plants/scrapeOccurrences", {
         body: appliedPlantFilters ?? {},
       });
-      data && startPolling();
       return data;
     },
     enabled: Boolean(
@@ -81,44 +81,56 @@ const PlantSearch = () => {
     }
   );
 
-  useEffect(() => {
-    if (
-      pollInterval &&
-      (!searchRecordId ||
-        searchRecord?.status === "DONE" ||
-        searchRecordQuery.error ||
-        plantSearchQuery.error)
-    ) {
-      setPollInterval(0);
-    }
-  }, [
-    pollInterval,
-    searchRecordId,
-    searchRecord?.status,
-    searchRecordQuery.error,
-    plantSearchQuery.error,
-  ]);
+  const stopPolling = () => {
+    setPollInterval(0);
+  };
 
   const startPolling = () => {
     setPollInterval(DEFAULT_POLL_INTERVAL);
 
     stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
     stopPollingTimeout.current = setTimeout(
-      () => setPollInterval(0),
+      () => stopPolling(),
       DEFAULT_POLL_INTERVAL * MAX_POLLS
     );
   };
 
-  const fetchMorePlants = () => {
+  useEffect(() => {
     if (
-      !plantSearchQuery.loading &&
-      plantSearch &&
-      plantSearch.results.length < plantSearch.count
+      searchRecord?.status === "DONE" ||
+      searchRecordQuery.error ||
+      plantSearchQuery.error
     ) {
+      stopPolling();
+    }
+  }, [searchRecord?.status, searchRecordQuery.error, plantSearchQuery.error]);
+
+  const fetchMorePlants = async () => {
+    if (plantSearchQuery.loading) {
+      return;
+    }
+
+    if (plantSearch && plantSearch.results.length < plantSearch.count) {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearch.results.length },
       });
+    } else if (
+      !loadMoreScrape.current &&
+      !searchRecord?.endOfRecords &&
+      !pollInterval
+    ) {
+      performScrapeWithPolling();
     }
+  };
+
+  const performScrapeWithPolling = async () => {
+    loadMoreScrape.current = true;
+    if (!scrapeQuery.isLoading) {
+      const { data } = await scrapeQuery.refetch();
+      data && (await searchRecordQuery.refetch({ searchId: data }));
+    }
+    startPolling();
+    loadMoreScrape.current = false;
   };
 
   return (
@@ -142,7 +154,10 @@ const PlantSearch = () => {
               />
               <Button
                 variant="primary"
-                onClick={() => setAppliedPlantFilters(plantFilterInput)}
+                onClick={() => {
+                  setAppliedPlantFilters(plantFilterInput);
+                  performScrapeWithPolling();
+                }}
               >
                 Search
               </Button>
