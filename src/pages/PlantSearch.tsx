@@ -17,7 +17,7 @@ import createClient from "openapi-fetch";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const DEFAULT_POLL_INTERVAL = 3000;
-const MAX_POLLS = 10;
+const MAX_POLLS = 20;
 const MIN_RESULTS = 50;
 
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
@@ -33,64 +33,46 @@ const PlantSearch = () => {
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pollInterval, setPollInterval] = useState(0);
   const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
-  const [enableScraping, setEnableScraping] = useState(false);
 
   const plantSearchVars = useMemo(
     () => ({ ...DEFAULT_PLANT_SEARCH_GQL_VARS, where: plantFilters }),
     [plantFilters]
   );
 
-  const {
-    data: searchRecordId,
-    refetch: scrapeAgain,
-    ..._scrapeSearchQuery
-  } = useQuery({
+  const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
+    SEARCH_PLANTS,
+    {
+      pollInterval,
+      skip: !plantFilters?.boundingBox && !pollInterval,
+      variables: plantSearchVars,
+    }
+  );
+
+  const { data: searchRecordId, ...scrapeQuery } = useQuery({
     queryKey: ["plant-search", plantFilters],
     queryFn: async () => {
-      // TODO: Sync types with server -- nulls/undefineds
       const { data } = await hotplantsClient.POST("/plants/scrapeOccurrences", {
         body: plantFilters ?? {},
       });
+      data && startPolling();
       return data;
     },
-    enabled: enableScraping,
-  });
-
-  const {
-    data: { plantSearch } = {},
-    fetchMore: fetchMorePlants,
-    ...plantSearchQuery
-  } = useApolloQuery(SEARCH_PLANTS, {
-    skip: !(plantFilters?.boundingBox || enableScraping || searchRecordId),
-    pollInterval,
-    variables: plantSearchVars,
+    enabled: Boolean(plantSearch && plantSearch?.count < MIN_RESULTS),
   });
 
   const { data: { searchRecord } = {}, ...searchRecordQuery } = useApolloQuery(
     GET_SEARCH_RECORD,
     {
-      skip: !searchRecordId,
       pollInterval,
+      skip: !searchRecordId,
       variables: {
         searchId: searchRecordId!,
       },
     }
   );
 
-  useEffect(() => {
-    if (
-      searchRecord?.endOfRecords ||
-      plantSearch?.count === undefined ||
-      plantSearch.count >= MIN_RESULTS
-    ) {
-      setEnableScraping(false);
-    } else {
-      setEnableScraping(true);
-    }
-  }, [plantSearch?.count, searchRecord?.endOfRecords]);
-
-  const startPolling = (interval: number) => {
-    setPollInterval(interval);
+  const startPolling = () => {
+    setPollInterval(DEFAULT_POLL_INTERVAL);
 
     stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
     stopPollingTimeout.current = setTimeout(
@@ -107,8 +89,6 @@ const PlantSearch = () => {
       searchRecord?.status === "DONE"
     ) {
       setPollInterval(0);
-    } else {
-      startPolling(DEFAULT_POLL_INTERVAL);
     }
   }, [
     searchRecordId,
@@ -119,19 +99,9 @@ const PlantSearch = () => {
 
   const getMorePlants = () => {
     if (plantSearch && plantSearch.results.length < plantSearch.count) {
-      fetchMorePlants({
+      plantSearchQuery.fetchMore({
         variables: { offset: plantSearch.results.length },
       });
-    }
-  };
-
-  const scrapeMorePlants = () => {
-    if (!searchRecord || !searchRecord.endOfRecords) {
-      if (!enableScraping) {
-        setEnableScraping(true);
-      } else {
-        scrapeAgain();
-      }
     }
   };
 
@@ -155,7 +125,7 @@ const PlantSearch = () => {
       <Button variant="primary" onClick={getMorePlants}>
         fetch more
       </Button>
-      <Button variant="primary" onClick={scrapeMorePlants}>
+      <Button variant="primary" onClick={() => scrapeQuery.refetch()}>
         scrape more
       </Button>
 
