@@ -1,14 +1,12 @@
 import classNames from "classnames";
+import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal, { ModalProps } from "designSystem/Modal";
 import { PlantResult } from "graphqlHelpers/plantQueries";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
 
-// TODO: Add a context, state to track whether image viewer is fullscreen
-// when it's fullscreen, block keyboard nav events for setting active plant
-// Then can re-enabled keyboard controls on non-fullscreen carousel
 const PlantImageViewer = ({
   plant,
   mode,
@@ -17,6 +15,9 @@ const PlantImageViewer = ({
   plant: PlantResult;
   mode: "thumbnail" | "carousel";
 } & Pick<ModalProps, "parentRef">) => {
+  const {
+    fullScreenElementState: [fullScreenElement, setFullScreenElement],
+  } = usePlantSearchContext();
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(0);
@@ -25,6 +26,10 @@ const PlantImageViewer = ({
     () => plant.mediaUrls.map((url, index) => <img key={index} src={url} />),
     [plant.mediaUrls]
   );
+
+  useEffect(() => {
+    setFullScreenElement(showFullScreen ? "IMAGE_VIEWER" : null);
+  }, [showFullScreen, setFullScreenElement]);
 
   return (
     <div
@@ -36,7 +41,10 @@ const PlantImageViewer = ({
       {mode === "thumbnail" ? (
         plantImages[0]
       ) : (
-        <Carousel {...{ carouselIndex, setCarouselIndex }}>
+        <Carousel
+          enableKeyboardEvents={!fullScreenElement}
+          {...{ carouselIndex, setCarouselIndex }}
+        >
           {plantImages}
         </Carousel>
       )}

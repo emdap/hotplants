@@ -40,7 +40,6 @@ const Carousel = ({
 
   const iterateCarousel = useCallback(
     (e: KeyboardEvent) => {
-      e.stopPropagation();
       let increment = 0;
       if (e.key === "ArrowRight" && !disableButtons.next) {
         increment = 1;
@@ -52,7 +51,7 @@ const Carousel = ({
     [disableButtons.next, disableButtons.prev, setActiveIndex]
   );
 
-  useDocumentListener("keydown", iterateCarousel, !!enableKeyboardEvents, true);
+  useDocumentListener("keydown", iterateCarousel, !!enableKeyboardEvents);
 
   const getChildStyle = (childIndex: number) => {
     const renderChild = Math.abs(activeIndex - childIndex) < childrenInDom;
