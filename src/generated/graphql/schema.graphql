@@ -3,7 +3,7 @@ schema {
 }
 
 type PlantData {
-  addedTimestamp: Int!
+  addedTimestamp: Float!
   bloomColors: [String!]
   bloomTimes: [String!]
   commonNames: [String!]
@@ -21,12 +21,12 @@ type PlantData {
   scrapeSources: [String!]!
   soilTypes: [String!]
   spread: PlantSize
-  updatedTimestamp: Int!
+  updatedTimestamp: Float!
   uses: [String!]
 }
 
 input PlantDataInput {
-  addedTimestamp: Int
+  addedTimestamp: Float
   bloomColors: [String!]
   bloomTimes: [String!]
   boundingBox: [Float!]
@@ -44,7 +44,7 @@ input PlantDataInput {
   scrapeSources: [String!]
   soilTypes: [String!]
   spread: PlantSizeInput
-  updatedTimestamp: Int
+  updatedTimestamp: Float
   uses: [String!]
 }
 
@@ -79,6 +79,7 @@ type SearchRecord {
   endOfRecords: Boolean
   jsonStringSearch: String!
   status: SearchRecordStatus!
+  statusUpdated: Float!
   totalOccurrences: Int!
 }
 
