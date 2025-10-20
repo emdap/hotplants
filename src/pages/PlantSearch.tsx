@@ -66,9 +66,7 @@ const PlantSearch = () => {
       return data;
     },
     enabled: Boolean(
-      !plantSearchQuery.loading &&
-        plantSearch &&
-        plantSearch?.count < MIN_RESULTS
+      plantSearch?.count !== undefined && plantSearch.count < MIN_RESULTS
     ),
   });
 
