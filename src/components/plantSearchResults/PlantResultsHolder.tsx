@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import { useDocumentListener } from "hooks/useDocumentListener";
@@ -7,11 +8,18 @@ import PlantImageViewer from "./PlantImageViewer";
 import PlantInfo from "./PlantInfo";
 import PlantResultPane from "./PlantResultPane";
 
-const PlantSearchResults = ({
+const FETCH_MORE_SCROLL_THRESHOLD = 100;
+
+const PlantResultsHolder = ({
   searchResults,
+  fetchMorePlants,
 }: {
   searchResults: PlantQueryResults;
+  fetchMorePlants: () => void;
 }) => {
+  const {
+    fullScreenElementState: [fullScreenElement],
+  } = usePlantSearchContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [activePlantIndex, setActivePlantIndex] = useState<null | number>(null);
@@ -46,13 +54,33 @@ const PlantSearchResults = ({
     [activePlantIndex, setActivePlantIndex, searchResults.length]
   );
 
-  useDocumentListener("keydown", iteratePlants, activePlantIndex !== null);
+  useDocumentListener(
+    "keydown",
+    iteratePlants,
+    !fullScreenElement && activePlantIndex !== null
+  );
+
+  const handleContainerScroll = () => {
+    const scrollContainer = containerRef.current;
+    if (!scrollContainer) {
+      return;
+    }
+
+    if (
+      scrollContainer.scrollHeight -
+        (scrollContainer.scrollTop + scrollContainer.clientHeight) <=
+      FETCH_MORE_SCROLL_THRESHOLD
+    ) {
+      fetchMorePlants();
+    }
+  };
 
   return (
     <>
       <div
         ref={containerRef}
         className="space-y-4 flex-grow overflow-auto p-2 relative scroll-smooth"
+        onScroll={handleContainerScroll}
       >
         {searchResults.map(
           (plant, index) =>
@@ -80,4 +108,4 @@ const PlantSearchResults = ({
   );
 };
 
-export default PlantSearchResults;
+export default PlantResultsHolder;

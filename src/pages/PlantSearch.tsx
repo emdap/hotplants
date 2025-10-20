@@ -2,8 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import LocationMap from "components/LocationMap";
 import LocationSearch from "components/plantFilters/LocationSearch";
 import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteristicsFilter";
-import PlantQueryResults from "components/plantSearchResults/PlantSearchResults";
+import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
+import {
+  FullScreenElement,
+  PlantSearchContext,
+} from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import {
@@ -33,6 +37,7 @@ const PlantSearch = () => {
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pollInterval, setPollInterval] = useState(0);
   const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
+  const fullScreenElementState = useState<FullScreenElement | null>(null);
 
   const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
     SEARCH_PLANTS,
@@ -52,7 +57,11 @@ const PlantSearch = () => {
       data && startPolling();
       return data;
     },
-    enabled: Boolean(plantSearch && plantSearch?.count < MIN_RESULTS),
+    enabled: Boolean(
+      !plantSearchQuery.loading &&
+        plantSearch &&
+        plantSearch?.count < MIN_RESULTS
+    ),
   });
 
   const { data: { searchRecord } = {}, ...searchRecordQuery } = useApolloQuery(
@@ -94,8 +103,12 @@ const PlantSearch = () => {
     );
   };
 
-  const getMorePlants = () => {
-    if (plantSearch && plantSearch.results.length < plantSearch.count) {
+  const fetchMorePlants = () => {
+    if (
+      !plantSearchQuery.loading &&
+      plantSearch &&
+      plantSearch.results.length < plantSearch.count
+    ) {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearch.results.length },
       });
@@ -103,31 +116,42 @@ const PlantSearch = () => {
   };
 
   return (
-    <main className="h-full relative overflow-hidden flex flex-col">
-      <div className="flex flex-col gap-2 p-4">
-        <div className="flex gap-4">
-          <Card>
-            <LocationSearch
-              setBoundingBox={(boundingBox) =>
-                setPlantFilters({ ...plantFilters, boundingBox })
-              }
-            />
-            <PlantCharacteristicsFilter />
-          </Card>
-          <LocationMap />
+    <PlantSearchContext.Provider
+      value={{
+        fullScreenElementState,
+      }}
+    >
+      <main className="h-full relative overflow-hidden flex flex-col">
+        <div className="flex flex-col gap-2 p-4">
+          <div className="flex gap-4">
+            <Card>
+              <LocationSearch
+                setBoundingBox={(boundingBox) =>
+                  setPlantFilters({ ...plantFilters, boundingBox })
+                }
+              />
+              <PlantCharacteristicsFilter />
+            </Card>
+            <LocationMap />
+          </div>
+
+          <ScrapeStatusBar searchRecord={searchRecord} />
         </div>
+        <Button variant="primary" onClick={fetchMorePlants}>
+          fetch more
+        </Button>
+        <Button variant="primary" onClick={() => scrapeQuery.refetch()}>
+          scrape more
+        </Button>
 
-        <ScrapeStatusBar searchRecord={searchRecord} />
-      </div>
-      <Button variant="primary" onClick={getMorePlants}>
-        fetch more
-      </Button>
-      <Button variant="primary" onClick={() => scrapeQuery.refetch()}>
-        scrape more
-      </Button>
-
-      {plantSearch && <PlantQueryResults searchResults={plantSearch.results} />}
-    </main>
+        {plantSearch && (
+          <PlantResultsHolder
+            searchResults={plantSearch.results}
+            fetchMorePlants={fetchMorePlants}
+          />
+        )}
+      </main>
+    </PlantSearchContext.Provider>
   );
 };
 
