@@ -17,9 +17,7 @@ const PlantResultsHolder = ({
   searchResults: PlantQueryResults;
   fetchMorePlants: () => void;
 }) => {
-  const {
-    fullScreenElementState: [fullScreenElement],
-  } = usePlantSearchContext();
+  const { fullScreenElement } = usePlantSearchContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [activePlantIndex, setActivePlantIndex] = useState<null | number>(null);

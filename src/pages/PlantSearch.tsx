@@ -34,25 +34,33 @@ const hotplantsClient = createClient<paths>({
 });
 
 const PlantSearch = () => {
+  const [fullScreenElement, setFullScreenElement] =
+    useState<FullScreenElement | null>(null);
+
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pollInterval, setPollInterval] = useState(0);
-  const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
-  const fullScreenElementState = useState<FullScreenElement | null>(null);
+  const [plantFilterInput, setPlantFilterInput] =
+    useState<PlantDataInput | null>(null);
+  const [appliedPlantFilters, setAppliedPlantFilters] =
+    useState<PlantDataInput | null>(null);
 
   const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
     SEARCH_PLANTS,
     {
       pollInterval,
-      skip: !plantFilters?.boundingBox && !pollInterval,
-      variables: { ...DEFAULT_PLANT_SEARCH_GQL_VARS, where: plantFilters },
+      skip: !appliedPlantFilters?.boundingBox && !pollInterval,
+      variables: {
+        ...DEFAULT_PLANT_SEARCH_GQL_VARS,
+        where: appliedPlantFilters,
+      },
     }
   );
 
   const { data: searchRecordId, ...scrapeQuery } = useQuery({
-    queryKey: ["plant-search", plantFilters],
+    queryKey: ["plant-search", appliedPlantFilters],
     queryFn: async () => {
       const { data } = await hotplantsClient.POST("/plants/scrapeOccurrences", {
-        body: plantFilters ?? {},
+        body: appliedPlantFilters ?? {},
       });
       data && startPolling();
       return data;
@@ -118,7 +126,8 @@ const PlantSearch = () => {
   return (
     <PlantSearchContext.Provider
       value={{
-        fullScreenElementState,
+        fullScreenElement,
+        setFullScreenElement,
       }}
     >
       <main className="h-full relative overflow-hidden flex flex-col">
@@ -127,10 +136,18 @@ const PlantSearch = () => {
             <Card>
               <LocationSearch
                 setBoundingBox={(boundingBox) =>
-                  setPlantFilters({ ...plantFilters, boundingBox })
+                  setPlantFilterInput({ ...plantFilterInput, boundingBox })
                 }
               />
-              <PlantCharacteristicsFilter />
+              <PlantCharacteristicsFilter
+                setPlantFilters={setPlantFilterInput}
+              />
+              <Button
+                variant="primary"
+                onClick={() => setAppliedPlantFilters(plantFilterInput)}
+              >
+                Search
+              </Button>
             </Card>
             <LocationMap />
           </div>

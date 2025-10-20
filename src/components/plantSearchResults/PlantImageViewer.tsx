@@ -15,9 +15,7 @@ const PlantImageViewer = ({
   plant: PlantResult;
   mode: "thumbnail" | "carousel";
 } & Pick<ModalProps, "parentRef">) => {
-  const {
-    fullScreenElementState: [fullScreenElement, setFullScreenElement],
-  } = usePlantSearchContext();
+  const { fullScreenElement, setFullScreenElement } = usePlantSearchContext();
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(0);
