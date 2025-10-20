@@ -26,6 +26,7 @@ const LocationSearch = ({
 
   const locationResult = useReactQuery({
     queryKey: ["location-search", debouncedInput],
+    enabled: !!debouncedInput,
     queryFn: async () => {
       if (!debouncedInput) {
         setBoundingBox(null);
