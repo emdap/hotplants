@@ -6,7 +6,7 @@ export const cache = new InMemoryCache({
     Query: {
       fields: {
         plantSearch: {
-          keyArgs: false,
+          keyArgs: ["where", "sort"],
           merge: (
             existing: PlantSearchResults = { count: 0, results: [] },
             incoming: PlantSearchResults
