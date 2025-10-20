@@ -14,7 +14,7 @@ import { paths } from "generated/schemas/hotplants";
 import { GET_SEARCH_RECORD, SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 20;
@@ -34,17 +34,12 @@ const PlantSearch = () => {
   const [pollInterval, setPollInterval] = useState(0);
   const [plantFilters, setPlantFilters] = useState<PlantDataInput | null>(null);
 
-  const plantSearchVars = useMemo(
-    () => ({ ...DEFAULT_PLANT_SEARCH_GQL_VARS, where: plantFilters }),
-    [plantFilters]
-  );
-
   const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
     SEARCH_PLANTS,
     {
       pollInterval,
       skip: !plantFilters?.boundingBox && !pollInterval,
-      variables: plantSearchVars,
+      variables: { ...DEFAULT_PLANT_SEARCH_GQL_VARS, where: plantFilters },
     }
   );
 
@@ -71,6 +66,24 @@ const PlantSearch = () => {
     }
   );
 
+  useEffect(() => {
+    if (
+      pollInterval &&
+      (!searchRecordId ||
+        searchRecord?.status === "DONE" ||
+        searchRecordQuery.error ||
+        plantSearchQuery.error)
+    ) {
+      setPollInterval(0);
+    }
+  }, [
+    pollInterval,
+    searchRecordId,
+    searchRecord?.status,
+    searchRecordQuery.error,
+    plantSearchQuery.error,
+  ]);
+
   const startPolling = () => {
     setPollInterval(DEFAULT_POLL_INTERVAL);
 
@@ -80,22 +93,6 @@ const PlantSearch = () => {
       DEFAULT_POLL_INTERVAL * MAX_POLLS
     );
   };
-
-  useEffect(() => {
-    if (
-      searchRecordQuery.error ||
-      plantSearchQuery.error ||
-      !searchRecordId ||
-      searchRecord?.status === "DONE"
-    ) {
-      setPollInterval(0);
-    }
-  }, [
-    searchRecordId,
-    searchRecord?.status,
-    searchRecordQuery.error,
-    plantSearchQuery.error,
-  ]);
 
   const getMorePlants = () => {
     if (plantSearch && plantSearch.results.length < plantSearch.count) {
