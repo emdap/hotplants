@@ -133,14 +133,14 @@ const PlantSearch = () => {
       <main className="h-full relative overflow-hidden flex flex-col">
         <div className="flex flex-col gap-2 p-4">
           <div className="flex gap-4">
-            <Card>
+            <Card className="flex flex-col gap-2 flex-grow">
               <LocationSearch
                 setBoundingBox={(boundingBox) =>
                   setPlantFilterInput({ ...plantFilterInput, boundingBox })
                 }
               />
               <PlantCharacteristicsFilter
-                setPlantFilters={setPlantFilterInput}
+                {...{ plantFilterInput, setPlantFilterInput }}
               />
               <Button
                 variant="primary"

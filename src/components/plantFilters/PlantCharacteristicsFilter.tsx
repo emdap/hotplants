@@ -1,14 +1,28 @@
-import Card from "designSystem/Card";
 import { PlantDataInput } from "generated/graphql/graphql";
 
+const INPUT_FILTER_FIELDS = ["scientificName", "commonName"] as const;
+
 const PlantCharacteristicsFilter = ({
-  setPlantFilterInput: _setPlantFilterInput,
+  plantFilterInput,
+  setPlantFilterInput,
 }: {
+  plantFilterInput: PlantDataInput | null;
   setPlantFilterInput: (
     filters: Omit<PlantDataInput, "boundingBox"> | null
   ) => void;
-}) => {
-  return <Card> PlantCharacteristicsFilter </Card>;
-};
+}) => (
+  <>
+    {INPUT_FILTER_FIELDS.map((field) => (
+      <input
+        key={field}
+        value={plantFilterInput?.[field] ?? ""}
+        onChange={({ target }) =>
+          setPlantFilterInput({ ...plantFilterInput, [field]: target.value })
+        }
+        placeholder={field}
+      />
+    ))}
+  </>
+);
 
 export default PlantCharacteristicsFilter;
