@@ -23,10 +23,10 @@ const PlantImageViewer = ({
 
   const [proxyUrls, setProxyUrls] = useState<Record<number, string>>({});
 
-  const createProxyUrl = async (url: string, occurenceId: number) => {
+  const createProxyUrl = async (url: string, occurrenceId: number) => {
     const md5Url = md5Hex(url);
-    const proxyUrl = `https://api.gbif.org/v1/image/cache/occurrence/${occurenceId}/media/${md5Url}`;
-    setProxyUrls((prev) => ({ ...prev, [occurenceId]: proxyUrl }));
+    const proxyUrl = `https://api.gbif.org/v1/image/cache/occurrence/${occurrenceId}/media/${md5Url}`;
+    setProxyUrls((prev) => ({ ...prev, [occurrenceId]: proxyUrl }));
   };
 
   const plantImages = useMemo(
