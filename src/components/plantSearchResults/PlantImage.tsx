@@ -7,9 +7,11 @@ import { FaSpinner } from "react-icons/fa";
 
 const PlantImage = ({
   plantId,
+  occurrenceId,
   mediaObject,
 }: {
   plantId: string;
+  occurrenceId: number;
   mediaObject: PlantMedia;
 }) => {
   const { syncPlant } = usePlantSearchContext();
@@ -20,7 +22,7 @@ const PlantImage = ({
   const [getProxyUrlMutation, { error }] = useApolloMutation(
     REPLACE_WITH_PROXY_URL,
     {
-      variables: { plantId, replaceUrl: mediaObject.url },
+      variables: { plantId, occurrenceId, replaceUrl: mediaObject.url },
     }
   );
 

@@ -10,11 +10,15 @@ const _PLANT_FIELDS_FRAGMENT = graphql(
       bloomColors
       bloomTimes
       physicalCharactersticsDump
-      fullMediaCount
 
-      mediaUrls {
-        url
+      fullOccurrencesCount
+      occurrences {
         occurrenceId
+        occurrenceCoords
+        media {
+          url
+          isProxyUrl
+        }
       }
     }
   `
@@ -45,8 +49,16 @@ export const SEARCH_PLANTS = graphql(`
 `);
 
 export const REPLACE_WITH_PROXY_URL = graphql(`
-  mutation replaceWithProxyUrl($plantId: String!, $replaceUrl: String!) {
-    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)
+  mutation replaceWithProxyUrl(
+    $plantId: String!
+    $occurrenceId: Float!
+    $replaceUrl: String!
+  ) {
+    replaceWithProxyUrl(
+      plantId: $plantId
+      occurrenceId: $occurrenceId
+      replaceUrl: $replaceUrl
+    )
   }
 `);
 

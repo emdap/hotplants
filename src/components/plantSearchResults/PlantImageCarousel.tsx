@@ -23,10 +23,16 @@ const PlantImageViewer = ({
 
   const plantImages = useMemo(
     () =>
-      plant.mediaUrls.map((mediaObject, index) => (
-        <PlantImage key={index} plantId={plant._id} mediaObject={mediaObject} />
-      )),
-    [plant.mediaUrls, plant._id]
+      plant.occurrences.flatMap(({ occurrenceId, media }) =>
+        media.map((mediaObject, index) => (
+          <PlantImage
+            key={index}
+            plantId={plant._id}
+            {...{ occurrenceId, mediaObject }}
+          />
+        ))
+      ),
+    [plant.occurrences, plant._id]
   );
 
   useEffect(() => {

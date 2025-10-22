@@ -4,7 +4,7 @@ schema {
 }
 
 type Mutation {
-  replaceWithProxyUrl(plantId: String!, replaceUrl: String!): String
+  replaceWithProxyUrl(occurrenceId: Float!, plantId: String!, replaceUrl: String!): String
 }
 
 scalar ObjectId
@@ -15,16 +15,14 @@ type PlantData {
   bloomColors: [String!]
   bloomTimes: [String!]
   commonNames: [String!]
-  fullMediaCount: Int
+  fullOccurrencesCount: Int
   habitat: String
   hardiness: [Int!]
   height: PlantSize
   isPerennial: Boolean
   lightLevels: [String!]
   maturityTime: String
-  mediaUrls: [PlantMedia!]!
-  occurrenceCoords: [[Float!]!]!
-  occurrenceIds: [Float!]!
+  occurrences: [PlantOccurrence!]!
   physicalCharactersticsDump: String
   scientificName: String!
   scrapeSources: [String!]!
@@ -46,7 +44,6 @@ input PlantDataInput {
   isPerennial: Boolean
   lightLevels: [String!]
   maturityTime: String
-  occurrenceIds: [Float!]
   physicalCharactersticsDump: String
   scientificName: String
   scrapeSources: [String!]
@@ -58,8 +55,18 @@ input PlantDataInput {
 
 type PlantMedia {
   isProxyUrl: Boolean
-  occurrenceId: Float!
   url: String!
+}
+
+type PlantOccurrence {
+  media: [PlantMedia!]!
+  occurrenceCoords: [Float!]!
+  occurrenceId: Float!
+}
+
+type PlantOccurrencesResults {
+  count: Float!
+  results: [PlantOccurrence!]!
 }
 
 type PlantSearchResults {
@@ -86,7 +93,7 @@ enum PlantSizeUnit {
 
 type Query {
   plant(id: String!): PlantData
-  plantMedia(id: String!, limit: Int, offset: Int): [PlantMedia!]!
+  plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
   plantSearch(limit: Int, offset: Int, sort: SortInput, where: PlantDataInput): PlantSearchResults!
   searchRecord(id: String!): SearchRecord
 }
@@ -104,13 +111,8 @@ enum SearchRecordStatus {
   SCRAPING
 }
 
-enum SortDirection {
-  asc
-  desc
-}
-
 input SortInput {
-  addedTimestamp: SortDirection
-  scientificName: SortDirection
-  updatedTimestamp: SortDirection
+  addedTimestamp: Int
+  scientificName: Int
+  updatedTimestamp: Int
 }

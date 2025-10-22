@@ -251,8 +251,6 @@ export interface components {
             isPerennial?: components["schemas"]["InputMaybe_boolean_"];
             lightLevels?: components["schemas"]["InputMaybe_string-Array_"];
             maturityTime?: components["schemas"]["InputMaybe_string_"];
-            mediaUrls?: components["schemas"]["InputMaybe_string-Array_"];
-            occurrenceIds?: components["schemas"]["InputMaybe_number-Array_"];
             physicalCharactersticsDump?: components["schemas"]["InputMaybe_string_"];
             scrapeSources?: components["schemas"]["InputMaybe_string-Array_"];
             soilTypes?: components["schemas"]["InputMaybe_string-Array_"];
