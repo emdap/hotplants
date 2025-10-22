@@ -14,13 +14,17 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        _id\n        scientificName\n        commonNames\n        bloomColors\n        bloomTimes\n        physicalCharactersticsDump\n\n        mediaUrls {\n          url\n          occurrenceId\n        }\n      }\n    }\n  }\n": typeof types.SearchPlantsDocument,
-    "\n  mutation replaceWithProxyUrl($plantId: ObjectId!, $replaceUrl: String!) {\n    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)\n  }\n": typeof types.ReplaceWithProxyUrlDocument,
+    "\n    fragment PlantFields on PlantData {\n      _id\n      scientificName\n      commonNames\n      bloomColors\n      bloomTimes\n      physicalCharactersticsDump\n      fullMediaCount\n\n      mediaUrls {\n        url\n        occurrenceId\n      }\n    }\n  ": typeof types.PlantFieldsFragmentDoc,
+    "\n  query getPlant($id: String!) {\n    plant(id: $id) {\n      ...PlantFields\n    }\n  }\n": typeof types.GetPlantDocument,
+    "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        ...PlantFields\n      }\n    }\n  }\n": typeof types.SearchPlantsDocument,
+    "\n  mutation replaceWithProxyUrl($plantId: String!, $replaceUrl: String!) {\n    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)\n  }\n": typeof types.ReplaceWithProxyUrlDocument,
     "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n": typeof types.GetSearchRecordDocument,
 };
 const documents: Documents = {
-    "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        _id\n        scientificName\n        commonNames\n        bloomColors\n        bloomTimes\n        physicalCharactersticsDump\n\n        mediaUrls {\n          url\n          occurrenceId\n        }\n      }\n    }\n  }\n": types.SearchPlantsDocument,
-    "\n  mutation replaceWithProxyUrl($plantId: ObjectId!, $replaceUrl: String!) {\n    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)\n  }\n": types.ReplaceWithProxyUrlDocument,
+    "\n    fragment PlantFields on PlantData {\n      _id\n      scientificName\n      commonNames\n      bloomColors\n      bloomTimes\n      physicalCharactersticsDump\n      fullMediaCount\n\n      mediaUrls {\n        url\n        occurrenceId\n      }\n    }\n  ": types.PlantFieldsFragmentDoc,
+    "\n  query getPlant($id: String!) {\n    plant(id: $id) {\n      ...PlantFields\n    }\n  }\n": types.GetPlantDocument,
+    "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        ...PlantFields\n      }\n    }\n  }\n": types.SearchPlantsDocument,
+    "\n  mutation replaceWithProxyUrl($plantId: String!, $replaceUrl: String!) {\n    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)\n  }\n": types.ReplaceWithProxyUrlDocument,
     "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n": types.GetSearchRecordDocument,
 };
 
@@ -41,11 +45,19 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        _id\n        scientificName\n        commonNames\n        bloomColors\n        bloomTimes\n        physicalCharactersticsDump\n\n        mediaUrls {\n          url\n          occurrenceId\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        _id\n        scientificName\n        commonNames\n        bloomColors\n        bloomTimes\n        physicalCharactersticsDump\n\n        mediaUrls {\n          url\n          occurrenceId\n        }\n      }\n    }\n  }\n"];
+export function graphql(source: "\n    fragment PlantFields on PlantData {\n      _id\n      scientificName\n      commonNames\n      bloomColors\n      bloomTimes\n      physicalCharactersticsDump\n      fullMediaCount\n\n      mediaUrls {\n        url\n        occurrenceId\n      }\n    }\n  "): (typeof documents)["\n    fragment PlantFields on PlantData {\n      _id\n      scientificName\n      commonNames\n      bloomColors\n      bloomTimes\n      physicalCharactersticsDump\n      fullMediaCount\n\n      mediaUrls {\n        url\n        occurrenceId\n      }\n    }\n  "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation replaceWithProxyUrl($plantId: ObjectId!, $replaceUrl: String!) {\n    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)\n  }\n"): (typeof documents)["\n  mutation replaceWithProxyUrl($plantId: ObjectId!, $replaceUrl: String!) {\n    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)\n  }\n"];
+export function graphql(source: "\n  query getPlant($id: String!) {\n    plant(id: $id) {\n      ...PlantFields\n    }\n  }\n"): (typeof documents)["\n  query getPlant($id: String!) {\n    plant(id: $id) {\n      ...PlantFields\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        ...PlantFields\n      }\n    }\n  }\n"): (typeof documents)["\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: SortInput\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        ...PlantFields\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation replaceWithProxyUrl($plantId: String!, $replaceUrl: String!) {\n    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)\n  }\n"): (typeof documents)["\n  mutation replaceWithProxyUrl($plantId: String!, $replaceUrl: String!) {\n    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

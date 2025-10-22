@@ -1,3 +1,4 @@
+import { useLazyQuery } from "@apollo/client/react";
 import { useQuery } from "@tanstack/react-query";
 import LocationMap from "components/LocationMap";
 import LocationSearch from "components/plantFilters/LocationSearch";
@@ -15,7 +16,12 @@ import {
   QueryPlantSearchArgs,
 } from "generated/graphql/graphql";
 import { paths } from "generated/schemas/hotplants";
-import { GET_SEARCH_RECORD, SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
+import {
+  GET_PLANT,
+  GET_SEARCH_RECORD,
+  PlantQueryResults,
+  SEARCH_PLANTS,
+} from "graphqlHelpers/plantQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useRef, useState } from "react";
@@ -36,6 +42,8 @@ const hotplantsClient = createClient<paths>({
 const PlantSearch = () => {
   const [fullScreenElement, setFullScreenElement] =
     useState<FullScreenElement | null>(null);
+  const [plantSearchResults, setPlantSearchResults] =
+    useState<PlantQueryResults>([]);
 
   const loadMoreScrape = useRef(false);
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -56,6 +64,10 @@ const PlantSearch = () => {
       },
     }
   );
+
+  useEffect(() => {
+    setPlantSearchResults(plantSearch?.results ?? []);
+  }, [plantSearch]);
 
   const { data: searchRecordId, ...scrapeQuery } = useQuery({
     queryKey: ["plant-search", appliedPlantFilters],
@@ -105,6 +117,21 @@ const PlantSearch = () => {
     }
   }, [searchRecord?.status, searchRecordQuery.error, plantSearchQuery.error]);
 
+  const [getPlantQuery] = useLazyQuery(GET_PLANT, { fetchPolicy: "no-cache" });
+
+  const syncPlant = async (plantId: string) => {
+    const { data } = await getPlantQuery({ variables: { id: plantId } });
+    if (data?.plant) {
+      setPlantSearchResults((prev) =>
+        prev.map((plantResult) =>
+          data.plant && data.plant._id === plantResult._id
+            ? data.plant
+            : plantResult
+        )
+      );
+    }
+  };
+
   const fetchMorePlants = async () => {
     if (plantSearchQuery.loading) {
       return;
@@ -136,6 +163,7 @@ const PlantSearch = () => {
   return (
     <PlantSearchContext.Provider
       value={{
+        syncPlant,
         fullScreenElement,
         setFullScreenElement,
       }}
@@ -167,19 +195,11 @@ const PlantSearch = () => {
 
           <ScrapeStatusBar searchRecord={searchRecord} />
         </div>
-        <Button variant="primary" onClick={fetchMorePlants}>
-          fetch more
-        </Button>
-        <Button variant="primary" onClick={() => scrapeQuery.refetch()}>
-          scrape more
-        </Button>
 
-        {plantSearch && (
-          <PlantResultsHolder
-            searchResults={plantSearch.results}
-            fetchMorePlants={fetchMorePlants}
-          />
-        )}
+        <PlantResultsHolder
+          searchResults={plantSearchResults}
+          fetchMorePlants={fetchMorePlants}
+        />
       </main>
     </PlantSearchContext.Provider>
   );

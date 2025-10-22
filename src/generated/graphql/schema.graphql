@@ -4,7 +4,7 @@ schema {
 }
 
 type Mutation {
-  replaceWithProxyUrl(plantId: ObjectId!, replaceUrl: String!): String
+  replaceWithProxyUrl(plantId: String!, replaceUrl: String!): String
 }
 
 scalar ObjectId
