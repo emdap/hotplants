@@ -4,7 +4,7 @@ schema {
 }
 
 type Mutation {
-  replaceWithProxyUrl(plantId: ObjectId!, replaceUrl: String!): ReplaceWithProxyUrlResponse!
+  replaceWithProxyUrl(plantId: ObjectId!, replaceUrl: String!): String
 }
 
 scalar ObjectId
@@ -15,6 +15,7 @@ type PlantData {
   bloomColors: [String!]
   bloomTimes: [String!]
   commonNames: [String!]
+  fullMediaCount: Int
   habitat: String
   hardiness: [Int!]
   height: PlantSize
@@ -84,13 +85,10 @@ enum PlantSizeUnit {
 }
 
 type Query {
+  plant(id: String!): PlantData
+  plantMedia(id: String!, limit: Int, offset: Int): [PlantMedia!]!
   plantSearch(limit: Int, offset: Int, sort: SortInput, where: PlantDataInput): PlantSearchResults!
   searchRecord(id: String!): SearchRecord
-}
-
-type ReplaceWithProxyUrlResponse {
-  proxyUrl: String
-  success: Boolean!
 }
 
 type SearchRecord {

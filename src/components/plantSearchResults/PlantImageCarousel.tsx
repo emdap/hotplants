@@ -4,9 +4,9 @@ import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal, { ModalProps } from "designSystem/Modal";
 import { PlantResult } from "graphqlHelpers/plantQueries";
-import md5Hex from "md5-hex";
 import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
+import PlantImage from "./PlantImage";
 
 const PlantImageViewer = ({
   plant,
@@ -21,24 +21,12 @@ const PlantImageViewer = ({
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(0);
 
-  const [proxyUrls, setProxyUrls] = useState<Record<number, string>>({});
-
-  const createProxyUrl = async (url: string, occurrenceId: number) => {
-    const md5Url = md5Hex(url);
-    const proxyUrl = `https://api.gbif.org/v1/image/cache/occurrence/${occurrenceId}/media/${md5Url}`;
-    setProxyUrls((prev) => ({ ...prev, [occurrenceId]: proxyUrl }));
-  };
-
   const plantImages = useMemo(
     () =>
-      plant.mediaUrls.map(({ url, occurrenceId }, index) => (
-        <img
-          key={index}
-          src={proxyUrls[occurrenceId] ?? url}
-          onError={() => createProxyUrl(url, occurrenceId)}
-        />
+      plant.mediaUrls.map((mediaObject, index) => (
+        <PlantImage key={index} plantId={plant._id} mediaObject={mediaObject} />
       )),
-    [plant.mediaUrls, proxyUrls]
+    [plant.mediaUrls, plant._id]
   );
 
   useEffect(() => {
@@ -47,7 +35,7 @@ const PlantImageViewer = ({
 
   return (
     <div
-      className={classNames("aspect-square flex justify-center p-0!", {
+      className={classNames("aspect-square", {
         "h-full": mode === "thumbnail",
         "w-1/2 max-h-70 flex-col relative": mode === "carousel",
       })}

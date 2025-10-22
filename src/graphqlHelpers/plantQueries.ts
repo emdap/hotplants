@@ -27,6 +27,12 @@ export const SEARCH_PLANTS = graphql(`
   }
 `);
 
+export const REPLACE_WITH_PROXY_URL = graphql(`
+  mutation replaceWithProxyUrl($plantId: ObjectId!, $replaceUrl: String!) {
+    replaceWithProxyUrl(plantId: $plantId, replaceUrl: $replaceUrl)
+  }
+`);
+
 export const GET_SEARCH_RECORD = graphql(`
   query getSearchRecord($searchId: String!) {
     searchRecord(id: $searchId) {

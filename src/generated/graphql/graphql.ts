@@ -18,7 +18,7 @@ export type Scalars = {
 };
 
 export type Mutation = {
-  replaceWithProxyUrl: ReplaceWithProxyUrlResponse;
+  replaceWithProxyUrl?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -33,6 +33,7 @@ export type PlantData = {
   bloomColors?: Maybe<Array<Scalars['String']['output']>>;
   bloomTimes?: Maybe<Array<Scalars['String']['output']>>;
   commonNames?: Maybe<Array<Scalars['String']['output']>>;
+  fullMediaCount?: Maybe<Scalars['Int']['output']>;
   habitat?: Maybe<Scalars['String']['output']>;
   hardiness?: Maybe<Array<Scalars['Int']['output']>>;
   height?: Maybe<PlantSize>;
@@ -101,8 +102,22 @@ export type PlantSizeUnit =
   | 'm';
 
 export type Query = {
+  plant?: Maybe<PlantData>;
+  plantMedia: Array<PlantMedia>;
   plantSearch: PlantSearchResults;
   searchRecord?: Maybe<SearchRecord>;
+};
+
+
+export type QueryPlantArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryPlantMediaArgs = {
+  id: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -116,11 +131,6 @@ export type QueryPlantSearchArgs = {
 
 export type QuerySearchRecordArgs = {
   id: Scalars['String']['input'];
-};
-
-export type ReplaceWithProxyUrlResponse = {
-  proxyUrl?: Maybe<Scalars['String']['output']>;
-  success: Scalars['Boolean']['output'];
 };
 
 export type SearchRecord = {
@@ -155,6 +165,14 @@ export type SearchPlantsQueryVariables = Exact<{
 
 export type SearchPlantsQuery = { plantSearch: { count: number, results: Array<{ _id: any, scientificName: string, commonNames?: Array<string> | null, bloomColors?: Array<string> | null, bloomTimes?: Array<string> | null, physicalCharactersticsDump?: string | null, mediaUrls: Array<{ url: string, occurrenceId: number }> }> } };
 
+export type ReplaceWithProxyUrlMutationVariables = Exact<{
+  plantId: Scalars['ObjectId']['input'];
+  replaceUrl: Scalars['String']['input'];
+}>;
+
+
+export type ReplaceWithProxyUrlMutation = { replaceWithProxyUrl?: string | null };
+
 export type GetSearchRecordQueryVariables = Exact<{
   searchId: Scalars['String']['input'];
 }>;
@@ -164,4 +182,5 @@ export type GetSearchRecordQuery = { searchRecord?: { status: SearchRecordStatus
 
 
 export const SearchPlantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"searchPlants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"SortInput"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"plantSearch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"results"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"mediaUrls"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SearchPlantsQuery, SearchPlantsQueryVariables>;
+export const ReplaceWithProxyUrlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"replaceWithProxyUrl"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"plantId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ObjectId"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"replaceUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"replaceWithProxyUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"plantId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"plantId"}}},{"kind":"Argument","name":{"kind":"Name","value":"replaceUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"replaceUrl"}}}]}]}}]} as unknown as DocumentNode<ReplaceWithProxyUrlMutation, ReplaceWithProxyUrlMutationVariables>;
 export const GetSearchRecordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getSearchRecord"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"searchId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"searchRecord"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"searchId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"totalOccurrences"}},{"kind":"Field","name":{"kind":"Name","value":"endOfRecords"}}]}}]}}]} as unknown as DocumentNode<GetSearchRecordQuery, GetSearchRecordQueryVariables>;

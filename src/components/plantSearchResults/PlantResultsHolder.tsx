@@ -4,7 +4,7 @@ import Card from "designSystem/Card";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { useCallback, useMemo, useRef, useState } from "react";
-import PlantImageViewer from "./PlantImageViewer";
+import PlantImageViewer from "./PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 import PlantResultPane from "./PlantResultPane";
 

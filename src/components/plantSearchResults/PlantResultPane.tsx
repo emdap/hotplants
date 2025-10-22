@@ -8,7 +8,7 @@ import { AnimatePresence } from "motion/react";
 import { useRef } from "react";
 import { MdClose } from "react-icons/md";
 import { useClickAway } from "react-use";
-import PlantImageViewer from "./PlantImageViewer";
+import PlantImageViewer from "./PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 
 const CARD_FADE_IN = CUSTOM_MOTION_FADE_IN({
