@@ -11,6 +11,7 @@ export const SEARCH_PLANTS = graphql(`
     plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {
       count
       results {
+        _id
         scientificName
         commonNames
         bloomColors
