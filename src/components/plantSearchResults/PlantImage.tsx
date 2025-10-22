@@ -1,3 +1,4 @@
+import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { PlantMedia } from "generated/graphql/graphql";
 import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
@@ -11,34 +12,32 @@ const PlantImage = ({
   plantId: string;
   mediaObject: PlantMedia;
 }) => {
+  const { syncPlant } = usePlantSearchContext();
   const [isLoading, setIsLoading] = useState(true);
-  const [usingProxyUrl, setUsingProxyUrl] = useState(mediaObject.isProxyUrl);
-  const [imageUrl, setImageUrl] = useState<string | undefined>(mediaObject.url);
+  const [hideImage, setHideImage] = useState(false);
   const [imageNotAvailable, setImageNotAvailable] = useState(false);
 
-  const [getProxyUrlMutation, { data, error }] = useApolloMutation(
+  const [getProxyUrlMutation, { error }] = useApolloMutation(
     REPLACE_WITH_PROXY_URL,
     {
       variables: { plantId, replaceUrl: mediaObject.url },
     }
   );
 
-  const handleImgError = () => {
-    if (!usingProxyUrl) {
+  useEffect(() => {
+    setHideImage(false);
+  }, [mediaObject.url]);
+
+  const handleImgError = async () => {
+    if (!mediaObject.isProxyUrl) {
       setIsLoading(true);
-      setUsingProxyUrl(true);
-      setImageUrl(undefined);
-      getProxyUrlMutation();
+      setHideImage(true);
+      await getProxyUrlMutation();
+      syncPlant(plantId);
     } else {
       setImageNotAvailable(true);
     }
   };
-
-  useEffect(() => {
-    if (data?.replaceWithProxyUrl) {
-      setImageUrl(data.replaceWithProxyUrl);
-    }
-  }, [data]);
 
   useEffect(() => {
     if (error) {
@@ -50,7 +49,7 @@ const PlantImage = ({
   return imageNotAvailable ? null : (
     <div className="relative h-full w-full flex justify-center">
       <img
-        src={imageUrl}
+        src={hideImage ? undefined : mediaObject.url}
         className="max-h-full self-center"
         onLoad={() => setIsLoading(false)}
         onError={handleImgError}
