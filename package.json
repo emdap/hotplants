@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "tsc": "npx tsc -b --noEmit",
     "generate-graphql": "graphql-codegen --watch",
     "generate-gbif-types": "npx openapi-typescript src/generated/schemas/gbif-schema.json -o src/generated/schemas/gbif.d.ts",
     "generate-hotplants-types": "npx openapi-typescript http://localhost:3000/swagger.json -o src/generated/schemas/hotplants.d.ts",
