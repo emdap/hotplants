@@ -1,6 +1,8 @@
-import type { PlantSearchFiltersNormalized } from "generated/schemas/gbif-custom-types";
 import type { paths } from "generated/schemas/nominatim";
-import { BBox } from "geojson";
+import {
+  LocationWithBoundingBox,
+  validateLocationData,
+} from "generated/schemas/schema-util";
 import { useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useState } from "react";
@@ -10,25 +12,27 @@ const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
 });
 
-export type LocationFilter = Pick<
-  PlantSearchFiltersNormalized,
-  "stateProvince" | "geometry" | "country"
->;
+const LOCATION_DEFAULT_PARAMS = {
+  format: "json",
+  addressdetails: 1,
+  polygon_geojson: 1,
+  polygon_threshold: 0.5,
+} as const;
 
 const LocationSearch = ({
-  setBoundingBox,
+  setLocation,
 }: {
-  setBoundingBox: (bbox: BBox | null) => void;
+  setLocation: (location: LocationWithBoundingBox | null) => void;
 }) => {
-  const [locationInput, setLocationInput] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
-  useDebounce(() => setDebouncedInput(locationInput), 2000, [locationInput]);
+  useDebounce(() => setDebouncedInput(searchInput), 2000, [searchInput]);
 
   const locationResult = useReactQuery({
     queryKey: ["location-search", debouncedInput],
     queryFn: async () => {
       if (!debouncedInput) {
-        setBoundingBox(null);
+        setLocation(null);
         return "";
       }
 
@@ -36,30 +40,20 @@ const LocationSearch = ({
         params: {
           query: {
             q: debouncedInput,
-            format: "json",
-            addressdetails: 1,
-            polygon_geojson: 1,
-            polygon_threshold: 0.5,
+            ...LOCATION_DEFAULT_PARAMS,
           },
         },
       });
 
-      if (!data?.[0]) {
+      const validLocation = validateLocationData(data?.[0]);
+
+      if (!validLocation) {
+        setLocation(null);
         return "Cannot find location";
       }
-      const result = data[0];
 
-      if (result?.boundingbox) {
-        const bboxNumbers = result.boundingbox.map(Number);
-        setBoundingBox([
-          bboxNumbers[2],
-          bboxNumbers[0],
-          bboxNumbers[3],
-          bboxNumbers[1],
-        ]);
-      }
-
-      return result.display_name;
+      setLocation(validLocation);
+      return validLocation.display_name;
     },
   });
 
@@ -73,10 +67,10 @@ const LocationSearch = ({
   return (
     <div className="flex flex-col">
       <input
-        value={locationInput}
-        onBlur={() => setDebouncedInput(locationInput)}
+        value={searchInput}
+        onBlur={() => setDebouncedInput(searchInput)}
         onKeyDown={handleKeyDown}
-        onChange={(e) => setLocationInput(e.target.value)}
+        onChange={(e) => setSearchInput(e.target.value)}
         placeholder="Enter a location"
       />
       {locationResult.data && locationResult.data}

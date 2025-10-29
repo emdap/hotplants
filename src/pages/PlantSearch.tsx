@@ -16,6 +16,7 @@ import {
   QueryPlantSearchArgs,
 } from "generated/graphql/graphql";
 import { paths } from "generated/schemas/hotplants";
+import { LocationWithBoundingBox } from "generated/schemas/schema-util";
 import {
   GET_PLANT,
   GET_SEARCH_RECORD,
@@ -48,10 +49,29 @@ const PlantSearch = () => {
   const loadMoreScrape = useRef(false);
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pollInterval, setPollInterval] = useState(0);
+
+  const [location, setLocation] = useState<LocationWithBoundingBox | null>(
+    null
+  );
   const [plantFilterInput, setPlantFilterInput] =
     useState<PlantDataInput | null>(null);
   const [appliedPlantFilters, setAppliedPlantFilters] =
     useState<PlantDataInput | null>(null);
+
+  useEffect(() => {
+    let boundingBox: number[] | null = null;
+    if (location) {
+      const bboxNumbers = location.boundingbox.map(Number);
+      boundingBox = [
+        bboxNumbers[2],
+        bboxNumbers[0],
+        bboxNumbers[3],
+        bboxNumbers[1],
+      ];
+    }
+
+    setPlantFilterInput((filters) => ({ ...filters, boundingBox }));
+  }, [location]);
 
   const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
     SEARCH_PLANTS,
@@ -172,11 +192,7 @@ const PlantSearch = () => {
         <div className="flex flex-col gap-2 p-4">
           <div className="flex gap-4">
             <Card className="flex flex-col gap-2 flex-grow">
-              <LocationSearch
-                setBoundingBox={(boundingBox) =>
-                  setPlantFilterInput({ ...plantFilterInput, boundingBox })
-                }
-              />
+              <LocationSearch setLocation={setLocation} />
               <PlantCharacteristicsFilter
                 {...{ plantFilterInput, setPlantFilterInput }}
               />
