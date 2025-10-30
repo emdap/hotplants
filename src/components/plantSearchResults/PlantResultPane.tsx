@@ -1,4 +1,4 @@
-import LocationMap from "components/LocationMap";
+import LocationMap from "components/interactiveMap/LocationMap";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { CUSTOM_MOTION_FADE_IN } from "designSystem/motionTransitions";

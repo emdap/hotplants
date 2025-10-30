@@ -1,8 +1,18 @@
-import { LocationWithBoundingBox } from "generated/schemas/schema-util";
+import { simplify } from "@turf/turf";
 import { LatLngExpression } from "leaflet";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useEffect } from "react";
+import { GeoJSON, Marker, Popup, useMap } from "react-leaflet";
+import { LocationData } from "schemaHelpers/customSchemaTypes";
+import {
+  LocationWithBoundingBox,
+  validateLocationData,
+} from "schemaHelpers/schemaTypesUtil";
 
-const DEMO_DATA = {
+export type LocationMapProps = {
+  location?: LocationWithBoundingBox;
+};
+
+const DEMO_DATA = validateLocationData({
   place_id: 304557507,
   licence:
     "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
@@ -102,29 +112,30 @@ const DEMO_DATA = {
       ],
     ],
   },
-} as unknown as LocationWithBoundingBox;
+} as unknown as LocationData) as unknown as LocationWithBoundingBox;
 
-const LocationMap = ({
-  location = DEMO_DATA,
-}: {
-  location?: LocationWithBoundingBox;
-}) => {
+const LocationMap = ({ location = DEMO_DATA }: LocationMapProps) => {
   const center: LatLngExpression = [location.lat, location.lon];
+  const test = useMap();
+
+  useEffect(() => {
+    test.setView([location.lat, location.lon], 13);
+  }, [location.lat, location.lon, test]);
+
+  console.log(location.boundingBox);
+  console.log(
+    location.geojson && simplify(location.geojson, { tolerance: 0.01 })
+  );
 
   return (
-    <div className="h-80">
-      <MapContainer className="h-full" center={center} zoom={13}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={center}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      </MapContainer>
-    </div>
+    <Marker position={center}>
+      <Popup>
+        A pretty CSS3 popup. <br /> Easily customizable.
+      </Popup>
+      {/* {location && ( */}
+      {location.geojson && <GeoJSON data={location.geojson} />}
+      {/* )} */}
+    </Marker>
   );
 };
 

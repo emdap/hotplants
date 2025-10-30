@@ -1,12 +1,12 @@
 import type { paths } from "generated/schemas/nominatim";
-import {
-  LocationWithBoundingBox,
-  validateLocationData,
-} from "generated/schemas/schema-util";
 import { useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useState } from "react";
 import { useDebounce } from "react-use";
+import {
+  LocationWithBoundingBox,
+  validateLocationData,
+} from "schemaHelpers/schemaTypesUtil";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
@@ -22,7 +22,7 @@ const LOCATION_DEFAULT_PARAMS = {
 const LocationSearch = ({
   setLocation,
 }: {
-  setLocation: (location: LocationWithBoundingBox | null) => void;
+  setLocation: (location?: LocationWithBoundingBox) => void;
 }) => {
   const [searchInput, setSearchInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
@@ -32,7 +32,7 @@ const LocationSearch = ({
     queryKey: ["location-search", debouncedInput],
     queryFn: async () => {
       if (!debouncedInput) {
-        setLocation(null);
+        setLocation();
         return "";
       }
 
@@ -48,7 +48,7 @@ const LocationSearch = ({
       const validLocation = validateLocationData(data?.[0]);
 
       if (!validLocation) {
-        setLocation(null);
+        setLocation();
         return "Cannot find location";
       }
 
