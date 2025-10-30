@@ -1,12 +1,10 @@
+import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import type { paths } from "generated/schemas/nominatim";
 import { useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
-import {
-  LocationWithBoundingBox,
-  validateLocationData,
-} from "schemaHelpers/schemaTypesUtil";
+import { validateNominatimLocation } from "schemaHelpers/schemaTypesUtil";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
@@ -19,41 +17,58 @@ const LOCATION_DEFAULT_PARAMS = {
   polygon_threshold: 0.5,
 } as const;
 
-const LocationSearch = ({
-  setLocation,
-}: {
-  setLocation: (location?: LocationWithBoundingBox) => void;
-}) => {
+const getLocation = (input: string) =>
+  locationClient.GET("/search", {
+    params: {
+      query: {
+        ...LOCATION_DEFAULT_PARAMS,
+        q: input,
+      },
+    },
+  });
+
+const LocationSearch = () => {
+  const { searchLocation, setSearchLocation } = usePlantSearchContext();
+
+  const [enableQuery, setEnableQuery] = useState(
+    searchLocation?.locationSource !== "map"
+  );
   const [searchInput, setSearchInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
+  const [locationInvalid, setLocationInvalid] = useState(false);
+
   useDebounce(() => setDebouncedInput(searchInput), 2000, [searchInput]);
 
-  const locationResult = useReactQuery({
+  useEffect(() => {
+    if (searchLocation?.locationSource === "map") {
+      setSearchInput("");
+      setDebouncedInput("");
+      setLocationInvalid(false);
+      setEnableQuery(false);
+    } else {
+      setEnableQuery(true);
+    }
+  }, [searchLocation?.locationSource]);
+
+  const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
+    enabled: enableQuery,
     queryFn: async () => {
-      if (!debouncedInput) {
-        setLocation();
-        return "";
+      setLocationInvalid(false);
+
+      if (debouncedInput) {
+        const { data } = await getLocation(debouncedInput);
+        const validLocation = validateNominatimLocation(data?.[0]);
+        if (validLocation) {
+          setSearchLocation(validLocation);
+          return validLocation;
+        } else {
+          setLocationInvalid(true);
+        }
       }
 
-      const { data } = await locationClient.GET("/search", {
-        params: {
-          query: {
-            q: debouncedInput,
-            ...LOCATION_DEFAULT_PARAMS,
-          },
-        },
-      });
-
-      const validLocation = validateLocationData(data?.[0]);
-
-      if (!validLocation) {
-        setLocation();
-        return "Cannot find location";
-      }
-
-      setLocation(validLocation);
-      return validLocation.display_name;
+      setSearchLocation(null);
+      return null;
     },
   });
 
@@ -70,12 +85,20 @@ const LocationSearch = ({
         value={searchInput}
         onBlur={() => setDebouncedInput(searchInput)}
         onKeyDown={handleKeyDown}
-        onChange={(e) => setSearchInput(e.target.value)}
+        onChange={(e) => {
+          setEnableQuery(true);
+          setSearchInput(e.target.value);
+        }}
         placeholder="Enter a location"
       />
-      {locationResult.data && locationResult.data}
-      {locationResult.isLoading && "Loading"}
-      {locationResult.isError && "Error"}
+      {searchLocation &&
+        (searchLocation?.displayName || "Using custom location on map")}
+
+      {locationQuery.isLoading
+        ? "Loading"
+        : locationQuery.isError
+        ? "Error"
+        : locationInvalid && "Cannot find location"}
     </div>
   );
 };

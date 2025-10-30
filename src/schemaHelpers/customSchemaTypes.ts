@@ -8,3 +8,5 @@ export type PlantSearchFiltersNormalized = Omit<
 
 export type LocationData =
   Nominatim.components["schemas"]["OSMGeocodeJson"][number];
+
+export type LocationCoord = [number, number];

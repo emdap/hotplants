@@ -1,34 +1,38 @@
-import { polygon } from "@turf/turf";
-import { Feature, Polygon as GeoPolygon, Position } from "geojson";
-import { LeafletEvent, Marker as MarkerType } from "leaflet";
+import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { LatLngTuple, LeafletEvent, Marker as MarkerType } from "leaflet";
 import { useEffect, useMemo } from "react";
 import { Marker, Polygon, useMap } from "react-leaflet";
-import { LocationWithBoundingBox } from "schemaHelpers/schemaTypesUtil";
-
-export type LocationMapProps = {
-  defaultLocation: LocationWithBoundingBox;
-  setBboxPoly: (bboxPoly: Feature<GeoPolygon>) => void;
-};
+import { LocationCoord } from "schemaHelpers/customSchemaTypes";
+import { LocationWithPolygon } from "schemaHelpers/schemaTypesUtil";
 
 // GeoJSON spec dictates lng, lat
 // Leaflet uses lat, lng
-const swapLatLng = (coords: Position[]): [number, number][] =>
+const swapLatLng = (coords: number[][] | LocationCoord[]): LocationCoord[] =>
   coords.map(([first, second]) => [second, first]);
 
-const LocationMap = ({
-  defaultLocation: { lat, lon: lng, bboxPoly },
-  setBboxPoly,
-}: LocationMapProps) => {
+const LocationPolygon = ({
+  boundingPolygon,
+  locationSource,
+  centerPoint: {
+    geometry: { coordinates: centerCoordinates },
+  },
+}: LocationWithPolygon) => {
   const map = useMap();
+  const { setCustomLocationPolygon } = usePlantSearchContext();
+
+  const centerPoint: LatLngTuple = useMemo(
+    () => [centerCoordinates[1], centerCoordinates[0]],
+    [centerCoordinates]
+  );
 
   useEffect(() => {
-    map.setView([lat, lng], 10);
-  }, [lat, lng, map]);
+    locationSource === "search" && map.setView(centerPoint, 10);
+  }, [centerPoint, locationSource, map]);
 
   // Only plotting outer ring of geometry
   const polyCoords = useMemo(
-    () => swapLatLng(bboxPoly.geometry.coordinates[0]),
-    [bboxPoly]
+    () => swapLatLng(boundingPolygon.geometry.coordinates[0]),
+    [boundingPolygon.geometry.coordinates]
   );
 
   const markerDragEnd = (e: LeafletEvent, index: number) => {
@@ -41,7 +45,7 @@ const LocationMap = ({
         : coord
     );
 
-    setBboxPoly(polygon([swapLatLng(newCoords)]));
+    setCustomLocationPolygon(swapLatLng(newCoords));
   };
 
   return (
@@ -62,4 +66,4 @@ const LocationMap = ({
   );
 };
 
-export default LocationMap;
+export default LocationPolygon;

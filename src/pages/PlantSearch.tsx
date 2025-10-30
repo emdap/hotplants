@@ -1,5 +1,6 @@
 import { useLazyQuery } from "@apollo/client/react";
 import { useQuery } from "@tanstack/react-query";
+import { centroid, polygon } from "@turf/turf";
 import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/plantFilters/LocationSearch";
 import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteristicsFilter";
@@ -25,7 +26,8 @@ import {
 import { useApolloQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useRef, useState } from "react";
-import { LocationWithBoundingBox } from "schemaHelpers/schemaTypesUtil";
+import { LocationCoord } from "schemaHelpers/customSchemaTypes";
+import { LocationWithPolygon } from "schemaHelpers/schemaTypesUtil";
 
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 20;
@@ -50,9 +52,8 @@ const PlantSearch = () => {
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pollInterval, setPollInterval] = useState(0);
 
-  const [location, setLocation] = useState<
-    LocationWithBoundingBox | undefined
-  >();
+  const [searchLocation, setSearchLocation] =
+    useState<LocationWithPolygon | null>(null);
   const [plantFilters, setPlantFilters] = useState<Omit<
     PlantDataInput,
     "bboxPolyCoords"
@@ -167,10 +168,24 @@ const PlantSearch = () => {
     loadMoreScrape.current = false;
   };
 
+  const setCustomLocationPolygon = (coordinates: LocationCoord[]) => {
+    const boundingPolygon = polygon([coordinates]);
+    setSearchLocation({
+      locationSource: "map",
+      boundingPolygon,
+      centerPoint: centroid(boundingPolygon),
+    });
+  };
+
   return (
     <PlantSearchContext.Provider
       value={{
         syncPlant,
+
+        searchLocation,
+        setSearchLocation,
+        setCustomLocationPolygon,
+
         fullScreenElement,
         setFullScreenElement,
       }}
@@ -179,31 +194,25 @@ const PlantSearch = () => {
         <div className="flex flex-col gap-2 p-4">
           <div className="flex gap-4">
             <Card className="flex flex-col gap-2 flex-grow">
-              <LocationSearch setLocation={setLocation} />
+              <LocationSearch />
               <PlantCharacteristicsFilter
                 {...{ plantFilters, setPlantFilters }}
               />
-              <Button
-                variant="primary"
-                onClick={() =>
-                  setPlantSearchCriteria({
-                    ...plantFilters,
-                    bboxPolyCoords: location?.bboxPoly.geometry.coordinates,
-                  })
-                }
-              >
-                Search
-              </Button>
             </Card>
-            <MapProvider
-              className="flex-grow"
-              defaultLocation={location}
-              setBboxPoly={(polygon) =>
-                setLocation((prev) => prev && { ...prev, bboxPoly: polygon })
-              }
-            />
+            <MapProvider className="flex-grow" />
           </div>
-
+          <Button
+            variant="primary"
+            onClick={() =>
+              setPlantSearchCriteria({
+                ...plantFilters,
+                bboxPolyCoords:
+                  searchLocation?.boundingPolygon.geometry.coordinates,
+              })
+            }
+          >
+            Search
+          </Button>
           <ScrapeStatusBar searchRecord={searchRecord} />
         </div>
 
