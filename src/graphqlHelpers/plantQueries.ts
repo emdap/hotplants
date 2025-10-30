@@ -25,8 +25,8 @@ const _PLANT_FIELDS_FRAGMENT = graphql(
 );
 
 export const GET_PLANT = graphql(`
-  query getPlant($id: String!, $boundingBox: [[[Float!]!]!]) {
-    plant(id: $id, boundingPolyCoords: $boundingBox) {
+  query getPlant($id: String!, $boundingPolyCoords: [[[Float!]!]!]) {
+    plant(id: $id, boundingPolyCoords: $boundingPolyCoords) {
       ...PlantFields
     }
   }
