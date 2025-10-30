@@ -34,9 +34,9 @@ type PlantData {
 
 input PlantDataInput {
   addedTimestamp: Float
+  bboxPolyCoords: [[[Float!]!]!]
   bloomColors: [String!]
   bloomTimes: [String!]
-  boundingBox: [Float!]
   commonName: String
   habitat: String
   hardiness: [Int!]

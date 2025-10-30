@@ -55,7 +55,7 @@ const PlantSearch = () => {
   >();
   const [plantFilters, setPlantFilters] = useState<Omit<
     PlantDataInput,
-    "boundingBox"
+    "bboxPolyCoords"
   > | null>(null);
   const [plantSearchCriteria, setPlantSearchCriteria] =
     useState<PlantDataInput | null>(null);
@@ -185,18 +185,17 @@ const PlantSearch = () => {
               />
               <Button
                 variant="primary"
-                onClick={() => {
+                onClick={() =>
                   setPlantSearchCriteria({
                     ...plantFilters,
-                    boundingBox: location?.boundingBox,
-                  });
-                  performScrapeWithPolling();
-                }}
+                    bboxPolyCoords: location?.bboxPoly.geometry.coordinates,
+                  })
+                }
               >
                 Search
               </Button>
             </Card>
-            <MapProvider location={location} />
+            <MapProvider defaultLocation={location} />
           </div>
 
           <ScrapeStatusBar searchRecord={searchRecord} />
