@@ -126,7 +126,12 @@ const PlantSearch = () => {
   const [getPlantQuery] = useLazyQuery(GET_PLANT, { fetchPolicy: "no-cache" });
 
   const syncPlant = async (plantId: string) => {
-    const { data } = await getPlantQuery({ variables: { id: plantId } });
+    const { data } = await getPlantQuery({
+      variables: {
+        id: plantId,
+        boundingBox: searchLocation?.boundingPolygon.geometry.coordinates,
+      },
+    });
     if (data?.plant) {
       setPlantSearchResults((prev) =>
         prev.map((plantResult) =>
@@ -179,7 +184,7 @@ const PlantSearch = () => {
   const applyFilters = () =>
     setPlantSearchCriteria({
       ...plantFilters,
-      bboxPolyCoords: searchLocation?.boundingPolygon.geometry.coordinates,
+      boundingPolyCoords: searchLocation?.boundingPolygon.geometry.coordinates,
     });
 
   return (

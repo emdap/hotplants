@@ -33,10 +33,11 @@ type PlantData {
 }
 
 input PlantDataInput {
+  _id: ObjectId
   addedTimestamp: Float
-  bboxPolyCoords: [[[Float!]!]!]
   bloomColors: [String!]
   bloomTimes: [String!]
+  boundingPolyCoords: [[[Float!]!]!]
   commonName: String
   habitat: String
   hardiness: [Int!]
@@ -92,7 +93,7 @@ enum PlantSizeUnit {
 }
 
 type Query {
-  plant(id: String!): PlantData
+  plant(boundingPolyCoords: [[[Float!]!]!], id: String!): PlantData
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
   plantSearch(limit: Int, offset: Int, sort: SortInput, where: PlantDataInput): PlantSearchResults!
   searchRecord(id: String!): SearchRecord
