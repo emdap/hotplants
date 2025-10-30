@@ -1,6 +1,6 @@
 import { useLazyQuery } from "@apollo/client/react";
 import { useQuery } from "@tanstack/react-query";
-import LocationMap from "components/LocationMap";
+import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/plantFilters/LocationSearch";
 import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteristicsFilter";
 import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
@@ -16,7 +16,6 @@ import {
   QueryPlantSearchArgs,
 } from "generated/graphql/graphql";
 import { paths } from "generated/schemas/hotplants";
-import { LocationWithBoundingBox } from "generated/schemas/schema-util";
 import {
   GET_PLANT,
   GET_SEARCH_RECORD,
@@ -26,6 +25,7 @@ import {
 import { useApolloQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useRef, useState } from "react";
+import { LocationWithBoundingBox } from "schemaHelpers/schemaTypesUtil";
 
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 20;
@@ -50,37 +50,24 @@ const PlantSearch = () => {
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pollInterval, setPollInterval] = useState(0);
 
-  const [location, setLocation] = useState<LocationWithBoundingBox | null>(
-    null
-  );
-  const [plantFilterInput, setPlantFilterInput] =
+  const [location, setLocation] = useState<
+    LocationWithBoundingBox | undefined
+  >();
+  const [plantFilters, setPlantFilters] = useState<Omit<
+    PlantDataInput,
+    "boundingBox"
+  > | null>(null);
+  const [plantSearchCriteria, setPlantSearchCriteria] =
     useState<PlantDataInput | null>(null);
-  const [appliedPlantFilters, setAppliedPlantFilters] =
-    useState<PlantDataInput | null>(null);
-
-  useEffect(() => {
-    let boundingBox: number[] | null = null;
-    if (location) {
-      const bboxNumbers = location.boundingbox.map(Number);
-      boundingBox = [
-        bboxNumbers[2],
-        bboxNumbers[0],
-        bboxNumbers[3],
-        bboxNumbers[1],
-      ];
-    }
-
-    setPlantFilterInput((filters) => ({ ...filters, boundingBox }));
-  }, [location]);
 
   const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
     SEARCH_PLANTS,
     {
       pollInterval,
-      skip: !appliedPlantFilters,
+      skip: !plantSearchCriteria,
       variables: {
         ...DEFAULT_PLANT_SEARCH_GQL_VARS,
-        where: appliedPlantFilters,
+        where: plantSearchCriteria,
       },
     }
   );
@@ -90,10 +77,10 @@ const PlantSearch = () => {
   }, [plantSearch]);
 
   const { data: searchRecordId, ...scrapeQuery } = useQuery({
-    queryKey: ["plant-search", appliedPlantFilters],
+    queryKey: ["plant-search", plantSearchCriteria],
     queryFn: async () => {
       const { data } = await hotplantsClient.POST("/plants/scrapeOccurrences", {
-        body: appliedPlantFilters ?? {},
+        body: plantSearchCriteria ?? {},
       });
       return data;
     },
@@ -194,19 +181,22 @@ const PlantSearch = () => {
             <Card className="flex flex-col gap-2 flex-grow">
               <LocationSearch setLocation={setLocation} />
               <PlantCharacteristicsFilter
-                {...{ plantFilterInput, setPlantFilterInput }}
+                {...{ plantFilters, setPlantFilters }}
               />
               <Button
                 variant="primary"
                 onClick={() => {
-                  setAppliedPlantFilters(plantFilterInput);
+                  setPlantSearchCriteria({
+                    ...plantFilters,
+                    boundingBox: location?.boundingBox,
+                  });
                   performScrapeWithPolling();
                 }}
               >
                 Search
               </Button>
             </Card>
-            <LocationMap />
+            <MapProvider location={location} />
           </div>
 
           <ScrapeStatusBar searchRecord={searchRecord} />

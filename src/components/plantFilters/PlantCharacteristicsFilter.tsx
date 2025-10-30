@@ -3,11 +3,11 @@ import { PlantDataInput } from "generated/graphql/graphql";
 const INPUT_FILTER_FIELDS = ["scientificName", "commonName"] as const;
 
 const PlantCharacteristicsFilter = ({
-  plantFilterInput,
-  setPlantFilterInput,
+  plantFilters,
+  setPlantFilters,
 }: {
-  plantFilterInput: PlantDataInput | null;
-  setPlantFilterInput: (
+  plantFilters: PlantDataInput | null;
+  setPlantFilters: (
     filters: Omit<PlantDataInput, "boundingBox"> | null
   ) => void;
 }) => (
@@ -15,9 +15,9 @@ const PlantCharacteristicsFilter = ({
     {INPUT_FILTER_FIELDS.map((field) => (
       <input
         key={field}
-        value={plantFilterInput?.[field] ?? ""}
+        value={plantFilters?.[field] ?? ""}
         onChange={({ target }) =>
-          setPlantFilterInput({ ...plantFilterInput, [field]: target.value })
+          setPlantFilters({ ...plantFilters, [field]: target.value })
         }
         placeholder={field}
       />
