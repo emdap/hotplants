@@ -195,7 +195,13 @@ const PlantSearch = () => {
                 Search
               </Button>
             </Card>
-            <MapProvider defaultLocation={location} />
+            <MapProvider
+              className="min-h-60 min-w-30 flex-grow"
+              defaultLocation={location}
+              setBboxPoly={(polygon) =>
+                setLocation((prev) => prev && { ...prev, bboxPoly: polygon })
+              }
+            />
           </div>
 
           <ScrapeStatusBar searchRecord={searchRecord} />

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-const VOID_FUNCTION = () => {};
+export const VOID_FUNCTION = () => {};
 
 export type FullScreenElement = "IMAGE_VIEWER";
 
