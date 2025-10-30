@@ -196,7 +196,7 @@ const PlantSearch = () => {
               </Button>
             </Card>
             <MapProvider
-              className="min-h-60 min-w-30 flex-grow"
+              className="flex-grow"
               defaultLocation={location}
               setBboxPoly={(polygon) =>
                 setLocation((prev) => prev && { ...prev, bboxPoly: polygon })

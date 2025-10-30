@@ -52,7 +52,7 @@ const PlantResultPane = ({
                   plant={plant}
                   parentRef={paneRef}
                 />
-                <MapProvider />
+                <MapProvider className="min-h-60 w-full" />
               </div>
               <PlantInfo plant={plant} />
             </div>
