@@ -1,4 +1,4 @@
-import LocationMap from "components/interactiveMap/LocationMap";
+import MapProvider from "components/interactiveMap/MapProvider";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { CUSTOM_MOTION_FADE_IN } from "designSystem/motionTransitions";
@@ -52,7 +52,7 @@ const PlantResultPane = ({
                   plant={plant}
                   parentRef={paneRef}
                 />
-                <LocationMap />
+                <MapProvider />
               </div>
               <PlantInfo plant={plant} />
             </div>
