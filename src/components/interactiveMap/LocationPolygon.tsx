@@ -1,7 +1,7 @@
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { LatLngTuple, LeafletEvent, Marker as MarkerType } from "leaflet";
 import { useEffect, useMemo } from "react";
-import { Marker, Polygon, useMap } from "react-leaflet";
+import { Marker, Polygon, Tooltip, useMap } from "react-leaflet";
 import { LocationCoord } from "schemaHelpers/customSchemaTypes";
 import { LocationWithPolygon } from "schemaHelpers/schemaTypesUtil";
 
@@ -25,9 +25,24 @@ const LocationPolygon = ({
     [centerCoordinates]
   );
 
+  const showMeridianWarning = useMemo(() => {
+    const { coordinates } = boundingPolygon.geometry;
+    console.log(coordinates);
+    const hasCoords: Record<string, boolean> = { "180": false, "-180": false };
+
+    coordinates[0].forEach(([lng]) => {
+      if ([180, -180].includes(lng)) {
+        hasCoords[String(lng)] = true;
+      }
+    });
+
+    return hasCoords["180"] && hasCoords["-180"];
+  }, [boundingPolygon.geometry]);
+
   useEffect(() => {
-    locationSource === "search" && map.setView(centerPoint, 10);
-  }, [centerPoint, locationSource, map]);
+    locationSource === "search" &&
+      map.setView(centerPoint, showMeridianWarning ? 1 : 10);
+  }, [centerPoint, locationSource, map, showMeridianWarning]);
 
   // Only plotting outer ring of geometry
   const polyCoords = useMemo(
@@ -50,7 +65,15 @@ const LocationPolygon = ({
 
   return (
     <>
-      <Polygon positions={polyCoords} />
+      <Polygon positions={polyCoords}>
+        {showMeridianWarning && (
+          <Tooltip position={centerPoint} direction="top">
+            Bounding boxes crossing the international date line will not display
+            correctly
+          </Tooltip>
+        )}
+      </Polygon>
+
       {polyCoords.slice(0, -1).map((point, index) => (
         // Omit connecting point at end
         <Marker
