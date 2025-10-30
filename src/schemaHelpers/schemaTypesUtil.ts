@@ -22,6 +22,8 @@ export const validateNominatimLocation = (
     return null;
   }
 
+  // Converting into a bounding box/polygon for more consistent results
+  // Raw polygons from nominatim are sometimes too long
   const bboxNumbers = location.boundingbox.map(Number);
   const boundingBox: BBox = [
     bboxNumbers[2],
