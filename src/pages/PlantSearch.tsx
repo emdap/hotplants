@@ -60,22 +60,20 @@ const PlantSearch = () => {
   > | null>(null);
   const [plantSearchCriteria, setPlantSearchCriteria] =
     useState<PlantDataInput | null>(null);
+  const [locationSearchLoading, setLocationSearchLoading] = useState(true);
 
-  const { data: { plantSearch } = {}, ...plantSearchQuery } = useApolloQuery(
-    SEARCH_PLANTS,
-    {
-      pollInterval,
-      skip: !plantSearchCriteria,
-      variables: {
-        ...DEFAULT_PLANT_SEARCH_GQL_VARS,
-        where: plantSearchCriteria,
-      },
-    }
-  );
+  const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
+    pollInterval,
+    skip: !plantSearchCriteria,
+    variables: {
+      ...DEFAULT_PLANT_SEARCH_GQL_VARS,
+      where: plantSearchCriteria,
+    },
+  });
 
   useEffect(() => {
-    setPlantSearchResults(plantSearch?.results ?? []);
-  }, [plantSearch]);
+    setPlantSearchResults(plantSearchQuery.data?.plantSearch.results ?? []);
+  }, [plantSearchQuery.data]);
 
   const { data: searchRecordId, ...scrapeQuery } = useQuery({
     queryKey: ["plant-search", plantSearchCriteria],
@@ -86,7 +84,7 @@ const PlantSearch = () => {
       return data;
     },
     enabled: Boolean(
-      plantSearch?.count !== undefined && plantSearch.count < MIN_RESULTS
+      (plantSearchQuery.data?.plantSearch?.count ?? Infinity) < MIN_RESULTS
     ),
   });
 
@@ -144,6 +142,7 @@ const PlantSearch = () => {
     if (plantSearchQuery.loading) {
       return;
     }
+    const { plantSearch } = plantSearchQuery.data ?? {};
 
     if (plantSearch && plantSearch.results.length < plantSearch.count) {
       plantSearchQuery.fetchMore({
@@ -177,6 +176,12 @@ const PlantSearch = () => {
     });
   };
 
+  const applyFilters = () =>
+    setPlantSearchCriteria({
+      ...plantFilters,
+      bboxPolyCoords: searchLocation?.boundingPolygon.geometry.coordinates,
+    });
+
   return (
     <PlantSearchContext.Provider
       value={{
@@ -194,22 +199,20 @@ const PlantSearch = () => {
         <div className="flex flex-col gap-2 p-4">
           <div className="flex gap-4">
             <Card className="flex flex-col gap-2 flex-grow">
-              <LocationSearch />
+              <LocationSearch
+                setLocationSearchLoading={setLocationSearchLoading}
+              />
               <PlantCharacteristicsFilter
-                {...{ plantFilters, setPlantFilters }}
+                plantFilters={plantFilters}
+                setPlantFilters={setPlantFilters}
               />
             </Card>
             <MapProvider className="flex-grow" />
           </div>
           <Button
+            disabled={locationSearchLoading}
             variant="primary"
-            onClick={() =>
-              setPlantSearchCriteria({
-                ...plantFilters,
-                bboxPolyCoords:
-                  searchLocation?.boundingPolygon.geometry.coordinates,
-              })
-            }
+            onClick={applyFilters}
           >
             Search
           </Button>

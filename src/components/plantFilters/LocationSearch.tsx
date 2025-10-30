@@ -27,7 +27,11 @@ const getLocation = (input: string) =>
     },
   });
 
-const LocationSearch = () => {
+const LocationSearch = ({
+  setLocationSearchLoading,
+}: {
+  setLocationSearchLoading: (isLoading: boolean) => void;
+}) => {
   const { searchLocation, setSearchLocation } = usePlantSearchContext();
 
   const [enableQuery, setEnableQuery] = useState(
@@ -71,6 +75,10 @@ const LocationSearch = () => {
       return null;
     },
   });
+
+  useEffect(() => {
+    setLocationSearchLoading(locationQuery.isLoading);
+  }, [setLocationSearchLoading, locationQuery.isLoading]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter" || !(e.target instanceof HTMLInputElement)) {
