@@ -27,7 +27,6 @@ const LocationPolygon = ({
 
   const showMeridianWarning = useMemo(() => {
     const { coordinates } = boundingPolygon.geometry;
-    console.log(coordinates);
     const hasCoords: Record<string, boolean> = { "180": false, "-180": false };
 
     coordinates[0].forEach(([lng]) => {

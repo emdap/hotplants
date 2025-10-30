@@ -99,14 +99,15 @@ const LocationSearch = ({
         }}
         placeholder="Enter a location"
       />
-      {searchLocation &&
-        (searchLocation?.displayName || "Using custom location on map")}
 
       {locationQuery.isLoading
         ? "Loading"
         : locationQuery.isError
         ? "Error"
-        : locationInvalid && "Cannot find location"}
+        : locationInvalid
+        ? "Cannot find location"
+        : searchLocation &&
+          (searchLocation?.displayName || "Using custom location on map")}
     </div>
   );
 };
