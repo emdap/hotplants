@@ -4,6 +4,7 @@ import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteris
 import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
 import {
+  ActivePlantIndexes,
   FullScreenElement,
   PlantSearchContext,
 } from "contexts/PlantSearchContext";
@@ -21,6 +22,10 @@ const PlantSearch = () => {
     useState<FullScreenElement | null>(null);
   const [plantSearchResults, setPlantSearchResults] =
     useState<PlantQueryResults>([]);
+  const activePlantIndexesState = useState<ActivePlantIndexes>({
+    plantIndex: null,
+    mediaIndex: null,
+  });
 
   const [searchLocation, setSearchLocation] =
     useState<LocationWithPolygon | null>(null);
@@ -91,6 +96,9 @@ const PlantSearch = () => {
   return (
     <PlantSearchContext.Provider
       value={{
+        plantSearchResults,
+        activePlantIndexes: activePlantIndexesState[0],
+        setActivePlantIndexes: activePlantIndexesState[1],
         syncPlant,
 
         searchLocation,
@@ -113,7 +121,7 @@ const PlantSearch = () => {
                 setPlantFilters={setPlantFilters}
               />
             </Card>
-            <MapProvider className="w-1/2 flex-grow" />
+            <MapProvider showAllPlants className="w-1/2 flex-grow" />
           </div>
           <Button
             disabled={locationSearchLoading}
@@ -127,10 +135,7 @@ const PlantSearch = () => {
           />
         </div>
 
-        <PlantResultsHolder
-          searchResults={plantSearchResults}
-          fetchMorePlants={fetchMorePlants}
-        />
+        <PlantResultsHolder fetchMorePlants={fetchMorePlants} />
       </main>
     </PlantSearchContext.Provider>
   );

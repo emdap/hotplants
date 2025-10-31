@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import LocationPolygon from "./LocationPolygon";
+import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
 
 const DEFAULT_CONTAINER_PROPS: MapContainerProps = {
   worldCopyJump: true,
@@ -18,8 +19,12 @@ const DEFAULT_CONTAINER_PROPS: MapContainerProps = {
 // Use https://github.com/Leaflet/Leaflet.markercluster
 // Create custom styles for markers
 
-const MapProvider = ({ className, ...containerProps }: MapContainerProps) => {
-  const { searchLocation } = usePlantSearchContext();
+const MapProvider = ({
+  showAllPlants,
+  className,
+  ...containerProps
+}: MapContainerProps & { showAllPlants?: boolean }) => {
+  const { searchLocation, activePlantIndexes } = usePlantSearchContext();
   return (
     <MapContainer
       {...{ ...DEFAULT_CONTAINER_PROPS, ...containerProps }}
@@ -29,7 +34,14 @@ const MapProvider = ({ className, ...containerProps }: MapContainerProps) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {searchLocation && <LocationPolygon {...searchLocation} />}
+      {searchLocation && (
+        <LocationPolygon
+          enableDrag={activePlantIndexes.plantIndex === null}
+          {...searchLocation}
+        />
+      )}
+
+      <PlantOccurrenceMarkers showAllPlants={showAllPlants} />
     </MapContainer>
   );
 };

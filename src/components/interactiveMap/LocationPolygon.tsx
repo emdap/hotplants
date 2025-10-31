@@ -15,7 +15,7 @@ import { useMount } from "react-use";
 import { LocationCoord } from "schemaHelpers/customSchemaTypes";
 import { LocationWithPolygon } from "schemaHelpers/schemaTypesUtil";
 import CrossingMerdianTooltip from "./CrossingMerdianTooltip";
-import { CenterIcon, PolygonMarkerIcon } from "./PolygonIcons";
+import { PolygonCenterIcon, PolygonCornerIcon } from "./MarkerIcons";
 
 // GeoJSON spec dictates lng, lat
 // Leaflet uses lat, lng
@@ -28,7 +28,8 @@ const getOuterCoordinates = (feature: Feature<PolygonType>) =>
 const LocationPolygon = ({
   boundingPolygon,
   locationSource,
-}: LocationWithPolygon) => {
+  enableDrag,
+}: LocationWithPolygon & { enableDrag: boolean }) => {
   const map = useMap();
   useMount(() => map.fitBounds(polyCoords));
 
@@ -97,28 +98,32 @@ const LocationPolygon = ({
         centerCoords={centerCoords}
         boundingPolygon={localPolygon}
       />
-      <Marker
-        icon={CenterIcon}
-        position={centerCoords}
-        draggable
-        eventHandlers={{
-          drag: centerDragEnd,
-          dragend: savePolygon,
-        }}
-      />
-      {polyCoords.slice(0, -1).map((point, index) => (
-        // Omit connecting point at end
-        <Marker
-          icon={PolygonMarkerIcon}
-          key={index}
-          position={point}
-          draggable
-          eventHandlers={{
-            drag: (e) => cornerDragEnd(e, index),
-            dragend: savePolygon,
-          }}
-        />
-      ))}
+      {enableDrag && (
+        <>
+          <Marker
+            icon={PolygonCenterIcon}
+            position={centerCoords}
+            draggable
+            eventHandlers={{
+              drag: centerDragEnd,
+              dragend: savePolygon,
+            }}
+          />
+          {polyCoords.slice(0, -1).map((point, index) => (
+            // Omit connecting point at end
+            <Marker
+              icon={PolygonCornerIcon}
+              key={index}
+              position={point}
+              draggable
+              eventHandlers={{
+                drag: (e) => cornerDragEnd(e, index),
+                dragend: savePolygon,
+              }}
+            />
+          ))}
+        </>
+      )}
     </>
   );
 };

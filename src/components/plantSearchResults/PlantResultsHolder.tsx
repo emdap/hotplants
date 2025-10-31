@@ -1,9 +1,8 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
-import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import { useDocumentListener } from "hooks/useDocumentListener";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import PlantImageViewer from "./PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 import PlantResultPane from "./PlantResultPane";
@@ -11,51 +10,53 @@ import PlantResultPane from "./PlantResultPane";
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantResultsHolder = ({
-  searchResults,
   fetchMorePlants,
 }: {
-  searchResults: PlantQueryResults;
   fetchMorePlants: () => void;
 }) => {
-  const { fullScreenElement } = usePlantSearchContext();
+  const {
+    fullScreenElement,
+    plantSearchResults,
+    activePlantIndexes: { plantIndex },
+    setActivePlantIndexes,
+  } = usePlantSearchContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [activePlantIndex, setActivePlantIndex] = useState<null | number>(null);
   const activePlant = useMemo(
-    () => (activePlantIndex === null ? null : searchResults[activePlantIndex]),
-    [searchResults, activePlantIndex]
+    () => (plantIndex === null ? null : plantSearchResults[plantIndex]),
+    [plantSearchResults, plantIndex]
   );
 
   const iteratePlants = useCallback(
     (e: KeyboardEvent) => {
-      if (activePlantIndex === null) {
+      if (plantIndex === null) {
         return;
       }
 
       let newActiveIndex: null | number = null;
-      if (e.code === "ArrowUp" && activePlantIndex !== 0) {
-        newActiveIndex = activePlantIndex - 1;
+      if (e.code === "ArrowUp" && plantIndex !== 0) {
+        newActiveIndex = plantIndex - 1;
       } else if (
         e.code === "ArrowDown" &&
-        activePlantIndex < searchResults.length - 1
+        plantIndex < plantSearchResults.length - 1
       ) {
-        newActiveIndex = activePlantIndex + 1;
+        newActiveIndex = plantIndex + 1;
       }
 
       if (newActiveIndex !== null) {
         e.preventDefault();
-        setActivePlantIndex(newActiveIndex);
+        setActivePlantIndexes({ plantIndex: newActiveIndex, mediaIndex: null });
         const childNode = containerRef.current?.childNodes[newActiveIndex];
         childNode instanceof HTMLElement && childNode.scrollIntoView();
       }
     },
-    [activePlantIndex, setActivePlantIndex, searchResults.length]
+    [plantIndex, setActivePlantIndexes, plantSearchResults.length]
   );
 
   useDocumentListener(
     "keydown",
     iteratePlants,
-    !fullScreenElement && activePlantIndex !== null
+    !fullScreenElement && plantIndex !== null
   );
 
   const handleContainerScroll = () => {
@@ -80,15 +81,17 @@ const PlantResultsHolder = ({
         className="space-y-4 flex-grow overflow-auto p-2 relative scroll-smooth"
         onScroll={handleContainerScroll}
       >
-        {searchResults.map(
+        {plantSearchResults.map(
           (plant, index) =>
             plant && (
               <Card
                 key={plant.scientificName}
                 id={plant.scientificName}
-                onClick={() => setActivePlantIndex(index)}
+                onClick={() =>
+                  setActivePlantIndexes({ plantIndex: index, mediaIndex: null })
+                }
                 className={classNames("flex gap-2 cursor-pointer h-40", {
-                  "bg-secondary/20!": activePlantIndex === index,
+                  "bg-secondary/20!": plantIndex === index,
                 })}
               >
                 <PlantImageViewer mode="thumbnail" plant={plant} />
@@ -100,7 +103,9 @@ const PlantResultsHolder = ({
 
       <PlantResultPane
         plant={activePlant}
-        onClose={() => setActivePlantIndex(null)}
+        onClose={() =>
+          setActivePlantIndexes({ plantIndex: null, mediaIndex: null })
+        }
       />
     </>
   );
