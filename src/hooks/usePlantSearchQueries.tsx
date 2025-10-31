@@ -31,6 +31,8 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadMoreScrape = useRef(false);
 
+  const [getPlantQuery] = useLazyQuery(GET_PLANT, { fetchPolicy: "no-cache" });
+
   const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
     pollInterval,
     skip: !plantSearchCriteria,
@@ -61,8 +63,38 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     },
   });
 
+  useEffect(() => {
+    if (
+      searchRecordQuery.data?.searchRecord?.status === "DONE" ||
+      searchRecordQuery.error ||
+      plantSearchQuery.error
+    ) {
+      stopPolling();
+    }
+  }, [searchRecordQuery, plantSearchQuery]);
+
   const stopPolling = () => {
     setPollInterval(0);
+  };
+
+  const startPolling = () => {
+    setPollInterval(DEFAULT_POLL_INTERVAL);
+
+    stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
+    stopPollingTimeout.current = setTimeout(
+      () => stopPolling(),
+      DEFAULT_POLL_INTERVAL * MAX_POLLS
+    );
+  };
+
+  const performScrapeWithPolling = async () => {
+    loadMoreScrape.current = true;
+    if (!scrapeQuery.isLoading) {
+      const { data } = await scrapeQuery.refetch();
+      data && (await searchRecordQuery.refetch({ searchId: data }));
+    }
+    startPolling();
+    loadMoreScrape.current = false;
   };
 
   const fetchMorePlants = async () => {
@@ -83,38 +115,6 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
       performScrapeWithPolling();
     }
   };
-
-  const performScrapeWithPolling = async () => {
-    loadMoreScrape.current = true;
-    if (!scrapeQuery.isLoading) {
-      const { data } = await scrapeQuery.refetch();
-      data && (await searchRecordQuery.refetch({ searchId: data }));
-    }
-    startPolling();
-    loadMoreScrape.current = false;
-  };
-
-  const startPolling = () => {
-    setPollInterval(DEFAULT_POLL_INTERVAL);
-
-    stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
-    stopPollingTimeout.current = setTimeout(
-      () => stopPolling(),
-      DEFAULT_POLL_INTERVAL * MAX_POLLS
-    );
-  };
-
-  useEffect(() => {
-    if (
-      searchRecordQuery.data?.searchRecord?.status === "DONE" ||
-      searchRecordQuery.error ||
-      plantSearchQuery.error
-    ) {
-      stopPolling();
-    }
-  }, [searchRecordQuery, plantSearchQuery]);
-
-  const [getPlantQuery] = useLazyQuery(GET_PLANT, { fetchPolicy: "no-cache" });
 
   return {
     plantSearchQuery,
