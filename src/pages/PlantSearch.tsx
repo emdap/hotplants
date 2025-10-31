@@ -71,15 +71,12 @@ const PlantSearch = () => {
 
   const applyFilters = useCallback(
     () =>
-      setPlantSearchCriteria((prev) => ({
-        ...prev,
+      setPlantSearchCriteria({
+        ...plantFilters,
         boundingPolyCoords:
           searchLocation?.boundingPolygon.geometry.coordinates,
-      })),
-    [
-      setPlantSearchCriteria,
-      searchLocation?.boundingPolygon.geometry.coordinates,
-    ]
+      }),
+    [plantFilters, searchLocation?.boundingPolygon.geometry.coordinates]
   );
 
   useEffect(() => {
