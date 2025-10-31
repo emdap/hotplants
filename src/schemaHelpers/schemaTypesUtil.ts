@@ -1,24 +1,17 @@
-import { bboxPolygon, centroid } from "@turf/turf";
-import { BBox, Feature, Point, Polygon } from "geojson";
+import { bboxPolygon } from "@turf/turf";
+import { BBox, Feature, Polygon } from "geojson";
 import { LocationData } from "./customSchemaTypes";
 
 export type LocationWithPolygon = {
   displayName?: string;
   locationSource: "search" | "map";
   boundingPolygon: Feature<Polygon>;
-  centerPoint: Feature<Point>;
 };
 
 export const validateNominatimLocation = (
   location?: LocationData
 ): null | LocationWithPolygon => {
-  if (
-    !location ||
-    !location.display_name ||
-    !location.boundingbox ||
-    location.lat === undefined ||
-    location.lon === undefined
-  ) {
+  if (!location?.display_name || !location?.boundingbox) {
     return null;
   }
 
@@ -37,6 +30,5 @@ export const validateNominatimLocation = (
     displayName: location.display_name,
     locationSource: "search",
     boundingPolygon,
-    centerPoint: centroid(boundingPolygon),
   };
 };

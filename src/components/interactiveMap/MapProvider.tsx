@@ -4,7 +4,12 @@ import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import LocationPolygon from "./LocationPolygon";
 
 const DEFAULT_CONTAINER_PROPS: MapContainerProps = {
-  className: "min-h-60 min-w-30 z-0",
+  worldCopyJump: true,
+  maxBoundsViscosity: 0.5,
+  maxBounds: [
+    [-90, -180],
+    [90, 180],
+  ],
   zoom: 0,
   center: [0, 0],
 };
@@ -18,7 +23,7 @@ const MapProvider = ({ className, ...containerProps }: MapContainerProps) => {
   return (
     <MapContainer
       {...{ ...DEFAULT_CONTAINER_PROPS, ...containerProps }}
-      className={classNames(DEFAULT_CONTAINER_PROPS.className, className)}
+      className={classNames("min-h-60 min-w-30 z-0", className)}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

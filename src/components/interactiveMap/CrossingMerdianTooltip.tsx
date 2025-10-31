@@ -19,10 +19,10 @@ const crossesMeridian = (coordinates: Position[]) => {
 
 const CrossingMerdianTooltip = ({
   boundingPolygon,
-  centerPoint: {
-    geometry: { coordinates: centerCoordinates },
-  },
-}: Pick<LocationWithPolygon, "boundingPolygon" | "centerPoint">) => {
+  centerCoords,
+}: Pick<LocationWithPolygon, "boundingPolygon"> & {
+  centerCoords: [number, number];
+}) => {
   const map = useMap();
   const meridanTooltip = useRef<TooltipType>(null);
 
@@ -37,10 +37,10 @@ const CrossingMerdianTooltip = ({
         .setContent(
           "Bounding boxes crossing the international<br />date line will not display correctly"
         )
-        .setLatLng([centerCoordinates[1], centerCoordinates[0]])
+        .setLatLng(centerCoords)
         .addTo(map);
     }
-  }, [boundingPolygon.geometry.coordinates, centerCoordinates, map]);
+  }, [boundingPolygon.geometry.coordinates, centerCoords, map]);
 
   return null;
 };

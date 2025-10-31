@@ -1,4 +1,3 @@
-import { centroid, polygon } from "@turf/turf";
 import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/plantFilters/LocationSearch";
 import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteristicsFilter";
@@ -11,10 +10,10 @@ import {
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { PlantDataInput } from "generated/graphql/graphql";
+import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
-import { useEffect, useState } from "react";
-import { LocationCoord } from "schemaHelpers/customSchemaTypes";
+import { useCallback, useEffect, useState } from "react";
 import { LocationWithPolygon } from "schemaHelpers/schemaTypesUtil";
 
 const PlantSearch = () => {
@@ -35,15 +34,15 @@ const PlantSearch = () => {
     useState<PlantDataInput | null>(null);
 
   const {
-    plantSearchQuery,
+    plantSearchQuery: { data: { plantSearch } = {} },
     searchRecordQuery,
     getPlantQuery,
     fetchMorePlants,
   } = usePlantSearchQueries(plantSearchCriteria);
 
   useEffect(() => {
-    setPlantSearchResults(plantSearchQuery.data?.plantSearch.results ?? []);
-  }, [plantSearchQuery.data]);
+    setPlantSearchResults(plantSearch?.results ?? []);
+  }, [plantSearch]);
 
   const syncPlant = async (plantId: string) => {
     const { data } = await getPlantQuery({
@@ -64,20 +63,33 @@ const PlantSearch = () => {
     }
   };
 
-  const setCustomLocationPolygon = (coordinates: LocationCoord[]) => {
-    const boundingPolygon = polygon([coordinates]);
+  const setCustomLocationPolygon = (boundingPolygon: Feature<Polygon>) =>
     setSearchLocation({
       locationSource: "map",
       boundingPolygon,
-      centerPoint: centroid(boundingPolygon),
     });
-  };
 
-  const applyFilters = () =>
-    setPlantSearchCriteria({
-      ...plantFilters,
-      boundingPolyCoords: searchLocation?.boundingPolygon.geometry.coordinates,
-    });
+  const applyFilters = useCallback(
+    () =>
+      setPlantSearchCriteria((prev) => ({
+        ...prev,
+        boundingPolyCoords:
+          searchLocation?.boundingPolygon.geometry.coordinates,
+      })),
+    [
+      setPlantSearchCriteria,
+      searchLocation?.boundingPolygon.geometry.coordinates,
+    ]
+  );
+
+  useEffect(() => {
+    if (
+      plantSearch?.results.length &&
+      searchLocation?.locationSource === "map"
+    ) {
+      applyFilters();
+    }
+  }, [plantSearch, searchLocation, applyFilters]);
 
   return (
     <PlantSearchContext.Provider
@@ -104,7 +116,7 @@ const PlantSearch = () => {
                 setPlantFilters={setPlantFilters}
               />
             </Card>
-            <MapProvider className="flex-grow" />
+            <MapProvider className="w-1/2 flex-grow" />
           </div>
           <Button
             disabled={locationSearchLoading}

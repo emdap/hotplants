@@ -1,5 +1,5 @@
+import { Feature, Polygon } from "geojson";
 import { createContext, useContext } from "react";
-import { LocationCoord } from "schemaHelpers/customSchemaTypes";
 import { LocationWithPolygon } from "schemaHelpers/schemaTypesUtil";
 
 export const VOID_FUNCTION = () => {};
@@ -11,7 +11,7 @@ type PlantSearchContextType = {
 
   searchLocation: LocationWithPolygon | null;
   setSearchLocation: (location: LocationWithPolygon | null) => void;
-  setCustomLocationPolygon: (coordinates: LocationCoord[]) => void;
+  setCustomLocationPolygon: (boundingPolygon: Feature<Polygon>) => void;
 
   fullScreenElement: FullScreenElement | null;
   setFullScreenElement: (element: FullScreenElement | null) => void;
