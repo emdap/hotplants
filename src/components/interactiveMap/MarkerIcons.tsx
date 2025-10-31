@@ -11,5 +11,5 @@ export const PolygonCenterIcon = new DivIcon({
 export const OccurrenceMarkerIcon = (iconUrl: string) =>
   new Icon({
     iconUrl,
-    className: "rounded-full h-10 aspect-square",
+    className: "!border-none h-10 aspect-square",
   });

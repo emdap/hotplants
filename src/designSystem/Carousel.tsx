@@ -72,17 +72,18 @@ const Carousel = ({
         {children.map((child, index) => {
           const { renderChild, translate } = getChildStyle(index);
           return (
-            renderChild && (
-              <div
-                key={index}
-                className="transition-all duration-300 absolute top-0 w-full h-full [&_*]:max-h-full flex justify-center items-center rounded-sm"
-                style={{
-                  translate,
-                }}
-              >
-                {child}
-              </div>
-            )
+            <div
+              key={index}
+              className={classNames(
+                "transition-all duration-300 absolute top-0 w-full h-full [&_*]:max-h-full flex justify-center items-center rounded-sm",
+                renderChild ? "opacity-100" : "opacity-0"
+              )}
+              style={{
+                translate,
+              }}
+            >
+              {renderChild && child}
+            </div>
           );
         })}
       </div>
