@@ -3,15 +3,11 @@ import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import LocationPolygon from "./LocationPolygon";
 import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
+import PolygonDrawer from "./PolygonDrawer";
 
 const DEFAULT_CONTAINER_PROPS: MapContainerProps = {
   worldCopyJump: true,
-  maxBoundsViscosity: 0.5,
-  maxBounds: [
-    [-90, -180],
-    [90, 180],
-  ],
-  zoom: 0,
+  zoom: 2,
   center: [0, 0],
 };
 
@@ -34,6 +30,7 @@ const MapProvider = ({
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+
       {searchLocation && (
         <LocationPolygon
           enableDrag={activePlantIndexes.plantIndex === null}
@@ -41,6 +38,7 @@ const MapProvider = ({
         />
       )}
 
+      <PolygonDrawer />
       <PlantOccurrenceMarkers showAllPlants={showAllPlants} />
     </MapContainer>
   );

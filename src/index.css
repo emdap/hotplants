@@ -31,3 +31,32 @@ body {
   height: 0;
   display: none;
 }
+
+/* Leaflet overrides */
+.leaflet-draw-section:last-of-type {
+  @apply hidden;
+}
+
+.leaflet-control-container {
+  .leaflet-bar {
+    @apply !border-none shadow-sm;
+  }
+  .leaflet-draw-actions,
+  .leaflet-control {
+    @apply rounded-sm shadow-sm bg-white/80;
+  }
+  .leaflet-draw-actions {
+    @apply mr-1;
+  }
+  a {
+    @apply bg-transparent hover:bg-white text-primary;
+  }
+}
+
+.leaflet-marker-icon {
+  @apply rounded-full bg-cyan-200 border-2 border-cyan-900;
+}
+
+.leaflet-interactive {
+  @apply stroke-cyan-900 fill-cyan-400;
+}
