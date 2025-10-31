@@ -11,7 +11,7 @@ import {
 } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 20;
@@ -43,16 +43,14 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   });
 
   const scrapeQuery = useReactQuery({
-    queryKey: ["plant-search", plantSearchCriteria],
+    queryKey: ["scrape-search", plantSearchCriteria],
     queryFn: async () => {
       const { data } = await hotplantsClient.POST("/plants/scrapeOccurrences", {
         body: plantSearchCriteria ?? {},
       });
       return data;
     },
-    enabled: Boolean(
-      (plantSearchQuery.data?.plantSearch?.count ?? Infinity) < MIN_RESULTS
-    ),
+    enabled: false,
   });
 
   const searchRecordQuery = useApolloQuery(GET_SEARCH_RECORD, {
@@ -69,25 +67,21 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
       searchRecordQuery.error ||
       plantSearchQuery.error
     ) {
-      stopPolling();
+      setPollInterval(0);
     }
   }, [searchRecordQuery, plantSearchQuery]);
-
-  const stopPolling = () => {
-    setPollInterval(0);
-  };
 
   const startPolling = () => {
     setPollInterval(DEFAULT_POLL_INTERVAL);
 
     stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
     stopPollingTimeout.current = setTimeout(
-      () => stopPolling(),
+      () => setPollInterval(0),
       DEFAULT_POLL_INTERVAL * MAX_POLLS
     );
   };
 
-  const performScrapeWithPolling = async () => {
+  const performScrapeWithPolling = useCallback(async () => {
     loadMoreScrape.current = true;
     if (!scrapeQuery.isLoading) {
       const { data } = await scrapeQuery.refetch();
@@ -95,10 +89,16 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     }
     startPolling();
     loadMoreScrape.current = false;
-  };
+  }, [scrapeQuery, searchRecordQuery]);
+
+  useEffect(() => {
+    if ((plantSearchQuery.data?.plantSearch.count ?? Infinity) < MIN_RESULTS) {
+      performScrapeWithPolling();
+    }
+  }, [plantSearchQuery.data?.plantSearch, performScrapeWithPolling]);
 
   const fetchMorePlants = async () => {
-    if (plantSearchQuery.loading) {
+    if (pollInterval || plantSearchQuery.loading) {
       return;
     }
     const { plantSearch } = plantSearchQuery.data ?? {};
