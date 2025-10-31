@@ -38,7 +38,7 @@ const MapProvider = ({
         />
       )}
 
-      <PolygonDrawer />
+      {showAllPlants && <PolygonDrawer />}
       <PlantOccurrenceMarkers showAllPlants={showAllPlants} />
     </MapContainer>
   );
