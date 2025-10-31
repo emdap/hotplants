@@ -11,10 +11,6 @@ const DEFAULT_CONTAINER_PROPS: MapContainerProps = {
   center: [0, 0],
 };
 
-// Create another component for plotting plant images on map
-// Use https://github.com/Leaflet/Leaflet.markercluster
-// Create custom styles for markers
-
 const MapProvider = ({
   showAllPlants,
   className,
