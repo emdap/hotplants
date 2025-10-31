@@ -7,6 +7,27 @@
   --color-white: #fff;
   --color-primary: #009999;
   --color-secondary: #bebebe;
+
+  --animate-background-shift: background-shift 40s ease infinite;
+
+  @keyframes background-shift {
+    0%,
+    100% {
+      background-position: 70% 50%;
+    }
+
+    25% {
+      background-position: 25% 50%;
+    }
+
+    50% {
+      background-position: 100% 100%;
+    }
+
+    75% {
+      background-position: 70% 100%;
+    }
+  }
 }
 
 @layer base {
@@ -23,6 +44,7 @@
 body {
   scrollbar-width: thin;
   scrollbar-color: var(--color-primary) transparent;
+
   @apply text-black bg-white;
 }
 
@@ -33,6 +55,13 @@ body {
 }
 
 /* Leaflet overrides */
+.dark {
+  .leaflet-layer,
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  }
+}
 .leaflet-draw-section:last-of-type {
   @apply hidden;
 }

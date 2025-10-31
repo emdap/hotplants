@@ -91,7 +91,7 @@ const PlantResultsHolder = ({
                   setActivePlantIndexes({ plantIndex: index, mediaIndex: null })
                 }
                 className={classNames("flex gap-2 cursor-pointer h-40", {
-                  "bg-secondary/20!": plantIndex === index,
+                  "bg-white/90!": plantIndex === index,
                 })}
               >
                 <PlantImageViewer mode="thumbnail" plant={plant} />

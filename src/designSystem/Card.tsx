@@ -9,7 +9,7 @@ const Card = ({ className, ...props }: CardProps) => (
   <motion.div
     {...props}
     className={classNames(
-      "rounded border border-gray-200 shadow-sm dark:border-gray-400 bg-white dark:bg-gray-800 p-6",
+      "rounded border border-gray-200 shadow-sm dark:border-gray-400 bg-white/80 backdrop-blur-xs dark:bg-gray-800 p-6",
       className
     )}
   />
