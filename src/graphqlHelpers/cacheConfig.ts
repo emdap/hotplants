@@ -4,15 +4,16 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 import {
+  PlantOccurrence,
   PlantSearchResults,
   SearchPlantsQueryVariables,
 } from "generated/graphql/graphql";
 
-const mergeFunction: FieldMergeFunction<
+const mergePlantSearch: FieldMergeFunction<
   PlantSearchResults,
   PlantSearchResults,
   FieldFunctionOptions<SearchPlantsQueryVariables, SearchPlantsQueryVariables>
-> = (existing, incoming: PlantSearchResults, { variables }) => {
+> = (existing, incoming, { variables }) => {
   const count = incoming.count;
   const baseResults =
     variables?.offset && existing?.results ? existing.results : [];
@@ -22,13 +23,25 @@ const mergeFunction: FieldMergeFunction<
   };
 };
 
+const mergeOccurrences: FieldMergeFunction<
+  PlantOccurrence[],
+  PlantOccurrence[]
+> = (_existing, incoming) => incoming;
+
 export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
         plantSearch: {
           keyArgs: ["where", "sort"],
-          merge: mergeFunction,
+          merge: mergePlantSearch,
+        },
+      },
+    },
+    PlantData: {
+      fields: {
+        occurrences: {
+          merge: mergeOccurrences,
         },
       },
     },
