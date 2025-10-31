@@ -11,7 +11,7 @@ import {
 } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 20;
@@ -81,7 +81,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     );
   };
 
-  const performScrapeWithPolling = useCallback(async () => {
+  const performScrapeWithPolling = async () => {
     loadMoreScrape.current = true;
     if (!scrapeQuery.isLoading) {
       const { data } = await scrapeQuery.refetch();
@@ -89,13 +89,18 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     }
     startPolling();
     loadMoreScrape.current = false;
-  }, [scrapeQuery, searchRecordQuery]);
+  };
 
   useEffect(() => {
-    if ((plantSearchQuery.data?.plantSearch.count ?? Infinity) < MIN_RESULTS) {
+    if (
+      plantSearchQuery.data &&
+      plantSearchQuery.data.plantSearch.count < MIN_RESULTS
+    ) {
       performScrapeWithPolling();
     }
-  }, [plantSearchQuery.data?.plantSearch, performScrapeWithPolling]);
+    // Stale reference of performScrapeWithPolling is ok, query objects update every render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plantSearchQuery.data]);
 
   const fetchMorePlants = async () => {
     if (pollInterval || plantSearchQuery.loading) {

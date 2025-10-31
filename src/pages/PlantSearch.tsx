@@ -39,7 +39,7 @@ const PlantSearch = () => {
     useState<PlantDataInput | null>(null);
 
   const {
-    plantSearchQuery: { data: { plantSearch } = {} },
+    plantSearchQuery: { data: { plantSearch } = {}, ...plantSearchQuery },
     searchRecordQuery,
     getPlantQuery,
     fetchMorePlants,
@@ -74,15 +74,12 @@ const PlantSearch = () => {
       boundingPolygon,
     });
 
-  const applyFilters = useCallback(
-    () =>
-      setPlantSearchCriteria({
-        ...plantFilters,
-        boundingPolyCoords:
-          searchLocation?.boundingPolygon.geometry.coordinates,
-      }),
-    [plantFilters, searchLocation?.boundingPolygon.geometry.coordinates]
-  );
+  const applyFilters = useCallback(() => {
+    setPlantSearchCriteria({
+      ...plantFilters,
+      boundingPolyCoords: searchLocation?.boundingPolygon.geometry.coordinates,
+    });
+  }, [plantFilters, searchLocation?.boundingPolygon.geometry.coordinates]);
 
   useEffect(() => {
     if (
@@ -92,6 +89,13 @@ const PlantSearch = () => {
       applyFilters();
     }
   }, [plantSearch, searchLocation, applyFilters]);
+
+  const searchPlants = () => {
+    applyFilters();
+    if (plantSearchQuery.error) {
+      plantSearchQuery.refetch();
+    }
+  };
 
   return (
     <PlantSearchContext.Provider
@@ -126,7 +130,7 @@ const PlantSearch = () => {
           <Button
             disabled={locationSearchLoading}
             variant="primary"
-            onClick={applyFilters}
+            onClick={searchPlants}
           >
             Search
           </Button>
