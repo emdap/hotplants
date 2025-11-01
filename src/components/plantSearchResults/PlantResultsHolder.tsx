@@ -17,8 +17,8 @@ const PlantResultsHolder = ({
   const {
     fullScreenElement,
     plantSearchResults,
-    activePlantIndexes: { plantIndex },
-    setActivePlantIndexes,
+    activeIndexes: { plantIndex },
+    setActiveIndexes,
   } = usePlantSearchContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -45,12 +45,12 @@ const PlantResultsHolder = ({
 
       if (newActiveIndex !== null) {
         e.preventDefault();
-        setActivePlantIndexes({ plantIndex: newActiveIndex, mediaIndex: null });
+        setActiveIndexes({ plantIndex: newActiveIndex, mediaIndex: null });
         const childNode = containerRef.current?.childNodes[newActiveIndex];
         childNode instanceof HTMLElement && childNode.scrollIntoView();
       }
     },
-    [plantIndex, setActivePlantIndexes, plantSearchResults.length]
+    [plantIndex, setActiveIndexes, plantSearchResults.length]
   );
 
   useDocumentListener(
@@ -88,10 +88,11 @@ const PlantResultsHolder = ({
                 key={plant.scientificName}
                 id={plant.scientificName}
                 onClick={() =>
-                  setActivePlantIndexes({ plantIndex: index, mediaIndex: null })
+                  setActiveIndexes({ plantIndex: index, mediaIndex: null })
                 }
                 className={classNames("flex gap-2 cursor-pointer h-40", {
-                  "bg-white/90!": plantIndex === index,
+                  "bg-default-background/90! dark:bg-default-background/50!":
+                    plantIndex === index,
                 })}
               >
                 <PlantImageViewer mode="thumbnail" plant={plant} />
@@ -103,9 +104,7 @@ const PlantResultsHolder = ({
 
       <PlantResultPane
         plant={activePlant}
-        onClose={() =>
-          setActivePlantIndexes({ plantIndex: null, mediaIndex: null })
-        }
+        onClose={() => setActiveIndexes({ plantIndex: null, mediaIndex: null })}
       />
     </>
   );

@@ -3,8 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-black: #000;
-  --color-white: #fff;
+  --color-default-text: #000;
+  --color-default-background: #fff;
   --color-primary: #009999;
   --color-secondary: #bebebe;
 
@@ -33,8 +33,8 @@
 @layer base {
   * {
     @variant dark {
-      --color-black: #eee;
-      --color-white: #000;
+      --color-default-text: #eee;
+      --color-default-background: #000;
       --color-primary: #005757;
       --color-secondary: #868686;
     }
@@ -45,7 +45,7 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--color-primary) transparent;
 
-  @apply text-black bg-white;
+  @apply text-default-text bg-default-background;
 }
 
 ::-webkit-scrollbar-button {
@@ -70,15 +70,14 @@ body {
   .leaflet-bar {
     @apply !border-none shadow-sm;
   }
-  .leaflet-draw-actions,
   .leaflet-control {
-    @apply rounded-sm shadow-sm bg-white/80;
+    @apply rounded-sm shadow-sm bg-default-background/80;
   }
   .leaflet-draw-actions {
-    @apply mr-1;
+    @apply !hidden;
   }
   a {
-    @apply bg-transparent hover:bg-white text-primary;
+    @apply bg-transparent hover:bg-default-background text-primary;
   }
 }
 

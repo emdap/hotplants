@@ -97,7 +97,11 @@ const LocationSearch = ({
           setEnableQuery(true);
           setSearchInput(e.target.value);
         }}
-        placeholder="Enter a location"
+        placeholder={
+          searchLocation?.locationSource === "map"
+            ? "Using custom location on map"
+            : "Enter a location"
+        }
       />
 
       {locationQuery.isLoading
@@ -106,8 +110,7 @@ const LocationSearch = ({
         ? "Error"
         : locationInvalid
         ? "Cannot find location"
-        : searchLocation &&
-          (searchLocation?.displayName || "Using custom location on map")}
+        : searchLocation && searchLocation.displayName}
     </div>
   );
 };

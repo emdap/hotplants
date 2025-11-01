@@ -48,12 +48,13 @@ const Modal = ({
         <>
           <motion.div
             key="mask"
-            className="fixed top-0 left-0 h-dvh w-dvw bg-black/10"
+            className="fixed top-0 left-0 h-dvh w-dvw bg-default-text/50"
             onClick={onClose}
             {...MOTION_FADE_IN}
           />
           <Card
             key="body"
+            disableBlurEffect
             className={classNames(
               "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 max-h-fit h-5/6 flex flex-col gap-2 overflow-auto",
               className

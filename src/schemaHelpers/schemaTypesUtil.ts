@@ -3,7 +3,7 @@ import { BBox, Feature, Polygon } from "geojson";
 import { LocationData } from "./customSchemaTypes";
 
 export type LocationWithPolygon = {
-  displayName?: string;
+  displayName: string;
   locationSource: "search" | "map";
   boundingPolygon: Feature<Polygon>;
 };

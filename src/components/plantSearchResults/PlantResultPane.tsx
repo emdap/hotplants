@@ -36,7 +36,7 @@ const PlantResultPane = ({
         <div ref={paneRef}>
           <Card
             key="plant-pane"
-            className="h-full w-full absolute top-0 sm:max-w-3/5 flex flex-col gap-2 bg-white/80! dark:bg-gray-800/80 backdrop-blur-xs"
+            className="h-full w-full absolute top-0 sm:max-w-3/5 flex flex-col gap-2 !bg-default-background/80 dark:!bg-gray-800/80 backdrop-blur-xs"
             {...CARD_FADE_IN}
           >
             <Button onClick={onClose} className="-mt-2 cursor-pointer">

@@ -1,10 +1,11 @@
+import { centroid } from "@turf/turf";
 import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/plantFilters/LocationSearch";
 import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteristicsFilter";
 import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
 import {
-  ActivePlantIndexes,
+  ActiveIndexes,
   FullScreenElement,
   PlantSearchContext,
 } from "contexts/PlantSearchContext";
@@ -22,7 +23,7 @@ const PlantSearch = () => {
     useState<FullScreenElement | null>(null);
   const [plantSearchResults, setPlantSearchResults] =
     useState<PlantQueryResults>([]);
-  const activePlantIndexesState = useState<ActivePlantIndexes>({
+  const activeIndexesState = useState<ActiveIndexes>({
     plantIndex: null,
     mediaIndex: null,
   });
@@ -68,11 +69,15 @@ const PlantSearch = () => {
     }
   };
 
-  const setCustomLocationPolygon = (boundingPolygon: Feature<Polygon>) =>
+  const setCustomLocationPolygon = (boundingPolygon: Feature<Polygon>) => {
+    const center = centroid(boundingPolygon).geometry.coordinates;
+    const [lat, lng] = center.map((num) => Math.round(num * 100) / 100);
     setSearchLocation({
+      displayName: `${lat}, ${lng}`,
       locationSource: "map",
       boundingPolygon,
     });
+  };
 
   const applyFilters = useCallback(() => {
     setPlantSearchCriteria({
@@ -101,8 +106,8 @@ const PlantSearch = () => {
     <PlantSearchContext.Provider
       value={{
         plantSearchResults,
-        activePlantIndexes: activePlantIndexesState[0],
-        setActivePlantIndexes: activePlantIndexesState[1],
+        activeIndexes: activeIndexesState[0],
+        setActiveIndexes: activeIndexesState[1],
         syncPlant,
 
         searchLocation,

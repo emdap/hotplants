@@ -4,47 +4,70 @@ import { useMemo } from "react";
 import { Marker } from "react-leaflet";
 import { OccurrenceMarkerIcon } from "./MarkerIcons";
 
+const plantOccurrencesFlat = (plant: PlantResult, plantIndex: number) =>
+  plant.occurrences.flatMap((occurrence, occurrenceIndex) =>
+    occurrence.media.map((media, mediaIndex) => ({
+      ...occurrence,
+      plantIndex,
+      occurrenceIndex,
+      mediaIndex,
+      media,
+    }))
+  );
+
 const PlantOccurrenceMarkers = ({
   showAllPlants,
 }: {
   showAllPlants?: boolean;
 }) => {
-  const {
-    plantSearchResults,
-    activePlantIndexes: { plantIndex },
-    setActivePlantIndexes,
-  } = usePlantSearchContext();
+  const { plantSearchResults, activeIndexes, setActiveIndexes } =
+    usePlantSearchContext();
 
-  const plantOccurrencesFlat = (plant: PlantResult, plantIndex: number) =>
-    plant.occurrences.flatMap((occurrence, occurrenceIndex) =>
-      occurrence.media.map((media, mediaIndex) => ({
-        ...occurrence,
-        plantIndex,
-        media,
-        mediaIndex: occurrenceIndex + mediaIndex,
-      }))
-    );
-
-  const occurrences = useMemo(() => {
+  const { isViewingAllPlants, occurrences } = useMemo(() => {
     if (
       showAllPlants ||
-      plantIndex === null ||
-      !plantSearchResults[plantIndex]
+      activeIndexes.plantIndex === null ||
+      !plantSearchResults[activeIndexes.plantIndex]
     ) {
-      return plantSearchResults.flatMap(plantOccurrencesFlat);
+      return {
+        isViewingAllPlants: true,
+        occurrences: plantSearchResults.flatMap(plantOccurrencesFlat),
+      };
     } else {
-      return plantOccurrencesFlat(plantSearchResults[plantIndex], plantIndex);
+      return {
+        isViewingAllPlants: false,
+        occurrences: plantOccurrencesFlat(
+          plantSearchResults[activeIndexes.plantIndex],
+          activeIndexes.plantIndex
+        ),
+      };
     }
-  }, [showAllPlants, plantSearchResults, plantIndex]);
+  }, [showAllPlants, plantSearchResults, activeIndexes.plantIndex]);
+
+  const isActiveOccurrenceMedia = (plantIndex: number, mediaIndex: number) =>
+    plantIndex === activeIndexes.plantIndex &&
+    mediaIndex === activeIndexes.mediaIndex;
 
   return occurrences.map(
-    ({ occurrenceCoords, media, plantIndex, mediaIndex }, index) => (
+    (
+      { occurrenceCoords, media, plantIndex, occurrenceIndex, mediaIndex },
+      index
+    ) => (
       <Marker
         key={index}
         position={[occurrenceCoords[1], occurrenceCoords[0]]}
-        icon={OccurrenceMarkerIcon(media.url)}
+        icon={OccurrenceMarkerIcon(
+          media.url,
+          isViewingAllPlants
+            ? false
+            : isActiveOccurrenceMedia(plantIndex, index)
+        )}
         eventHandlers={{
-          click: () => setActivePlantIndexes({ plantIndex, mediaIndex }),
+          click: () =>
+            setActiveIndexes({
+              plantIndex,
+              mediaIndex: occurrenceIndex + mediaIndex,
+            }),
         }}
       />
     )

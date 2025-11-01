@@ -16,14 +16,18 @@ const PlantImageViewer = ({
   plant: PlantResult;
   mode: "thumbnail" | "carousel";
 } & Pick<ModalProps, "parentRef">) => {
-  const { fullScreenElement, setFullScreenElement, activePlantIndexes } =
-    usePlantSearchContext();
+  const {
+    fullScreenElement,
+    setFullScreenElement,
+    activeIndexes,
+    setActiveIndexes,
+  } = usePlantSearchContext();
   const [showFullScreen, setShowFullScreen] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(
-    activePlantIndexes.mediaIndex ?? 0
+    activeIndexes.mediaIndex ?? 0
   );
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(
-    activePlantIndexes.mediaIndex ?? 0
+    activeIndexes.mediaIndex ?? 0
   );
 
   const plantImages = useMemo(
@@ -45,9 +49,13 @@ const PlantImageViewer = ({
   }, [showFullScreen, setFullScreenElement]);
 
   useEffect(() => {
-    activePlantIndexes.mediaIndex !== null &&
-      setCarouselIndex(activePlantIndexes.mediaIndex);
-  }, [activePlantIndexes.mediaIndex]);
+    activeIndexes.mediaIndex !== null &&
+      setCarouselIndex(activeIndexes.mediaIndex);
+  }, [activeIndexes.mediaIndex]);
+
+  useEffect(() => {
+    setActiveIndexes((prev) => ({ ...prev, mediaIndex: carouselIndex }));
+  }, [carouselIndex, setActiveIndexes]);
 
   return (
     <div
