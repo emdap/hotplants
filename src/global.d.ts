@@ -4,8 +4,7 @@ declare module "wkt" {
 }
 
 interface ImportMetaEnv {
-  readonly VITE_GRAPHQL_SERVER: string;
-  readonly VITE_HOTPLANTS_SERVER: string;
+  readonly VITE_SERVER_URL: string;
 }
 
 interface ImportMeta {

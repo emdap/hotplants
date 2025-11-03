@@ -6,6 +6,11 @@ import LocationPolygon from "./LocationPolygon";
 import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
 import PolygonDrawer from "./PolygonDrawer";
 
+import "leaflet-draw/dist/leaflet.draw.css";
+import "leaflet/dist/leaflet.css";
+import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
+import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
+
 const DEFAULT_CONTAINER_PROPS: MapContainerProps = {
   worldCopyJump: true,
   zoom: 2,

@@ -6,9 +6,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 import App from "./App.tsx";
-
-import "leaflet-draw/dist/leaflet.draw.css";
-import "leaflet/dist/leaflet.css";
 import "./index.css";
 
 const queryClient = new QueryClient({
@@ -16,7 +13,7 @@ const queryClient = new QueryClient({
 });
 
 const apolloClient = new ApolloClient({
-  link: new HttpLink({ uri: import.meta.env.VITE_GRAPHQL_SERVER }),
+  link: new HttpLink({ uri: `${import.meta.env.VITE_SERVER_URL}/graphql` }),
   cache,
 });
 

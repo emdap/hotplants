@@ -23,7 +23,7 @@ const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
 };
 
 const hotplantsClient = createClient<paths>({
-  baseUrl: import.meta.env.VITE_HOTPLANTS_SERVER,
+  baseUrl: `${import.meta.env.VITE_SERVER_URL}/api`,
 });
 
 const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
