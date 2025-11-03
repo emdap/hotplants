@@ -77,7 +77,7 @@ body {
     @apply !hidden;
   }
   a {
-    @apply bg-transparent hover:bg-default-background text-primary;
+    @apply !bg-transparent hover:bg-default-background text-primary;
   }
 }
 

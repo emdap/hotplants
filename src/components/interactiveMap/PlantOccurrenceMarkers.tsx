@@ -2,7 +2,8 @@ import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useMemo } from "react";
 import { Marker } from "react-leaflet";
-import { OccurrenceMarkerIcon } from "./MarkerIcons";
+import MarkerClusterGroup from "react-leaflet-cluster";
+import { MarkerClusterIcon, OccurrenceMarkerIcon } from "./MarkerIcons";
 
 const plantOccurrencesFlat = (plant: PlantResult, plantIndex: number) =>
   plant.occurrences.flatMap((occurrence, occurrenceIndex) =>
@@ -48,29 +49,37 @@ const PlantOccurrenceMarkers = ({
     plantIndex === activeIndexes.plantIndex &&
     mediaIndex === activeIndexes.mediaIndex;
 
-  return occurrences.map(
-    (
-      { occurrenceCoords, media, plantIndex, occurrenceIndex, mediaIndex },
-      index
-    ) => (
-      <Marker
-        key={index}
-        position={[occurrenceCoords[1], occurrenceCoords[0]]}
-        icon={OccurrenceMarkerIcon(
-          media.url,
-          isViewingAllPlants
-            ? false
-            : isActiveOccurrenceMedia(plantIndex, index)
-        )}
-        eventHandlers={{
-          click: () =>
-            setActiveIndexes({
-              plantIndex,
-              mediaIndex: occurrenceIndex + mediaIndex,
-            }),
-        }}
-      />
-    )
+  return (
+    <MarkerClusterGroup
+      key={activeIndexes.mediaIndex}
+      maxClusterRadius={5}
+      iconCreateFunction={MarkerClusterIcon}
+    >
+      {occurrences.map(
+        (
+          { occurrenceCoords, media, plantIndex, occurrenceIndex, mediaIndex },
+          index
+        ) => (
+          <Marker
+            key={index}
+            position={[occurrenceCoords[1], occurrenceCoords[0]]}
+            icon={OccurrenceMarkerIcon(
+              media.url,
+              isViewingAllPlants
+                ? false
+                : isActiveOccurrenceMedia(plantIndex, index)
+            )}
+            eventHandlers={{
+              click: () =>
+                setActiveIndexes({
+                  plantIndex,
+                  mediaIndex: occurrenceIndex + mediaIndex,
+                }),
+            }}
+          />
+        )
+      )}
+    </MarkerClusterGroup>
   );
 };
 
