@@ -1,20 +1,31 @@
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { PlantOccurrence } from "generated/graphql/graphql";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useMemo } from "react";
 import { Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { MarkerClusterIcon, OccurrenceMarkerIcon } from "./MarkerIcons";
 
-const plantOccurrencesFlat = (plant: PlantResult, plantIndex: number) =>
-  plant.occurrences.flatMap((occurrence, occurrenceIndex) =>
-    occurrence.media.map((media, mediaIndex) => ({
+type FlatOccurrenceMedia = Omit<PlantOccurrence, "media"> & {
+  plantIndex: number;
+  mediaIndex: number;
+  media: PlantOccurrence["media"][number];
+};
+
+const occurrenceMediaFlat = (plant: PlantResult, plantIndex: number) => {
+  let overallIndex = 0;
+  return plant.occurrences.reduce<FlatOccurrenceMedia[]>((prev, occurrence) => {
+    const mappedMedia = occurrence.media.map((media, index) => ({
       ...occurrence,
       plantIndex,
-      occurrenceIndex,
-      mediaIndex,
+      mediaIndex: overallIndex + index,
       media,
-    }))
-  );
+    }));
+
+    overallIndex += mappedMedia.length;
+    return prev.concat(mappedMedia);
+  }, []);
+};
 
 const PlantOccurrenceMarkers = ({
   showAllPlants,
@@ -32,12 +43,12 @@ const PlantOccurrenceMarkers = ({
     ) {
       return {
         isViewingAllPlants: true,
-        occurrences: plantSearchResults.flatMap(plantOccurrencesFlat),
+        occurrences: plantSearchResults.flatMap(occurrenceMediaFlat),
       };
     } else {
       return {
         isViewingAllPlants: false,
-        occurrences: plantOccurrencesFlat(
+        occurrences: occurrenceMediaFlat(
           plantSearchResults[activeIndexes.plantIndex],
           activeIndexes.plantIndex
         ),
@@ -52,14 +63,13 @@ const PlantOccurrenceMarkers = ({
   return (
     <MarkerClusterGroup
       key={activeIndexes.mediaIndex}
-      maxClusterRadius={5}
+      maxClusterRadius={10}
+      zoomToBoundsOnClick={false}
+      spiderfyOnEveryZoom
       iconCreateFunction={MarkerClusterIcon}
     >
       {occurrences.map(
-        (
-          { occurrenceCoords, media, plantIndex, occurrenceIndex, mediaIndex },
-          index
-        ) => (
+        ({ occurrenceCoords, media, plantIndex, mediaIndex }, index) => (
           <Marker
             key={index}
             position={[occurrenceCoords[1], occurrenceCoords[0]]}
@@ -73,7 +83,7 @@ const PlantOccurrenceMarkers = ({
               click: () =>
                 setActiveIndexes({
                   plantIndex,
-                  mediaIndex: occurrenceIndex + mediaIndex,
+                  mediaIndex,
                 }),
             }}
           />
