@@ -4,7 +4,7 @@ import Card from "designSystem/Card";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import LocationPolygon from "./LocationPolygon";
 import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
-import PolygonDrawer from "./PolygonDrawer";
+import PolygonDrawing from "./PolygonDrawing";
 
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet/dist/leaflet.css";
@@ -46,7 +46,7 @@ const MapProvider = ({
           />
         )}
 
-        {showAllPlants && <PolygonDrawer />}
+        {showAllPlants && <PolygonDrawing />}
         <PlantOccurrenceMarkers showAllPlants={showAllPlants} />
       </MapContainer>
     </Card>

@@ -3,10 +3,10 @@ import { DrawEvents } from "leaflet";
 import { FeatureGroup } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 
-const PolygonDrawer = () => {
+const PolygonDrawing = () => {
   const { setCustomLocationPolygon } = usePlantSearchContext();
 
-  const created = ({ layer }: DrawEvents.Created) => {
+  const createdDrawing = ({ layer }: DrawEvents.Created) => {
     const geojson = layer.toGeoJSON();
     setCustomLocationPolygon(geojson);
     layer.remove();
@@ -17,7 +17,7 @@ const PolygonDrawer = () => {
       <EditControl
         position="topleft"
         edit={{ edit: false }}
-        onCreated={created}
+        onCreated={createdDrawing}
         draw={{
           polyline: false,
           marker: false,
@@ -31,4 +31,4 @@ const PolygonDrawer = () => {
   );
 };
 
-export default PolygonDrawer;
+export default PolygonDrawing;
