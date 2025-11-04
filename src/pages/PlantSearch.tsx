@@ -129,16 +129,17 @@ const PlantSearch = () => {
                 plantFilters={plantFilters}
                 setPlantFilters={setPlantFilters}
               />
+              <Button
+                className="mt-auto"
+                disabled={locationSearchLoading}
+                variant="primary"
+                onClick={searchPlants}
+              >
+                Search
+              </Button>
             </Card>
             <MapProvider showAllPlants className="w-1/2 flex-grow" />
           </div>
-          <Button
-            disabled={locationSearchLoading}
-            variant="primary"
-            onClick={searchPlants}
-          >
-            Search
-          </Button>
           <ScrapeStatusBar
             searchRecord={searchRecordQuery.data?.searchRecord}
           />
