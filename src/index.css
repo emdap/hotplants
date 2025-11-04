@@ -68,14 +68,30 @@ body {
 }
 
 .leaflet-control-container {
+  * {
+    @apply font-sans;
+  }
   .leaflet-bar {
     @apply !border-none shadow-sm;
   }
   .leaflet-control {
     @apply rounded-sm shadow-sm bg-default-background/80;
   }
+
+  /* CSS hacks to hide the toolbar, but allow cancelling drawing by re-clicking the active icon.
+No method available in lib to cancel drawings */
   .leaflet-draw-actions {
-    @apply !hidden;
+    @apply top-0 left-0 w-full h-full overflow-hidden;
+    li {
+      @apply !hidden;
+    }
+    li:last-of-type {
+      @apply !block h-full w-full;
+
+      a {
+        @apply !border-0 h-full w-full text-transparent;
+      }
+    }
   }
   a {
     @apply !bg-transparent hover:bg-default-background text-primary;
