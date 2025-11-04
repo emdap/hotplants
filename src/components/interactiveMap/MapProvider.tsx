@@ -24,7 +24,12 @@ const MapProvider = ({
 }: MapContainerProps & { showAllPlants?: boolean }) => {
   const { searchLocation, activeIndexes } = usePlantSearchContext();
   return (
-    <Card className={classNames("min-h-60 min-w-30 !p-0", className)}>
+    <Card
+      className={classNames(
+        "min-h-60 min-w-30 !p-0 overflow-hidden",
+        className
+      )}
+    >
       <MapContainer
         className="w-full h-full z-0 !bg-transparent"
         {...{ ...DEFAULT_CONTAINER_PROPS, ...containerProps }}

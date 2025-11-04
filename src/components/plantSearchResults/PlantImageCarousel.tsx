@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
-import Modal, { ModalProps } from "designSystem/Modal";
+import Modal from "designSystem/Modal";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
@@ -11,11 +11,10 @@ import PlantImage from "./PlantImage";
 const PlantImageViewer = ({
   plant,
   mode,
-  parentRef,
 }: {
   plant: PlantResult;
   mode: "thumbnail" | "carousel";
-} & Pick<ModalProps, "parentRef">) => {
+}) => {
   const {
     fullScreenElement,
     setFullScreenElement,
@@ -90,7 +89,6 @@ const PlantImageViewer = ({
           setShowFullScreen(false);
           setCarouselIndex(largeCarouselIndex);
         }}
-        parentRef={parentRef}
       >
         <Carousel
           carouselIndex={carouselIndex}

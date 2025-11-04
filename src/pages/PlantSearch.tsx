@@ -118,7 +118,7 @@ const PlantSearch = () => {
         setFullScreenElement,
       }}
     >
-      <main className="h-full relative overflow-hidden flex flex-col">
+      <main className="overflow-hidden flex flex-col">
         <div className="flex flex-col gap-2 p-4">
           <div className="flex gap-4">
             <Card className="flex flex-col gap-2 flex-grow">

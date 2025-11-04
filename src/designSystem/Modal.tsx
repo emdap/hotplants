@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence, motion } from "motion/react";
-import { HTMLProps, RefObject } from "react";
+import { HTMLProps } from "react";
 import { createPortal } from "react-dom";
 import { MdClose } from "react-icons/md";
 import Button from "./Button";
@@ -12,7 +12,6 @@ export type ModalProps = {
   isOpen?: boolean;
   onClose?: () => void;
   headerProps?: HTMLProps<HTMLDivElement>;
-  parentRef?: RefObject<HTMLElement | null>;
 } & CardProps;
 
 const MODAL_BODY_FADE_IN = CUSTOM_MOTION_FADE_IN({
@@ -27,7 +26,6 @@ const Modal = ({
   headerProps: { className: headerClassName, ...headerProps } = {},
   children,
   className,
-  parentRef,
   ...bodyProps
 }: ModalProps) => {
   const closeOnEscape = (e: KeyboardEvent) => {
@@ -56,7 +54,7 @@ const Modal = ({
             key="body"
             disableBlurEffect
             className={classNames(
-              "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 max-h-fit h-5/6 flex flex-col gap-2 overflow-auto",
+              "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 h-5/6 flex flex-col gap-2 overflow-auto",
               className
             )}
             {...MODAL_BODY_FADE_IN}
@@ -78,7 +76,7 @@ const Modal = ({
         </>
       )}
     </AnimatePresence>,
-    parentRef?.current ?? document.body
+    document.body
   );
 };
 

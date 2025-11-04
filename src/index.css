@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
+/* #region tailwind config */
 @custom-variant dark (&:where(.dark, .dark *));
-
 @theme {
   --color-default-text: #000;
   --color-default-background: #fff;
@@ -40,6 +40,7 @@
     }
   }
 }
+/* #endregion */
 
 body {
   scrollbar-width: thin;
@@ -54,7 +55,7 @@ body {
   display: none;
 }
 
-/* Leaflet overrides */
+/* #region Leaflet overrides */
 .dark {
   .leaflet-layer,
   .leaflet-control-zoom-in,
@@ -88,3 +89,4 @@ body {
 .leaflet-interactive {
   @apply stroke-cyan-900 fill-cyan-400;
 }
+/* #endregion */
