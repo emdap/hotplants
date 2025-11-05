@@ -2,7 +2,7 @@ import { PlantDataInput } from "generated/graphql/graphql";
 
 const INPUT_FILTER_FIELDS = ["scientificName", "commonName"] as const;
 
-const PlantCharacteristicsFilter = ({
+const PlantFilters = ({
   plantFilters,
   setPlantFilters,
 }: {
@@ -25,4 +25,4 @@ const PlantCharacteristicsFilter = ({
   </>
 );
 
-export default PlantCharacteristicsFilter;
+export default PlantFilters;

@@ -1,7 +1,7 @@
 import { centroid } from "@turf/turf";
 import MapProvider from "components/interactiveMap/MapProvider";
-import LocationSearch from "components/plantFilters/LocationSearch";
-import PlantCharacteristicsFilter from "components/plantFilters/PlantCharacteristicsFilter";
+import LocationSearch from "components/LocationSearch";
+import PlantFilters from "components/plantSearchFilters/PlantFilters";
 import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
 import {
@@ -125,7 +125,7 @@ const PlantSearch = () => {
               <LocationSearch
                 setLocationSearchLoading={setLocationSearchLoading}
               />
-              <PlantCharacteristicsFilter
+              <PlantFilters
                 plantFilters={plantFilters}
                 setPlantFilters={setPlantFilters}
               />
