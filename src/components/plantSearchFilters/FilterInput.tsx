@@ -1,5 +1,5 @@
 import CustomListbox from "designSystem/CustomListbox";
-import { ChangeEvent, useMemo } from "react";
+import { ChangeEvent } from "react";
 import {
   FilterInput,
   FilterInputType,
@@ -23,40 +23,16 @@ const FilterInputField = <
   value: PlantDataFilter[T];
   onChange: (value: PlantDataFilter[T]) => void;
 }) => {
-  const inputValue = useMemo(() => {
-    let typesafeValue: unknown;
-    switch (filterInput.inputType) {
-      case "text":
-        typesafeValue = (value as string) ?? "";
-        break;
-      case "select":
-        typesafeValue = Array.isArray(value) ? value : [];
-        break;
-      default:
-        typesafeValue = "";
-    }
-
-    return typesafeValue as PlantDataFilter[T];
-  }, [value, filterInput.inputType]);
-
-  const staticProps = useMemo(
-    () => ({
-      name: filterInput.label,
-      value: inputValue,
-    }),
-    [filterInput.label, inputValue]
-  );
-
   const inputOnChange = ({
     target: { value },
-  }: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  }: ChangeEvent<HTMLInputElement>) => {
     if (filterInput.inputType === "number") {
       const newValue = value.length ? Number(value) : 0;
       if (["height", "width"].includes(filterKey)) {
         onChange({ amount: newValue, unit: "cm" } as PlantDataFilter[T]);
       }
-    } else if (filterInput.inputType === "select") {
-      //   console.log(value);
+    } else if (filterInput.inputType === "text") {
+      onChange(value as PlantDataFilter[T]);
     }
   };
 
@@ -65,7 +41,7 @@ const FilterInputField = <
       <label>{filterInput.label}</label>
       {DEFAULT_INPUT_TYPE.includes(filterInput.inputType) ? (
         <input
-          {...staticProps}
+          name={filterInput.label}
           value={value as string}
           type={filterInput.inputType}
           placeholder={`Enter ${filterInput.inputType}`}
@@ -73,7 +49,7 @@ const FilterInputField = <
         />
       ) : filterInput.inputType === "select" ? (
         <CustomListbox
-          {...staticProps}
+          name={filterInput.label}
           value={value as string[]}
           onChange={(value) => onChange(value as PlantDataFilter[T])}
           multiple

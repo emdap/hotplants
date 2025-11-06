@@ -35,7 +35,9 @@ const PlantInfo = ({
       {showFullInfo ? (
         <table className="border-separate border-spacing-4 [&_th,td]:p-2">
           <thead>
-            <th colSpan={2}>{plantHeader}</th>
+            <tr>
+              <th colSpan={2}>{plantHeader}</th>
+            </tr>
           </thead>
           {showFullInfo && (
             <tbody>

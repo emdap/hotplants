@@ -84,7 +84,15 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     loadMoreScrape.current = true;
     if (!scrapeQuery.isLoading) {
       const { data } = await scrapeQuery.refetch();
-      data && (await searchRecordQuery.refetch({ searchId: data }));
+      if (data) {
+        const searchRecord = await searchRecordQuery.refetch({
+          searchId: data,
+        });
+        if (searchRecord.data?.searchRecord?.endOfRecords) {
+          setPollInterval(0);
+          return;
+        }
+      }
     }
     startPolling();
     loadMoreScrape.current = false;

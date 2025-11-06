@@ -1,16 +1,15 @@
 import Button from "designSystem/Button";
-import { useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { FILTERS, PlantDataFilter } from "./filterFixtures";
 import FilterInputField from "./FilterInput";
 
 const PlantFilters = ({
-  plantFilters: _p,
-  setPlantFilters: _pf,
+  plantFilters,
+  setPlantFilters,
 }: {
-  plantFilters?: PlantDataFilter;
-  setPlantFilters?: (filters: PlantDataFilter) => void;
+  plantFilters: PlantDataFilter;
+  setPlantFilters: Dispatch<SetStateAction<PlantDataFilter>>;
 }) => {
-  const [tempFilter, setTempFilter] = useState<PlantDataFilter>({});
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   const filterList = useMemo(
@@ -27,9 +26,9 @@ const PlantFilters = ({
         <FilterInputField
           key={filterKey}
           {...{ filterKey, filterInput }}
-          value={tempFilter[filterKey]}
+          value={plantFilters[filterKey]}
           onChange={(value) =>
-            setTempFilter((prev) => ({ ...prev, [filterKey]: value }))
+            setPlantFilters((prev) => ({ ...prev, [filterKey]: value }))
           }
         />
       ))}
