@@ -118,7 +118,7 @@ const PlantSearch = () => {
     >
       <main className="overflow-hidden flex flex-col">
         <div className="flex flex-col gap-2 p-4">
-          <div className="flex gap-4">
+          <div className="flex max-sm:flex-col gap-4">
             <Card className="flex flex-col gap-2 flex-grow">
               <LocationSearch
                 setLocationSearchLoading={setLocationSearchLoading}
@@ -136,7 +136,10 @@ const PlantSearch = () => {
                 Search
               </Button>
             </Card>
-            <MapProvider showAllPlants className="w-1/2 flex-grow" />
+            <MapProvider
+              showAllPlants
+              className="w-full h-[200px] sm:w-1/2 sm:h-[unset] flex-grow"
+            />
           </div>
           <ScrapeStatusBar
             searchRecord={searchRecordQuery.data?.searchRecord}

@@ -46,7 +46,7 @@ const Modal = ({
         <>
           <motion.div
             key="mask"
-            className="fixed top-0 left-0 h-dvh w-dvw bg-default-text/50"
+            className="fixed top-0 left-0 h-dvh w-dvw bg-black/60"
             onClick={onClose}
             {...MOTION_FADE_IN}
           />
