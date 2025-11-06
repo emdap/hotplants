@@ -9,6 +9,18 @@ import PlantResultPane from "./PlantResultPane";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
+const getScrollParent = (element: Element | null) => {
+  if (element == null) {
+    return null;
+  }
+
+  if (element.scrollHeight > element.clientHeight) {
+    return element;
+  } else {
+    return getScrollParent(element.parentElement);
+  }
+};
+
 const PlantResultsHolder = ({
   fetchMorePlants,
 }: {
@@ -60,7 +72,7 @@ const PlantResultsHolder = ({
   );
 
   const handleContainerScroll = () => {
-    const scrollContainer = containerRef.current;
+    const scrollContainer = getScrollParent(containerRef.current);
     if (!scrollContainer) {
       return;
     }
@@ -78,7 +90,7 @@ const PlantResultsHolder = ({
     <>
       <div
         ref={containerRef}
-        className="space-y-4 flex-grow overflow-auto p-2 relative scroll-smooth"
+        className="space-y-4 flex-grow p-2"
         onScroll={handleContainerScroll}
       >
         {plantSearchResults.map(

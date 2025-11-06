@@ -4,6 +4,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @theme {
   --color-default-text: #000;
+  --color-scrollbar: #ffffff85;
   --color-default-background: #fff;
   --color-primary: #009999;
   --color-secondary: #bebebe;
@@ -34,6 +35,7 @@
   * {
     @variant dark {
       --color-default-text: #eee;
+      --color-scrollbar: #00000085;
       --color-default-background: #000;
       --color-primary: #005757;
       --color-secondary: #868686;
@@ -44,7 +46,7 @@
 
 body {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-primary) transparent;
+  scrollbar-color: var(--color-scrollbar) transparent;
 
   @apply text-default-text bg-default-background;
 }
