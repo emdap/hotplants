@@ -22,7 +22,7 @@ const PlantFilters = ({
   );
 
   return (
-    <div>
+    <div className="space-y-2">
       {filterList.map(([filterKey, filterInput]) => (
         <FilterInputField
           key={filterKey}

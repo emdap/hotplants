@@ -82,7 +82,7 @@ const CustomListbox = ({
             "focus:not-data-focus:outline-none data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white/25"
           )}
         >
-          <ListboxButton className="absolute w-full h-full z-0">
+          <ListboxButton className="absolute w-full h-full">
             {({ open }) => {
               open && customInputRef.current?.focus();
               return (
@@ -115,7 +115,7 @@ const CustomListbox = ({
           transition
           className={classNames(
             "w-(--button-width) rounded-xl border border-default-background/5 bg-default-background/90 p-1 [--anchor-gap:--spacing(1)] focus:outline-none",
-            "transition duration-100 ease-in data-leave:data-closed:opacity-0"
+            "transition duration-100 ease-in data-leave:data-closed:opacity-0 z-20"
           )}
         >
           <input
@@ -150,7 +150,7 @@ const CustomListbox = ({
 };
 
 const SelectedOptionDisplay = ({ children }: { children: ReactNode }) => (
-  <div className="rounded-md bg-primary/40 text-xs px-1 py-0.5 w-fit flex gap-1 items-center z-10 overflow-ellipsis">
+  <div className="rounded-md bg-primary/40 text-xs px-1 py-0.5 w-fit flex gap-1 items-center max-w-20 overflow-hidden overflow-ellipsis z-10">
     {children}
   </div>
 );
