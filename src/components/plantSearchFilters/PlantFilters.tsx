@@ -1,28 +1,49 @@
-import { PlantDataInput } from "generated/graphql/graphql";
-
-const INPUT_FILTER_FIELDS = ["scientificName", "commonName"] as const;
+import Button from "designSystem/Button";
+import { useMemo, useState } from "react";
+import { FILTERS, PlantDataFilter } from "./filterFixtures";
+import FilterInputField from "./FilterInput";
 
 const PlantFilters = ({
-  plantFilters,
-  setPlantFilters,
+  plantFilters: _p,
+  setPlantFilters: _pf,
 }: {
-  plantFilters: PlantDataInput | null;
-  setPlantFilters: (
-    filters: Omit<PlantDataInput, "boundingBox"> | null
-  ) => void;
-}) => (
-  <>
-    {INPUT_FILTER_FIELDS.map((field) => (
-      <input
-        key={field}
-        value={plantFilters?.[field] ?? ""}
-        onChange={({ target }) =>
-          setPlantFilters({ ...plantFilters, [field]: target.value })
-        }
-        placeholder={field}
-      />
-    ))}
-  </>
-);
+  plantFilters?: PlantDataFilter;
+  setPlantFilters?: (filters: PlantDataFilter) => void;
+}) => {
+  const [tempFilter, setTempFilter] = useState<PlantDataFilter>({});
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
+  const filterList = useMemo(
+    () =>
+      showAdvancedFilters
+        ? FILTERS.sort(([, { advancedFilter }]) => (advancedFilter ? 1 : -1))
+        : FILTERS.filter(([, { advancedFilter }]) => !advancedFilter),
+    [showAdvancedFilters]
+  );
+
+  return (
+    <div>
+      {filterList.map(([filterKey, filterInput]) => (
+        <FilterInputField
+          key={filterKey}
+          {...{ filterKey, filterInput }}
+          value={tempFilter[filterKey]}
+          onChange={(value) =>
+            setTempFilter((prev) => ({ ...prev, [filterKey]: value }))
+          }
+        />
+      ))}
+
+      <Button
+        variant="primary"
+        onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+      >
+        {showAdvancedFilters
+          ? "Hide Advanced Filters"
+          : "Show Advanced Filters"}
+      </Button>
+    </div>
+  );
+};
 
 export default PlantFilters;

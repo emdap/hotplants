@@ -1,6 +1,7 @@
 import { centroid } from "@turf/turf";
 import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/LocationSearch";
+import { PlantDataFilter } from "components/plantSearchFilters/filterFixtures";
 import PlantFilters from "components/plantSearchFilters/PlantFilters";
 import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
@@ -32,10 +33,7 @@ const PlantSearch = () => {
     useState<LocationWithPolygon | null>(null);
   const [locationSearchLoading, setLocationSearchLoading] = useState(true);
 
-  const [plantFilters, setPlantFilters] = useState<Omit<
-    PlantDataInput,
-    "bboxPolyCoords"
-  > | null>(null);
+  const [plantFilters, setPlantFilters] = useState<PlantDataFilter>({});
   const [plantSearchCriteria, setPlantSearchCriteria] =
     useState<PlantDataInput | null>(null);
 
