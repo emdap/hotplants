@@ -95,7 +95,7 @@ enum PlantSizeUnit {
 type Query {
   plant(boundingPolyCoords: [[[Float!]!]!], id: String!): PlantData
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
-  plantSearch(limit: Int, offset: Int, sort: SortInput, where: PlantDataInput): PlantSearchResults!
+  plantSearch(limit: Int, offset: Int, sort: [SortInput!], where: PlantDataInput): PlantSearchResults!
   searchRecord(id: String!): SearchRecord
 }
 
@@ -112,8 +112,13 @@ enum SearchRecordStatus {
   SCRAPING
 }
 
+enum SortField {
+  addedTimestamp
+  scientificName
+  updatedTimestamp
+}
+
 input SortInput {
-  addedTimestamp: Int
-  scientificName: Int
-  updatedTimestamp: Int
+  direction: Int!
+  field: SortField!
 }

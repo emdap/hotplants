@@ -19,6 +19,10 @@ const MIN_RESULTS = 50;
 
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
   limit: 20,
+  sort: [
+    { field: "addedTimestamp", direction: 1 },
+    { field: "scientificName", direction: 1 },
+  ],
 };
 
 const hotplantsClient = createClient<paths>({

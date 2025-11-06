@@ -36,7 +36,7 @@ export const SEARCH_PLANTS = graphql(`
   query searchPlants(
     $limit: Int
     $offset: Int
-    $sort: SortInput
+    $sort: [SortInput!]
     $where: PlantDataInput
   ) {
     plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {
