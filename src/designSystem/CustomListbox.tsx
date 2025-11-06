@@ -11,6 +11,7 @@ import {
   HTMLProps,
   ReactNode,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { MdArrowDropDown, MdCheck, MdClose } from "react-icons/md";
@@ -29,6 +30,7 @@ const CustomListbox = ({
 } & ListboxProps<"select", string[]>) => {
   const [customOptions, setCustomOptions] = useState<string[]>([]);
   const [customOptionInput, setCustomOptionInput] = useState("");
+  const customInputRef = useRef<HTMLInputElement>(null);
 
   const options = useMemo(
     () => defaultOptions.concat(customOptions),
@@ -81,10 +83,15 @@ const CustomListbox = ({
           )}
         >
           <ListboxButton className="absolute w-full h-full z-0">
-            <MdArrowDropDown
-              className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
-              aria-hidden="true"
-            />
+            {({ open }) => {
+              open && customInputRef.current?.focus();
+              return (
+                <MdArrowDropDown
+                  className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
+                  aria-hidden="true"
+                />
+              );
+            }}
           </ListboxButton>
           <div className="flex gap-2 py-1.5 pr-8 pl-3 max-w-5/6 overflow-hidden">
             {listboxValue.slice(0, 3).map((value) => (
@@ -112,6 +119,8 @@ const CustomListbox = ({
           )}
         >
           <input
+            name="custom option"
+            ref={customInputRef}
             className="w-full text-sm px-2"
             placeholder="Enter custom option"
             value={customOptionInput}
