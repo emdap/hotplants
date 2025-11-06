@@ -1,7 +1,7 @@
 import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
+import { LocationWithPolygon } from "helpers/schemaTypesUtil";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { LocationWithPolygon } from "schemaHelpers/schemaTypesUtil";
 
 export const VOID_FUNCTION = () => {};
 

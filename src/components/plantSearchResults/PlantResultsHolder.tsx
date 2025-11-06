@@ -1,25 +1,14 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
+import { getScrollParent } from "helpers/util";
 import { useDocumentListener } from "hooks/useDocumentListener";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import PlantImageViewer from "./PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 import PlantResultPane from "./PlantResultPane";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
-
-const getScrollParent = (element: Element | null) => {
-  if (element == null) {
-    return null;
-  }
-
-  if (element.scrollHeight > element.clientHeight) {
-    return element;
-  } else {
-    return getScrollParent(element.parentElement);
-  }
-};
 
 const PlantResultsHolder = ({
   fetchMorePlants,
@@ -71,28 +60,29 @@ const PlantResultsHolder = ({
     !fullScreenElement && plantIndex !== null
   );
 
-  const handleContainerScroll = () => {
+  useLayoutEffect(() => {
     const scrollContainer = getScrollParent(containerRef.current);
-    if (!scrollContainer) {
-      return;
-    }
+    const handleScroll = () => {
+      if (!scrollContainer) {
+        return;
+      }
+      if (
+        scrollContainer.scrollHeight -
+          (scrollContainer.scrollTop + scrollContainer.clientHeight) <=
+        FETCH_MORE_SCROLL_THRESHOLD
+      ) {
+        fetchMorePlants();
+      }
+    };
 
-    if (
-      scrollContainer.scrollHeight -
-        (scrollContainer.scrollTop + scrollContainer.clientHeight) <=
-      FETCH_MORE_SCROLL_THRESHOLD
-    ) {
-      fetchMorePlants();
-    }
-  };
+    scrollContainer?.addEventListener("scroll", handleScroll);
+
+    return () => scrollContainer?.removeEventListener("scroll", handleScroll);
+  }, [fetchMorePlants]);
 
   return (
     <>
-      <div
-        ref={containerRef}
-        className="space-y-4 flex-grow p-2"
-        onScroll={handleContainerScroll}
-      >
+      <div ref={containerRef} className="space-y-4 flex-grow p-2">
         {plantSearchResults.map(
           (plant, index) =>
             plant && (

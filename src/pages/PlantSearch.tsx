@@ -15,9 +15,9 @@ import Card from "designSystem/Card";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
+import { LocationWithPolygon } from "helpers/schemaTypesUtil";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { useCallback, useEffect, useState } from "react";
-import { LocationWithPolygon } from "schemaHelpers/schemaTypesUtil";
 
 const PlantSearch = () => {
   const [fullScreenElement, setFullScreenElement] =

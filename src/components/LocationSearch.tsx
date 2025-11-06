@@ -1,10 +1,10 @@
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import type { paths } from "generated/schemas/nominatim";
+import { validateNominatimLocation } from "helpers/schemaTypesUtil";
 import { useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
-import { validateNominatimLocation } from "schemaHelpers/schemaTypesUtil";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",

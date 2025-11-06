@@ -51,6 +51,7 @@ const PlantImage = ({
   return imageNotAvailable ? null : (
     <div className="relative h-full w-full flex justify-center">
       <img
+        loading="lazy"
         src={hideImage ? undefined : mediaObject.url}
         className="max-h-full self-center"
         onLoad={() => setIsLoading(false)}

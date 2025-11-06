@@ -8,12 +8,12 @@ import {
 } from "@turf/turf";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { Feature, Polygon as PolygonType } from "geojson";
+import { LocationCoord } from "helpers/customSchemaTypes";
+import { LocationWithPolygon } from "helpers/schemaTypesUtil";
 import { LeafletEvent, Marker as MarkerType } from "leaflet";
 import { useEffect, useMemo, useState } from "react";
 import { Marker, Polygon, useMap } from "react-leaflet";
 import { useMount } from "react-use";
-import { LocationCoord } from "schemaHelpers/customSchemaTypes";
-import { LocationWithPolygon } from "schemaHelpers/schemaTypesUtil";
 import CrossingMerdianTooltip from "./CrossingMerdianTooltip";
 import { PolygonCenterIcon, PolygonCornerIcon } from "./MarkerIcons";
 
