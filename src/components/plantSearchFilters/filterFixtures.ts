@@ -11,6 +11,7 @@ type BaseFilterInput<T extends FilterInputType = FilterInputType> = {
   label: string;
   inputType: T;
   advancedFilter?: boolean;
+  order?: number;
 };
 
 type FilterSelectInput = BaseFilterInput<"select"> & {
@@ -60,14 +61,27 @@ const FILTER_MAPPING: Record<keyof PlantDataFilter, FilterInput> = {
     label: "Bloom time",
     inputType: "select",
   },
+
   // TODO: Better filters for these on BE -- min/max, select unit?
-  height: { label: "Plant height (cm)", inputType: "number" },
-  spread: { label: "Plant spread (cm)", inputType: "number" },
-  isPerennial: { label: "Perennial", inputType: "checkbox" },
-  lightLevels: { label: "Light level", inputType: "select" },
-  physicalCharactersticsDump: {
-    label: "Search description",
-    inputType: "text",
+  height: {
+    label: "Plant height (cm)",
+    inputType: "number",
+    advancedFilter: true,
+  },
+  spread: {
+    label: "Plant spread (cm)",
+    inputType: "number",
+    advancedFilter: true,
+  },
+
+  isPerennial: {
+    label: "Perennial",
+    inputType: "checkbox",
+  },
+  lightLevels: {
+    label: "Light level",
+    inputType: "select",
+    advancedFilter: true,
   },
 
   scientificName: {
@@ -82,10 +96,21 @@ const FILTER_MAPPING: Record<keyof PlantDataFilter, FilterInput> = {
     minMaxValue: [0, 9],
     advancedFilter: true,
   },
-  soilTypes: { label: "Soil type", inputType: "select", advancedFilter: true },
+  soilTypes: {
+    label: "Soil type",
+    inputType: "select",
+    advancedFilter: true,
+  },
+  physicalCharactersticsDump: {
+    label: "Search description",
+    inputType: "text",
+  },
 };
 
-export const FILTERS = Object.entries(FILTER_MAPPING) as [
-  keyof PlantDataFilter,
-  FilterInput
-][];
+export const FILTERS = Object.entries(FILTER_MAPPING).sort(
+  ([, { advancedFilter }]) => (advancedFilter ? 1 : -1)
+) as [keyof PlantDataFilter, FilterInput][];
+
+export const FIRST_ADVANCED_FILTER_INDEX = FILTERS.findIndex(
+  ([, { advancedFilter }]) => advancedFilter
+);

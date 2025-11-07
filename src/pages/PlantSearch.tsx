@@ -135,7 +135,7 @@ const PlantSearch = () => {
             </Card>
             <MapProvider
               showAllPlants
-              className="w-full h-[200px] sm:w-1/2 sm:h-[unset] flex-grow"
+              className="w-full h-[200px] sm:w-1/2 sm:h-[400px] flex-grow"
             />
           </div>
           <ScrapeStatusBar

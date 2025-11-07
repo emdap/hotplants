@@ -1,6 +1,10 @@
 import Button from "designSystem/Button";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { FILTERS, PlantDataFilter } from "./filterFixtures";
+import {
+  FILTERS,
+  FIRST_ADVANCED_FILTER_INDEX,
+  PlantDataFilter,
+} from "./filterFixtures";
 import FilterInputField from "./FilterInput";
 
 const PlantFilters = ({
@@ -15,22 +19,27 @@ const PlantFilters = ({
   const filterList = useMemo(
     () =>
       showAdvancedFilters
-        ? FILTERS.sort(([, { advancedFilter }]) => (advancedFilter ? 1 : -1))
+        ? FILTERS
         : FILTERS.filter(([, { advancedFilter }]) => !advancedFilter),
     [showAdvancedFilters]
   );
 
   return (
     <div className="space-y-2">
-      {filterList.map(([filterKey, filterInput]) => (
-        <FilterInputField
-          key={filterKey}
-          {...{ filterKey, filterInput }}
-          value={plantFilters[filterKey]}
-          onChange={(value) =>
-            setPlantFilters((prev) => ({ ...prev, [filterKey]: value }))
-          }
-        />
+      {filterList.map(([filterKey, filterInput], index) => (
+        <>
+          {index === FIRST_ADVANCED_FILTER_INDEX && (
+            <hr className="opacity-10 my-4" />
+          )}
+          <FilterInputField
+            key={filterKey}
+            {...{ filterKey, filterInput }}
+            value={plantFilters[filterKey]}
+            onChange={(value) =>
+              setPlantFilters((prev) => ({ ...prev, [filterKey]: value }))
+            }
+          />
+        </>
       ))}
 
       <Button

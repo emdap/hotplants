@@ -95,28 +95,33 @@ const LocationSearch = ({
 
   return (
     <div className="flex flex-col">
-      <input
-        value={searchInput}
-        onBlur={() => setDebouncedInput(searchInput)}
-        onKeyDown={handleKeyDown}
-        onChange={(e) => {
-          setEnableQuery(true);
-          setSearchInput(e.target.value);
-        }}
-        placeholder={
-          searchLocation?.locationSource === "map"
-            ? "Using custom location on map"
-            : "Enter a location"
-        }
-      />
-
-      {locationQuery.isLoading
-        ? "Loading"
-        : locationQuery.isError
-        ? "Error"
-        : locationInvalid
-        ? "Cannot find location"
-        : searchLocation && searchLocation.displayName}
+      <label className="flex gap-2">
+        Location
+        <input
+          name="search-location"
+          value={searchInput}
+          onBlur={() => setDebouncedInput(searchInput)}
+          onKeyDown={handleKeyDown}
+          onChange={(e) => {
+            setEnableQuery(true);
+            setSearchInput(e.target.value);
+          }}
+          placeholder={
+            searchLocation?.locationSource === "map"
+              ? "Using custom location on map"
+              : "Enter a location"
+          }
+        />
+      </label>
+      <div className="h-4">
+        {locationQuery.isLoading
+          ? "Loading"
+          : locationQuery.isError
+          ? "Error"
+          : locationInvalid
+          ? "Cannot find location"
+          : searchLocation && searchLocation.displayName}
+      </div>
     </div>
   );
 };

@@ -37,11 +37,11 @@ const FilterInputField = <
   };
 
   return (
-    <div className="flex gap-2">
-      <label>{filterInput.label}</label>
+    <label className="flex gap-2">
+      {filterInput.label}
       {DEFAULT_INPUT_TYPE.includes(filterInput.inputType) ? (
         <input
-          name={filterInput.label}
+          id={filterKey}
           value={value as string}
           type={filterInput.inputType}
           placeholder={`Enter ${filterInput.inputType}`}
@@ -56,7 +56,7 @@ const FilterInputField = <
           defaultOptions={filterInput.defaultOptions}
         />
       ) : null}
-    </div>
+    </label>
   );
 };
 
