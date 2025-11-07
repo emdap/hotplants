@@ -1,4 +1,5 @@
 import MapProvider from "components/interactiveMap/MapProvider";
+import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { CUSTOM_MOTION_FADE_IN } from "designSystem/motionTransitions";
@@ -24,8 +25,11 @@ const PlantResultPane = ({
   plant: PlantResult | null;
   onClose: () => void;
 }) => {
+  const { fullScreenElement } = usePlantSearchContext();
   const paneRef = useRef<HTMLDivElement>(null);
-  useClickAway(paneRef, onClose, ["mouseup"]);
+  useClickAway(paneRef, () => fullScreenElement === null && onClose(), [
+    "mouseup",
+  ]);
 
   const closeOnEscape = (e: KeyboardEvent) => e.code === "Escape" && onClose();
   useDocumentListener("keydown", closeOnEscape, !!plant);

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { DivIcon, Icon, MarkerCluster } from "leaflet";
+import { DivIcon, MarkerCluster } from "leaflet";
 
 export const PolygonCornerIcon = new DivIcon({
   className: "leaflet-icon h-4 w-4",
@@ -10,12 +10,14 @@ export const PolygonCenterIcon = new DivIcon({
 });
 
 export const OccurrenceMarkerIcon = (iconUrl: string, isActive: boolean) =>
-  new Icon({
+  new DivIcon({
     iconUrl,
+    // Add overflow-clip-margin: unset to prevent images from looking pixelated in chrome
+    html: `<img loading="lazy" class="object-cover !w-full !h-full" style="overflow-clip-margin: unset" src="${iconUrl}"/>`,
     // Re-using this property to pass information to MarkerClusterGroup
     pane: isActive ? "active" : undefined,
     className: classNames(
-      "h-10 aspect-square !bg-gray-800/50 !border-none",
+      "!h-10 !w-10 overflow-hidden !bg-gray-800/50 !border-none",
       isActive && "!outline-2 outline-white"
     ),
   });

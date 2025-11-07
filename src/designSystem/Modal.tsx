@@ -46,7 +46,7 @@ const Modal = ({
         <>
           <motion.div
             key="mask"
-            className="fixed top-0 left-0 h-dvh w-dvw bg-black/60"
+            className="fixed top-0 left-0 h-dvh w-dvw bg-black/60 z-50"
             onClick={onClose}
             {...MOTION_FADE_IN}
           />
@@ -54,7 +54,7 @@ const Modal = ({
             key="body"
             disableBlurEffect
             className={classNames(
-              "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 h-5/6 flex flex-col gap-2 overflow-auto",
+              "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 h-5/6 flex flex-col gap-2 overflow-auto z-50",
               className
             )}
             {...MODAL_BODY_FADE_IN}
