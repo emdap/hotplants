@@ -26,10 +26,6 @@ const Carousel = ({
     setActiveIndex(carouselIndex);
   }, [carouselIndex]);
 
-  useEffect(() => {
-    setCarouselIndex && setCarouselIndex(activeIndex);
-  }, [activeIndex, setCarouselIndex]);
-
   const disableButtons = useMemo(
     () => ({
       next: activeIndex === children.length - 1,
@@ -38,17 +34,25 @@ const Carousel = ({
     [children.length, activeIndex]
   );
 
+  const setIndexes = useCallback(
+    (newIndex: number) => {
+      setActiveIndex(newIndex);
+      setCarouselIndex && setCarouselIndex(newIndex);
+    },
+    [setActiveIndex, setCarouselIndex]
+  );
+
   const iterateCarousel = useCallback(
     (e: KeyboardEvent) => {
-      let increment = 0;
+      let newIndex = activeIndex;
       if (e.key === "ArrowRight" && !disableButtons.next) {
-        increment = 1;
+        newIndex += 1;
       } else if (e.key === "ArrowLeft" && !disableButtons.prev) {
-        increment = -1;
+        newIndex -= 1;
       }
-      setActiveIndex((prev) => prev + increment);
+      setIndexes(newIndex);
     },
-    [disableButtons.next, disableButtons.prev, setActiveIndex]
+    [disableButtons.next, disableButtons.prev, activeIndex, setIndexes]
   );
 
   useDocumentListener("keydown", iterateCarousel, !!enableKeyboardEvents);
@@ -61,8 +65,8 @@ const Carousel = ({
         childIndex === activeIndex
           ? "0"
           : childIndex < activeIndex
-          ? "-110%"
-          : "110%",
+          ? "-200%"
+          : "200%",
     };
   };
 
@@ -99,7 +103,7 @@ const Carousel = ({
                 disabled={
                   isNextButton ? disableButtons.next : disableButtons.prev
                 }
-                onClick={() => setActiveIndex(activeIndex + incremenet)}
+                onClick={() => setIndexes(activeIndex + incremenet)}
               >
                 {isNextButton ? <MdArrowForward /> : <MdArrowBack />}
               </Button>

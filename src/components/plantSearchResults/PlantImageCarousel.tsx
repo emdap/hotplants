@@ -22,12 +22,11 @@ const PlantImageViewer = ({
     setActiveIndexes,
   } = usePlantSearchContext();
   const [showFullScreen, setShowFullScreen] = useState(false);
-  const [carouselIndex, setCarouselIndex] = useState(
-    activeIndexes.mediaIndex ?? 0
-  );
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(
     activeIndexes.mediaIndex ?? 0
   );
+
+  const carouselIndex = activeIndexes.mediaIndex ?? 0;
 
   const plantImages = useMemo(
     () =>
@@ -47,14 +46,8 @@ const PlantImageViewer = ({
     setFullScreenElement(showFullScreen ? "IMAGE_VIEWER" : null);
   }, [showFullScreen, setFullScreenElement]);
 
-  useEffect(() => {
-    activeIndexes.mediaIndex !== null &&
-      setCarouselIndex(activeIndexes.mediaIndex);
-  }, [activeIndexes.mediaIndex]);
-
-  useEffect(() => {
-    setActiveIndexes((prev) => ({ ...prev, mediaIndex: carouselIndex }));
-  }, [carouselIndex, setActiveIndexes]);
+  const syncActiveMediaIndex = (newIndex: number) =>
+    setActiveIndexes((prev) => ({ ...prev, mediaIndex: newIndex }));
 
   return (
     <div
@@ -68,7 +61,8 @@ const PlantImageViewer = ({
       ) : (
         <Carousel
           enableKeyboardEvents={!fullScreenElement}
-          {...{ carouselIndex, setCarouselIndex }}
+          carouselIndex={carouselIndex}
+          setCarouselIndex={syncActiveMediaIndex}
         >
           {plantImages}
         </Carousel>
@@ -87,7 +81,7 @@ const PlantImageViewer = ({
         isOpen={showFullScreen}
         onClose={() => {
           setShowFullScreen(false);
-          setCarouselIndex(largeCarouselIndex);
+          syncActiveMediaIndex(largeCarouselIndex);
         }}
       >
         <Carousel
