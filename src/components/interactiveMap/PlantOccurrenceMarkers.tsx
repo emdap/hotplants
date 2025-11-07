@@ -35,7 +35,7 @@ const PlantOccurrenceMarkers = ({
   const { plantSearchResults, activeIndexes, setActiveIndexes } =
     usePlantSearchContext();
 
-  const { isViewingAllPlants, occurrences } = useMemo(() => {
+  const { isViewingAllPlants, plantOccurrences } = useMemo(() => {
     if (
       showAllPlants ||
       activeIndexes.plantIndex === null ||
@@ -43,30 +43,38 @@ const PlantOccurrenceMarkers = ({
     ) {
       return {
         isViewingAllPlants: true,
-        occurrences: plantSearchResults.flatMap(occurrenceMediaFlat),
+        plantOccurrences: plantSearchResults.map(occurrenceMediaFlat),
       };
     } else {
       return {
         isViewingAllPlants: false,
-        occurrences: occurrenceMediaFlat(
-          plantSearchResults[activeIndexes.plantIndex],
-          activeIndexes.plantIndex
-        ),
+        plantOccurrences: [
+          occurrenceMediaFlat(
+            plantSearchResults[activeIndexes.plantIndex],
+            activeIndexes.plantIndex
+          ),
+        ],
       };
     }
   }, [showAllPlants, plantSearchResults, activeIndexes.plantIndex]);
 
-  const isActiveOccurrenceMedia = (plantIndex: number, mediaIndex: number) =>
-    plantIndex === activeIndexes.plantIndex &&
-    mediaIndex === activeIndexes.mediaIndex;
+  const isActiveOccurrenceMedia = (
+    isViewingAllPlants: boolean,
+    plantIndex: number,
+    mediaIndex: number
+  ) =>
+    isViewingAllPlants
+      ? false
+      : plantIndex === activeIndexes.plantIndex &&
+        mediaIndex === activeIndexes.mediaIndex;
 
-  return (
+  return plantOccurrences.map((occurrences, index) => (
     <MarkerClusterGroup
-      key={activeIndexes.mediaIndex}
-      maxClusterRadius={10}
+      key={`${index}-${activeIndexes.mediaIndex}`}
       zoomToBoundsOnClick={false}
       spiderfyOnEveryZoom
       iconCreateFunction={MarkerClusterIcon}
+      maxClusterRadius={isViewingAllPlants ? 200 : 80}
     >
       {occurrences.map(
         ({ occurrenceCoords, media, plantIndex, mediaIndex }, index) => (
@@ -75,9 +83,7 @@ const PlantOccurrenceMarkers = ({
             position={[occurrenceCoords[1], occurrenceCoords[0]]}
             icon={OccurrenceMarkerIcon(
               media.url,
-              isViewingAllPlants
-                ? false
-                : isActiveOccurrenceMedia(plantIndex, index)
+              isActiveOccurrenceMedia(isViewingAllPlants, plantIndex, index)
             )}
             eventHandlers={{
               click: () =>
@@ -90,7 +96,7 @@ const PlantOccurrenceMarkers = ({
         )
       )}
     </MarkerClusterGroup>
-  );
+  ));
 };
 
 export default PlantOccurrenceMarkers;
