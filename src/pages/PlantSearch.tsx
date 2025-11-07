@@ -31,7 +31,7 @@ const PlantSearch = () => {
 
   const [searchLocation, setSearchLocation] =
     useState<LocationWithPolygon | null>(null);
-  const [locationSearchLoading, setLocationSearchLoading] = useState(true);
+  const [locationSearchLoading, setLocationSearchLoading] = useState(false);
 
   const [plantFilters, setPlantFilters] = useState<PlantDataFilter>({});
   const [plantSearchCriteria, setPlantSearchCriteria] =
@@ -85,10 +85,7 @@ const PlantSearch = () => {
   }, [plantFilters, searchLocation?.boundingPolygon.geometry.coordinates]);
 
   useEffect(() => {
-    if (
-      plantSearch?.results.length &&
-      searchLocation?.locationSource === "map"
-    ) {
+    if (plantSearch?.results.length || searchLocation !== null) {
       applyFilters();
     }
   }, [plantSearch, searchLocation, applyFilters]);

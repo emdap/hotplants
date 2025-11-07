@@ -38,10 +38,16 @@ const LocationSearch = ({
     searchLocation?.locationSource !== "map"
   );
   const [searchInput, setSearchInput] = useState("");
-  const [debouncedInput, setDebouncedInput] = useState("");
+  const [debouncedInput, setDebouncedInput] = useState<string | null>(null);
   const [locationInvalid, setLocationInvalid] = useState(false);
 
-  useDebounce(() => setDebouncedInput(searchInput), 2000, [searchInput]);
+  useDebounce(
+    () =>
+      (debouncedInput !== null || searchInput) &&
+      setDebouncedInput(searchInput),
+    2000,
+    [searchInput]
+  );
 
   useEffect(() => {
     if (searchLocation?.locationSource === "map") {
@@ -56,7 +62,7 @@ const LocationSearch = ({
 
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
-    enabled: enableQuery,
+    enabled: enableQuery && debouncedInput !== null,
     queryFn: async () => {
       setLocationInvalid(false);
 
