@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "tsc": "npx tsc -b --noEmit",
+    "tsc": "tsc -b --noEmit",
     "generate-graphql": "graphql-codegen --watch http://localhost:3000/graphql",
     "generate-graphql:prod": "graphql-codegen --watch https://hotplants-server.fly.dev/graphql",
     "generate-hotplants-types": "npx openapi-typescript http://localhost:3000/swagger.json -o src/generated/schemas/hotplants.d.ts",
