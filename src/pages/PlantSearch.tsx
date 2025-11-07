@@ -1,4 +1,5 @@
 import { centroid } from "@turf/turf";
+import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/LocationSearch";
 import { PlantDataFilter } from "components/plantSearchFilters/filterFixtures";
@@ -12,6 +13,7 @@ import {
 } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
+import PageTitle from "designSystem/PageTitle";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
@@ -113,37 +115,52 @@ const PlantSearch = () => {
         setFullScreenElement,
       }}
     >
-      <main className="overflow-hidden flex flex-col">
-        <div className="flex flex-col gap-2 p-4">
-          <div className="flex max-sm:flex-col gap-4">
-            <Card className="flex flex-col gap-2 flex-grow">
-              <LocationSearch
-                setLocationSearchLoading={setLocationSearchLoading}
-              />
-              <PlantFilters
-                plantFilters={plantFilters}
-                setPlantFilters={setPlantFilters}
-              />
-              <Button
-                className="mt-auto"
-                disabled={locationSearchLoading}
-                variant="primary"
-                onClick={searchPlants}
-              >
-                Search
-              </Button>
-            </Card>
-            <MapProvider
-              showAllPlants
-              className="w-full h-[200px] sm:w-1/2 sm:h-[400px] flex-grow"
-            />
-          </div>
-          <ScrapeStatusBar
-            searchRecord={searchRecordQuery.data?.searchRecord}
-          />
-        </div>
+      <main className="flex-grow overflow-auto scroll-smooth px-2 2xl:pr-8 py-4 space-y-4 flex flex-col">
+        <PageTitle>Plant Search</PageTitle>
+        <div
+          className={classNames(
+            "flex max-sm:flex-col gap-4 2xl:gap-12",
+            !plantSearchResults.length && "min-h-full"
+          )}
+        >
+          <div className="basis-1/3 sm:sticky -top-4 sm:max-w-lg sm:h-[calc(100dvh_-_1.5rem)]">
+            <div className="sm:overflow-auto sm:h-full space-y-4 pb-4">
+              <Card className="flex flex-col gap-2 w-full !p-2">
+                <LocationSearch
+                  setLocationSearchLoading={setLocationSearchLoading}
+                />
+                <MapProvider
+                  showAllPlants
+                  className="w-full h-[200px] md:h-[350px] flex-grow"
+                />
+              </Card>
 
-        <PlantResultsHolder fetchMorePlants={fetchMorePlants} />
+              <Card className="space">
+                <PlantFilters
+                  plantFilters={plantFilters}
+                  setPlantFilters={setPlantFilters}
+                />
+                <Button
+                  className="mt-auto"
+                  disabled={locationSearchLoading}
+                  variant="primary"
+                  onClick={searchPlants}
+                >
+                  Apply filters
+                </Button>
+              </Card>
+            </div>
+          </div>
+
+          <div className="flex-grow space-y-6 h-fit sm:mx-auto">
+            <div className="sticky -top-4 z-20">
+              <ScrapeStatusBar
+                searchRecord={searchRecordQuery.data?.searchRecord}
+              />
+            </div>
+            <PlantResultsHolder fetchMorePlants={fetchMorePlants} />
+          </div>
+        </div>
       </main>
     </PlantSearchContext.Provider>
   );

@@ -8,7 +8,6 @@ const ScrapeStatusBar = ({
 }) => {
   return (
     <Card>
-      {" "}
       Scrape status: {searchRecord?.status ?? "N/A"}; Count:{" "}
       {searchRecord?.totalOccurrences ?? "N/A"}{" "}
     </Card>

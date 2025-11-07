@@ -94,10 +94,11 @@ const LocationSearch = ({
   };
 
   return (
-    <div className="flex flex-col">
-      <label className="flex gap-2">
+    <div className="flex flex-col px-2 pt-2">
+      <label className="flex gap-2 w-full">
         Location
         <input
+          className="flex-grow"
           name="search-location"
           value={searchInput}
           onBlur={() => setDebouncedInput(searchInput)}
@@ -109,7 +110,7 @@ const LocationSearch = ({
           placeholder={
             searchLocation?.locationSource === "map"
               ? "Using custom location on map"
-              : "Enter a location"
+              : "Search for a location"
           }
         />
       </label>

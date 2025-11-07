@@ -13,7 +13,7 @@ const Card = ({ disableBlurEffect, className, ...props }: CardProps) => (
       className,
       disableBlurEffect
         ? "bg-default-background dark:bg-gray-800"
-        : "bg-default-background/80 dark:bg-gray-800/80 backdrop-blur-xs"
+        : "bg-default-background/80 dark:bg-gray-800/80 backdrop-blur-2xl"
     )}
   />
 );

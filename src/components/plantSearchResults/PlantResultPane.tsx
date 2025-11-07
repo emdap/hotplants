@@ -40,7 +40,7 @@ const PlantResultPane = ({
         <Card
           key="plant-pane"
           ref={paneRef}
-          className="h-full w-full absolute top-0 sm:max-w-3/5 flex flex-col overflow-hidden gap-2 !bg-default-background/80 dark:!bg-gray-800/80 backdrop-blur-xs z-20"
+          className="max-sm:rounded-l-none rounded-r-none h-full w-full absolute top-0 sm:w-3/7 sm:max-w-5xl flex flex-col gap-2 overflow-auto z-20"
           {...CARD_FADE_IN}
         >
           <Button onClick={onClose} className="-mt-2 cursor-pointer">
@@ -48,9 +48,9 @@ const PlantResultPane = ({
           </Button>
           <div
             key={plant.scientificName}
-            className="flex-grow flex flex-col overflow-hidden gap-4"
+            className="flex-grow flex flex-col sm:overflow-hidden gap-4"
           >
-            <div className="flex gap-4 justify-between">
+            <div className="flex max-sm:flex-col gap-4 justify-between">
               <PlantImageViewer mode="carousel" plant={plant} />
               <MapProvider className="min-h-60 w-full" />
             </div>

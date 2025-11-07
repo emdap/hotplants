@@ -1,5 +1,5 @@
 import Button from "designSystem/Button";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useMemo, useState } from "react";
 import {
   FILTERS,
   FIRST_ADVANCED_FILTER_INDEX,
@@ -27,19 +27,18 @@ const PlantFilters = ({
   return (
     <div className="space-y-2">
       {filterList.map(([filterKey, filterInput], index) => (
-        <>
+        <Fragment key={filterKey}>
           {index === FIRST_ADVANCED_FILTER_INDEX && (
             <hr className="opacity-10 my-4" />
           )}
           <FilterInputField
-            key={filterKey}
             {...{ filterKey, filterInput }}
             value={plantFilters[filterKey]}
             onChange={(value) =>
               setPlantFilters((prev) => ({ ...prev, [filterKey]: value }))
             }
           />
-        </>
+        </Fragment>
       ))}
 
       <Button

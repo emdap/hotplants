@@ -82,7 +82,7 @@ const PlantResultsHolder = ({
 
   return (
     <>
-      <div ref={containerRef} className="space-y-4 flex-grow p-2">
+      <div ref={containerRef} className="space-y-2 lg:space-y-4 flex-grow">
         {plantSearchResults.map(
           (plant, index) =>
             plant && (
