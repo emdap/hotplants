@@ -104,7 +104,7 @@ const PlantResultsHolder = ({
           <motion.div
             {...MOTION_FADE_IN}
             key="content-placeholder"
-            className="overflow-hidden"
+            className="h-[400px] md:h-full flex flex-col"
           >
             <ContentPlaceholder
               mode={isLoading ? "loading" : "empty"}

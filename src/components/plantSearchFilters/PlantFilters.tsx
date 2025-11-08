@@ -25,7 +25,7 @@ const PlantFilters = ({
   );
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 max-w-full overflow-auto">
       {filterList.map(([filterKey, filterInput], index) => (
         <Fragment key={filterKey}>
           {index === FIRST_ADVANCED_FILTER_INDEX && (

@@ -149,8 +149,8 @@ const PlantSearch = () => {
         <PageTitle>Plant Search</PageTitle>
         <div
           className={classNames(
-            "flex max-md:flex-col gap-4 2xl:gap-12",
-            !plantSearchResults.length && "min-h-full"
+            "flex max-md:flex-col gap-4 2xl:gap-12"
+            // !plantSearchResults.length && "min-h-full"
           )}
         >
           <div
@@ -158,23 +158,25 @@ const PlantSearch = () => {
             className="basis-1/3 md:sticky -top-4 md:max-w-lg md:h-[calc(100dvh-1.5rem)] max-h-fit -mb-4"
           >
             <div className="md:overflow-auto md:h-full max-h-fit space-y-4 pb-8">
-              <Card className="grid grid-rows-[auto_auto] gap-2 items-start w-full !p-2">
+              <Card className="flex flex-col gap-2 items-start w-full !p-2">
                 <LocationSearch
                   setLocationSearchLoading={setLocationSearchLoading}
                 />
-                <a
-                  href={`#${FILTER_HOLDER_ID}`}
-                  className="md:hidden sticky top-0 z-20 justify-self-end"
-                >
-                  <Button variant="primary">Jump to Filters</Button>
-                </a>
+                {searchLocation && (
+                  <a
+                    href={`#${FILTER_HOLDER_ID}`}
+                    className="md:hidden sticky top-0 z-20 justify-self-end"
+                  >
+                    <Button variant="primary">Jump to Filters</Button>
+                  </a>
+                )}
                 <MapProvider
                   showAllPlants
-                  className="w-full h-[200px] md:h-[300px] flex-grow row-start-2 col-span-2"
+                  className="w-full h-[200px] md:h-[300px] flex-grow"
                 />
               </Card>
 
-              <Card id={FILTER_HOLDER_ID}>
+              <Card id={FILTER_HOLDER_ID} className="space-y-4">
                 <PlantFilters
                   plantFilters={plantFilters}
                   setPlantFilters={setPlantFilters}
@@ -193,7 +195,7 @@ const PlantSearch = () => {
 
           <div
             id="results-holder"
-            className="flex-grow flex flex-col gap-6 sm:mx-auto"
+            className="flex-grows flex flex-col gap-6 sm:mx-auto"
           >
             <AnimatePresence>
               {hasBeenSearched && (

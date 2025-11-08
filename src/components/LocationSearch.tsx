@@ -94,8 +94,8 @@ const LocationSearch = ({
   };
 
   return (
-    <div className="flex flex-col px-2 pt-2">
-      <label className="flex gap-2 w-full">
+    <div className="flex flex-col px-2 pt-2 max-w-full overflow-auto">
+      <label className="flex flex-wrap gap-2 w-full">
         Location
         <input
           className="flex-grow"

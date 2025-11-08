@@ -37,7 +37,7 @@ const FilterInputField = <
   };
 
   return (
-    <label className="flex gap-2">
+    <label className="flex gap-2 flex-wrap">
       {filterInput.label}
       {DEFAULT_INPUT_TYPE.includes(filterInput.inputType) ? (
         <input

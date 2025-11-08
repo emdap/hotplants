@@ -12,16 +12,16 @@ const ContentPlaceholder = ({
 }) => {
   const Lottie = useLottie({
     animationData: mode === "empty" ? stillPlant : movingPlant,
-    className: "flex flex-col md:-mt-40",
+    className: "flex flex-col min-h-[200px]",
   });
   useEffect(() => {
     mode === "empty" && Lottie.setSpeed(0.25);
   }, [Lottie, mode]);
 
   return (
-    <div className="flex flex-col pt-10 min-h-0 max-md:gap-10 pb-4">
+    <div className="flex flex-col h-5/7 gap-10 pb-10 my-auto">
       {Lottie.View}
-      <h4 className="text-white text-center -mt-20">
+      <h4 className="text-white text-center px-4">
         {text ?? (mode === "empty" ? "No content available" : "Loading ...")}
       </h4>
     </div>
