@@ -21,6 +21,8 @@ import { LocationWithPolygon } from "helpers/schemaTypesUtil";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { useCallback, useEffect, useState } from "react";
 
+const FILTER_HOLDER_ID = "filter-holder";
+
 const PlantSearch = () => {
   const [fullScreenElement, setFullScreenElement] =
     useState<FullScreenElement | null>(null);
@@ -119,23 +121,32 @@ const PlantSearch = () => {
         <PageTitle>Plant Search</PageTitle>
         <div
           className={classNames(
-            "flex max-sm:flex-col gap-4 2xl:gap-12",
+            "flex max-md:flex-col gap-4 2xl:gap-12",
             !plantSearchResults.length && "min-h-full"
           )}
         >
-          <div className="basis-1/3 sm:sticky -top-4 sm:max-w-lg sm:h-[calc(100dvh_-_1.5rem)]">
-            <div className="sm:overflow-auto sm:h-full space-y-4 pb-4">
-              <Card className="flex flex-col gap-2 w-full !p-2">
+          <div
+            id="filter-sidebar"
+            className="basis-1/3 md:sticky -top-4 md:max-w-lg md:h-[calc(100dvh_-_1.5rem)]"
+          >
+            <div className="md:overflow-auto md:h-full space-y-4 pb-4">
+              <Card className="grid grid-rows-[auto_auto] gap-2 items-start w-full !p-2">
                 <LocationSearch
                   setLocationSearchLoading={setLocationSearchLoading}
                 />
+                <a
+                  href={`#${FILTER_HOLDER_ID}`}
+                  className="md:hidden sticky top-0 z-20 justify-self-end"
+                >
+                  <Button variant="primary">Jump to Filters</Button>
+                </a>
                 <MapProvider
                   showAllPlants
-                  className="w-full h-[200px] md:h-[350px] flex-grow"
+                  className="w-full h-[200px] md:h-[300px] flex-grow row-start-2 col-span-2"
                 />
               </Card>
 
-              <Card className="space">
+              <Card id={FILTER_HOLDER_ID}>
                 <PlantFilters
                   plantFilters={plantFilters}
                   setPlantFilters={setPlantFilters}
@@ -152,7 +163,10 @@ const PlantSearch = () => {
             </div>
           </div>
 
-          <div className="flex-grow space-y-6 h-fit sm:mx-auto">
+          <div
+            id="results-holder"
+            className="flex-grow space-y-6 h-fit sm:mx-auto"
+          >
             <div className="sticky -top-4 z-20">
               <ScrapeStatusBar
                 searchRecord={searchRecordQuery.data?.searchRecord}
