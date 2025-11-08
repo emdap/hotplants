@@ -1,19 +1,23 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
-import { getScrollParent } from "helpers/util";
+import ContentPlaceholder from "designSystem/ContentPlaceholder";
+import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { useDocumentListener } from "hooks/useDocumentListener";
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useMemo, useRef } from "react";
 import PlantImageViewer from "./PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 import PlantResultPane from "./PlantResultPane";
 
-const FETCH_MORE_SCROLL_THRESHOLD = 100;
-
 const PlantResultsHolder = ({
-  fetchMorePlants,
+  showPlaceholder,
+  hasBeenSearched,
+  isLoading,
 }: {
-  fetchMorePlants: () => void;
+  showPlaceholder: boolean;
+  hasBeenSearched: boolean;
+  isLoading: boolean;
 }) => {
   const {
     fullScreenElement,
@@ -60,49 +64,63 @@ const PlantResultsHolder = ({
     !fullScreenElement && plantIndex !== null
   );
 
-  useLayoutEffect(() => {
-    const scrollContainer = getScrollParent(containerRef.current);
-    const handleScroll = () => {
-      if (!scrollContainer) {
-        return;
-      }
-      if (
-        scrollContainer.scrollHeight -
-          (scrollContainer.scrollTop + scrollContainer.clientHeight) <=
-        FETCH_MORE_SCROLL_THRESHOLD
-      ) {
-        fetchMorePlants();
-      }
-    };
-
-    scrollContainer?.addEventListener("scroll", handleScroll);
-
-    return () => scrollContainer?.removeEventListener("scroll", handleScroll);
-  }, [fetchMorePlants]);
-
   return (
     <>
-      <div ref={containerRef} className="space-y-2 lg:space-y-4 flex-grow">
-        {plantSearchResults.map(
-          (plant, index) =>
-            plant && (
-              <Card
-                key={plant.scientificName}
-                id={plant.scientificName}
-                onClick={() =>
-                  setActiveIndexes({ plantIndex: index, mediaIndex: null })
-                }
-                className={classNames("flex gap-2 cursor-pointer h-40", {
-                  "bg-default-background/90! dark:bg-default-background/50!":
-                    plantIndex === index,
-                })}
-              >
-                <PlantImageViewer mode="thumbnail" plant={plant} />
-                <PlantInfo plant={plant} />
-              </Card>
-            )
+      <AnimatePresence>
+        {plantSearchResults.length && (
+          <motion.div
+            key="results-list"
+            {...MOTION_FADE_IN}
+            ref={containerRef}
+            className="space-y-2 lg:space-y-4 flex-grow"
+          >
+            {plantSearchResults.map(
+              (plant, index) =>
+                plant && (
+                  <Card
+                    key={plant.scientificName}
+                    id={plant.scientificName}
+                    onClick={() =>
+                      setActiveIndexes({ plantIndex: index, mediaIndex: null })
+                    }
+                    className={classNames(
+                      "flex gap-2 cursor-pointer h-40 scroll-mt-20",
+                      {
+                        "!bg-default-background dark:!bg-default-background/50":
+                          plantIndex === index,
+                      }
+                    )}
+                  >
+                    {index}
+                    <PlantImageViewer mode="thumbnail" plant={plant} />
+                    <PlantInfo plant={plant} />
+                  </Card>
+                )
+            )}
+          </motion.div>
         )}
-      </div>
+
+        {showPlaceholder && (
+          <motion.div
+            {...MOTION_FADE_IN}
+            key="content-placeholder"
+            className="overflow-hidden"
+          >
+            <ContentPlaceholder
+              mode={isLoading ? "loading" : "empty"}
+              text={
+                isLoading
+                  ? plantSearchResults.length
+                    ? "Searching for more plants ..."
+                    : "Searching for plants ..."
+                  : hasBeenSearched
+                  ? "No plants found, try adjusting your filters"
+                  : "Search for some plants to get started!"
+              }
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <PlantResultPane
         plant={activePlant}

@@ -92,7 +92,11 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
         const searchRecord = await searchRecordQuery.refetch({
           searchId: data,
         });
-        if (searchRecord.data?.searchRecord?.endOfRecords) {
+        if (
+          searchRecord.data?.searchRecord &&
+          searchRecord.data.searchRecord.status === "DONE" &&
+          searchRecord.data.searchRecord.endOfRecords
+        ) {
           setPollInterval(0);
           return;
         }
@@ -104,14 +108,29 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
 
   useEffect(() => {
     if (
-      plantSearchQuery.data &&
-      plantSearchQuery.data.plantSearch.count < MIN_RESULTS
+      (plantSearchQuery.dataState === "complete" &&
+        !plantSearchQuery.data.plantSearch.count) ||
+      (plantSearchQuery.data &&
+        plantSearchQuery.data.plantSearch.count < MIN_RESULTS)
     ) {
       performScrapeWithPolling();
     }
     // Stale reference of performScrapeWithPolling is ok, query objects update every render
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plantSearchQuery.data]);
+  }, [plantSearchQuery.data, plantSearchQuery.dataState]);
+
+  const scrapeMorePlants = async () => {
+    if (pollInterval || plantSearchQuery.loading) {
+      return;
+    }
+    if (
+      !loadMoreScrape.current &&
+      !searchRecordQuery.data?.searchRecord?.endOfRecords &&
+      !pollInterval
+    ) {
+      performScrapeWithPolling();
+    }
+  };
 
   const fetchMorePlants = async () => {
     if (pollInterval || plantSearchQuery.loading) {
@@ -123,12 +142,6 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearch.results.length },
       });
-    } else if (
-      !loadMoreScrape.current &&
-      !searchRecordQuery.data?.searchRecord?.endOfRecords &&
-      !pollInterval
-    ) {
-      performScrapeWithPolling();
     }
   };
 
@@ -137,6 +150,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     searchRecordQuery,
     getPlantQuery,
     fetchMorePlants,
+    scrapeMorePlants,
   };
 };
 

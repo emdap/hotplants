@@ -42,20 +42,9 @@ type HiddenFilterKey =
 export type PlantDataFilter = Omit<PlantDataInput, HiddenFilterKey>;
 
 const FILTER_MAPPING: Record<keyof PlantDataFilter, FilterInput> = {
-  commonName: { label: "Common name", inputType: "text" },
-  bloomColors: {
-    label: "Bloom colors",
-    inputType: "select",
-    defaultOptions: [
-      "red",
-      "orange",
-      "yellow",
-      "green",
-      "blue",
-      "purple",
-      "white",
-    ],
-    freeform: true,
+  physicalCharactersticsDump: {
+    label: "Search description",
+    inputType: "text",
   },
   bloomTimes: {
     label: "Bloom time",
@@ -101,10 +90,22 @@ const FILTER_MAPPING: Record<keyof PlantDataFilter, FilterInput> = {
     inputType: "select",
     advancedFilter: true,
   },
-  physicalCharactersticsDump: {
-    label: "Search description",
-    inputType: "text",
+
+  bloomColors: {
+    label: "Bloom colors",
+    inputType: "select",
+    defaultOptions: [
+      "red",
+      "orange",
+      "yellow",
+      "green",
+      "blue",
+      "purple",
+      "white",
+    ],
+    freeform: true,
   },
+  commonName: { label: "Common name", inputType: "text" },
 };
 
 export const FILTERS = Object.entries(FILTER_MAPPING).sort(

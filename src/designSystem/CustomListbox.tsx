@@ -87,7 +87,7 @@ const CustomListbox = ({
               open && customInputRef.current?.focus();
               return (
                 <MdArrowDropDown
-                  className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-white/60"
+                  className="group pointer-events-none absolute top-2.5 right-2.5 size-4 fill-primary"
                   aria-hidden="true"
                 />
               );
@@ -150,7 +150,7 @@ const CustomListbox = ({
 };
 
 const SelectedOptionDisplay = ({ children }: { children: ReactNode }) => (
-  <div className="rounded-md bg-primary/40 text-xs px-1 py-0.5 w-fit flex gap-1 items-center max-w-20 overflow-hidden overflow-ellipsis z-10">
+  <div className="rounded-md bg-primary/40 text-xs px-1 py-0.5 min-w-max flex gap-1 items-center max-w-3/4 overflow-hidden overflow-ellipsis z-10">
     {children}
   </div>
 );

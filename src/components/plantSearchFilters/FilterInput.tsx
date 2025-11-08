@@ -42,7 +42,7 @@ const FilterInputField = <
       {DEFAULT_INPUT_TYPE.includes(filterInput.inputType) ? (
         <input
           id={filterKey}
-          value={value as string}
+          value={(value as string) ?? ""}
           type={filterInput.inputType}
           placeholder={`Enter ${filterInput.inputType}`}
           onChange={inputOnChange}
@@ -50,7 +50,7 @@ const FilterInputField = <
       ) : filterInput.inputType === "select" ? (
         <CustomListbox
           name={filterInput.label}
-          value={value as string[]}
+          value={(value as string[]) ?? []}
           onChange={(value) => onChange(value as PlantDataFilter[T])}
           multiple
           defaultOptions={filterInput.defaultOptions}
