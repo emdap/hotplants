@@ -3,6 +3,8 @@ import movingPlant from "lottieFiles/movingPlant.json";
 import stillPlant from "lottieFiles/stillPlant.json";
 import { useEffect } from "react";
 
+// TODO: Adapt this to the specific use case, status -> message
+// text logic should go in here
 const ContentPlaceholder = ({
   text,
   mode,
@@ -19,7 +21,7 @@ const ContentPlaceholder = ({
   }, [Lottie, mode]);
 
   return (
-    <div className="flex flex-col h-5/7 gap-10 pb-10 my-auto">
+    <div className="flex flex-col h-full gap-10 pb-10 my-auto">
       {Lottie.View}
       <h4 className="text-white text-center px-4">
         {text ?? (mode === "empty" ? "No content available" : "Loading ...")}

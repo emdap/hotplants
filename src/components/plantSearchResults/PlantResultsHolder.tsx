@@ -1,24 +1,18 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
-import ContentPlaceholder from "designSystem/ContentPlaceholder";
-import { MOTION_FADE_IN } from "designSystem/motionTransitions";
+import {
+  MOTION_FADE_IN,
+  MOTION_SLIDE_UP,
+} from "designSystem/motionTransitions";
 import { useDocumentListener } from "hooks/useDocumentListener";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { useCallback, useMemo, useRef } from "react";
 import PlantImageViewer from "./PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 import PlantResultPane from "./PlantResultPane";
 
-const PlantResultsHolder = ({
-  showPlaceholder,
-  hasBeenSearched,
-  isLoading,
-}: {
-  showPlaceholder: boolean;
-  hasBeenSearched: boolean;
-  isLoading: boolean;
-}) => {
+const PlantResultsHolder = () => {
   const {
     fullScreenElement,
     plantSearchResults,
@@ -66,61 +60,37 @@ const PlantResultsHolder = ({
 
   return (
     <>
-      <AnimatePresence>
-        {plantSearchResults.length && (
-          <motion.div
-            key="results-list"
-            {...MOTION_FADE_IN}
-            ref={containerRef}
-            className="space-y-2 lg:space-y-4 flex-grow"
-          >
-            {plantSearchResults.map(
-              (plant, index) =>
-                plant && (
-                  <Card
-                    key={plant.scientificName}
-                    id={plant.scientificName}
-                    onClick={() =>
-                      setActiveIndexes({ plantIndex: index, mediaIndex: null })
-                    }
-                    className={classNames(
-                      "flex gap-2 cursor-pointer h-40 scroll-mt-20",
-                      {
-                        "!bg-default-background dark:!bg-default-background/50":
-                          plantIndex === index,
-                      }
-                    )}
-                  >
-                    {index}
-                    <PlantImageViewer mode="thumbnail" plant={plant} />
-                    <PlantInfo plant={plant} />
-                  </Card>
-                )
-            )}
-          </motion.div>
+      <motion.div
+        key="results-list"
+        {...MOTION_FADE_IN}
+        ref={containerRef}
+        className="space-y-2 lg:space-y-4 flex-grow"
+      >
+        {plantSearchResults.map(
+          (plant, index) =>
+            plant && (
+              <Card
+                {...MOTION_SLIDE_UP}
+                key={plant.scientificName}
+                id={plant.scientificName}
+                onClick={() =>
+                  setActiveIndexes({ plantIndex: index, mediaIndex: null })
+                }
+                className={classNames(
+                  "flex gap-2 cursor-pointer h-40 scroll-mt-20",
+                  {
+                    "!bg-default-background dark:!bg-default-background/50":
+                      plantIndex === index,
+                  }
+                )}
+              >
+                {index}
+                <PlantImageViewer mode="thumbnail" plant={plant} />
+                <PlantInfo plant={plant} />
+              </Card>
+            )
         )}
-
-        {showPlaceholder && (
-          <motion.div
-            {...MOTION_FADE_IN}
-            key="content-placeholder"
-            className="h-[400px] md:h-full flex flex-col"
-          >
-            <ContentPlaceholder
-              mode={isLoading ? "loading" : "empty"}
-              text={
-                isLoading
-                  ? plantSearchResults.length
-                    ? "Searching for more plants ..."
-                    : "Searching for plants ..."
-                  : hasBeenSearched
-                  ? "No plants found, try adjusting your filters"
-                  : "Search for some plants to get started!"
-              }
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </motion.div>
 
       <PlantResultPane
         plant={activePlant}

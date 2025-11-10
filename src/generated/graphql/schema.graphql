@@ -96,20 +96,6 @@ type Query {
   plant(boundingPolyCoords: [[[Float!]!]!], id: String!): PlantData
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
   plantSearch(limit: Int, offset: Int, sort: [SortInput!], where: PlantDataInput): PlantSearchResults!
-  searchRecord(id: String!): SearchRecord
-}
-
-type SearchRecord {
-  endOfRecords: Boolean
-  jsonStringSearch: String!
-  status: SearchRecordStatus!
-  statusUpdated: Float!
-  totalOccurrences: Int!
-}
-
-enum SearchRecordStatus {
-  DONE
-  SCRAPING
 }
 
 enum SortField {

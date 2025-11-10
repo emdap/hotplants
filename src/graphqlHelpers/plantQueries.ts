@@ -62,15 +62,5 @@ export const REPLACE_WITH_PROXY_URL = graphql(`
   }
 `);
 
-export const GET_SEARCH_RECORD = graphql(`
-  query getSearchRecord($searchId: String!) {
-    searchRecord(id: $searchId) {
-      status
-      totalOccurrences
-      endOfRecords
-    }
-  }
-`);
-
 export type PlantQueryResults = SearchPlantsQuery["plantSearch"]["results"];
 export type PlantResult = PlantQueryResults[number];

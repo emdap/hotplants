@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/plants/scrapeOccurrences": {
+    "/plants/getSearchRecord": {
         parameters: {
             query?: never;
             header?: never;
@@ -13,10 +13,24 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Initiate a new scrape of occurrences from GBIF and combine with PFAF data.
-         *     Return the searchRecord, which can be queried against in graphQL to check
-         *     the status of the scrape. */
-        post: operations["ScrapeOccurrences"];
+        post: operations["GetSearchRecord"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plants/scrapeOccurrences/{searchRecordId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Initiate a new scrape of occurrences from GBIF and combine with PFAF data. */
+        get: operations["ScrapeOccurrences"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -27,8 +41,17 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @description A class representation of the BSON ObjectId type. */
-        ObjectId: string;
+        /** @enum {string} */
+        SearchRecordStatus: "READY" | "SCRAPING" | "COMPLETE";
+        /** @description From T, pick a set of properties whose keys are in the union K */
+        "Pick_SearchRecordDocument.status-or-occurrencesOffset_": {
+            status: components["schemas"]["SearchRecordStatus"];
+            /** Format: double */
+            occurrencesOffset: number;
+        };
+        SearchRecordResponse: {
+            id: string;
+        } & components["schemas"]["Pick_SearchRecordDocument.status-or-occurrencesOffset_"];
         /** @description Construct a type with a set of properties K of type T */
         "Record_string.never_": Record<string, never>;
         /** @description From T, pick a set of properties whose keys are in the union K */
@@ -220,6 +243,8 @@ export interface components {
         InputMaybe_number_: components["schemas"]["Maybe_number_"];
         "Maybe_string-Array_": string[] | null;
         "InputMaybe_string-Array_": components["schemas"]["Maybe_string-Array_"];
+        "Maybe_number-Array-Array-Array_": number[][][] | null;
+        "InputMaybe_number-Array-Array-Array_": components["schemas"]["Maybe_number-Array-Array-Array_"];
         "Maybe_number-Array_": number[] | null;
         "InputMaybe_number-Array_": components["schemas"]["Maybe_number-Array_"];
         /** Format: double */
@@ -240,10 +265,11 @@ export interface components {
         /** @description From T, pick a set of properties whose keys are in the union K */
         "Pick_PlantDataInput.Exclude_keyofPlantDataInput.__": {
             scientificName?: components["schemas"]["InputMaybe_string_"];
+            _id?: unknown;
             addedTimestamp?: components["schemas"]["InputMaybe_number_"];
             bloomColors?: components["schemas"]["InputMaybe_string-Array_"];
             bloomTimes?: components["schemas"]["InputMaybe_string-Array_"];
-            boundingBox?: components["schemas"]["InputMaybe_number-Array_"];
+            boundingPolyCoords?: components["schemas"]["InputMaybe_number-Array-Array-Array_"];
             commonName?: components["schemas"]["InputMaybe_string_"];
             habitat?: components["schemas"]["InputMaybe_string_"];
             hardiness?: components["schemas"]["InputMaybe_number-Array_"];
@@ -270,7 +296,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    ScrapeOccurrences: {
+    GetSearchRecord: {
         parameters: {
             query?: never;
             header?: never;
@@ -289,7 +315,37 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ObjectId"];
+                    "application/json": components["schemas"]["SearchRecordResponse"];
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+        };
+    };
+    ScrapeOccurrences: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                searchRecordId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ok */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchRecordResponse"];
                 };
             };
             500: {

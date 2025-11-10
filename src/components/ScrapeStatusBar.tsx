@@ -1,17 +1,8 @@
 import Card from "designSystem/Card";
-import { GetSearchRecordQuery } from "generated/graphql/graphql";
+import { SearchRecord } from "helpers/customSchemaTypes";
 
-const ScrapeStatusBar = ({
-  searchRecord,
-}: {
-  searchRecord?: GetSearchRecordQuery["searchRecord"];
-}) => {
-  return (
-    <Card>
-      Scrape status: {searchRecord?.status ?? "N/A"}; Count:{" "}
-      {searchRecord?.totalOccurrences ?? "N/A"}{" "}
-    </Card>
-  );
+const ScrapeStatusBar = ({ searchRecord }: { searchRecord?: SearchRecord }) => {
+  return <Card>Scrape status: {searchRecord?.status ?? "N/A"}</Card>;
 };
 
 export default ScrapeStatusBar;

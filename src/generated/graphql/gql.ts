@@ -18,14 +18,12 @@ type Documents = {
     "\n  query getPlant($id: String!, $boundingPolyCoords: [[[Float!]!]!]) {\n    plant(id: $id, boundingPolyCoords: $boundingPolyCoords) {\n      ...PlantFields\n    }\n  }\n": typeof types.GetPlantDocument,
     "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: [SortInput!]\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        ...PlantFields\n      }\n    }\n  }\n": typeof types.SearchPlantsDocument,
     "\n  mutation replaceWithProxyUrl(\n    $plantId: String!\n    $occurrenceId: Float!\n    $replaceUrl: String!\n  ) {\n    replaceWithProxyUrl(\n      plantId: $plantId\n      occurrenceId: $occurrenceId\n      replaceUrl: $replaceUrl\n    )\n  }\n": typeof types.ReplaceWithProxyUrlDocument,
-    "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n": typeof types.GetSearchRecordDocument,
 };
 const documents: Documents = {
     "\n    fragment PlantFields on PlantData {\n      _id\n      scientificName\n      commonNames\n      bloomColors\n      bloomTimes\n      physicalCharactersticsDump\n\n      fullOccurrencesCount\n      occurrences {\n        occurrenceId\n        occurrenceCoords\n        media {\n          url\n          isProxyUrl\n        }\n      }\n    }\n  ": types.PlantFieldsFragmentDoc,
     "\n  query getPlant($id: String!, $boundingPolyCoords: [[[Float!]!]!]) {\n    plant(id: $id, boundingPolyCoords: $boundingPolyCoords) {\n      ...PlantFields\n    }\n  }\n": types.GetPlantDocument,
     "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: [SortInput!]\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        ...PlantFields\n      }\n    }\n  }\n": types.SearchPlantsDocument,
     "\n  mutation replaceWithProxyUrl(\n    $plantId: String!\n    $occurrenceId: Float!\n    $replaceUrl: String!\n  ) {\n    replaceWithProxyUrl(\n      plantId: $plantId\n      occurrenceId: $occurrenceId\n      replaceUrl: $replaceUrl\n    )\n  }\n": types.ReplaceWithProxyUrlDocument,
-    "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n": types.GetSearchRecordDocument,
 };
 
 /**
@@ -58,10 +56,6 @@ export function graphql(source: "\n  query searchPlants(\n    $limit: Int\n    $
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation replaceWithProxyUrl(\n    $plantId: String!\n    $occurrenceId: Float!\n    $replaceUrl: String!\n  ) {\n    replaceWithProxyUrl(\n      plantId: $plantId\n      occurrenceId: $occurrenceId\n      replaceUrl: $replaceUrl\n    )\n  }\n"): (typeof documents)["\n  mutation replaceWithProxyUrl(\n    $plantId: String!\n    $occurrenceId: Float!\n    $replaceUrl: String!\n  ) {\n    replaceWithProxyUrl(\n      plantId: $plantId\n      occurrenceId: $occurrenceId\n      replaceUrl: $replaceUrl\n    )\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n"): (typeof documents)["\n  query getSearchRecord($searchId: String!) {\n    searchRecord(id: $searchId) {\n      status\n      totalOccurrences\n      endOfRecords\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
