@@ -73,7 +73,7 @@ const PlantOccurrenceMarkers = ({
       key={`${index}-${activeIndexes.mediaIndex}`}
       zoomToBoundsOnClick={false}
       spiderfyOnEveryZoom
-      iconCreateFunction={MarkerClusterIcon}
+      iconCreateFunction={isViewingAllPlants ? undefined : MarkerClusterIcon}
       maxClusterRadius={isViewingAllPlants ? 200 : 80}
     >
       {occurrences.map(
