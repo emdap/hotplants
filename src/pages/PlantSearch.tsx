@@ -4,6 +4,7 @@ import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/LocationSearch";
 import { PlantDataFilter } from "components/plantSearchFilters/filterFixtures";
 import PlantFilters from "components/plantSearchFilters/PlantFilters";
+import PlantAnimation from "components/plantSearchResults/PlantAnimation";
 import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
 import {
@@ -13,7 +14,6 @@ import {
 } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
-import ContentPlaceholder from "designSystem/ContentPlaceholder";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import PageTitle from "designSystem/PageTitle";
 import { PlantDataInput } from "generated/graphql/graphql";
@@ -134,28 +134,31 @@ const PlantSearch = () => {
       <main
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex-grow overflow-auto scroll-smooth pl-2 pr-4 2xl:pr-8 py-4 space-y-4 flex flex-col"
+        className={classNames(
+          "grow overflow-auto scroll-smooth px-2 2xl:pr-8 pt-4 flex flex-col",
+          plantSearchResults.length && "md:pr-4 pb-4 gap-4"
+        )}
       >
         <PageTitle>Plant Search</PageTitle>
         <div
           className={classNames(
-            "flex max-md:flex-col gap-4 2xl:gap-12 flex-grow",
-            !plantSearchResults.length && "overflow-auto"
-            // !plantSearchResults.length && "md:basis-1 min-h-[600px]"
+            "flex max-md:flex-col gap-4 2xl:gap-12 grow",
+            !plantSearchResults.length && "overflow-auto py-4"
           )}
         >
           <div
             id="filter-sidebar"
             className={classNames(
-              "basis-1/3 md:max-w-lg -mb-4",
-              plantSearchResults.length &&
-                "md:sticky -top-4 md:h-[calc(100dvh-1.5rem)]"
+              "basis-1/3 md:max-w-lg md:min-w-sm",
+              plantSearchResults.length
+                ? "md:sticky -top-4 md:h-[calc(100dvh-1.5rem)]"
+                : "h-max"
             )}
           >
             <div
               className={classNames(
-                "md:h-full max-h-fit space-y-4 pb-8 pr-4",
-                plantSearchResults.length && "md:overflow-auto"
+                "md:h-full max-h-fit space-y-4",
+                plantSearchResults.length && "md:overflow-auto pb-24"
               )}
             >
               <Card className="flex flex-col gap-2 items-start w-full !p-2">
@@ -172,7 +175,7 @@ const PlantSearch = () => {
                 )}
                 <MapProvider
                   showAllPlants
-                  className="w-full h-[200px] md:h-[300px] flex-grow"
+                  className="w-full h-[200px] md:h-[300px] grow"
                 />
               </Card>
 
@@ -194,9 +197,9 @@ const PlantSearch = () => {
           </div>
 
           <div
-            id="results-holder"
+            id="results"
             className={classNames(
-              "flex-grow flex flex-col gap-6 sm:mx-auto",
+              "grow flex flex-col gap-6 sm:mx-auto",
               !plantSearchResults.length && "sticky top-0"
             )}
           >
@@ -211,27 +214,17 @@ const PlantSearch = () => {
                 </motion.div>
               )}
 
-              {plantSearchResults.length && <PlantResultsHolder />}
+              {plantSearchResults.length && (
+                <PlantResultsHolder key="results-holder" />
+              )}
 
               {(plantSearchResults.length === 0 || showScrapeLoader) && (
-                <motion.div
-                  {...MOTION_FADE_IN}
-                  key={`content-placeholder`}
-                  className="flex-grow min-h-[400px] md:h-full flex flex-col basis-1"
-                >
-                  <ContentPlaceholder
-                    mode={showScrapeLoader ? "loading" : "empty"}
-                    text={
-                      showScrapeLoader
-                        ? plantSearchResults.length
-                          ? "Searching for more plants ..."
-                          : "Searching for plants ..."
-                        : hasBeenSearched
-                        ? "No plants found, try adjusting your filters"
-                        : "Search for some plants to get started!"
-                    }
-                  />
-                </motion.div>
+                <PlantAnimation
+                  key="animation"
+                  isLoading={showScrapeLoader}
+                  currentResultsLength={plantSearchResults.length}
+                  hasBeenSearched={hasBeenSearched}
+                />
               )}
             </AnimatePresence>
           </div>
