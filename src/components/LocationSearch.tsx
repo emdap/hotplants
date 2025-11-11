@@ -98,7 +98,7 @@ const LocationSearch = ({
       <label className="flex flex-wrap gap-2 w-full">
         Location
         <input
-          className="flex-grow"
+          className="grow"
           name="search-location"
           value={searchInput}
           onBlur={() => setDebouncedInput(searchInput)}

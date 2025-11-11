@@ -72,7 +72,7 @@ const Carousel = ({
 
   return (
     <div className="flex flex-col gap-2 justify-center h-full w-full overflow-hidden relative">
-      <div className="flex-grow overflow-hidden relative">
+      <div className="grow overflow-hidden relative">
         {children.map((child, index) => {
           const { renderChild, translate } = getChildStyle(index);
           return (

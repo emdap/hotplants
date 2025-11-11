@@ -48,7 +48,7 @@ const PlantResultPane = ({
           </Button>
           <div
             key={plant.scientificName}
-            className="flex-grow flex flex-col sm:overflow-hidden gap-4"
+            className="grow flex flex-col sm:overflow-hidden gap-4"
           >
             <div className="flex max-sm:flex-col gap-4 justify-between">
               <PlantImageViewer mode="carousel" plant={plant} />
