@@ -3,9 +3,9 @@ import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import LocationPolygon from "./LocationPolygon";
-import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
 import PolygonDrawing from "./PolygonDrawing";
 
+import LoadingOverlay from "designSystem/LoadingOverlay";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
@@ -22,14 +22,18 @@ const MapProvider = ({
   className,
   ...containerProps
 }: MapContainerProps & { showAllPlants?: boolean }) => {
-  const { searchLocation, activeIndexes } = usePlantSearchContext();
+  const { searchLocation, activeIndexes, searchLocationLoading } =
+    usePlantSearchContext();
   return (
     <Card
       className={classNames(
         "min-h-60 min-w-30 !p-0 overflow-hidden",
+        searchLocationLoading && "relative",
         className
       )}
     >
+      <LoadingOverlay show={searchLocationLoading} size={40} />
+
       <MapContainer
         className="w-full h-full z-0 !bg-transparent"
         {...{ ...DEFAULT_CONTAINER_PROPS, ...containerProps }}
@@ -47,7 +51,7 @@ const MapProvider = ({
         )}
 
         {showAllPlants && <PolygonDrawing />}
-        <PlantOccurrenceMarkers showAllPlants={showAllPlants} />
+        {/* <PlantOccurrenceMarkers showAllPlants={showAllPlants} /> */}
       </MapContainer>
     </Card>
   );

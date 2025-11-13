@@ -1,9 +1,15 @@
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import classNames from "classnames";
+import {
+  FILTER_HOLDER_ID,
+  usePlantSearchContext,
+} from "contexts/PlantSearchContext";
+import Button from "designSystem/Button";
 import type { paths } from "generated/schemas/nominatim";
 import { validateNominatimLocation } from "helpers/schemaTypesUtil";
 import { useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useState } from "react";
+import { MdChevronRight } from "react-icons/md";
 import { useDebounce } from "react-use";
 
 const locationClient = createClient<paths>({
@@ -27,12 +33,9 @@ const getLocation = (input: string) =>
     },
   });
 
-const LocationSearch = ({
-  setLocationSearchLoading,
-}: {
-  setLocationSearchLoading: (isLoading: boolean) => void;
-}) => {
-  const { searchLocation, setSearchLocation } = usePlantSearchContext();
+const LocationSearch = () => {
+  const { searchLocation, setSearchLocation, setSearchLocationLoading } =
+    usePlantSearchContext();
 
   const [enableQuery, setEnableQuery] = useState(
     searchLocation?.locationSource !== "map"
@@ -83,8 +86,8 @@ const LocationSearch = ({
   });
 
   useEffect(() => {
-    setLocationSearchLoading(locationQuery.isLoading);
-  }, [setLocationSearchLoading, locationQuery.isLoading]);
+    setSearchLocationLoading(locationQuery.isLoading);
+  }, [setSearchLocationLoading, locationQuery.isLoading]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter" || !(e.target instanceof HTMLInputElement)) {
@@ -94,13 +97,17 @@ const LocationSearch = ({
   };
 
   return (
-    <div className="flex flex-col px-2 pt-2 max-w-full overflow-auto">
-      <label className="flex flex-wrap gap-2 w-full">
-        Location
+    <div className="flex flex-col px-2 pt-2 w-full overflow-auto">
+      <div className="form-item flex-row items-center">
+        <label htmlFor="search-location">Location</label>
         <input
-          className="grow"
-          name="search-location"
+          id="search-location"
           value={searchInput}
+          className={classNames(
+            "w-full",
+            (locationQuery.isError || locationInvalid) &&
+              "dark:!border-red-700 ring-offset-red-500/70 !border-red-500"
+          )}
           onBlur={() => setDebouncedInput(searchInput)}
           onKeyDown={handleKeyDown}
           onChange={(e) => {
@@ -109,19 +116,26 @@ const LocationSearch = ({
           }}
           placeholder={
             searchLocation?.locationSource === "map"
-              ? "Using custom location on map"
+              ? `Custom Location: (${searchLocation.displayName})`
               : "Search for a location"
           }
         />
-      </label>
-      <div className="min-h-4">
-        {locationQuery.isLoading
-          ? "Loading"
-          : locationQuery.isError
-          ? "Error"
-          : locationInvalid
-          ? "Cannot find location"
-          : searchLocation && searchLocation.displayName}
+        {searchLocation && (
+          <a
+            href={`#${FILTER_HOLDER_ID}`}
+            className="md:hidden sticky top-0 z-20 justify-self-end"
+          >
+            <Button className="text-sm" variant="primary">
+              <MdChevronRight className="rotate-90" />
+            </Button>
+          </a>
+        )}
+      </div>
+
+      <div className="px-1 text-xs font-medium text-default-text/70">
+        {locationQuery.isError
+          ? "Error loading location"
+          : locationInvalid && "Cannot find location"}
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ const PlantResultPane = ({
         <Card
           key="plant-pane"
           ref={paneRef}
-          className="max-sm:rounded-l-none rounded-r-none h-full w-full absolute top-0 sm:w-3/7 sm:max-w-5xl flex flex-col gap-2 overflow-auto z-20"
+          className="max-sm:rounded-l-none rounded-r-none h-full w-full fixed top-0 sm:w-3/7 sm:max-w-5xl flex flex-col gap-2 overflow-auto z-20"
           {...CARD_FADE_IN}
         >
           <Button onClick={onClose} className="-mt-2 cursor-pointer">

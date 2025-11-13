@@ -64,7 +64,7 @@ const PlantResultsHolder = () => {
         key="results-list"
         {...MOTION_FADE_IN}
         ref={containerRef}
-        className="space-y-2 lg:space-y-4 grow"
+        className="space-y-2 lg:space-y-4"
       >
         {plantSearchResults.map(
           (plant, index) =>

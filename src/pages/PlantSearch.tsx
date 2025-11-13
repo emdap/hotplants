@@ -9,11 +9,14 @@ import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder
 import ScrapeStatusBar from "components/ScrapeStatusBar";
 import {
   ActiveIndexes,
+  FILTER_HOLDER_ID,
   FullScreenElement,
   PlantSearchContext,
 } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
+import LoadingIcon from "designSystem/LoadingIcon";
+import LoadingOverlay from "designSystem/LoadingOverlay";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import PageTitle from "designSystem/PageTitle";
 import { PlantDataInput } from "generated/graphql/graphql";
@@ -24,10 +27,10 @@ import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
-const FILTER_HOLDER_ID = "filter-holder";
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
+  const plantContentHolderRef = useRef<HTMLDivElement>(null);
   const [fullScreenElement, setFullScreenElement] =
     useState<FullScreenElement | null>(null);
   const [plantSearchResults, setPlantSearchResults] =
@@ -39,22 +42,25 @@ const PlantSearch = () => {
 
   const [searchLocation, setSearchLocation] =
     useState<LocationWithPolygon | null>(null);
-  const [locationSearchLoading, setLocationSearchLoading] = useState(false);
+  const [searchLocationLoading, setSearchLocationLoading] = useState(false);
 
   const [plantFilters, setPlantFilters] = useState<PlantDataFilter>({});
   const [plantSearchCriteria, setPlantSearchCriteria] =
     useState<PlantDataInput | null>(null);
 
   const {
+    isInitialSearch,
     plantSearchQuery: { data: { plantSearch } = {}, ...plantSearchQuery },
     searchRecordQuery: { data: searchRecord },
     scrapeQueryLoading,
+    isScraping,
+    isLoading,
     getPlantQuery,
     fetchNextPlantsPage,
   } = usePlantSearchQueries(plantSearchCriteria);
 
   useEffect(() => {
-    setPlantSearchResults(plantSearch?.results ?? []);
+    plantSearch && setPlantSearchResults(plantSearch.results);
   }, [plantSearch]);
 
   const syncPlant = async (plantId: string) => {
@@ -87,6 +93,18 @@ const PlantSearch = () => {
   };
 
   const searchPlants = () => {
+    if (!searchLocation && !Object.keys(plantFilters).length) {
+      return;
+    }
+
+    if (plantSearchResults.length) {
+      scrollContainerRef.current?.scrollTo(
+        0,
+        plantContentHolderRef.current?.offsetTop ?? 0
+      );
+      plantContentHolderRef.current?.scrollTo(0, 0);
+    }
+
     setPlantSearchCriteria({
       ...plantFilters,
       boundingPolyCoords: searchLocation?.boundingPolygon.geometry.coordinates,
@@ -112,8 +130,7 @@ const PlantSearch = () => {
     }
   };
 
-  const hasBeenSearched = Boolean(searchRecord);
-  const showScrapeLoader = searchRecord?.status === "SCRAPING";
+  const showLoadingOverlay = Boolean(plantSearchResults.length && isLoading);
 
   return (
     <PlantSearchContext.Provider
@@ -126,6 +143,9 @@ const PlantSearch = () => {
         searchLocation,
         setSearchLocation,
         setCustomLocationPolygon,
+
+        searchLocationLoading,
+        setSearchLocationLoading,
 
         fullScreenElement,
         setFullScreenElement,
@@ -141,9 +161,10 @@ const PlantSearch = () => {
       >
         <PageTitle>Plant Search</PageTitle>
         <div
+          ref={plantContentHolderRef}
           className={classNames(
             "flex max-md:flex-col gap-4 2xl:gap-12 grow",
-            !plantSearchResults.length && "overflow-auto py-4"
+            !plantSearchResults.length && "md:overflow-auto scroll-smooth py-4"
           )}
         >
           <div
@@ -151,7 +172,7 @@ const PlantSearch = () => {
             className={classNames(
               "basis-1/3 md:max-w-lg md:min-w-sm",
               plantSearchResults.length
-                ? "md:sticky -top-4 md:h-[calc(100dvh-1.5rem)]"
+                ? "md:sticky -top-4 md:h-[calc(100dvh-2.5rem)]"
                 : "h-max"
             )}
           >
@@ -162,17 +183,7 @@ const PlantSearch = () => {
               )}
             >
               <Card className="flex flex-col gap-2 items-start w-full !p-2">
-                <LocationSearch
-                  setLocationSearchLoading={setLocationSearchLoading}
-                />
-                {searchLocation && (
-                  <a
-                    href={`#${FILTER_HOLDER_ID}`}
-                    className="md:hidden sticky top-0 z-20 justify-self-end"
-                  >
-                    <Button variant="primary">Jump to Filters</Button>
-                  </a>
-                )}
+                <LocationSearch />
                 <MapProvider
                   showAllPlants
                   className="w-full h-[200px] md:h-[300px] grow"
@@ -186,7 +197,7 @@ const PlantSearch = () => {
                 />
                 <Button
                   className="mt-auto"
-                  disabled={locationSearchLoading || scrapeQueryLoading}
+                  disabled={searchLocationLoading || scrapeQueryLoading}
                   variant="primary"
                   onClick={searchPlants}
                 >
@@ -200,9 +211,15 @@ const PlantSearch = () => {
             id="results"
             className={classNames(
               "grow flex flex-col gap-6 sm:mx-auto",
-              !plantSearchResults.length && "sticky top-0"
+              !plantSearchResults.length && "sticky top-0",
+              showLoadingOverlay && "relative"
             )}
           >
+            <LoadingOverlay
+              show={showLoadingOverlay}
+              className="items-baseline pt-60"
+            />
+
             <AnimatePresence>
               {plantSearchResults.length && (
                 <motion.div
@@ -218,12 +235,17 @@ const PlantSearch = () => {
                 <PlantResultsHolder key="results-holder" />
               )}
 
-              {(plantSearchResults.length === 0 || showScrapeLoader) && (
+              {!isScraping &&
+              plantSearch &&
+              plantSearchResults.length < plantSearch.count ? (
+                <LoadingIcon size={25} className="text-white mx-auto" />
+              ) : (
                 <PlantAnimation
                   key="animation"
-                  isLoading={showScrapeLoader}
-                  currentResultsLength={plantSearchResults.length}
-                  hasBeenSearched={hasBeenSearched}
+                  isLoading={isLoading}
+                  isScraping={isScraping}
+                  hasCurrentResults={Boolean(plantSearchResults.length)}
+                  isInitialSearch={isInitialSearch}
                 />
               )}
             </AnimatePresence>

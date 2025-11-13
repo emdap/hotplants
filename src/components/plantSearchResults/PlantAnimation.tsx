@@ -7,52 +7,74 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 
+type PlantAnimationProps = {
+  isLoading: boolean;
+  isScraping: boolean;
+  isInitialSearch: boolean;
+  hasCurrentResults: boolean;
+};
+
+const getDescription = (args: Partial<PlantAnimationProps>) => {
+  if (args.isScraping) {
+    return [1, `Searching for ${args.hasCurrentResults ? "more " : ""}plants`];
+  } else if (args.isInitialSearch) {
+    return [2, "Search for some plants to get started!"];
+  } else if (!args.hasCurrentResults) {
+    return [3, "No plants found, try adjusting your filters."];
+  } else {
+    return [4, "End of results"];
+  }
+};
+
 const PlantAnimation = ({
   isLoading,
-  hasBeenSearched,
-  currentResultsLength,
-}: {
-  isLoading: boolean;
-  hasBeenSearched: boolean;
-  currentResultsLength: number;
-}) => {
-  const [debouncedLoading, setDebouncedLoading] = useState(false);
-  useDebounce(() => setDebouncedLoading(isLoading), 1000, [isLoading]);
+  isScraping,
+  isInitialSearch,
+  hasCurrentResults,
+}: PlantAnimationProps) => {
+  const [debouncedScraping, setDebouncedScraping] = useState(false);
+  useDebounce(() => setDebouncedScraping(isScraping), 500, [isScraping]);
+  const isProcessing = isLoading && !isScraping;
 
   const Lottie = useLottie({
-    animationData: debouncedLoading ? movingPlant : stillPlant,
-    className: "flex basis-1 grow overflow-hidden",
+    animationData: debouncedScraping ? movingPlant : stillPlant,
+    className: "w-[200px] md:w-[300px] lg:w-[400px]",
   });
 
   useEffect(() => {
-    if (debouncedLoading !== isLoading) {
+    if (debouncedScraping !== isScraping) {
       Lottie.setSpeed(0.1);
-      isLoading && Lottie.setDirection(-1);
-    } else if (!debouncedLoading) {
+      isScraping && Lottie.setDirection(-1);
+    } else if (!debouncedScraping) {
       Lottie.setSpeed(0.25);
     }
-  }, [debouncedLoading, isLoading, Lottie]);
+  }, [debouncedScraping, isScraping, Lottie]);
 
-  const description = isLoading
-    ? currentResultsLength
-      ? "Searching for more plants"
-      : "Searching for plants"
-    : hasBeenSearched
-    ? "No plants found, try adjusting your filters."
-    : "Search for some plants to get started!";
+  const [descriptionKey, description] = isProcessing
+    ? [0, ""]
+    : getDescription({ isScraping, hasCurrentResults, isInitialSearch });
 
   return (
     <motion.div
       {...MOTION_FADE_IN}
       className={classNames(
-        "grow min-h-[400px] md:h-full basis-1",
-        "flex flex-col gap-10 pb-10 my-auto items-center relative"
+        "grow flex flex-col gap-10 pb-10 my-auto items-center justify-center relative",
+        isProcessing && "animate-pulse"
       )}
     >
-      <div className="flex flex-col w-full grow basis-1 my-auto items-center">
-        {Lottie.View}
-      </div>
-      <h4 className="text-white text-center px-4">{description}</h4>
+      {Lottie.View}
+      <motion.h4
+        key={descriptionKey}
+        {...MOTION_FADE_IN}
+        transition={{ delay: 0.5 }}
+        className={classNames(
+          "text-white text-center px-4 h-8",
+          isScraping && "animate-pulse"
+        )}
+        style={{ animationDelay: "500ms" }}
+      >
+        {description}
+      </motion.h4>
     </motion.div>
   );
 };

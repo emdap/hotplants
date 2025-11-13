@@ -27,9 +27,10 @@ const hotplantsClient = createClient<paths>({
 });
 
 const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
-  const [pollInterval, setPollInterval] = useState(0);
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [autoScrapesRemaining, setAutoScrapesRemaining] = useState(0);
+  const [pollInterval, setPollInterval] = useState(0);
+  const [isInitialSearch, setIsInitialSearch] = useState(true);
 
   const [getPlantQuery] = useLazyQuery(GET_PLANT, { fetchPolicy: "no-cache" });
 
@@ -50,16 +51,18 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
         body: plantSearchCriteria!,
       });
 
-      if (data?.status === "READY" && !data.occurrencesOffset) {
-        setAutoScrapesRemaining(MAX_AUTO_SCRAPES);
-      } else {
-        setAutoScrapesRemaining(0);
+      if (isInitialSearch) {
+        setIsInitialSearch(false);
+      }
+
+      if (pollInterval && data?.status !== "SCRAPING") {
+        stopPolling();
       }
 
       return data;
     },
     refetchInterval: pollInterval,
-    enabled: plantSearchCriteria !== null,
+    enabled: Boolean(plantSearchCriteria),
   });
   const searchRecordData = searchRecordQuery.data;
 
@@ -77,27 +80,35 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchRecordData?.id]);
 
-  const startPolling = () => {
-    const completePollingCycle = () => {
-      setPollInterval(0);
-      setAutoScrapesRemaining((prev) => prev - 1);
-    };
+  const stopPolling = () => {
+    stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
 
+    setPollInterval(0);
+    setAutoScrapesRemaining((prev) => Math.max(0, prev - 1));
+  };
+
+  const startPolling = () => {
     setPollInterval(DEFAULT_POLL_INTERVAL);
 
     stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
     stopPollingTimeout.current = setTimeout(
-      completePollingCycle,
+      stopPolling,
       DEFAULT_POLL_INTERVAL * MAX_POLLS
     );
   };
 
+  useEffect(() => {
+    if (searchRecordQuery.error || plantSearchQuery.error) {
+      stopPolling();
+    }
+  }, [searchRecordQuery.error, plantSearchQuery.error]);
+
   const shouldAutoScrapePlants =
-    autoScrapesRemaining !== 0 &&
+    autoScrapesRemaining > 0 &&
+    searchRecordData?.status === "READY" &&
     !plantSearchQuery.loading &&
     plantSearchData !== undefined &&
-    plantSearchData.count < MIN_RESULTS &&
-    searchRecordData?.status === "READY";
+    plantSearchData.count < MIN_RESULTS;
 
   const scrapeOccurrencesQuery = useReactQuery({
     queryKey: [
@@ -117,23 +128,15 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
         { params: { path: { searchRecordId: searchRecordData.id } } }
       );
 
-      if (data?.status === "SCRAPING") {
+      if (data?.status === "SCRAPING" && !pollInterval) {
+        searchRecordQuery.refetch();
+        plantSearchQuery.refetch();
         startPolling();
       }
 
       return data;
     },
   });
-
-  useEffect(() => {
-    if (
-      searchRecordData?.status === "COMPLETE" ||
-      searchRecordQuery.error ||
-      plantSearchQuery.error
-    ) {
-      setPollInterval(0);
-    }
-  }, [searchRecordData, searchRecordQuery.error, plantSearchQuery.error]);
 
   const fetchNextPlantsPage = async () => {
     if (pollInterval || plantSearchQuery.loading || !plantSearchData) {
@@ -148,6 +151,14 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   };
 
   return {
+    isInitialSearch,
+    isLoading:
+      // Include check on dataState to differentiate between fetching next page,
+      // and loading new filter results
+      (plantSearchQuery.dataState === "empty" && plantSearchQuery.loading) ||
+      searchRecordQuery.isLoading ||
+      scrapeOccurrencesQuery.isLoading,
+    isScraping: Boolean(pollInterval),
     plantSearchQuery,
     searchRecordQuery,
     scrapeQueryLoading: scrapeOccurrencesQuery.isLoading,
