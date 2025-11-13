@@ -1,6 +1,10 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/forms";
 
-/* #region tailwind config */
+@import "./styles/form-elements.css";
+@import "./styles/leaflet-overrides.css";
+@import "./styles/headers.css";
+
 @custom-variant dark (&:where(.dark, .dark *));
 @theme {
   --color-default-text: #000;
@@ -37,12 +41,11 @@
       --color-default-text: #eee;
       --color-scrollbar: #ffffff85;
       --color-default-background: #000;
-      --color-primary: #005757;
+      --color-primary: #00b1b1;
       --color-secondary: #868686;
     }
   }
 }
-/* #endregion */
 
 body {
   scrollbar-width: thin;
@@ -51,75 +54,8 @@ body {
   @apply text-default-text bg-default-background;
 }
 
-h1,
-h2,
-h3,
-h4 {
-  @apply font-mono text-white/80;
-}
-
-h1 {
-  @apply font-medium text-4xl;
-}
-
-h4 {
-  @apply font-medium text-lg;
-}
-
 ::-webkit-scrollbar-button {
   width: 0;
   height: 0;
   display: none;
 }
-
-/* #region Leaflet overrides */
-.dark {
-  .leaflet-layer,
-  .leaflet-control-zoom-in,
-  .leaflet-control-zoom-out {
-    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-  }
-}
-.leaflet-draw-section:last-of-type {
-  @apply hidden;
-}
-
-.leaflet-control-container {
-  * {
-    @apply font-sans;
-  }
-  .leaflet-bar {
-    @apply !border-none shadow-sm;
-  }
-  .leaflet-control {
-    @apply rounded-sm shadow-sm bg-default-background/80;
-  }
-
-  /* CSS hacks to hide the toolbar, but allow cancelling drawing by re-clicking the active icon.
-No method available in lib to cancel drawings */
-  .leaflet-draw-actions {
-    @apply top-0 left-0 w-full h-full overflow-hidden;
-    li {
-      @apply !hidden;
-    }
-    li:last-of-type {
-      @apply !block h-full w-full;
-
-      a {
-        @apply !border-0 h-full w-full text-transparent;
-      }
-    }
-  }
-  a {
-    @apply !bg-transparent hover:bg-default-background text-primary;
-  }
-}
-
-.leaflet-marker-icon {
-  @apply rounded-full bg-cyan-200 border-2 border-cyan-900;
-}
-
-.leaflet-interactive {
-  @apply stroke-cyan-900 fill-cyan-400;
-}
-/* #endregion */
