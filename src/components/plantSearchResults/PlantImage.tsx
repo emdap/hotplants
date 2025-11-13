@@ -1,9 +1,9 @@
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import LoadingIcon from "designSystem/LoadingIcon";
 import { PlantMedia } from "generated/graphql/graphql";
 import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { useEffect, useState } from "react";
-import { FaSpinner } from "react-icons/fa";
 
 const PlantImage = ({
   plantId,
@@ -59,7 +59,7 @@ const PlantImage = ({
       />
       {isLoading && (
         <div className="absolute top-0 left-0 h-full w-full bg-secondary/20 flex items-center justify-center">
-          <FaSpinner className="animate-spin" />
+          <LoadingIcon />
         </div>
       )}
     </div>
