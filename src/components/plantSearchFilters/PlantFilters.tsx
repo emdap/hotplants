@@ -1,5 +1,6 @@
+import classNames from "classnames";
 import Button from "designSystem/Button";
-import { Dispatch, Fragment, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import {
   FILTERS,
   FIRST_ADVANCED_FILTER_INDEX,
@@ -25,12 +26,20 @@ const PlantFilters = ({
   );
 
   return (
-    <div className="space-y-2 max-w-full overflow-auto">
+    <div className="space-y-4 max-w-full overflow-auto">
       {filterList.map(([filterKey, filterInput], index) => (
-        <Fragment key={filterKey}>
+        <div
+          className={classNames(
+            "form-item",
+            ["checkbox", "range"].includes(filterInput.inputType) &&
+              "flex-row items-center gap-4"
+          )}
+          key={index}
+        >
           {index === FIRST_ADVANCED_FILTER_INDEX && (
             <hr className="opacity-10 my-4" />
           )}
+          <label htmlFor={filterKey}>{filterInput.label}</label>
           <FilterInputField
             {...{ filterKey, filterInput }}
             value={plantFilters[filterKey]}
@@ -38,7 +47,7 @@ const PlantFilters = ({
               setPlantFilters((prev) => ({ ...prev, [filterKey]: value }))
             }
           />
-        </Fragment>
+        </div>
       ))}
 
       <Button

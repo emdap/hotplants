@@ -1,4 +1,4 @@
-import CustomListbox from "designSystem/CustomListbox";
+import ListboxWrapper from "designSystem/listbox/ListboxWrapper";
 import { ChangeEvent } from "react";
 import {
   FilterInput,
@@ -36,28 +36,23 @@ const FilterInputField = <
     }
   };
 
-  return (
-    <label className="flex gap-2 flex-wrap">
-      {filterInput.label}
-      {DEFAULT_INPUT_TYPE.includes(filterInput.inputType) ? (
-        <input
-          id={filterKey}
-          value={(value as string) ?? ""}
-          type={filterInput.inputType}
-          placeholder={`Enter ${filterInput.inputType}`}
-          onChange={inputOnChange}
-        />
-      ) : filterInput.inputType === "select" ? (
-        <CustomListbox
-          name={filterInput.label}
-          value={(value as string[]) ?? []}
-          onChange={(value) => onChange(value as PlantDataFilter[T])}
-          multiple
-          defaultOptions={filterInput.defaultOptions}
-        />
-      ) : null}
-    </label>
-  );
+  return DEFAULT_INPUT_TYPE.includes(filterInput.inputType) ? (
+    <input
+      id={filterKey}
+      value={(value as string) ?? ""}
+      type={filterInput.inputType}
+      placeholder={`Enter ${filterInput.inputType}`}
+      onChange={inputOnChange}
+    />
+  ) : filterInput.inputType === "select" ? (
+    <ListboxWrapper
+      name={filterKey}
+      value={(value as string[]) ?? []}
+      onChange={(value) => onChange(value as PlantDataFilter[T])}
+      multiple
+      defaultOptions={filterInput.defaultOptions}
+    />
+  ) : null;
 };
 
 export default FilterInputField;
