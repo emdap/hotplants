@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import LoadingIcon from "designSystem/LoadingIcon";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { useLottie } from "lottie-react";
 import movingPlant from "lottieFiles/movingPlant.json";
@@ -47,6 +48,8 @@ const PlantAnimation = ({
       isScraping && Lottie.setDirection(-1);
     } else if (!debouncedScraping) {
       Lottie.setSpeed(0.25);
+    } else {
+      Lottie.setSpeed(1);
     }
   }, [debouncedScraping, isScraping, Lottie]);
 
@@ -57,23 +60,18 @@ const PlantAnimation = ({
   return (
     <motion.div
       {...MOTION_FADE_IN}
-      className={classNames(
-        "grow flex flex-col gap-10 pb-10 my-auto items-center justify-center relative",
-        isProcessing && "animate-pulse"
-      )}
+      className="transition-opacity grow flex flex-col gap-10 pb-10 my-auto items-center justify-center"
     >
       {Lottie.View}
       <motion.h4
         key={descriptionKey}
         {...MOTION_FADE_IN}
-        transition={{ delay: 0.5 }}
         className={classNames(
           "text-white text-center px-4 h-8",
           isScraping && "animate-pulse"
         )}
-        style={{ animationDelay: "500ms" }}
       >
-        {description}
+        {description || <LoadingIcon />}
       </motion.h4>
     </motion.div>
   );

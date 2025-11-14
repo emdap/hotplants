@@ -16,8 +16,6 @@ import {
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
-import LoadingOverlay from "designSystem/LoadingOverlay";
-import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import PageTitle from "designSystem/PageTitle";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { Feature, Polygon } from "geojson";
@@ -30,7 +28,9 @@ import { useEffect, useRef, useState } from "react";
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
+  const scrollContainerRef = useRef<HTMLElement>(null);
   const plantContentHolderRef = useRef<HTMLDivElement>(null);
+
   const [fullScreenElement, setFullScreenElement] =
     useState<FullScreenElement | null>(null);
   const [plantSearchResults, setPlantSearchResults] =
@@ -97,14 +97,6 @@ const PlantSearch = () => {
       return;
     }
 
-    if (plantSearchResults.length) {
-      scrollContainerRef.current?.scrollTo(
-        0,
-        plantContentHolderRef.current?.offsetTop ?? 0
-      );
-      plantContentHolderRef.current?.scrollTo(0, 0);
-    }
-
     setPlantSearchCriteria({
       ...plantFilters,
       boundingPolyCoords: searchLocation?.boundingPolygon.geometry.coordinates,
@@ -113,9 +105,10 @@ const PlantSearch = () => {
     if (plantSearchQuery.error) {
       plantSearchQuery.refetch();
     }
+
+    scrollResultsToTop();
   };
 
-  const scrollContainerRef = useRef<HTMLElement>(null);
   const handleScroll = () => {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) {
@@ -130,7 +123,20 @@ const PlantSearch = () => {
     }
   };
 
-  const showLoadingOverlay = Boolean(plantSearchResults.length && isLoading);
+  const scrollResultsToTop = () => {
+    if (
+      plantContentHolderRef.current &&
+      plantContentHolderRef.current.parentElement
+    ) {
+      scrollContainerRef.current?.scrollTo(
+        0,
+        plantContentHolderRef.current?.offsetTop -
+          plantContentHolderRef.current.parentElement.offsetTop
+      );
+    } else {
+      scrollContainerRef.current?.scrollTo(0, 0);
+    }
+  };
 
   return (
     <PlantSearchContext.Provider
@@ -203,6 +209,7 @@ const PlantSearch = () => {
                 >
                   Apply filters
                 </Button>
+                <div onClick={() => scrollResultsToTop()}>test</div>
               </Card>
             </div>
           </div>
@@ -210,30 +217,25 @@ const PlantSearch = () => {
           <div
             id="results"
             className={classNames(
-              "grow flex flex-col gap-6 sm:mx-auto",
-              !plantSearchResults.length && "sticky top-0",
-              showLoadingOverlay && "relative"
+              "grow flex flex-col gap-6 sm:mx-auto relative",
+              !plantSearchResults.length && "sticky top-0"
             )}
           >
-            <LoadingOverlay
-              show={showLoadingOverlay}
-              className="items-baseline pt-60"
-            />
-
             <AnimatePresence>
-              {plantSearchResults.length && (
-                <motion.div
-                  key="scrape-status-bar"
-                  className="sticky -top-4 z-20"
-                  {...MOTION_FADE_IN}
-                >
-                  <ScrapeStatusBar searchRecord={searchRecord} />
-                </motion.div>
-              )}
+              <motion.div
+                key="scrape-status-bar"
+                className={classNames(
+                  "sticky -top-4 z-20 transition-opacity",
+                  plantSearchResults.length ? "opacity-100" : "opacity-0"
+                )}
+              >
+                <ScrapeStatusBar searchRecord={searchRecord} />
+              </motion.div>
 
-              {plantSearchResults.length && (
-                <PlantResultsHolder key="results-holder" />
-              )}
+              <PlantResultsHolder
+                key="results-holder"
+                searchId={searchRecord?.id}
+              />
 
               {!isScraping &&
               plantSearch &&

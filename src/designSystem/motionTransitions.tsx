@@ -12,17 +12,20 @@ export const MOTION_FADE_IN: MotionProps = {
   exit: { opacity: 0 },
 };
 
-export const CUSTOM_MOTION_FADE_IN = (extraProps: MotionProps) => {
-  const newProps: MotionProps = extraProps;
+export const mergeMotionProps = (
+  baseProps: MotionProps,
+  addProps: MotionProps
+) => {
+  const newProps: MotionProps = { ...addProps };
 
-  Object.entries(MOTION_FADE_IN).forEach(([key, value]) => {
+  Object.entries(baseProps).forEach(([key, value]) => {
     const typesafeKey = key as keyof MotionProps;
 
     if (
       typeof value === "object" &&
-      (!extraProps[typesafeKey] || typeof extraProps[typesafeKey] === "object")
+      (!addProps[typesafeKey] || typeof addProps[typesafeKey] === "object")
     ) {
-      newProps[typesafeKey] = { ...value, ...extraProps[typesafeKey] };
+      newProps[typesafeKey] = { ...value, ...addProps[typesafeKey] };
     }
   });
 

@@ -2,7 +2,10 @@ import MapProvider from "components/interactiveMap/MapProvider";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
-import { CUSTOM_MOTION_FADE_IN } from "designSystem/motionTransitions";
+import {
+  mergeMotionProps,
+  MOTION_FADE_IN,
+} from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence } from "motion/react";
@@ -12,7 +15,7 @@ import { useClickAway } from "react-use";
 import PlantImageViewer from "./PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 
-const CARD_FADE_IN = CUSTOM_MOTION_FADE_IN({
+const CARD_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
   initial: { right: "-100%" },
   animate: { right: 0 },
   exit: { right: "-100%" },

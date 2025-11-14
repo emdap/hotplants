@@ -48,7 +48,7 @@ const LocationSearch = () => {
     () =>
       (debouncedInput !== null || searchInput) &&
       setDebouncedInput(searchInput),
-    2000,
+    1000,
     [searchInput]
   );
 

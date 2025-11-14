@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import { MdClose } from "react-icons/md";
 import Button from "./Button";
 import Card, { CardProps } from "./Card";
-import { CUSTOM_MOTION_FADE_IN, MOTION_FADE_IN } from "./motionTransitions";
+import { mergeMotionProps, MOTION_FADE_IN } from "./motionTransitions";
 
 export type ModalProps = {
   isOpen?: boolean;
@@ -14,7 +14,7 @@ export type ModalProps = {
   headerProps?: HTMLProps<HTMLDivElement>;
 } & CardProps;
 
-const MODAL_BODY_FADE_IN = CUSTOM_MOTION_FADE_IN({
+const MODAL_BODY_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
   initial: { top: "55%" },
   animate: { top: "50%" },
   exit: { top: "55%" },

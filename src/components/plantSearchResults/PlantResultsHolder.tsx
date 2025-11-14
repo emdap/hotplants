@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
 import {
+  mergeMotionProps,
   MOTION_FADE_IN,
   MOTION_SLIDE_UP,
 } from "designSystem/motionTransitions";
@@ -12,7 +13,7 @@ import PlantImageViewer from "./PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 import PlantResultPane from "./PlantResultPane";
 
-const PlantResultsHolder = () => {
+const PlantResultsHolder = ({ searchId }: { searchId?: string }) => {
   const {
     fullScreenElement,
     plantSearchResults,
@@ -60,38 +61,40 @@ const PlantResultsHolder = () => {
 
   return (
     <>
-      <motion.div
-        key="results-list"
-        {...MOTION_FADE_IN}
-        ref={containerRef}
-        className="space-y-2 lg:space-y-4"
-      >
-        {plantSearchResults.map(
-          (plant, index) =>
-            plant && (
-              <Card
-                {...MOTION_SLIDE_UP}
-                key={plant.scientificName}
-                id={plant.scientificName}
-                onClick={() =>
-                  setActiveIndexes({ plantIndex: index, mediaIndex: null })
-                }
-                className={classNames(
-                  "flex gap-2 cursor-pointer h-40 scroll-mt-20",
-                  {
-                    "!bg-default-background dark:!bg-default-background/50":
-                      plantIndex === index,
+      {" "}
+      {searchId && (
+        <motion.div
+          key="results-list"
+          {...MOTION_FADE_IN}
+          ref={containerRef}
+          className="flex flex-col gap-2 lg:gap-4"
+        >
+          {plantSearchResults.map(
+            (plant, index) =>
+              plant && (
+                <Card
+                  {...mergeMotionProps(MOTION_FADE_IN, MOTION_SLIDE_UP)}
+                  key={`${plant.scientificName}-${index}-${searchId}`}
+                  id={plant.scientificName}
+                  onClick={() =>
+                    setActiveIndexes({ plantIndex: index, mediaIndex: null })
                   }
-                )}
-              >
-                {index}
-                <PlantImageViewer mode="thumbnail" plant={plant} />
-                <PlantInfo plant={plant} />
-              </Card>
-            )
-        )}
-      </motion.div>
-
+                  className={classNames(
+                    "flex gap-2 cursor-pointer h-40 scroll-mt-20",
+                    {
+                      "!bg-default-background dark:!bg-default-background/50":
+                        plantIndex === index,
+                    }
+                  )}
+                >
+                  {index}
+                  <PlantImageViewer mode="thumbnail" plant={plant} />
+                  <PlantInfo plant={plant} />
+                </Card>
+              )
+          )}
+        </motion.div>
+      )}
       <PlantResultPane
         plant={activePlant}
         onClose={() => setActiveIndexes({ plantIndex: null, mediaIndex: null })}
