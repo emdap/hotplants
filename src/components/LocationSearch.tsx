@@ -121,14 +121,13 @@ const LocationSearch = () => {
           }
         />
         {searchLocation && (
-          <a
-            href={`#${FILTER_HOLDER_ID}`}
-            className="md:hidden sticky top-0 z-20 justify-self-end"
+          <Button
+            linkAddress={`#${FILTER_HOLDER_ID}`}
+            className="md:hidden sticky top-0 z-20 justify-self-end text-sm"
+            variant="primary"
           >
-            <Button className="text-sm" variant="primary">
-              <MdChevronRight className="rotate-90" />
-            </Button>
-          </a>
+            <MdChevronRight className="rotate-90" />
+          </Button>
         )}
       </div>
 
