@@ -4,6 +4,7 @@ import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/LocationSearch";
 import { PlantDataFilter } from "components/plantSearchFilters/filterFixtures";
 import PlantFilters from "components/plantSearchFilters/PlantFilters";
+import ActivePlantPane from "components/plantSearchResults/ActivePlantPane";
 import PlantAnimation from "components/plantSearchResults/PlantAnimation";
 import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
@@ -23,7 +24,7 @@ import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import { LocationWithPolygon } from "helpers/schemaTypesUtil";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { isEqual } from "lodash";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
@@ -35,7 +36,7 @@ const PlantSearch = () => {
     useState<FullScreenElement | null>(null);
   const [plantSearchResults, setPlantSearchResults] =
     useState<PlantQueryResults>([]);
-  const activeIndexesState = useState<ActiveIndexes>({
+  const [activeIndexes, setActiveIndexes] = useState<ActiveIndexes>({
     plantIndex: null,
     mediaIndex: null,
   });
@@ -58,8 +59,10 @@ const PlantSearch = () => {
   } = usePlantSearchQueries(plantSearchCriteria);
 
   useEffect(() => {
-    plantSearchData && setPlantSearchResults(plantSearchData.results);
-  }, [plantSearchData]);
+    status !== "CHECKING_STATUS" &&
+      plantSearchData &&
+      setPlantSearchResults(plantSearchData.results);
+  }, [status, plantSearchData]);
 
   const syncPlant = async (plantId: string) => {
     const { data } = await getPlantQuery({
@@ -103,13 +106,24 @@ const PlantSearch = () => {
     [draftCriteria, plantSearchCriteria]
   );
 
-  const searchPlants = () => {
+  const scrollToTop = () =>
+    new Promise<void>((resolve) => {
+      scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      const checkScrollInterval = setInterval(() => {
+        if ((scrollContainerRef.current?.scrollTop ?? 10) <= 10) {
+          clearInterval(checkScrollInterval);
+          resolve();
+        }
+      });
+    });
+
+  const applyFilters = async () => {
     if (!searchLocation && !Object.keys(plantFilters).length) {
       return;
     }
 
     if (criteriaIsChanged) {
-      scrollContainerRef.current?.scrollTo(0, 0);
+      await scrollToTop();
       setPlantSearchCriteria(draftCriteria);
     }
 
@@ -133,14 +147,15 @@ const PlantSearch = () => {
   };
 
   const isShowingAllResults =
-    plantSearchData?.count === plantSearchData?.results.length;
+    !plantSearchData ||
+    plantSearchData.count === plantSearchData.results.length;
 
   return (
     <PlantSearchContext.Provider
       value={{
         plantSearchResults,
-        activeIndexes: activeIndexesState[0],
-        setActiveIndexes: activeIndexesState[1],
+        activeIndexes,
+        setActiveIndexes,
         syncPlant,
 
         searchLocation,
@@ -158,7 +173,7 @@ const PlantSearch = () => {
         ref={scrollContainerRef}
         onScroll={handleScroll}
         className={classNames(
-          "grow overflow-auto scroll-smooth px-2 2xl:pr-8 pt-4 flex flex-col",
+          "grow overflow-auto px-2 2xl:pr-8 pt-4 flex flex-col",
           plantSearchResults.length && "md:pr-4 pb-4 gap-4"
         )}
       >
@@ -166,7 +181,7 @@ const PlantSearch = () => {
         <div
           className={classNames(
             "flex max-md:flex-col gap-4 2xl:gap-12 grow",
-            !plantSearchResults.length && "md:overflow-auto scroll-smooth py-4"
+            !plantSearchResults.length && "md:overflow-auto py-4"
           )}
         >
           <div
@@ -205,7 +220,7 @@ const PlantSearch = () => {
                     !criteriaIsChanged
                   }
                   variant="primary"
-                  onClick={searchPlants}
+                  onClick={applyFilters}
                 >
                   Apply filters
                 </Button>
@@ -221,22 +236,34 @@ const PlantSearch = () => {
             )}
           >
             <AnimatePresence>
-              <motion.div
-                key="scrape-status-bar"
+              <div
+                key="status-bar"
                 className={classNames(
                   "sticky -top-4 z-20 transition-opacity",
                   plantSearchResults.length ? "opacity-100" : "opacity-0"
                 )}
               >
                 <ScrapeStatusBar searchRecord={searchRecordQuery.data} />
-              </motion.div>
+              </div>
 
-              <PlantResultsHolder
-                key="results-holder"
-                searchId={searchRecordQuery.data?.id}
-              />
+              <PlantResultsHolder key="results-holder" />
 
-              {isShowingAllResults ||
+              {!isShowingAllResults ? (
+                <LoadingIcon
+                  key="loading-icon"
+                  size={25}
+                  className="text-white mx-auto mt-auto"
+                />
+              ) : (
+                <PlantAnimation
+                  key="plant-animation"
+                  queryStatus={status}
+                  isInitialSearch={!searchRecordQuery.dataUpdatedAt}
+                  hasCurrentResults={Boolean(plantSearchResults.length)}
+                />
+              )}
+
+              {/* {isShowingAllResults ||
               ["CHECKING_STATUS", "SCRAPING_AND_POLLING"].includes(status) ? (
                 <PlantAnimation
                   key="plant-animation"
@@ -245,12 +272,14 @@ const PlantSearch = () => {
                   hasCurrentResults={Boolean(plantSearchResults.length)}
                 />
               ) : (
-                <LoadingIcon size={25} className="text-white mx-auto" />
-              )}
+                <LoadingIcon size={25} className="text-white mx-auto mt-auto" />
+              )} */}
             </AnimatePresence>
           </div>
         </div>
       </main>
+
+      <ActivePlantPane />
     </PlantSearchContext.Provider>
   );
 };
