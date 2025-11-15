@@ -6,10 +6,9 @@ import {
   mergeMotionProps,
   MOTION_FADE_IN,
 } from "designSystem/motionTransitions";
-import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence } from "motion/react";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { MdClose } from "react-icons/md";
 import { useClickAway } from "react-use";
 import PlantImageViewer from "./PlantImageCarousel";
@@ -21,43 +20,55 @@ const CARD_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
   exit: { right: "-100%" },
 });
 
-const PlantResultPane = ({
-  plant,
-  onClose,
-}: {
-  plant: PlantResult | null;
-  onClose: () => void;
-}) => {
-  const { fullScreenElement } = usePlantSearchContext();
-  const paneRef = useRef<HTMLDivElement>(null);
-  useClickAway(paneRef, () => fullScreenElement === null && onClose(), [
-    "mouseup",
-  ]);
+const ActivePlantPane = () => {
+  const {
+    fullScreenElement,
+    plantSearchResults,
+    activeIndexes,
+    setActiveIndexes,
+  } = usePlantSearchContext();
 
-  const closeOnEscape = (e: KeyboardEvent) => e.code === "Escape" && onClose();
-  useDocumentListener("keydown", closeOnEscape, !!plant);
+  const activePlant = useMemo(() => {
+    return activeIndexes.plantIndex === null
+      ? null
+      : plantSearchResults[activeIndexes.plantIndex] ?? null;
+  }, [plantSearchResults, activeIndexes.plantIndex]);
+
+  const resetActivePlant = () =>
+    setActiveIndexes({ plantIndex: null, mediaIndex: null });
+
+  const paneRef = useRef<HTMLDivElement>(null);
+  useClickAway(
+    paneRef,
+    () => fullScreenElement === null && resetActivePlant(),
+    ["mouseup"]
+  );
+
+  const closeOnEscape = (e: KeyboardEvent) =>
+    e.code === "Escape" && resetActivePlant();
+  useDocumentListener("keydown", closeOnEscape, !!activePlant);
 
   return (
     <AnimatePresence>
-      {plant && (
+      {activePlant && (
         <Card
           key="plant-pane"
           ref={paneRef}
           className="max-sm:rounded-l-none rounded-r-none h-full w-full fixed top-0 sm:w-3/7 sm:max-w-5xl flex flex-col gap-2 overflow-auto z-20"
           {...CARD_FADE_IN}
         >
-          <Button onClick={onClose} className="-mt-2 cursor-pointer">
+          <Button onClick={resetActivePlant} className="-mt-2 cursor-pointer">
             <MdClose />
           </Button>
           <div
-            key={plant.scientificName}
+            key={activePlant.scientificName}
             className="grow flex flex-col sm:overflow-hidden gap-4"
           >
             <div className="flex max-sm:flex-col gap-4 justify-between">
-              <PlantImageViewer mode="carousel" plant={plant} />
+              <PlantImageViewer mode="carousel" plant={activePlant} />
               <MapProvider className="min-h-60 w-full" />
             </div>
-            <PlantInfo plant={plant} showFullInfo />
+            <PlantInfo plant={activePlant} showFullInfo />
           </div>
         </Card>
       )}
@@ -65,4 +76,4 @@ const PlantResultPane = ({
   );
 };
 
-export default PlantResultPane;
+export default ActivePlantPane;
