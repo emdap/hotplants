@@ -157,6 +157,9 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   };
 
   const startPolling = () => {
+    plantSearchQuery.refetch();
+    searchRecordQuery.refetch();
+
     setPollInterval(DEFAULT_POLL_INTERVAL);
 
     stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
