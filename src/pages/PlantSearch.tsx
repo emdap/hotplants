@@ -262,18 +262,6 @@ const PlantSearch = () => {
                   hasCurrentResults={Boolean(plantSearchResults.length)}
                 />
               )}
-
-              {/* {isShowingAllResults ||
-              ["CHECKING_STATUS", "SCRAPING_AND_POLLING"].includes(status) ? (
-                <PlantAnimation
-                  key="plant-animation"
-                  queryStatus={status}
-                  isInitialSearch={!searchRecordQuery.dataUpdatedAt}
-                  hasCurrentResults={Boolean(plantSearchResults.length)}
-                />
-              ) : (
-                <LoadingIcon size={25} className="text-white mx-auto mt-auto" />
-              )} */}
             </AnimatePresence>
           </div>
         </div>

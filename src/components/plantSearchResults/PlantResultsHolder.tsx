@@ -1,11 +1,7 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
-import {
-  mergeMotionProps,
-  MOTION_FADE_IN,
-  MOTION_SLIDE_UP,
-} from "designSystem/motionTransitions";
+import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { useCallback, useRef } from "react";
 import PlantImageViewer from "./PlantImageCarousel";
@@ -62,7 +58,7 @@ const PlantResultsHolder = () => {
         (plant, index) =>
           plant && (
             <Card
-              {...mergeMotionProps(MOTION_FADE_IN, MOTION_SLIDE_UP)}
+              {...MOTION_FADE_SLIDE}
               key={`${plant.scientificName}-${index}`}
               id={plant.scientificName}
               onClick={() =>

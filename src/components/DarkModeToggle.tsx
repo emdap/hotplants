@@ -1,3 +1,5 @@
+import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
+import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { useLocalStorage } from "react-use";
@@ -30,10 +32,12 @@ const DarkModeToggle = () => {
 
   return (
     <div
-      className="cursor-pointer"
+      className="cursor-pointer text-white/80"
       onClick={() => setStoredDarkMode(!isDarkMode)}
     >
-      {isDarkMode ? <MdDarkMode /> : <MdLightMode />}
+      <motion.div key={isDarkMode ? "dark" : "light"} {...MOTION_FADE_SLIDE}>
+        {isDarkMode ? <MdDarkMode /> : <MdLightMode />}
+      </motion.div>
     </div>
   );
 };

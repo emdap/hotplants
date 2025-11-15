@@ -52,6 +52,10 @@ body {
   scrollbar-color: var(--color-scrollbar) transparent;
 
   @apply text-default-text bg-default-background;
+
+  * {
+    @apply transition-colors;
+  }
 }
 
 ::-webkit-scrollbar-button {

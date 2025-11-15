@@ -10,7 +10,7 @@ import {
 import { MdClose } from "react-icons/md";
 
 const SelectedOptionDisplay = ({ children }: { children: ReactNode }) => (
-  <div className="rounded-md text-white bg-primary/80 dark:bg-black/50 text-xs pl-1.5 pr-1 py-0.5 min-w-max flex gap-1 items-center max-w-3/4 overflow-hidden overflow-ellipsis z-10">
+  <div className="rounded-md text-white bg-primary/80 dark:bg-black/50 shadow-sm shadow-black/20 text-xs pl-1.5 pr-1 py-0.5 min-w-max flex gap-1 items-center max-w-3/4 overflow-hidden overflow-ellipsis z-10">
     {children}
   </div>
 );
@@ -58,7 +58,10 @@ const SelectedOptions = ({
   }, [listboxValue.length, checkMaxVisible]);
 
   return (
-    <div ref={containerRef} className="flex gap-2 pr-4 grow overflow-hidden">
+    <div
+      ref={containerRef}
+      className="h-full flex items-center gap-2 pr-4 grow overflow-hidden"
+    >
       {listboxValue.slice(0, maxVisible).map((value) => (
         <SelectedOptionDisplay key={value}>
           {value}

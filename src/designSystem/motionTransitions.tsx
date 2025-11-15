@@ -31,3 +31,8 @@ export const mergeMotionProps = (
 
   return newProps;
 };
+
+export const MOTION_FADE_SLIDE = mergeMotionProps(
+  MOTION_FADE_IN,
+  MOTION_SLIDE_UP
+);

@@ -12,16 +12,16 @@ import { useEffect, useRef, useState } from "react";
 export type PlantSearchQueryStatus =
   | "READY"
   | "CHECKING_STATUS"
-  | "SCRAPING_AND_POLLING"
-  | "FETCHING_NEXT_PAGE";
+  | "SCRAPING_AND_POLLING";
 
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
 const MAX_AUTO_SCRAPES = 3;
 const MIN_RESULTS = 50;
+const DEFAULT_PAGE_SIZE = 20;
 
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
-  limit: 20,
+  limit: DEFAULT_PAGE_SIZE,
   sort: [
     { field: "addedTimestamp", direction: 1 },
     { field: "scientificName", direction: 1 },
@@ -185,16 +185,20 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   ]);
 
   const fetchNextPlantsPage = async () => {
-    if (status !== "READY" || !plantSearchData?.results) {
+    if (!plantSearchData?.results) {
       return;
     }
 
-    if (plantSearchData.results.length < plantSearchData.count) {
-      setStatus("FETCHING_NEXT_PAGE");
-      await plantSearchQuery.fetchMore({
+    const { results, count } = plantSearchData;
+    const unfetchedPlants = count - results.length;
+
+    if (
+      (status === "READY" && unfetchedPlants) ||
+      unfetchedPlants >= DEFAULT_PAGE_SIZE
+    ) {
+      plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
-      setStatus("READY");
     }
   };
 
