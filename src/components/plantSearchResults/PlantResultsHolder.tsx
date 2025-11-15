@@ -11,7 +11,7 @@ import { useCallback, useRef } from "react";
 import PlantImageViewer from "./PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 
-const PlantResultsHolder = ({ searchId }: { searchId?: string }) => {
+const PlantResultsHolder = () => {
   const {
     fullScreenElement,
     plantSearchResults,
@@ -63,7 +63,7 @@ const PlantResultsHolder = ({ searchId }: { searchId?: string }) => {
           plant && (
             <Card
               {...mergeMotionProps(MOTION_FADE_IN, MOTION_SLIDE_UP)}
-              key={`${plant.scientificName}-${index}-${searchId}`}
+              key={`${plant.scientificName}-${index}`}
               id={plant.scientificName}
               onClick={() =>
                 setActiveIndexes({ plantIndex: index, mediaIndex: null })
