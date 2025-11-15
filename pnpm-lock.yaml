@@ -38,6 +38,9 @@ importers:
       leaflet.markercluster:
         specifier: ^1.5.3
         version: 1.5.3(leaflet@1.9.4)
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       lottie-react:
         specifier: ^2.4.1
         version: 2.4.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -126,6 +129,9 @@ importers:
       '@types/leaflet.markercluster':
         specifier: ^1.5.6
         version: 1.5.6
+      '@types/lodash':
+        specifier: ^4.17.20
+        version: 4.17.20
       '@types/react':
         specifier: ^19.1.8
         version: 19.1.12
@@ -1958,6 +1964,9 @@ packages:
 
   '@types/leaflet@1.9.21':
     resolution: {integrity: sha512-TbAd9DaPGSnzp6QvtYngntMZgcRk+igFELwR2N99XZn7RXUdKgsXMR+28bUO0rPsWp8MIu/f47luLIQuSLYv/w==}
+
+  '@types/lodash@4.17.20':
+    resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
   '@types/node@24.3.0':
     resolution: {integrity: sha512-aPTXCrfwnDLj4VvXrm+UUCQjNEvJgNA8s5F1cvwQU+3KNltTOkBm1j30uNLyqqPNe7gE3KFzImYoZEfLhp4Yow==}
@@ -6704,6 +6713,8 @@ snapshots:
   '@types/leaflet@1.9.21':
     dependencies:
       '@types/geojson': 7946.0.16
+
+  '@types/lodash@4.17.20': {}
 
   '@types/node@24.3.0':
     dependencies:

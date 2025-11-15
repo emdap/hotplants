@@ -9,6 +9,12 @@ import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useRef, useState } from "react";
 
+export type PlantSearchQueryStatus =
+  | "READY"
+  | "CHECKING_STATUS"
+  | "SCRAPING_AND_POLLING"
+  | "FETCHING_NEXT_PAGE";
+
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
 const MAX_AUTO_SCRAPES = 3;
@@ -27,16 +33,22 @@ const hotplantsClient = createClient<paths>({
 });
 
 const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
+  const [status, setStatus] = useState<PlantSearchQueryStatus>("READY");
+
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [autoScrapesRemaining, setAutoScrapesRemaining] = useState(0);
   const [pollInterval, setPollInterval] = useState(0);
-  const [isInitialSearch, setIsInitialSearch] = useState(true);
 
+  // #region Queries
   const [getPlantQuery] = useLazyQuery(GET_PLANT, { fetchPolicy: "no-cache" });
+
+  const hasSearchCriteria = Boolean(
+    plantSearchCriteria && Object.keys(plantSearchCriteria).length
+  );
 
   const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
     pollInterval,
-    skip: !plantSearchCriteria,
+    skip: !hasSearchCriteria,
     variables: {
       ...DEFAULT_PLANT_SEARCH_GQL_VARS,
       where: plantSearchCriteria,
@@ -44,25 +56,33 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   });
   const plantSearchData = plantSearchQuery.data?.plantSearch;
 
+  const setStatusFromRunningQuery = () =>
+    setStatus((prev) =>
+      prev === "SCRAPING_AND_POLLING" ? prev : "CHECKING_STATUS"
+    );
+
+  useEffect(() => {
+    plantSearchQuery.loading && setStatusFromRunningQuery();
+  }, [plantSearchQuery.loading]);
+
   const searchRecordQuery = useReactQuery({
-    queryKey: ["init-search-record", plantSearchCriteria],
+    queryKey: ["search-record", plantSearchCriteria],
+    refetchInterval: pollInterval,
+    enabled: hasSearchCriteria,
+
     queryFn: async () => {
+      setStatusFromRunningQuery();
+
       const { data } = await hotplantsClient.POST("/plants/getSearchRecord", {
         body: plantSearchCriteria!,
       });
 
-      if (isInitialSearch) {
-        setIsInitialSearch(false);
-      }
-
-      if (pollInterval && data?.status !== "SCRAPING") {
+      if (data?.status !== "SCRAPING" && pollInterval) {
         stopPolling();
       }
 
       return data;
     },
-    refetchInterval: pollInterval,
-    enabled: Boolean(plantSearchCriteria),
   });
   const searchRecordData = searchRecordQuery.data;
 
@@ -70,15 +90,64 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     if (
       searchRecordData?.id &&
       searchRecordData.status === "READY" &&
-      !searchRecordData.occurrencesOffset
+      !searchRecordData.occurrencesOffset &&
+      plantSearchData?.count !== undefined &&
+      plantSearchData?.count < MIN_RESULTS
     ) {
       setAutoScrapesRemaining(MAX_AUTO_SCRAPES);
     } else {
       setAutoScrapesRemaining(0);
     }
-    // Only want to run this effect when the searchRecord id updates
+    // Only want to run this effect when the searchRecord id, or plantSearchData count updates
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchRecordData?.id]);
+  }, [searchRecordData?.id, plantSearchData?.count]);
+
+  const scrapeOccurrencesQuery = useReactQuery({
+    queryKey: [
+      "scrape-occurrences",
+      searchRecordData?.id,
+      autoScrapesRemaining,
+    ],
+    enabled: Boolean(
+      searchRecordData?.id &&
+        searchRecordData.status === "READY" &&
+        autoScrapesRemaining > 0
+    ),
+
+    queryFn: async () => {
+      setStatusFromRunningQuery();
+
+      const { data } = await hotplantsClient.GET(
+        "/plants/scrapeOccurrences/{searchRecordId}",
+        { params: { path: { searchRecordId: searchRecordData!.id } } }
+      );
+
+      if (data?.status === "SCRAPING" && !pollInterval) {
+        setStatus("SCRAPING_AND_POLLING");
+        startPolling();
+      }
+
+      return data;
+    },
+  });
+
+  /**
+   * Each query only sets the status to a non-READY state
+   * Status is only set to READY once the poll interval is empty,
+   * and no query is loading or fetching.
+   */
+  const someQueryInProgress =
+    pollInterval ||
+    plantSearchQuery.loading ||
+    searchRecordQuery.fetchStatus !== "idle" ||
+    scrapeOccurrencesQuery.fetchStatus !== "idle";
+
+  useEffect(() => {
+    if (!someQueryInProgress) {
+      setStatus("READY");
+    }
+  }, [someQueryInProgress]);
+  // #endregion
 
   const stopPolling = () => {
     stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
@@ -98,70 +167,39 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   };
 
   useEffect(() => {
-    if (searchRecordQuery.error || plantSearchQuery.error) {
+    if (
+      searchRecordQuery.error ||
+      plantSearchQuery.error ||
+      scrapeOccurrencesQuery.error
+    ) {
       stopPolling();
+      console.error("TODO: Tell user there was an error :)");
     }
-  }, [searchRecordQuery.error, plantSearchQuery.error]);
-
-  const shouldAutoScrapePlants =
-    autoScrapesRemaining > 0 &&
-    searchRecordData?.status === "READY" &&
-    !plantSearchQuery.loading &&
-    plantSearchData !== undefined &&
-    plantSearchData.count < MIN_RESULTS;
-
-  const scrapeOccurrencesQuery = useReactQuery({
-    queryKey: [
-      "scrape-occurrences",
-      searchRecordData?.id,
-      autoScrapesRemaining,
-    ],
-    enabled: shouldAutoScrapePlants,
-
-    queryFn: async () => {
-      if (!searchRecordData?.id) {
-        return;
-      }
-
-      const { data } = await hotplantsClient.GET(
-        "/plants/scrapeOccurrences/{searchRecordId}",
-        { params: { path: { searchRecordId: searchRecordData.id } } }
-      );
-
-      if (data?.status === "SCRAPING" && !pollInterval) {
-        searchRecordQuery.refetch();
-        plantSearchQuery.refetch();
-        startPolling();
-      }
-
-      return data;
-    },
-  });
+  }, [
+    searchRecordQuery.error,
+    plantSearchQuery.error,
+    scrapeOccurrencesQuery.error,
+  ]);
 
   const fetchNextPlantsPage = async () => {
-    if (pollInterval || plantSearchQuery.loading || !plantSearchData) {
+    if (status !== "READY" || !plantSearchData?.results) {
       return;
     }
 
     if (plantSearchData.results.length < plantSearchData.count) {
-      plantSearchQuery.fetchMore({
+      setStatus("FETCHING_NEXT_PAGE");
+      await plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
+      setStatus("READY");
     }
   };
 
   return {
-    isInitialSearch,
-    isLoading:
-      // Include check on dataState to differentiate between fetching next page,
-      // and loading new filter results
-      (plantSearchQuery.dataState === "empty" && plantSearchQuery.loading) ||
-      searchRecordQuery.isLoading ||
-      scrapeOccurrencesQuery.isLoading,
-    isScraping: Boolean(pollInterval),
+    status,
+    plantSearchData,
     plantSearchQuery,
     searchRecordQuery,
-    scrapeQueryLoading: scrapeOccurrencesQuery.isLoading,
     getPlantQuery,
     fetchNextPlantsPage,
     scrapeMoreData: scrapeOccurrencesQuery.refetch,
