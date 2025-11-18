@@ -5,6 +5,7 @@ import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { useEffect, useState } from "react";
 
+// TODO: Make this more generic, use in PlantCard
 const PlantImage = ({
   plantId,
   occurrenceId,
