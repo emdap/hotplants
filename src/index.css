@@ -14,8 +14,9 @@
   --color-default-text: #000;
   --color-scrollbar: #0000003b;
   --color-default-background: #fff;
-  --color-primary: #009999;
-  --color-secondary: #bebebe;
+  --color-primary-dark: #8777e3;
+  --color-primary: #998ce5;
+  --color-secondary: #b0b0b0;
 
   --animate-background-shift: background-shift 40s ease infinite;
 
@@ -45,7 +46,7 @@
       --color-default-text: #eee;
       --color-scrollbar: #ffffff85;
       --color-default-background: #000;
-      --color-primary: #00b1b1;
+      --color-primary: #8777e3;
       --color-secondary: #868686;
     }
   }
@@ -60,4 +61,10 @@ body {
   * {
     @apply transition-colors;
   }
+}
+
+@utility button-focus-ring {
+  transition: outline 0s !important;
+
+  @apply focus-visible:outline-offset-2 focus-visible:outline-2 m-1;
 }

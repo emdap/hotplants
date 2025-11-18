@@ -83,7 +83,7 @@ const ListboxWrapper = ({
 
               <MdArrowDropDown
                 className={classNames(
-                  "group pointer-events-none size-4 fill-primary dark:fill-black/50 transition-transform",
+                  "group pointer-events-none size-4 fill-primary transition-transform",
                   open && "rotate-180"
                 )}
                 aria-hidden="true"
@@ -135,7 +135,7 @@ const ListboxWrapper = ({
           <ListboxOption
             key={index}
             value={value}
-            className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none dark:data-focus:bg-white/10 data-focus:bg-primary/20"
+            className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-primary/20"
           >
             <MdCheck className="invisible size-4 fill-default-text group-data-selected:visible" />
             <div className="text-sm/6">{value}</div>
