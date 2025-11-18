@@ -1,9 +1,11 @@
 import classNames from "classnames";
 import { ButtonHTMLAttributes } from "react";
+import LoadingIcon from "./LoadingIcon";
 
 type ButtonProps = {
   variant?: "primary" | "secondary" | "text";
   size?: "small" | "default";
+  isLoading?: boolean;
   linkAddress?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -14,7 +16,7 @@ const getClasses = ({
   ...buttonProps
 }: ButtonProps) =>
   classNames(
-    "rounded-md max-w-fit flex items-center justify-center font-medium text-sm",
+    "rounded-md max-w-fit flex gap-2 items-center justify-center font-medium text-sm",
     className,
     {
       "bg-primary/80 enabled:hover:bg-primary focus-visible:outline-primary text-white":
@@ -29,7 +31,7 @@ const getClasses = ({
       "opacity-50 hover:shadow-none!": buttonProps.disabled,
     },
     variant !== "text" && [
-      "hover:shadow-sm button-focus-ring",
+      "hover:shadow-sm focus-ring",
       {
         "py-2 px-3": size === "default",
         "py-1 px-1.5 text-xs": size === "small",
@@ -40,24 +42,35 @@ const getClasses = ({
 const Button = ({
   variant = "primary",
   size = "default",
+  isLoading,
   linkAddress,
   className,
+  disabled,
   ...buttonProps
 }: ButtonProps) => {
+  const isDisabled = isLoading || disabled;
   const classes = getClasses({
     variant,
     size,
     linkAddress,
     className,
+    disabled: isDisabled,
     ...buttonProps,
   });
 
-  return linkAddress && !buttonProps.disabled ? (
+  const renderButton = ({ children, ...props }: Partial<ButtonProps>) => (
+    <button {...props}>
+      {children}
+      {isLoading && <LoadingIcon />}
+    </button>
+  );
+
+  return linkAddress && !isDisabled ? (
     <a className={classNames("block w-fit", classes)} href={linkAddress}>
-      <button {...buttonProps} />
+      {renderButton(buttonProps)}
     </a>
   ) : (
-    <button className={classes} {...buttonProps} />
+    renderButton({ disabled: isDisabled, className: classes, ...buttonProps })
   );
 };
 

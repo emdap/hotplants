@@ -56,6 +56,7 @@ const PlantSearch = () => {
     searchRecordQuery,
     getPlantQuery,
     fetchNextPlantsPage,
+    // scrapeMoreData,
   } = usePlantSearchQueries(plantSearchCriteria);
 
   useEffect(() => {
@@ -246,7 +247,23 @@ const PlantSearch = () => {
                     : "opacity-0 max-md:h-0"
                 )}
               >
-                <ScrapeStatusBar searchRecord={searchRecordQuery.data} />
+                <ScrapeStatusBar
+                  plantQueryStatus={status}
+                  totalResultsCount={plantSearchData?.count}
+                >
+                  {/* {searchRecordQuery.data && (
+                    <Button
+                      className="ml-auto"
+                      disabled={!isShowingAllResults}
+                      onClick={() => scrapeMoreData()}
+                      isLoading={searchRecordQuery.data.status !== "READY"}
+                    >
+                      {searchRecordQuery.data.status === "COMPLETE"
+                        ? "All plants scraped"
+                        : "Scrape more plants"}
+                    </Button>
+                  )} */}
+                </ScrapeStatusBar>
               </div>
 
               <PlantResultsHolder key="results-holder" />

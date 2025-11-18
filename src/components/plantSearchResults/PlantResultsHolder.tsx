@@ -1,11 +1,7 @@
-import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
-import Card from "designSystem/Card";
-import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { useCallback, useRef } from "react";
-import PlantImageViewer from "./PlantImageCarousel";
-import PlantInfo from "./PlantInfo";
+import PlantCard from "./PlantCard";
 
 const PlantResultsHolder = () => {
   const {
@@ -36,7 +32,7 @@ const PlantResultsHolder = () => {
         e.preventDefault();
         setActiveIndexes({ plantIndex: newActiveIndex, mediaIndex: null });
         const childNode = containerRef.current?.childNodes[newActiveIndex];
-        childNode instanceof HTMLElement && childNode.scrollIntoView();
+        childNode instanceof HTMLElement && childNode.focus();
       }
     },
     [plantIndex, setActiveIndexes, plantSearchResults.length]
@@ -53,25 +49,14 @@ const PlantResultsHolder = () => {
       {plantSearchResults.map(
         (plant, index) =>
           plant && (
-            <Card
-              {...MOTION_FADE_SLIDE}
+            <PlantCard
               key={`${plant.scientificName}-${index}`}
-              id={plant.scientificName}
-              onClick={() =>
+              plant={plant}
+              setActive={() =>
                 setActiveIndexes({ plantIndex: index, mediaIndex: null })
               }
-              className={classNames(
-                "flex gap-2 cursor-pointer h-40 scroll-mt-20",
-                {
-                  "!bg-default-background dark:!bg-default-background/50":
-                    plantIndex === index,
-                }
-              )}
-            >
-              {index}
-              <PlantImageViewer mode="thumbnail" plant={plant} />
-              <PlantInfo plant={plant} />
-            </Card>
+              isActive={plantIndex === index}
+            />
           )
       )}
     </div>
