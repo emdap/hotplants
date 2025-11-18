@@ -1,3 +1,4 @@
+import { NetworkStatus } from "@apollo/client";
 import { useLazyQuery } from "@apollo/client/react";
 import {
   PlantDataInput,
@@ -62,8 +63,10 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     );
 
   useEffect(() => {
-    plantSearchQuery.loading && setStatusFromRunningQuery();
-  }, [plantSearchQuery.loading]);
+    plantSearchQuery.loading &&
+      plantSearchQuery.networkStatus !== NetworkStatus.fetchMore &&
+      setStatusFromRunningQuery();
+  }, [plantSearchQuery.loading, plantSearchQuery.networkStatus]);
 
   const searchRecordQuery = useReactQuery({
     queryKey: ["search-record", plantSearchCriteria],
