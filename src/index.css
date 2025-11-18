@@ -1,70 +1,9 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 
+@import "./styles/tailwind-base-theme.css";
+@import "./styles/tailwind-utils.css";
+
 @import "./styles/form-elements.css";
 @import "./styles/leaflet-overrides.css";
-@import "./styles/headers.css";
 @import "./styles/old-safari-overrides.css";
-
-@custom-variant dark (&:where(.dark, .dark *));
-@theme {
-  --font-sans: InterVariable, sans-serif;
-  --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-
-  --color-default-text: #000;
-  --color-scrollbar: #0000003b;
-  --color-default-background: #fff;
-  --color-primary-dark: #8777e3;
-  --color-primary: #998ce5;
-  --color-secondary: #b0b0b0;
-
-  --animate-background-shift: background-shift 40s ease infinite;
-
-  @keyframes background-shift {
-    0%,
-    100% {
-      background-position: 70% 50%;
-    }
-
-    25% {
-      background-position: 25% 50%;
-    }
-
-    50% {
-      background-position: 100% 100%;
-    }
-
-    75% {
-      background-position: 70% 100%;
-    }
-  }
-}
-
-@layer base {
-  * {
-    @variant dark {
-      --color-default-text: #eee;
-      --color-scrollbar: #ffffff85;
-      --color-default-background: #000;
-      --color-primary: #8777e3;
-      --color-secondary: #868686;
-    }
-  }
-}
-
-body {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-scrollbar) transparent;
-
-  @apply text-default-text bg-default-background;
-
-  * {
-    @apply transition-colors;
-  }
-}
-
-@utility focus-ring {
-  transition: outline 0s !important;
-
-  @apply focus-visible:outline-offset-2 focus-visible:outline-2 focus:outline-offset-2 focus:outline-2 m-1;
-}

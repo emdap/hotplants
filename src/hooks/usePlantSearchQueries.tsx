@@ -188,7 +188,10 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   ]);
 
   const fetchNextPlantsPage = async () => {
-    if (!plantSearchData?.results) {
+    if (
+      !plantSearchData?.results ||
+      plantSearchQuery.networkStatus === NetworkStatus.fetchMore
+    ) {
       return;
     }
 

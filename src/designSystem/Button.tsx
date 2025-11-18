@@ -19,12 +19,12 @@ const getClasses = ({
     "rounded-md max-w-fit flex gap-2 items-center justify-center font-medium text-sm",
     className,
     {
-      "bg-primary/80 enabled:hover:bg-primary focus-visible:outline-primary text-white":
+      "bg-primary/90 dark:bg-primary/80 enabled:hover:bg-primary outline-primary text-white":
         variant === "primary",
-      "bg-secondary/50 enabled:hover:bg-secondary/80  focus-visible:outline-secondary ":
+      "bg-secondary/50 enabled:hover:bg-secondary/80 outline-secondary ":
         variant === "secondary",
 
-      "text-primary-dark enabled:hover:underline underline-offset-3 focus-visible:outline-0 focus-visible:underline":
+      "text-primary-dark enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
         variant === "text",
 
       "cursor-pointer": !buttonProps.disabled,

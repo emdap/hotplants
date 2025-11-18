@@ -1,0 +1,43 @@
+@layer components {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-mono text-white/80;
+  }
+
+  h1 {
+    @apply font-medium text-4xl;
+  }
+
+  h2 {
+    @apply font-semibold text-2xl;
+  }
+  h4 {
+    @apply font-medium text-lg;
+  }
+  h6 {
+    @apply font-medium;
+  }
+
+  .card:not(.card-blurred-bg) {
+    @apply bg-default-background dark:bg-gray-800;
+  }
+}
+
+@utility focus-ring {
+  transition: outline 0s !important;
+
+  @apply focus-visible:outline-offset-2 focus-visible:outline-2 focus:outline-offset-2 focus:outline-2 m-1;
+}
+
+@utility card {
+  @apply rounded border border-gray-200 dark:border-gray-800/20 shadow-md;
+  @apply p-4 md:p-6;
+}
+
+@utility card-blurred-bg {
+  @apply backdrop-blur-2xl bg-default-background/80 dark:bg-gray-800/80;
+}
