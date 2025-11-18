@@ -9,7 +9,7 @@ const Card = ({ disableBlurEffect, className, ...props }: CardProps) => (
   <motion.div
     {...props}
     className={classNames(
-      "rounded border border-gray-200 shadow-md dark:border-gray-800/20   p-6",
+      "rounded border border-gray-200 shadow-md dark:border-gray-800/20 p-4 md:p-6",
       className,
       disableBlurEffect
         ? "bg-default-background dark:bg-gray-800"

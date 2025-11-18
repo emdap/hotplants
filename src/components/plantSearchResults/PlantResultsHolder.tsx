@@ -49,11 +49,7 @@ const PlantResultsHolder = () => {
   );
 
   return (
-    <div
-      key="results-list"
-      ref={containerRef}
-      className="flex flex-col gap-2 lg:gap-4"
-    >
+    <div key="results-list" ref={containerRef} className="flex flex-col gap-4">
       {plantSearchResults.map(
         (plant, index) =>
           plant && (

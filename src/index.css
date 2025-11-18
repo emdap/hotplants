@@ -4,6 +4,7 @@
 @import "./styles/form-elements.css";
 @import "./styles/leaflet-overrides.css";
 @import "./styles/headers.css";
+@import "./styles/old-safari-overrides.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @theme {
@@ -48,8 +49,8 @@
 }
 
 body {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-scrollbar) transparent;
+  /* scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent; */
 
   @apply text-default-text bg-default-background;
 

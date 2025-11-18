@@ -32,7 +32,7 @@ const DarkModeToggle = () => {
 
   return (
     <div
-      className="cursor-pointer text-white/80"
+      className="cursor-pointer text-white/80 hover:text-white"
       onClick={() => setStoredDarkMode(!isDarkMode)}
     >
       <motion.div key={isDarkMode ? "dark" : "light"} {...MOTION_FADE_SLIDE}>

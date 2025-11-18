@@ -97,7 +97,7 @@ const LocationSearch = () => {
   };
 
   return (
-    <div className="flex flex-col px-2 pt-2 w-full overflow-auto">
+    <div className="flex flex-col pl-2 pr-4 w-full overflow-auto">
       <div className="form-item flex-row items-center">
         <label htmlFor="search-location">Location</label>
         <input

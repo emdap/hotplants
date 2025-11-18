@@ -123,7 +123,8 @@ const PlantSearch = () => {
     }
 
     if (criteriaIsChanged) {
-      await scrollToTop();
+      // 768 is the md screen size breakpoint
+      window.innerWidth >= 768 && (await scrollToTop());
       setPlantSearchCriteria(draftCriteria);
     }
 
@@ -173,14 +174,14 @@ const PlantSearch = () => {
         ref={scrollContainerRef}
         onScroll={handleScroll}
         className={classNames(
-          "grow overflow-auto px-2 2xl:pr-8 pt-4 flex flex-col",
-          plantSearchResults.length && "md:pr-4 pb-4 gap-4"
+          "grow overflow-auto max-md:mr-1 scroll-smooth px-2 2xl:pr-8 pt-4 flex flex-col max-md:pb-10",
+          plantSearchResults.length && "md:pr-4 md:pb-4 gap-4"
         )}
       >
         <PageTitle>Plant Search</PageTitle>
         <div
           className={classNames(
-            "flex max-md:flex-col gap-4 2xl:gap-12 grow",
+            "flex max-md:flex-col gap-y-12 gap-x-4 2xl:gap-x-12 grow",
             !plantSearchResults.length && "md:overflow-auto py-4"
           )}
         >
@@ -196,7 +197,7 @@ const PlantSearch = () => {
             <div
               className={classNames(
                 "md:h-full max-h-fit space-y-4",
-                plantSearchResults.length && "md:overflow-auto pb-24"
+                plantSearchResults.length && "md:overflow-auto md:pb-24"
               )}
             >
               <Card className="flex flex-col gap-2 items-start w-full !p-2">
@@ -240,7 +241,9 @@ const PlantSearch = () => {
                 key="status-bar"
                 className={classNames(
                   "sticky -top-4 z-20 transition-opacity",
-                  plantSearchResults.length ? "opacity-100" : "opacity-0"
+                  plantSearchResults.length
+                    ? "opacity-100"
+                    : "opacity-0 max-md:h-0"
                 )}
               >
                 <ScrapeStatusBar searchRecord={searchRecordQuery.data} />
@@ -248,7 +251,7 @@ const PlantSearch = () => {
 
               <PlantResultsHolder key="results-holder" />
 
-              {!isShowingAllResults ? (
+              {!isShowingAllResults && status !== "CHECKING_STATUS" ? (
                 <LoadingIcon
                   key="loading-icon"
                   size={25}
