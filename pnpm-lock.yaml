@@ -77,9 +77,6 @@ importers:
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
-      tailwindcss:
-        specifier: ^4.1.11
-        version: 4.1.12
       wkt:
         specifier: ^0.1.1
         version: 0.1.1
@@ -156,6 +153,9 @@ importers:
       openapi-typescript:
         specifier: ^7.8.0
         version: 7.9.1(typescript@5.9.3)
+      tailwindcss:
+        specifier: ^4.1.11
+        version: 4.1.12
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
