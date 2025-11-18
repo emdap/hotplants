@@ -8,6 +8,9 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 @theme {
+  --font-sans: InterVariable, sans-serif;
+  --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+
   --color-default-text: #000;
   --color-scrollbar: #0000003b;
   --color-default-background: #fff;
@@ -49,18 +52,12 @@
 }
 
 body {
-  /* scrollbar-width: thin;
-  scrollbar-color: var(--color-scrollbar) transparent; */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent;
 
   @apply text-default-text bg-default-background;
 
   * {
     @apply transition-colors;
   }
-}
-
-::-webkit-scrollbar-button {
-  width: 0;
-  height: 0;
-  display: none;
 }
