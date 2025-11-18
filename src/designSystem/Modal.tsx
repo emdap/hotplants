@@ -67,8 +67,8 @@ const Modal = ({
               )}
               {...headerProps}
             >
-              <Button>
-                <MdClose onClick={onClose} />
+              <Button onClick={onClose}>
+                <MdClose />
               </Button>
             </div>
             {children}

@@ -99,6 +99,7 @@ const Carousel = ({
             return (
               <Button
                 key={incremenet}
+                variant="text"
                 className={classNames({ "text-xl p-4": bigButtons })}
                 disabled={
                   isNextButton ? disableButtons.next : disableButtons.prev

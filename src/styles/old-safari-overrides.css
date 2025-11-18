@@ -2,21 +2,24 @@
 including what I'm running (18.1.1). Some CSS overrides here to keep tailwindv4 functionality,
 but preserve Safari functionality. */
 
-label,
-button,
-a,
-input {
-  @apply text-default-text;
-}
+@supports (hanging-punctuation: first) and (font: -apple-system-body) and
+  (-webkit-appearance: none) {
+  label,
+  button,
+  a,
+  input {
+    @apply text-default-text;
+  }
 
-.dark input::placeholder {
-  @apply text-white/70 transition-colors;
-}
+  .dark input::placeholder {
+    @apply text-white/70 transition-colors;
+  }
 
-::-webkit-scrollbar {
-  @apply w-2 h-2 bg-transparent;
-}
+  ::-webkit-scrollbar {
+    @apply w-2 h-2 bg-transparent;
+  }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-scrollbar rounded-full p-2;
+  ::-webkit-scrollbar-thumb {
+    @apply bg-scrollbar rounded-full p-2;
+  }
 }

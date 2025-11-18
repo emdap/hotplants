@@ -68,12 +68,13 @@ const PlantImageViewer = ({
         </Carousel>
       )}
       {mode === "carousel" && (
-        <Button variant="secondary" className="absolute top-1 right-1">
-          <MdFullscreen
-            size={24}
-            color="white"
-            onClick={() => setShowFullScreen(true)}
-          />
+        <Button
+          variant="secondary"
+          className="absolute top-1 right-1"
+          onClick={() => setShowFullScreen(true)}
+          size="small"
+        >
+          <MdFullscreen size={24} color="white" />
         </Button>
       )}
 
