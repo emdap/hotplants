@@ -22,8 +22,7 @@ const MapProvider = ({
   className,
   ...containerProps
 }: MapContainerProps & { showAllPlants?: boolean }) => {
-  const { searchLocation, activeIndexes, searchLocationLoading } =
-    usePlantSearchContext();
+  const { searchLocation, searchLocationLoading } = usePlantSearchContext();
   return (
     <Card
       className={classNames(
@@ -44,10 +43,7 @@ const MapProvider = ({
         />
 
         {searchLocation && (
-          <LocationPolygon
-            enableDrag={activeIndexes.plantIndex === null}
-            {...searchLocation}
-          />
+          <LocationPolygon enableDrag={!!showAllPlants} {...searchLocation} />
         )}
 
         {showAllPlants && <PolygonDrawing />}
