@@ -3,6 +3,7 @@ import Card from "designSystem/Card";
 import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { capitalize } from "lodash";
+import { useRef } from "react";
 import PlantImage from "./PlantImage";
 
 const PlantCard = ({
@@ -14,6 +15,8 @@ const PlantCard = ({
   isActive: boolean;
   setActive: () => void;
 }) => {
+  const isRightClick = useRef(false);
+
   const hasCommonName = Boolean(plant.commonNames?.length);
   const firstOccurrence = plant.occurrences[0];
   const firstMedia = firstOccurrence?.media[0];
@@ -23,13 +26,19 @@ const PlantCard = ({
       {...MOTION_FADE_SLIDE}
       id={plant.scientificName}
       onClick={setActive}
-      onFocus={setActive}
+      onFocus={() => !isRightClick.current && setActive}
+      onMouseDown={(e) => {
+        if (e.button === 2) {
+          isRightClick.current = true;
+        }
+      }}
+      onMouseUp={() => (isRightClick.current = false)}
       tabIndex={1}
       disableBlurEffect
       className={classNames(
-        "cursor-pointer h-40 w-full outline-white/60 transition-all focus-ring m-0 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-primary/80 dark:border-transparent bg-transparent",
+        "cursor-pointer h-40 w-full outline-white/60 transition-all m-0 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-primary/80 dark:border-transparent bg-transparent",
 
-        isActive ? "outline-2 outline-offset-2" : "m-0"
+        isActive ? "focus-ring outline-2 outline-offset-2" : "m-0"
       )}
     >
       {firstOccurrence && (
@@ -41,7 +50,7 @@ const PlantCard = ({
         >
           {({ isLoaded }) =>
             isLoaded ? (
-              <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opactiy-0 group-hover:opacity-0 group-focus:opacity-0 backdrop-grayscale-25 backdrop-contrast-80" />
+              <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opactiy-0 group-hover:opacity-0 backdrop-grayscale-25 backdrop-contrast-80" />
             ) : (
               <div className="absolute h-full w-full bg-gray-600/40 animate-pulse" />
             )
