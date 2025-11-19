@@ -3,8 +3,9 @@ import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import { PlantMedia } from "generated/graphql/graphql";
 import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
+import { elementInViewport, getScrollParent } from "helpers/generalUtil";
 import { useApolloMutation } from "hooks/useQuery";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const PlantImage = ({
   plantId,
@@ -23,6 +24,7 @@ const PlantImage = ({
   imageClass?: string;
   children?: (data: { isLoaded: boolean }) => ReactNode;
 }) => {
+  const plantImageRef = useRef<HTMLDivElement>(null);
   const { syncPlant } = usePlantSearchContext();
   const [isLoaded, setIsLoaded] = useState(false);
   const [hideImage, setHideImage] = useState(false);
@@ -57,8 +59,35 @@ const PlantImage = ({
     }
   }, [error]);
 
+  useLayoutEffect(() => {
+    const imageInViewport = () => {
+      if (!plantImageRef.current) {
+        return;
+      }
+
+      const shouldRenderImage = elementInViewport(plantImageRef.current, {
+        yBuffer: 20,
+      });
+
+      if (!shouldRenderImage && isLoaded) {
+        setHideImage(true);
+        setIsLoaded(false);
+      } else if (shouldRenderImage) {
+        setHideImage(false);
+      }
+    };
+
+    const parentElement = getScrollParent(plantImageRef.current);
+    parentElement?.addEventListener("scroll", imageInViewport);
+
+    return () => parentElement?.removeEventListener("scroll", imageInViewport);
+  }, [isLoaded]);
+
   return imageNotAvailable ? null : (
-    <div className={classNames(showSpinner && "relative", containerClass)}>
+    <div
+      ref={plantImageRef}
+      className={classNames(showSpinner && "relative", containerClass)}
+    >
       <img
         loading="lazy"
         src={hideImage ? undefined : mediaObject.url}
