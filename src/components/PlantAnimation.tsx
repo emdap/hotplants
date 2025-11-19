@@ -3,9 +3,9 @@ import LoadingIcon from "designSystem/LoadingIcon";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
 import { useLottie } from "lottie-react";
-import movingPlant from "lottieFiles/movingPlant.json";
-import stillPlant from "lottieFiles/stillPlant.json";
 import { motion } from "motion/react";
+import movingPlant from "placeholderImages/movingPlant.json";
+import stillPlant from "placeholderImages/stillPlant.json";
 import { useEffect, useState } from "react";
 
 type PlantAnimationProps = {
