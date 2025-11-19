@@ -1,63 +1,62 @@
 import classNames from "classnames";
-import Button from "designSystem/Button";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import {
-  FILTERS,
-  FIRST_ADVANCED_FILTER_INDEX,
-  PlantDataFilter,
-} from "./filterFixtures";
-import FilterInputField from "./FilterInput";
+import { PlantDataInput } from "generated/graphql/graphql";
+import { Dispatch, SetStateAction } from "react";
+import { ENABLED_FILTERS } from "./filterFixtures";
+import FilterInputField from "./FilterInputField";
 
 const PlantFilters = ({
   plantFilters,
   setPlantFilters,
 }: {
-  plantFilters: PlantDataFilter;
-  setPlantFilters: Dispatch<SetStateAction<PlantDataFilter>>;
+  plantFilters: PlantDataInput;
+  setPlantFilters: Dispatch<SetStateAction<PlantDataInput>>;
 }) => {
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  // const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
-  const filterList = useMemo(
-    () =>
-      showAdvancedFilters
-        ? FILTERS
-        : FILTERS.filter(([, { advancedFilter }]) => !advancedFilter),
-    [showAdvancedFilters]
-  );
+  // const filterList = useMemo(
+  //   () =>
+  //     showAdvancedFilters
+  //       ? ENABLED_FILTERS
+  //       : ENABLED_FILTERS.filter(({ advancedFilter }) => !advancedFilter),
+  //   [showAdvancedFilters]
+  // );
 
   return (
     <div className="space-y-4 max-w-full overflow-auto">
-      {filterList.map(([filterKey, filterInput], index) => (
-        <div
-          className={classNames(
-            "form-item",
-            ["checkbox", "range"].includes(filterInput.inputType) &&
-              "flex-row items-center gap-4"
-          )}
-          key={index}
-        >
-          {index === FIRST_ADVANCED_FILTER_INDEX && (
-            <hr className="opacity-10 my-4" />
-          )}
-          <label htmlFor={filterKey}>{filterInput.label}</label>
-          <FilterInputField
-            {...{ filterKey, filterInput }}
-            value={plantFilters[filterKey]}
-            onChange={(value) =>
-              setPlantFilters((prev) => ({ ...prev, [filterKey]: value }))
-            }
-          />
-        </div>
-      ))}
+      {ENABLED_FILTERS.map((filterInput, index) => {
+        const { plantDataKey } = filterInput;
 
-      <Button
+        return (
+          <div
+            className={classNames(
+              "form-item",
+              ["checkbox", "range"].includes(filterInput.inputType) &&
+                "flex-row items-center gap-4"
+            )}
+            key={index}
+          >
+            {/* {index === FIRST_ADVANCED_FILTER_INDEX && (
+              <hr className="opacity-10 my-4" />
+            )} */}
+            <FilterInputField
+              filterInput={filterInput}
+              value={plantFilters[plantDataKey]}
+              onChange={(value) =>
+                setPlantFilters((prev) => ({ ...prev, [plantDataKey]: value }))
+              }
+            />
+          </div>
+        );
+      })}
+
+      {/* <Button
         variant="primary"
         onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
       >
         {showAdvancedFilters
           ? "Hide Advanced Filters"
           : "Show Advanced Filters"}
-      </Button>
+      </Button> */}
     </div>
   );
 };

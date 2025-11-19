@@ -7,91 +7,50 @@ export type FilterInputType =
   | "select"
   | "range";
 
-type BaseFilterInput<T extends FilterInputType = FilterInputType> = {
+type BaseFilterInput<
+  T extends FilterInputType,
+  K extends keyof PlantDataInput
+> = {
+  plantDataKey: K;
   label: string;
   inputType: T;
+  isEnabled?: boolean;
   advancedFilter?: boolean;
-  order?: number;
 };
 
-type FilterSelectInput = BaseFilterInput<"select"> & {
+type FilterSelectInput<K extends keyof PlantDataInput> = BaseFilterInput<
+  "select",
+  K
+> & {
   defaultOptions?: string[];
   freeform?: boolean;
 };
 
-type FilterRangeInput = BaseFilterInput<"range"> & {
+type FilterRangeInput<K extends keyof PlantDataInput> = BaseFilterInput<
+  "range",
+  K
+> & {
   minMaxValue: [number, number];
 };
 
-export type FilterInput<T extends FilterInputType = FilterInputType> =
-  T extends "select"
-    ? FilterSelectInput
-    : T extends "range"
-    ? FilterRangeInput
-    : BaseFilterInput<T>;
+export type FilterInput<
+  T extends FilterInputType = FilterInputType,
+  K extends keyof PlantDataInput = keyof PlantDataInput
+> = T extends "select"
+  ? FilterSelectInput<K>
+  : T extends "range"
+  ? FilterRangeInput<K>
+  : BaseFilterInput<T, K>;
 
-type HiddenFilterKey =
-  | "_id"
-  | "boundingPolyCoords"
-  | "addedTimestamp"
-  | "updatedTimestamp"
-  | "scrapeSources"
-  | "maturityTime"
-  | "uses";
-
-export type PlantDataFilter = Omit<PlantDataInput, HiddenFilterKey>;
-
-const FILTER_MAPPING: Record<keyof PlantDataFilter, FilterInput> = {
-  physicalCharactersticsDump: {
-    label: "Search description",
+const FILTER_MAPPING: FilterInput[] = [
+  {
+    plantDataKey: "commonName",
+    label: "Common name",
     inputType: "text",
+    isEnabled: true,
   },
-  bloomTimes: {
-    label: "Bloom time",
-    inputType: "select",
-  },
-
-  // TODO: Better filters for these on BE -- min/max, select unit?
-  height: {
-    label: "Plant height (cm)",
-    inputType: "number",
-    advancedFilter: true,
-  },
-  spread: {
-    label: "Plant spread (cm)",
-    inputType: "number",
-    advancedFilter: true,
-  },
-
-  isPerennial: {
-    label: "Perennial",
-    inputType: "checkbox",
-  },
-  lightLevels: {
-    label: "Light level",
-    inputType: "select",
-    advancedFilter: true,
-  },
-
-  scientificName: {
-    label: "Scientific name",
-    inputType: "text",
-    advancedFilter: true,
-  },
-  habitat: { label: "Habitat", inputType: "select" },
-  hardiness: {
-    label: "Hardiness Zones",
-    inputType: "range",
-    minMaxValue: [0, 9],
-    advancedFilter: true,
-  },
-  soilTypes: {
-    label: "Soil type",
-    inputType: "select",
-    advancedFilter: true,
-  },
-
-  bloomColors: {
+  {
+    plantDataKey: "bloomColors",
     label: "Bloom colors",
     inputType: "select",
     defaultOptions: [
@@ -104,14 +63,72 @@ const FILTER_MAPPING: Record<keyof PlantDataFilter, FilterInput> = {
       "white",
     ],
     freeform: true,
+    isEnabled: true,
   },
-  commonName: { label: "Common name", inputType: "text" },
-};
+  {
+    plantDataKey: "isPerennial",
+    label: "Perennial",
+    inputType: "checkbox",
+    isEnabled: true,
+  },
+  {
+    plantDataKey: "physicalCharactersticsDump",
+    label: "Description keyword search",
+    inputType: "text",
+    isEnabled: true,
+  },
 
-export const FILTERS = Object.entries(FILTER_MAPPING).sort(
-  ([, { advancedFilter }]) => (advancedFilter ? 1 : -1)
-) as [keyof PlantDataFilter, FilterInput][];
+  // TODO: Better filters for these on BE -- min/max, select unit?
+  {
+    plantDataKey: "height",
+    label: "Plant height (cm)",
+    inputType: "number",
+    advancedFilter: true,
+  },
+  {
+    plantDataKey: "spread",
+    label: "Plant spread (cm)",
+    inputType: "number",
+    advancedFilter: true,
+  },
 
-export const FIRST_ADVANCED_FILTER_INDEX = FILTERS.findIndex(
-  ([, { advancedFilter }]) => advancedFilter
+  {
+    plantDataKey: "bloomTimes",
+    label: "Bloom time",
+    inputType: "select",
+  },
+  {
+    plantDataKey: "lightLevels",
+    label: "Light level",
+    inputType: "select",
+    advancedFilter: true,
+  },
+  {
+    plantDataKey: "scientificName",
+    label: "Scientific name",
+    inputType: "text",
+    advancedFilter: true,
+  },
+  {
+    plantDataKey: "habitat",
+    label: "Habitat",
+    inputType: "select",
+  },
+  {
+    plantDataKey: "hardiness",
+    label: "Hardiness Zones",
+    inputType: "range",
+    minMaxValue: [0, 9],
+    advancedFilter: true,
+  },
+  {
+    plantDataKey: "soilTypes",
+    label: "Soil type",
+    inputType: "select",
+    advancedFilter: true,
+  },
+];
+
+export const ENABLED_FILTERS = FILTER_MAPPING.filter(
+  ({ isEnabled }) => isEnabled
 );
