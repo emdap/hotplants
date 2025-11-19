@@ -53,11 +53,11 @@ const ActivePlantPane = () => {
         <Card
           key="plant-pane"
           ref={paneRef}
-          className="max-sm:rounded-l-none rounded-r-none h-full w-full fixed top-0 sm:w-3/7 sm:max-w-5xl flex flex-col gap-2 overflow-auto z-20"
+          className="max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-3/7 md:max-w-5xl flex flex-col gap-2 overflow-auto z-20"
           {...CARD_FADE_IN}
         >
           <Button
-            variant="secondary"
+            variant="primary"
             onClick={resetActivePlant}
             className="-mt-2 cursor-pointer"
           >
@@ -65,7 +65,7 @@ const ActivePlantPane = () => {
           </Button>
           <div
             key={activePlant.scientificName}
-            className="grow flex flex-col sm:overflow-hidden gap-4"
+            className="grow flex flex-col md:overflow-hidden gap-4"
           >
             {/* <div className="flex max-sm:flex-col gap-4 justify-between"> */}
             <PlantImageViewer mode="carousel" plant={activePlant} />
