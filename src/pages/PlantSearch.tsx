@@ -2,7 +2,6 @@ import { centroid } from "@turf/turf";
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/LocationSearch";
-import { PlantDataFilter } from "components/plantSearchFilters/filterFixtures";
 import PlantFilters from "components/plantSearchFilters/PlantFilters";
 import ActivePlantPane from "components/plantSearchResults/ActivePlantPane";
 import PlantAnimation from "components/plantSearchResults/PlantAnimation";
@@ -45,9 +44,11 @@ const PlantSearch = () => {
     useState<LocationWithPolygon | null>(null);
   const [searchLocationLoading, setSearchLocationLoading] = useState(false);
 
-  const [plantFilters, setPlantFilters] = useState<PlantDataFilter>({});
+  const [plantFilters, setPlantFilters] = useState<PlantDataInput>({});
   const [plantSearchCriteria, setPlantSearchCriteria] =
     useState<PlantDataInput | null>(null);
+
+  const hasResults = Boolean(plantSearchResults.length);
 
   const {
     status,
@@ -131,7 +132,7 @@ const PlantSearch = () => {
 
     if (hasNewCriteria) {
       // 768 is the md screen size breakpoint
-      window.innerWidth >= 768 && (await scrollToTop());
+      hasResults && window.innerWidth >= 768 && (await scrollToTop());
       setPlantSearchCriteria(draftCriteria);
     }
 
@@ -182,21 +183,21 @@ const PlantSearch = () => {
         onScroll={handleScroll}
         className={classNames(
           "grow overflow-auto max-md:mr-1 scroll-smooth px-2 2xl:pr-8 pt-4 flex flex-col gap-4 max-md:pb-10",
-          plantSearchResults.length && "md:pr-4 md:pb-4"
+          hasResults && "md:pr-4 md:pb-4"
         )}
       >
         <PageTitle>Plant Search</PageTitle>
         <div
           className={classNames(
             "flex max-md:flex-col gap-y-12 gap-x-4 2xl:gap-x-12 grow",
-            !plantSearchResults.length && "pb-10"
+            !hasResults && "pb-10"
           )}
         >
           <div
             id="filter-sidebar"
             className={classNames(
               "basis-1/3 md:max-w-lg md:min-w-sm",
-              plantSearchResults.length
+              hasResults
                 ? "md:sticky -top-4 md:h-[calc(100dvh-2.5rem)]"
                 : "h-max"
             )}
@@ -204,7 +205,7 @@ const PlantSearch = () => {
             <div
               className={classNames(
                 "md:h-full max-h-fit space-y-4",
-                plantSearchResults.length && "md:overflow-auto md:pb-24"
+                hasResults && "md:overflow-auto md:pb-24"
               )}
             >
               <Card className="flex flex-col gap-2 items-start w-full !p-2">
@@ -222,7 +223,7 @@ const PlantSearch = () => {
                 />
                 <Button
                   className="mt-auto"
-                  disabled={!hasSelectedFilters}
+                  disabled={!hasNewCriteria}
                   isLoading={searchLocationLoading || status !== "READY"}
                   variant="primary"
                   onClick={applyFilters}
@@ -237,7 +238,7 @@ const PlantSearch = () => {
             id="results-pane"
             className={classNames(
               "grow flex flex-col gap-6 sm:mx-auto relative",
-              !plantSearchResults.length && "md:sticky md:top-20 h-fit"
+              !hasResults && "md:sticky md:top-20 h-fit"
             )}
           >
             <AnimatePresence>
@@ -245,9 +246,7 @@ const PlantSearch = () => {
                 key="status-bar"
                 className={classNames(
                   "sticky -top-4 z-20 transition-opacity",
-                  plantSearchResults.length
-                    ? "opacity-100"
-                    : "opacity-0 max-md:h-0"
+                  hasResults ? "opacity-100" : "opacity-0 max-md:h-0"
                 )}
               >
                 <ScrapeStatusBar
@@ -282,7 +281,7 @@ const PlantSearch = () => {
                   key="plant-animation"
                   queryStatus={status}
                   isInitialSearch={!searchRecordQuery.dataUpdatedAt}
-                  hasCurrentResults={Boolean(plantSearchResults.length)}
+                  hasCurrentResults={hasResults}
                 />
               )}
             </AnimatePresence>
