@@ -23,7 +23,7 @@ import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import { LocationWithPolygon } from "helpers/schemaTypesUtil";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
-import { isEqual } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -94,17 +94,23 @@ const PlantSearch = () => {
     });
   };
 
-  const draftCriteria = useMemo(
-    () => ({
+  const { hasSelectedFilters, draftCriteria } = useMemo(() => {
+    const draftCriteria = {
       ...plantFilters,
-      boundingPolyCoords: searchLocation?.boundingPolygon.geometry.coordinates,
-    }),
-    [plantFilters, searchLocation?.boundingPolygon]
-  );
+      ...(searchLocation && {
+        boundingPolyCoords: searchLocation.boundingPolygon.geometry.coordinates,
+      }),
+    };
 
-  const criteriaIsChanged = useMemo(
-    () => !isEqual(draftCriteria, plantSearchCriteria),
-    [draftCriteria, plantSearchCriteria]
+    return {
+      hasSelectedFilters: !isEmpty(draftCriteria),
+      draftCriteria,
+    };
+  }, [plantFilters, searchLocation]);
+
+  const hasNewCriteria = useMemo(
+    () => hasSelectedFilters && !isEqual(draftCriteria, plantSearchCriteria),
+    [hasSelectedFilters, draftCriteria, plantSearchCriteria]
   );
 
   const scrollToTop = () =>
@@ -123,7 +129,7 @@ const PlantSearch = () => {
       return;
     }
 
-    if (criteriaIsChanged) {
+    if (hasNewCriteria) {
       // 768 is the md screen size breakpoint
       window.innerWidth >= 768 && (await scrollToTop());
       setPlantSearchCriteria(draftCriteria);
@@ -216,11 +222,8 @@ const PlantSearch = () => {
                 />
                 <Button
                   className="mt-auto"
-                  disabled={
-                    searchLocationLoading ||
-                    status !== "READY" ||
-                    !criteriaIsChanged
-                  }
+                  disabled={!hasSelectedFilters}
+                  isLoading={searchLocationLoading || status !== "READY"}
                   variant="primary"
                   onClick={applyFilters}
                 >

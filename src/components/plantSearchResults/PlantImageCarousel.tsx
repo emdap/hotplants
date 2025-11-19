@@ -4,6 +4,7 @@ import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal from "designSystem/Modal";
 import { PlantResult } from "graphqlHelpers/plantQueries";
+import { capitalize } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
 import PlantImage from "./PlantImage";
@@ -53,7 +54,7 @@ const PlantImageViewer = ({
     <div
       className={classNames("aspect-square", {
         "h-full": mode === "thumbnail",
-        "w-1/2 max-h-70 flex-col relative": mode === "carousel",
+        "max-h-70 flex-col relative": mode === "carousel",
       })}
     >
       {mode === "thumbnail" ? (
@@ -70,15 +71,16 @@ const PlantImageViewer = ({
       {mode === "carousel" && (
         <Button
           variant="secondary"
-          className="absolute top-1 right-1"
+          className="absolute top-0 right-0"
           onClick={() => setShowFullScreen(true)}
           size="small"
         >
-          <MdFullscreen size={24} color="white" />
+          <MdFullscreen size={24} />
         </Button>
       )}
 
       <Modal
+        title={capitalize(plant.commonNames?.[0] ?? plant.scientificName)}
         isOpen={showFullScreen}
         onClose={() => {
           setShowFullScreen(false);

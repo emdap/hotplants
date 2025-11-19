@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
-import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Button from "./Button";
 
 const Carousel = ({
@@ -106,7 +106,7 @@ const Carousel = ({
                 }
                 onClick={() => setIndexes(activeIndex + incremenet)}
               >
-                {isNextButton ? <MdArrowForward /> : <MdArrowBack />}
+                {isNextButton ? <FaArrowRight /> : <FaArrowLeft />}
               </Button>
             );
           })}

@@ -30,7 +30,7 @@
 @utility focus-ring {
   transition: outline 0s !important;
 
-  @apply focus-visible:outline-offset-2 focus-visible:outline-2 focus:outline-offset-2 focus:outline-2 m-1;
+  @apply focus-visible:outline-offset-2 focus-visible:outline-2 focus:outline-offset-2 focus:outline-2 [button]:m-1;
 }
 
 @utility card {

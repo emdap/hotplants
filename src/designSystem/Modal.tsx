@@ -9,6 +9,7 @@ import Card, { CardProps } from "./Card";
 import { mergeMotionProps, MOTION_FADE_IN } from "./motionTransitions";
 
 export type ModalProps = {
+  title?: string;
   isOpen?: boolean;
   onClose?: () => void;
   headerProps?: HTMLProps<HTMLDivElement>;
@@ -21,6 +22,7 @@ const MODAL_BODY_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
 });
 
 const Modal = ({
+  title,
   isOpen,
   onClose,
   headerProps: { className: headerClassName, ...headerProps } = {},
@@ -54,7 +56,7 @@ const Modal = ({
             key="body"
             disableBlurEffect
             className={classNames(
-              "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 h-5/6 flex flex-col gap-2 overflow-auto z-50",
+              "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 h-5/6 flex flex-col gap-2 overflow-auto z-50 p-4",
               className
             )}
             {...MODAL_BODY_FADE_IN}
@@ -62,14 +64,19 @@ const Modal = ({
           >
             <div
               className={classNames(
-                "sticky bg-inherit -top-6 pt-6 -mt-6",
+                "flex items-center mb-2 relative",
                 headerClassName
               )}
               {...headerProps}
             >
-              <Button onClick={onClose}>
-                <MdClose />
+              <Button
+                className="absolute top-0 left-0"
+                variant="secondary"
+                onClick={onClose}
+              >
+                <MdClose size={16} />
               </Button>
+              {title && <h2 className="text-default-text mx-auto">{title}</h2>}
             </div>
             {children}
           </Card>

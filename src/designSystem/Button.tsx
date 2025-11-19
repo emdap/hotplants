@@ -9,32 +9,28 @@ type ButtonProps = {
   linkAddress?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const getClasses = ({
-  variant,
-  size,
-  className,
-  ...buttonProps
-}: ButtonProps) =>
+const getClasses = (props: ButtonProps) =>
   classNames(
-    "rounded-md max-w-fit flex gap-2 items-center justify-center font-medium text-sm",
-    className,
+    "rounded-md max-w-fit flex gap-3 items-center justify-center font-medium text-sm",
+    props.className,
     {
       "bg-primary/90 dark:bg-primary/80 enabled:hover:bg-primary outline-primary text-white":
-        variant === "primary",
+        props.variant === "primary",
       "bg-secondary/50 enabled:hover:bg-secondary/80 outline-secondary ":
-        variant === "secondary",
+        props.variant === "secondary",
 
       "text-primary-dark enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
-        variant === "text",
+        props.variant === "text",
 
-      "cursor-pointer": !buttonProps.disabled,
-      "opacity-50 hover:shadow-none!": buttonProps.disabled,
+      "cursor-pointer": !props.disabled,
+      "opacity-50 hover:shadow-none!": props.disabled,
+      "px-10": props.isLoading !== undefined,
     },
-    variant !== "text" && [
+    props.variant !== "text" && [
       "hover:shadow-sm focus-ring",
       {
-        "py-2 px-3": size === "default",
-        "py-1 px-1.5 text-xs": size === "small",
+        "py-2 px-3": props.size === "default",
+        "py-1 px-1.5 text-xs": props.size === "small",
       },
     ]
   );
@@ -46,7 +42,7 @@ const Button = ({
   linkAddress,
   className,
   disabled,
-  ...buttonProps
+  ...directButtonProps
 }: ButtonProps) => {
   const isDisabled = isLoading || disabled;
   const classes = getClasses({
@@ -55,22 +51,27 @@ const Button = ({
     linkAddress,
     className,
     disabled: isDisabled,
-    ...buttonProps,
+    isLoading,
+    ...directButtonProps,
   });
 
   const renderButton = ({ children, ...props }: Partial<ButtonProps>) => (
     <button {...props}>
       {children}
-      {isLoading && <LoadingIcon />}
+      {isLoading && <LoadingIcon size={16} className="-mr-7" />}
     </button>
   );
 
   return linkAddress && !isDisabled ? (
     <a className={classNames("block w-fit", classes)} href={linkAddress}>
-      {renderButton(buttonProps)}
+      {renderButton(directButtonProps)}
     </a>
   ) : (
-    renderButton({ disabled: isDisabled, className: classes, ...buttonProps })
+    renderButton({
+      disabled: isDisabled,
+      className: classes,
+      ...directButtonProps,
+    })
   );
 };
 

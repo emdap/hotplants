@@ -25,9 +25,10 @@ const PlantCard = ({
       tabIndex={1}
       disableBlurEffect
       className={classNames(
-        "cursor-pointer h-40 w-full outline-white/60 transition-all focus-ring relative p-0 overflow-hidden rounded-lg group bg-default-background bg-clip-padding border-primary/80 dark:border-none",
+        "cursor-pointer h-40 w-full outline-white/60 transition-all focus-ring m-0 relative p-0 overflow-hidden rounded-lg group bg-default-background bg-clip-padding border-primary/80 dark:border-none",
         {
-          "bg-default-background dark:bg-default-background/50": isActive,
+          "bg-default-background dark:bg-default-background/50 outline-2 outline-offset-2 active-card":
+            isActive,
           "m-0": !isActive,
         }
       )}
@@ -37,7 +38,7 @@ const PlantCard = ({
           <div className="absolute w-full h-full flex items-center overflow-hidden z-0 backdrop-grayscale-100">
             <img src={firstImage} loading="lazy" className="" />
           </div>
-          <div className="absolute h-full w-full transition-opacity opacity-100 group-hover:opacity-0 group-focus:opacity-0 backdrop-grayscale-25 backdrop-contrast-60" />
+          <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opactiy-0 group-hover:opacity-0 group-focus:opacity-0 backdrop-grayscale-25 backdrop-contrast-60" />
         </>
       )}
 
