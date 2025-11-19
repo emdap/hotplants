@@ -2,9 +2,9 @@ import { centroid } from "@turf/turf";
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/LocationSearch";
+import PlantAnimation from "components/PlantAnimation";
 import PlantFilters from "components/plantSearchFilters/PlantFilters";
 import ActivePlantPane from "components/plantSearchResults/ActivePlantPane";
-import PlantAnimation from "components/plantSearchResults/PlantAnimation";
 import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
 import ScrapeStatusBar from "components/ScrapeStatusBar";
 import {
