@@ -20,7 +20,7 @@ const ScrapeStatusBar = ({
       <span>{plantQueryStatus !== "READY" && <LoadingIcon />}</span>
       {totalResultsCount && (
         <span>
-          Viewing results {plantSearchResults.length} out of {totalResultsCount}
+          Viewing {plantSearchResults.length} results out of {totalResultsCount}
         </span>
       )}
 

@@ -19,7 +19,7 @@ const getClasses = (props: ButtonProps) =>
       "bg-secondary/50 enabled:hover:bg-secondary/80 outline-secondary ":
         props.variant === "secondary",
 
-      "text-primary-dark enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
+      "text-primary enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
         props.variant === "text",
 
       "cursor-pointer": !props.disabled,

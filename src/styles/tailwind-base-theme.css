@@ -6,8 +6,8 @@
   --color-default-text: #000;
   --color-scrollbar: #0000003b;
   --color-default-background: #fff;
-  --color-primary-dark: #a577e3;
   --color-primary: #ad8ce5;
+  --color-primary-dark: #a577e3;
   --color-secondary: #b0b0b0;
 
   --animate-background-shift: background-shift 40s ease infinite;
@@ -43,6 +43,7 @@
       --color-scrollbar: #ffffff85;
       --color-default-background: #000;
       --color-primary: #a577e3;
+      --color-primary-dark: #5d4995;
       --color-secondary: #868686;
     }
   }
