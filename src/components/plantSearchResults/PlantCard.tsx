@@ -3,6 +3,7 @@ import Card from "designSystem/Card";
 import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { capitalize } from "lodash";
+import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useRef } from "react";
 import PlantImage from "./PlantImage";
 
@@ -47,12 +48,19 @@ const PlantCard = ({
           occurrenceId={firstOccurrence.occurrenceId}
           mediaObject={firstMedia}
           containerClass="absolute w-full h-full flex items-center overflow-hidden z-0"
+          imageClass="w-full"
         >
           {({ isLoaded }) =>
             isLoaded ? (
               <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opactiy-0 group-hover:opacity-0 backdrop-grayscale-25 backdrop-contrast-80" />
             ) : (
-              <div className="absolute h-full w-full bg-gray-600/40 animate-pulse" />
+              <>
+                <img
+                  className="absolute bottom-0 opacity-30"
+                  src={plantPlaceholder}
+                />
+                <div className="absolute h-full w-full bg-gray-600/50 animate-pulse" />
+              </>
             )
           }
         </PlantImage>
