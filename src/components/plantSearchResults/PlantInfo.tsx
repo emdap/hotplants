@@ -1,17 +1,10 @@
 import Card from "designSystem/Card";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 
-const SKIP_FIELDS_IN_TABLE: (keyof PlantResult | "__typename")[] = [
-  "scientificName",
-  "_id",
-  "__typename",
-  "commonNames",
-  "occurrences",
-];
-
 const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
   bloomColors: "Bloom Colors",
   bloomTimes: "Bloom Times",
+  isPerennial: "Perennial",
   physicalCharactersticsDump: "General Info",
   fullOccurrencesCount: "Total Occurrences",
 };
@@ -31,7 +24,7 @@ const PlantInfo = ({
   );
 
   return (
-    <Card className="overflow-auto">
+    <Card className="overflow-auto flex-grow">
       {showFullInfo ? (
         <table className="border-separate border-spacing-4 [&_th,td]:p-2">
           <thead>
@@ -43,7 +36,7 @@ const PlantInfo = ({
             <tbody>
               {(Object.entries(plant) as [keyof PlantResult, object][]).map(
                 ([key, value], index) =>
-                  SKIP_FIELDS_IN_TABLE.includes(key) ? null : (
+                  PLANT_FIELD_LABEL[key] && (
                     <tr key={index}>
                       <th>{PLANT_FIELD_LABEL[key]}</th>
                       <td>{JSON.stringify(value)}</td>
