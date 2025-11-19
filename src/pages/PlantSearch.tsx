@@ -175,15 +175,15 @@ const PlantSearch = () => {
         ref={scrollContainerRef}
         onScroll={handleScroll}
         className={classNames(
-          "grow overflow-auto max-md:mr-1 scroll-smooth px-2 2xl:pr-8 pt-4 flex flex-col max-md:pb-10",
-          plantSearchResults.length && "md:pr-4 md:pb-4 gap-4"
+          "grow overflow-auto max-md:mr-1 scroll-smooth px-2 2xl:pr-8 pt-4 flex flex-col gap-4 max-md:pb-10",
+          plantSearchResults.length && "md:pr-4 md:pb-4"
         )}
       >
         <PageTitle>Plant Search</PageTitle>
         <div
           className={classNames(
             "flex max-md:flex-col gap-y-12 gap-x-4 2xl:gap-x-12 grow",
-            !plantSearchResults.length && "md:overflow-auto py-4"
+            !plantSearchResults.length && "pb-10"
           )}
         >
           <div
@@ -234,7 +234,7 @@ const PlantSearch = () => {
             id="results-pane"
             className={classNames(
               "grow flex flex-col gap-6 sm:mx-auto relative",
-              !plantSearchResults.length && "sticky top-0"
+              !plantSearchResults.length && "md:sticky md:top-20 h-fit"
             )}
           >
             <AnimatePresence>
