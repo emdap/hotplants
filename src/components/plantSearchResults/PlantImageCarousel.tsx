@@ -54,7 +54,7 @@ const PlantImageViewer = ({
     <div
       className={classNames("aspect-square", {
         "h-full": mode === "thumbnail",
-        "max-h-70 flex-col relative": mode === "carousel",
+        "h-70 flex-col relative": mode === "carousel",
       })}
     >
       {mode === "thumbnail" ? (

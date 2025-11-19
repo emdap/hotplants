@@ -27,7 +27,7 @@ const PlantCard = ({
       className={classNames(
         "cursor-pointer h-40 w-full outline-white/60 transition-all focus-ring m-0 relative p-0 overflow-hidden rounded-lg group bg-default-background bg-clip-padding border-primary/80 dark:border-transparent",
         {
-          "bg-default-background dark:bg-default-background/50 outline-2 outline-offset-2 active-card":
+          "bg-default-background dark:bg-default-background/50 outline-2 outline-offset-2":
             isActive,
           "m-0": !isActive,
         }
@@ -42,7 +42,7 @@ const PlantCard = ({
         </>
       )}
 
-      <div className="flex flex-col w-full gap-2 pt-4 px-6 bg-primary/60 dark:bg-primary-dark/60 text-shadow-glow  relative backdrop-blur-sm group-hover:backdrop-blur-xs">
+      <div className="flex flex-col w-full gap-2 pt-4 px-6 bg-primary/60 dark:bg-primary-dark/60 text-shadow-glow  relative backdrop-blur-sm group-hover:backdrop-blur-xs group-[.active-card]:opacity-0">
         {hasCommonName ? (
           <>
             <h2 className="text-white border-b border-white/80 w-full">

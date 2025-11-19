@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { useCallback, useRef } from "react";
@@ -45,7 +46,14 @@ const PlantResultsHolder = () => {
   );
 
   return (
-    <div key="results-list" ref={containerRef} className="flex flex-col gap-4">
+    <div
+      key="results-list"
+      ref={containerRef}
+      className={classNames(
+        "flex flex-col gap-4",
+        plantSearchResults.length && "md:pb-20"
+      )}
+    >
       {plantSearchResults.map(
         (plant, index) =>
           plant && (
