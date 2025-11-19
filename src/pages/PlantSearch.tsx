@@ -274,7 +274,7 @@ const PlantSearch = () => {
                 <LoadingIcon
                   key="loading-icon"
                   size={25}
-                  className="text-white mx-auto mt-auto"
+                  containerClassName="text-white mx-auto mt-auto pb-4"
                 />
               ) : (
                 <PlantAnimation

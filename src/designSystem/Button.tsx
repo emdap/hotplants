@@ -58,7 +58,7 @@ const Button = ({
   const renderButton = ({ children, ...props }: Partial<ButtonProps>) => (
     <button {...props}>
       {children}
-      {isLoading && <LoadingIcon size={16} className="-mr-7" />}
+      {isLoading && <LoadingIcon size={16} containerClassName="-mr-7" />}
     </button>
   );
 
