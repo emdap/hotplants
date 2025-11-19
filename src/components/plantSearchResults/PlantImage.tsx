@@ -1,22 +1,30 @@
+import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import { PlantMedia } from "generated/graphql/graphql";
 import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
-// TODO: Make this more generic, use in PlantCard
 const PlantImage = ({
   plantId,
   occurrenceId,
   mediaObject,
+  showSpinner,
+  containerClass,
+  imageClass,
+  children,
 }: {
   plantId: string;
   occurrenceId: number;
   mediaObject: PlantMedia;
+  showSpinner?: boolean;
+  containerClass?: string;
+  imageClass?: string;
+  children?: (data: { isLoaded: boolean }) => ReactNode;
 }) => {
   const { syncPlant } = usePlantSearchContext();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [hideImage, setHideImage] = useState(false);
   const [imageNotAvailable, setImageNotAvailable] = useState(false);
 
@@ -33,7 +41,7 @@ const PlantImage = ({
 
   const handleImgError = async () => {
     if (!mediaObject.isProxyUrl) {
-      setIsLoading(true);
+      setIsLoaded(true);
       setHideImage(true);
       await getProxyUrlMutation();
       syncPlant(plantId);
@@ -44,25 +52,32 @@ const PlantImage = ({
 
   useEffect(() => {
     if (error) {
-      setIsLoading(false);
+      setIsLoaded(false);
       setImageNotAvailable(true);
     }
   }, [error]);
 
   return imageNotAvailable ? null : (
-    <div className="relative h-full w-full flex justify-center">
+    <div className={classNames(showSpinner && "relative", containerClass)}>
       <img
         loading="lazy"
         src={hideImage ? undefined : mediaObject.url}
-        className="max-h-full self-center"
-        onLoad={() => setIsLoading(false)}
+        className={classNames(
+          imageClass,
+
+          ["transition-opacity", isLoaded ? "opacity-100" : "opacity-0"]
+        )}
+        onLoad={() => setIsLoaded(true)}
         onError={handleImgError}
       />
-      {isLoading && (
-        <div className="absolute top-0 left-0 h-full w-full bg-secondary/20 flex items-center justify-center">
+
+      {showSpinner && !isLoaded && (
+        <div className="absolute top-0 left-0 h-full w-full bg-secondary/20 flex items-center justify-center text-primary">
           <LoadingIcon />
         </div>
       )}
+
+      {children && children({ isLoaded })}
     </div>
   );
 };

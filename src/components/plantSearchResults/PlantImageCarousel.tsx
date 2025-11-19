@@ -35,6 +35,9 @@ const PlantImageViewer = ({
         media.map((mediaObject, index) => (
           <PlantImage
             key={index}
+            showSpinner
+            imageClass="max-h-full self-center"
+            containerClass="w-full h-full flex justify-center"
             plantId={plant._id}
             {...{ occurrenceId, mediaObject }}
           />
