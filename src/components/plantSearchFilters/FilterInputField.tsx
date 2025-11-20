@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import ListboxWrapper from "designSystem/listbox/ListboxWrapper";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { ChangeEvent } from "react";
@@ -36,7 +37,13 @@ const FilterInputField = <
   };
 
   return (
-    <>
+    <div
+      className={classNames(
+        "form-item",
+        ["checkbox", "range"].includes(filterInput.inputType) &&
+          "flex-row items-center gap-4"
+      )}
+    >
       <label htmlFor={plantDataKey}>{filterInput.label}</label>
       {DEFAULT_INPUT_TYPE.includes(inputType) ? (
         <input
@@ -45,6 +52,9 @@ const FilterInputField = <
           type={inputType}
           placeholder={`Enter ${inputType}`}
           onChange={inputOnChange}
+          className={
+            inputType === "checkbox" ? "styled-checkbox" : "styled-input"
+          }
         />
       ) : inputType === "select" ? (
         <ListboxWrapper
@@ -55,7 +65,7 @@ const FilterInputField = <
           defaultOptions={filterInput.defaultOptions}
         />
       ) : null}
-    </>
+    </div>
   );
 };
 

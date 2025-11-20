@@ -16,10 +16,6 @@
   }
 }
 
-input:not([type="checkbox"]) {
-  @apply styled-input;
-}
-
-input[type="checkbox"] {
+@utility styled-checkbox {
   @apply bg-primary rounded outline-primary ring-primary border-transparent;
 }

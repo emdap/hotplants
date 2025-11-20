@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { Dispatch, SetStateAction } from "react";
 import { ENABLED_FILTERS } from "./filterFixtures";
@@ -27,25 +26,14 @@ const PlantFilters = ({
         const { plantDataKey } = filterInput;
 
         return (
-          <div
-            className={classNames(
-              "form-item",
-              ["checkbox", "range"].includes(filterInput.inputType) &&
-                "flex-row items-center gap-4"
-            )}
+          <FilterInputField
             key={index}
-          >
-            {/* {index === FIRST_ADVANCED_FILTER_INDEX && (
-              <hr className="opacity-10 my-4" />
-            )} */}
-            <FilterInputField
-              filterInput={filterInput}
-              value={plantFilters[plantDataKey]}
-              onChange={(value) =>
-                setPlantFilters((prev) => ({ ...prev, [plantDataKey]: value }))
-              }
-            />
-          </div>
+            filterInput={filterInput}
+            value={plantFilters[plantDataKey]}
+            onChange={(value) =>
+              setPlantFilters((prev) => ({ ...prev, [plantDataKey]: value }))
+            }
+          />
         );
       })}
 
