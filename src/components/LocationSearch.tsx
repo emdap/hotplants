@@ -97,14 +97,14 @@ const LocationSearch = () => {
   };
 
   return (
-    <div className="flex flex-col pl-2 pr-4 w-full overflow-auto">
+    <div className="flex flex-col pl-2 md:pr-4 w-full overflow-auto">
       <div className="form-item flex-row items-center">
         <label htmlFor="search-location">Location</label>
         <input
           id="search-location"
           value={searchInput}
           className={classNames(
-            "w-full",
+            "styled-input flex-grow min-w-20",
             (locationQuery.isError || locationInvalid) &&
               "dark:!border-red-700 ring-offset-red-500/70 !border-red-500"
           )}
