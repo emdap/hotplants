@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
+import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
 import { ReactNode, useLayoutEffect, useRef, useState } from "react";
 
@@ -19,24 +20,19 @@ const ScrapeStatusBar = ({
   const { plantSearchResults } = usePlantSearchContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const [disableTransparency, setDisableTransparency] = useState(false);
+  const { scrollContainer } = useGetScrollContainer();
 
-  // TODO: simplify other scroll effects to just use body
   useLayoutEffect(() => {
-    const setTransparency = () =>
-      setDisableTransparency((prev) => {
-        if (prev) {
-          const rect = containerRef.current?.getBoundingClientRect();
-          return Boolean(!rect || rect.top === 24);
-        } else {
-          return body?.scrollTop !== 0;
-        }
-      });
+    const setTransparency = () => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      setDisableTransparency(rect?.top === 24);
+    };
 
-    const body = document.querySelector("body");
-    body?.addEventListener("scroll", setTransparency);
+    scrollContainer?.addEventListener("scroll", setTransparency);
 
-    return () => body?.removeEventListener("scroll", setTransparency);
-  }, []);
+    return () =>
+      scrollContainer?.removeEventListener("scroll", setTransparency);
+  }, [scrollContainer]);
 
   return (
     <Card

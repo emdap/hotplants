@@ -20,19 +20,21 @@ import PageTitle from "designSystem/PageTitle";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
-import { getScrollParent } from "helpers/generalUtil";
 import { LocationWithPolygon } from "helpers/schemaTypesUtil";
+import {
+  MEDIUM_SCREEN_SIZE,
+  useGetScrollContainer,
+} from "hooks/useGetScrollContainer";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { isEmpty, isEqual } from "lodash";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
-const MEDIUM_SCREEN_SIZE = 768;
 
 const PlantSearch = () => {
   const containerRef = useRef<HTMLElement>(null);
-  const scrollContainerRef = useRef<HTMLElement>(null);
+  const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
 
   const [fullScreenElement, setFullScreenElement] =
     useState<FullScreenElement | null>(null);
@@ -120,9 +122,12 @@ const PlantSearch = () => {
 
   const scrollToTop = () =>
     new Promise<void>((resolve) => {
-      scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      scrollContainerElement?.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
       const checkScrollInterval = setInterval(() => {
-        if ((scrollContainerRef.current?.scrollTop ?? 10) <= 10) {
+        if ((scrollContainerElement?.scrollTop ?? 10) <= 10) {
           clearInterval(checkScrollInterval);
           resolve();
         }
@@ -148,25 +153,23 @@ const PlantSearch = () => {
 
   useLayoutEffect(() => {
     const handleScroll = () => {
-      const scrollContainer = scrollContainerRef.current;
-      if (!scrollContainer) {
+      if (!scrollContainerElement) {
         return;
       }
       if (
-        scrollContainer.scrollHeight -
-          (scrollContainer.scrollTop + scrollContainer.clientHeight) <=
+        scrollContainerElement.scrollHeight -
+          (scrollContainerElement.scrollTop +
+            scrollContainerElement.clientHeight) <=
         FETCH_MORE_SCROLL_THRESHOLD
       ) {
         fetchNextPlantsPage();
       }
     };
 
-    scrollContainerRef.current = getScrollParent(containerRef.current);
-    scrollContainerRef.current?.addEventListener("scroll", handleScroll);
+    scrollContainer?.addEventListener("scroll", handleScroll);
 
-    return () =>
-      scrollContainerRef.current?.removeEventListener("scroll", handleScroll);
-  }, [fetchNextPlantsPage]);
+    return () => scrollContainer?.removeEventListener("scroll", handleScroll);
+  }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
 
   return (
     <PlantSearchContext.Provider

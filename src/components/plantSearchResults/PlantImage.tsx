@@ -3,7 +3,8 @@ import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import { PlantMedia } from "generated/graphql/graphql";
 import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
-import { elementInViewport, getScrollParent } from "helpers/generalUtil";
+import { elementInViewport } from "helpers/generalUtil";
+import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useApolloMutation } from "hooks/useQuery";
 import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
 
@@ -59,6 +60,8 @@ const PlantImage = ({
     }
   }, [error]);
 
+  const { scrollContainer } = useGetScrollContainer();
+
   useLayoutEffect(() => {
     const imageInViewport = () => {
       if (!plantImageRef.current) {
@@ -77,11 +80,11 @@ const PlantImage = ({
       }
     };
 
-    const parentElement = getScrollParent(plantImageRef.current);
-    parentElement?.addEventListener("scroll", imageInViewport);
+    scrollContainer?.addEventListener("scroll", imageInViewport);
 
-    return () => parentElement?.removeEventListener("scroll", imageInViewport);
-  }, [isLoaded]);
+    return () =>
+      scrollContainer?.removeEventListener("scroll", imageInViewport);
+  }, [isLoaded, scrollContainer]);
 
   return imageNotAvailable ? (
     children({ isLoaded })

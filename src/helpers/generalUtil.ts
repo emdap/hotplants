@@ -1,22 +1,3 @@
-export const getScrollParent = (
-  element: HTMLElement | null
-): HTMLElement | null => {
-  if (element == null) {
-    return null;
-  }
-
-  const computedStyle = window.getComputedStyle(element);
-
-  if (
-    computedStyle.overflow !== "hidden" &&
-    element.scrollHeight > element.clientHeight
-  ) {
-    return element;
-  } else {
-    return getScrollParent(element.parentElement);
-  }
-};
-
 export const elementInViewport = (
   element: HTMLElement,
   { xBuffer = 1, yBuffer = 1 }: { xBuffer?: number; yBuffer?: number } = {}
