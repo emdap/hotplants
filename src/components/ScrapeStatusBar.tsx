@@ -22,8 +22,10 @@ const ScrapeStatusBar = ({
 }) => {
   const { plantSearchResults } = usePlantSearchContext();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [disableTransparency, setDisableTransparency] = useState(false);
   const { scrollContainer } = useGetScrollContainer();
+
+  const isSmallScreen = window.innerWidth < MEDIUM_SCREEN_SIZE;
+  const [disableTransparency, setDisableTransparency] = useState(isSmallScreen);
 
   useLayoutEffect(() => {
     const setTransparency = () => {
@@ -31,12 +33,12 @@ const ScrapeStatusBar = ({
       setDisableTransparency(!rect || rect.top === 24);
     };
 
-    window.innerWidth >= MEDIUM_SCREEN_SIZE &&
+    !isSmallScreen &&
       scrollContainer?.addEventListener("scroll", setTransparency);
 
     return () =>
       scrollContainer?.removeEventListener("scroll", setTransparency);
-  }, [scrollContainer]);
+  }, [scrollContainer, isSmallScreen]);
 
   return (
     <Card
