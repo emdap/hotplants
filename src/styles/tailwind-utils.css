@@ -41,3 +41,11 @@
 @utility card-blurred-bg {
   @apply backdrop-blur-2xl bg-default-background/80 dark:bg-gray-800/80;
 }
+
+@utility pretty-background {
+  background-size: 800%;
+
+  @apply bg-gradient-to-tr animate-background-shift
+  bg-default-background from-cyan-500/80 via-teal-500/80 to-purple-500/80 
+  dark:from-cyan-800/60 dark:via-teal-800/60 dark:to-purple-600/60;
+}

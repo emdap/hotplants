@@ -20,15 +20,18 @@ import PageTitle from "designSystem/PageTitle";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
+import { getScrollParent } from "helpers/generalUtil";
 import { LocationWithPolygon } from "helpers/schemaTypesUtil";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { isEmpty, isEqual } from "lodash";
 import { AnimatePresence } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
+const MEDIUM_SCREEN_SIZE = 768;
 
 const PlantSearch = () => {
+  const containerRef = useRef<HTMLElement>(null);
   const scrollContainerRef = useRef<HTMLElement>(null);
 
   const [fullScreenElement, setFullScreenElement] =
@@ -131,8 +134,9 @@ const PlantSearch = () => {
     }
 
     if (hasNewCriteria) {
-      // 768 is the md screen size breakpoint
-      hasResults && window.innerWidth >= 768 && (await scrollToTop());
+      hasResults &&
+        window.innerWidth >= MEDIUM_SCREEN_SIZE &&
+        (await scrollToTop());
       setPlantSearchCriteria(draftCriteria);
     }
 
@@ -141,19 +145,27 @@ const PlantSearch = () => {
     }
   };
 
-  const handleScroll = () => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) {
-      return;
-    }
-    if (
-      scrollContainer.scrollHeight -
-        (scrollContainer.scrollTop + scrollContainer.clientHeight) <=
-      FETCH_MORE_SCROLL_THRESHOLD
-    ) {
-      fetchNextPlantsPage();
-    }
-  };
+  useLayoutEffect(() => {
+    const handleScroll = () => {
+      const scrollContainer = scrollContainerRef.current;
+      if (!scrollContainer) {
+        return;
+      }
+      if (
+        scrollContainer.scrollHeight -
+          (scrollContainer.scrollTop + scrollContainer.clientHeight) <=
+        FETCH_MORE_SCROLL_THRESHOLD
+      ) {
+        fetchNextPlantsPage();
+      }
+    };
+
+    scrollContainerRef.current = getScrollParent(containerRef.current);
+    scrollContainerRef.current?.addEventListener("scroll", handleScroll);
+
+    return () =>
+      scrollContainerRef.current?.removeEventListener("scroll", handleScroll);
+  }, [fetchNextPlantsPage]);
 
   const isShowingAllResults =
     !plantSearchData ||
@@ -179,17 +191,16 @@ const PlantSearch = () => {
       }}
     >
       <main
-        ref={scrollContainerRef}
-        onScroll={handleScroll}
+        ref={containerRef}
         className={classNames(
-          "grow overflow-auto max-md:mr-1 scroll-smooth px-2 2xl:pr-8 pt-4 flex flex-col gap-4 max-md:pb-10",
-          hasResults && "md:pr-4 md:pb-4"
+          "grow max-md:mr-1 pt-4 px-2 flex flex-col gap-4 max-md:pb-10",
+          hasResults && "md:pb-4"
         )}
       >
         <PageTitle>Plant Search</PageTitle>
         <div
           className={classNames(
-            "flex max-md:flex-col gap-y-12 gap-x-4 2xl:gap-x-12 grow",
+            "flex max-md:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow",
             !hasResults && "pb-10"
           )}
         >
@@ -198,7 +209,7 @@ const PlantSearch = () => {
             className={classNames(
               "basis-1/3 md:max-w-lg md:min-w-sm",
               hasResults
-                ? "md:sticky -top-4 md:h-[calc(100dvh-2.5rem)]"
+                ? "md:sticky top-6 md:h-[calc(100dvh-2.5rem)]"
                 : "h-max"
             )}
           >
@@ -245,15 +256,16 @@ const PlantSearch = () => {
               <div
                 key="status-bar"
                 className={classNames(
-                  "sticky -top-4 z-20 transition-opacity",
+                  "sticky top-6 z-20 transition-opacity",
                   hasResults ? "opacity-100" : "opacity-0 max-md:h-0"
                 )}
               >
                 <ScrapeStatusBar
                   plantQueryStatus={status}
                   totalResultsCount={plantSearchData?.count}
-                >
-                  {/* {searchRecordQuery.data && (
+                />
+
+                {/* {searchRecordQuery.data && (
                     <Button
                       className="ml-auto"
                       disabled={!isShowingAllResults}
@@ -265,7 +277,6 @@ const PlantSearch = () => {
                         : "Scrape more plants"}
                     </Button>
                   )} */}
-                </ScrapeStatusBar>
               </div>
 
               <PlantResultsHolder key="results-holder" />

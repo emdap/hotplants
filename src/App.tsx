@@ -4,18 +4,14 @@ import HeaderMenu from "designSystem/HeaderMenu";
 
 const App = () => {
   return (
-    <div
-      className={`h-dvh w-dvw flex flex-col overflow-hidden relative bg-gradient-to-tr animate-background-shift
-      from-cyan-500/80 via-teal-500/80 to-purple-500/80 
-      dark:from-cyan-800/60 dark:via-teal-800/60 dark:to-purple-600/60 
-    `}
-      style={{ backgroundSize: "800%" }}
-    >
+    <>
+      <div className="fixed -z-10 h-dvh w-[calc(100dvw+20px)]  pretty-background"></div>
+
       <HeaderMenu>
         <DarkModeToggle />
       </HeaderMenu>
       <AppRoutes />
-    </div>
+    </>
   );
 };
 

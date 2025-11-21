@@ -48,11 +48,16 @@
     }
   }
 
+  html {
+    @apply md:overflow-hidden;
+  }
+
   body {
     scrollbar-width: thin;
     scrollbar-color: var(--color-scrollbar) transparent;
 
-    @apply text-default-text bg-default-background;
+    @apply h-dvh w-dvw flex flex-col overflow-auto
+      scroll-smooth text-default-text;
 
     * {
       @apply transition-colors;
