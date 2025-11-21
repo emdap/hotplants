@@ -49,7 +49,7 @@
   }
 
   html {
-    @apply md:overflow-hidden;
+    @apply md:overflow-hidden max-md:scroll-smooth;
   }
 
   body {

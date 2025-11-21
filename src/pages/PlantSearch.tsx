@@ -227,7 +227,7 @@ const PlantSearch = () => {
                 />
               </Card>
 
-              <Card id={FILTER_HOLDER_ID} className="space-y-4">
+              <Card id={FILTER_HOLDER_ID} className="space-y-4 scroll-m-6">
                 <PlantFilters
                   plantFilters={plantFilters}
                   setPlantFilters={setPlantFilters}

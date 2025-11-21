@@ -2,7 +2,10 @@ import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
-import { useGetScrollContainer } from "hooks/useGetScrollContainer";
+import {
+  MEDIUM_SCREEN_SIZE,
+  useGetScrollContainer,
+} from "hooks/useGetScrollContainer";
 import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
 import { ReactNode, useLayoutEffect, useRef, useState } from "react";
 
@@ -25,10 +28,11 @@ const ScrapeStatusBar = ({
   useLayoutEffect(() => {
     const setTransparency = () => {
       const rect = containerRef.current?.getBoundingClientRect();
-      setDisableTransparency(rect?.top === 24);
+      setDisableTransparency(!rect || rect.top === 24);
     };
 
-    scrollContainer?.addEventListener("scroll", setTransparency);
+    window.innerWidth >= MEDIUM_SCREEN_SIZE &&
+      scrollContainer?.addEventListener("scroll", setTransparency);
 
     return () =>
       scrollContainer?.removeEventListener("scroll", setTransparency);
