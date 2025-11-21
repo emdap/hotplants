@@ -2,6 +2,7 @@ import classNames from "classnames";
 import Card from "designSystem/Card";
 import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlHelpers/plantQueries";
+import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import { capitalize } from "lodash";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useRef } from "react";
@@ -9,10 +10,12 @@ import PlantImage from "./PlantImage";
 
 const PlantCard = ({
   plant,
+  index,
   isActive,
   setActive,
 }: {
   plant: PlantResult;
+  index: number;
   isActive: boolean;
   setActive: () => void;
 }) => {
@@ -25,6 +28,7 @@ const PlantCard = ({
   return (
     <Card
       {...MOTION_FADE_SLIDE}
+      transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.05 }}
       id={plant.scientificName}
       onClick={setActive}
       onFocus={() => !isRightClick.current && setActive}
@@ -35,11 +39,10 @@ const PlantCard = ({
       }}
       onMouseUp={() => (isRightClick.current = false)}
       tabIndex={1}
-      disableBlurEffect
       className={classNames(
-        "cursor-pointer h-40 w-full outline-white/60 transition-all m-0 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-primary/80 dark:border-transparent bg-transparent",
+        "cursor-pointer h-50 outline-white/60 transition-all m-0 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-primary/80 dark:border-transparent bg-transparent",
 
-        isActive ? "focus-ring outline-2 outline-offset-2" : "m-0"
+        isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0"
       )}
     >
       {firstOccurrence && (
@@ -52,7 +55,7 @@ const PlantCard = ({
         >
           {({ isLoaded }) =>
             isLoaded ? (
-              <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opactiy-0 group-hover:opacity-0 backdrop-grayscale-25 backdrop-contrast-80" />
+              <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opacity-0 group-hover:opacity-0 bg-primary-dark/30" />
             ) : (
               <>
                 <img
@@ -66,18 +69,20 @@ const PlantCard = ({
         </PlantImage>
       )}
 
-      <div className="flex flex-col w-full gap-2 pt-4 px-6 bg-primary/60 dark:bg-primary-dark/60 text-shadow-glow  relative backdrop-blur-sm group-hover:backdrop-blur-xs group-[.active-card]:opacity-0">
+      <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 md:min-h-20 justify-center bg-primary/70 dark:bg-primary-dark/70 text-shadow-glow relative">
         {hasCommonName ? (
           <>
-            <h2 className="text-white border-b border-white/80 w-full">
+            <h2 className="max-md:text-lg text-white border-b border-white/80 w-full">
               {capitalize(plant.commonNames?.[0])}
             </h2>
-            <h6 className="self-end italic -mt-2 text-right">
+            <h6 className="max-md:text-sm self-end italic -mt-1.5 pb-1 text-right">
               {plant.scientificName}
             </h6>
           </>
         ) : (
-          <h2 className="text-white italic pb-3">{plant.scientificName}</h2>
+          <h2 className="max-md:text-lg text-white italic pb-3">
+            {plant.scientificName}
+          </h2>
         )}
       </div>
     </Card>

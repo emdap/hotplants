@@ -15,11 +15,11 @@ export type PlantSearchQueryStatus =
   | "CHECKING_STATUS"
   | "SCRAPING_AND_POLLING";
 
+export const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
 const MAX_AUTO_SCRAPES = 3;
 const MIN_RESULTS = 50;
-const DEFAULT_PAGE_SIZE = 20;
 
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
   limit: DEFAULT_PAGE_SIZE,
@@ -187,6 +187,11 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     scrapeOccurrencesQuery.error,
   ]);
 
+  const unfetchedPlants = plantSearchData
+    ? plantSearchData.count - plantSearchData.results.length
+    : 0;
+  const hasNextPage = unfetchedPlants >= DEFAULT_PAGE_SIZE;
+
   const fetchNextPlantsPage = async () => {
     if (
       !plantSearchData?.results ||
@@ -195,13 +200,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
       return;
     }
 
-    const { results, count } = plantSearchData;
-    const unfetchedPlants = count - results.length;
-
-    if (
-      (status === "READY" && unfetchedPlants) ||
-      unfetchedPlants >= DEFAULT_PAGE_SIZE
-    ) {
+    if ((status === "READY" && unfetchedPlants) || hasNextPage) {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
@@ -215,6 +214,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     searchRecordQuery,
     getPlantQuery,
     fetchNextPlantsPage,
+    hasNextPage,
     scrapeMoreData: scrapeOccurrencesQuery.refetch,
   };
 };

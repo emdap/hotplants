@@ -22,7 +22,7 @@
     @apply font-medium;
   }
 
-  .card:not(.card-blurred-bg) {
+  .card:not(.card-transparent) {
     @apply bg-default-background dark:bg-gray-800;
   }
 }
@@ -34,12 +34,12 @@
 }
 
 @utility card {
-  @apply rounded border border-gray-200 dark:border-gray-800/20 shadow-md;
-  @apply p-4 md:p-6;
+  @apply rounded border shadow-md p-4 md:p-6;
+  @apply border-gray-200 dark:border-gray-800/20;
 }
 
-@utility card-blurred-bg {
-  @apply backdrop-blur-2xl bg-default-background/80 dark:bg-gray-800/80;
+@utility card-transparent {
+  @apply bg-default-background/80 dark:bg-gray-800/80;
 }
 
 @utility pretty-background {

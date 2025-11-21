@@ -14,7 +14,7 @@ const PlantImage = ({
   showSpinner,
   containerClass,
   imageClass,
-  children,
+  children = () => null,
 }: {
   plantId: string;
   occurrenceId: number;
@@ -66,7 +66,7 @@ const PlantImage = ({
       }
 
       const shouldRenderImage = elementInViewport(plantImageRef.current, {
-        yBuffer: 20,
+        yBuffer: 2,
       });
 
       if (!shouldRenderImage && isLoaded) {
@@ -83,7 +83,9 @@ const PlantImage = ({
     return () => parentElement?.removeEventListener("scroll", imageInViewport);
   }, [isLoaded]);
 
-  return imageNotAvailable ? null : (
+  return imageNotAvailable ? (
+    children({ isLoaded })
+  ) : (
     <div
       ref={plantImageRef}
       className={classNames(showSpinner && "relative", containerClass)}
@@ -106,7 +108,7 @@ const PlantImage = ({
         </div>
       )}
 
-      {children && children({ isLoaded })}
+      {children({ isLoaded })}
     </div>
   );
 };

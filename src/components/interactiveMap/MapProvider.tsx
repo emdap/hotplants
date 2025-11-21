@@ -26,8 +26,7 @@ const MapProvider = ({
   return (
     <Card
       className={classNames(
-        "min-h-60 min-w-30 p-0 overflow-hidden",
-        searchLocationLoading && "relative",
+        "min-h-60 min-w-30 p-0 overflow-hidden relative",
         className
       )}
     >

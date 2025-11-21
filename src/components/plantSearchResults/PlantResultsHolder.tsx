@@ -50,7 +50,8 @@ const PlantResultsHolder = () => {
       key="results-list"
       ref={containerRef}
       className={classNames(
-        "flex flex-col gap-4",
+        "gap-4 justify-around items-stretch max-md:flex flex-col",
+        "md:grid grid-cols-[repeat(auto-fit,_minmax(320px,max-content))]",
         plantSearchResults.length && "md:pb-20"
       )}
     >
@@ -59,11 +60,11 @@ const PlantResultsHolder = () => {
           plant && (
             <PlantCard
               key={`${plant.scientificName}-${index}`}
-              plant={plant}
               setActive={() =>
                 setActiveIndexes({ plantIndex: index, mediaIndex: null })
               }
               isActive={plantIndex === index}
+              {...{ plant, index }}
             />
           )
       )}

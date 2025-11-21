@@ -3,14 +3,16 @@ import { HTMLMotionProps, motion } from "motion/react";
 import { HTMLProps } from "react";
 
 export type CardProps = Omit<HTMLMotionProps<"div">, "children"> &
-  Pick<HTMLProps<HTMLDivElement>, "children"> & { disableBlurEffect?: boolean };
+  Pick<HTMLProps<HTMLDivElement>, "children"> & {
+    disableTransparency?: boolean;
+  };
 
-const Card = ({ disableBlurEffect, className, ...props }: CardProps) => (
+const Card = ({ disableTransparency, className, ...props }: CardProps) => (
   <motion.div
     {...props}
     className={classNames(
       "card",
-      !disableBlurEffect && "card-blurred-bg",
+      !disableTransparency && "card-transparent",
       className
     )}
   />

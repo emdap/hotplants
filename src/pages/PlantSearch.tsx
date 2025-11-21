@@ -60,6 +60,7 @@ const PlantSearch = () => {
     searchRecordQuery,
     getPlantQuery,
     fetchNextPlantsPage,
+    hasNextPage,
     // scrapeMoreData,
   } = usePlantSearchQueries(plantSearchCriteria);
 
@@ -167,10 +168,6 @@ const PlantSearch = () => {
       scrollContainerRef.current?.removeEventListener("scroll", handleScroll);
   }, [fetchNextPlantsPage]);
 
-  const isShowingAllResults =
-    !plantSearchData ||
-    plantSearchData.count === plantSearchData.results.length;
-
   return (
     <PlantSearchContext.Provider
       value={{
@@ -253,19 +250,20 @@ const PlantSearch = () => {
             )}
           >
             <AnimatePresence>
-              <div
+              {/* <div
                 key="status-bar"
                 className={classNames(
-                  "sticky top-6 z-20 transition-opacity",
+                  "z-20 transition-opacity",
                   hasResults ? "opacity-100" : "opacity-0 max-md:h-0"
                 )}
-              >
-                <ScrapeStatusBar
-                  plantQueryStatus={status}
-                  totalResultsCount={plantSearchData?.count}
-                />
+              > */}
+              <ScrapeStatusBar
+                plantQueryStatus={status}
+                currentResultsCount={plantSearchData?.count}
+                hasResults={hasResults}
+              />
 
-                {/* {searchRecordQuery.data && (
+              {/* {searchRecordQuery.data && (
                     <Button
                       className="ml-auto"
                       disabled={!isShowingAllResults}
@@ -277,11 +275,11 @@ const PlantSearch = () => {
                         : "Scrape more plants"}
                     </Button>
                   )} */}
-              </div>
+              {/* </div> */}
 
               <PlantResultsHolder key="results-holder" />
 
-              {!isShowingAllResults && status !== "CHECKING_STATUS" ? (
+              {hasNextPage && status !== "CHECKING_STATUS" ? (
                 <LoadingIcon
                   key="loading-icon"
                   size={25}
