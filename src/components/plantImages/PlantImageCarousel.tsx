@@ -1,7 +1,5 @@
 import classNames from "classnames";
-import PlantImage, {
-  PlantImageProps,
-} from "components/plantSearchResults/PlantImage";
+import PlantImage, { PlantImageProps } from "components/plantImages/PlantImage";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";

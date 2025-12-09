@@ -10,7 +10,7 @@ import { AnimatePresence } from "motion/react";
 import { useMemo, useRef } from "react";
 import { MdClose } from "react-icons/md";
 import { useClickAway } from "react-use";
-import PlantImageViewer from "./PlantImageCarousel";
+import PlantImageViewer from "../plantImages/PlantImageCarousel";
 import PlantInfo from "./PlantInfo";
 
 const CARD_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {

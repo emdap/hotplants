@@ -6,7 +6,7 @@ import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import { capitalize } from "lodash";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useRef } from "react";
-import PlantImage from "./PlantImage";
+import PlantImage from "../plantImages/PlantImage";
 
 const PlantCard = ({
   plant,
