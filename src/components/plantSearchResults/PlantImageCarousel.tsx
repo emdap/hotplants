@@ -1,4 +1,7 @@
 import classNames from "classnames";
+import PlantImage, {
+  PlantImageProps,
+} from "components/plantSearchResults/PlantImage";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
@@ -7,7 +10,6 @@ import { PlantResult } from "graphqlHelpers/plantQueries";
 import { capitalize } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
-import PlantImage from "./PlantImage";
 
 const PlantImageViewer = ({
   plant,
@@ -31,19 +33,12 @@ const PlantImageViewer = ({
 
   const plantImages = useMemo(
     () =>
-      plant.occurrences.flatMap(({ occurrenceId, media }) =>
-        media.map((mediaObject, index) => (
-          <PlantImage
-            key={index}
-            showSpinner
-            imageClass="max-h-full self-center"
-            containerClass="w-full h-full flex justify-center"
-            plantId={plant._id}
-            {...{ occurrenceId, mediaObject }}
-          />
-        ))
-      ),
-    [plant.occurrences, plant._id]
+      CarouselImages({
+        occurrences: plant.occurrences,
+        thumbnailUrl: plant.thumbnailUrl,
+        _id: plant._id,
+      }),
+    [plant.occurrences, plant.thumbnailUrl, plant._id]
   );
 
   useEffect(() => {
@@ -102,5 +97,38 @@ const PlantImageViewer = ({
     </div>
   );
 };
+
+const DEFAULT_IMAGE_PROPS = {
+  showSpinner: true,
+  imageClass: "max-h-full self-center",
+  containerClass: "w-full h-full flex justify-center",
+};
+
+const CarouselImages = (
+  plant: Pick<PlantResult, "occurrences" | "thumbnailUrl" | "_id">
+) =>
+  plant.occurrences.flatMap(({ occurrenceId, media }, occurrenceIndex) =>
+    media.flatMap((mediaObject, index) => {
+      const imageProps: PlantImageProps = {
+        plantId: plant._id,
+        occurrenceId,
+        mediaObject,
+        ...DEFAULT_IMAGE_PROPS,
+      };
+
+      const baseArray =
+        occurrenceIndex === 0 && index === 0 && plant.thumbnailUrl
+          ? [
+              <PlantImage
+                key="thumbnail"
+                thumbnailUrl={plant.thumbnailUrl}
+                {...imageProps}
+              />,
+            ]
+          : [];
+
+      return baseArray.concat(<PlantImage key={index} {...imageProps} />);
+    })
+  );
 
 export default PlantImageViewer;

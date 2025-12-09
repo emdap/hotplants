@@ -6,30 +6,43 @@ import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
 import { elementInViewport } from "helpers/generalUtil";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useApolloMutation } from "hooks/useQuery";
-import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
-const PlantImage = ({
-  plantId,
-  occurrenceId,
-  mediaObject,
-  showSpinner,
-  containerClass,
-  imageClass,
-  children = () => null,
-}: {
+export type PlantImageProps = {
   plantId: string;
+  thumbnailUrl?: string | null;
   occurrenceId: number;
   mediaObject: PlantMedia;
   showSpinner?: boolean;
   containerClass?: string;
   imageClass?: string;
   children?: (data: { isLoaded: boolean }) => ReactNode;
-}) => {
+};
+
+/** Uses thumbnailUrl if it's provided, otherwise uses the PlantMedia object */
+const PlantImage = ({
+  plantId,
+  thumbnailUrl,
+  occurrenceId,
+  mediaObject,
+  showSpinner,
+  containerClass,
+  imageClass,
+  children = () => null,
+}: PlantImageProps) => {
   const plantImageRef = useRef<HTMLDivElement>(null);
   const { syncPlant } = usePlantSearchContext();
   const [isLoaded, setIsLoaded] = useState(false);
   const [hideImage, setHideImage] = useState(false);
   const [imageNotAvailable, setImageNotAvailable] = useState(false);
+  const [useThumbnail, setUseThumbnail] = useState(Boolean(thumbnailUrl));
 
   const [getProxyUrlMutation, { error }] = useApolloMutation(
     REPLACE_WITH_PROXY_URL,
@@ -40,18 +53,33 @@ const PlantImage = ({
 
   useEffect(() => {
     setHideImage(false);
-  }, [mediaObject.url]);
+  }, [thumbnailUrl, mediaObject.url]);
 
   const handleImgError = async () => {
-    if (!mediaObject.isProxyUrl) {
-      setIsLoaded(true);
-      setHideImage(true);
-      await getProxyUrlMutation();
-      syncPlant(plantId);
-    } else {
+    if (!useThumbnail && mediaObject.isProxyUrl) {
       setImageNotAvailable(true);
+    } else {
+      setIsLoaded(false);
+      setHideImage(true);
+
+      if (useThumbnail) {
+        setUseThumbnail(false);
+      } else if (!mediaObject.isProxyUrl) {
+        await getProxyUrlMutation();
+        syncPlant(plantId);
+      }
     }
   };
+
+  const imgSrc = useMemo(() => {
+    if (hideImage) {
+      return undefined;
+    } else if (useThumbnail && thumbnailUrl) {
+      return thumbnailUrl;
+    } else {
+      return mediaObject.url;
+    }
+  }, [hideImage, thumbnailUrl, mediaObject.url, useThumbnail]);
 
   useEffect(() => {
     if (error) {
@@ -95,7 +123,7 @@ const PlantImage = ({
     >
       <img
         loading="lazy"
-        src={hideImage ? undefined : mediaObject.url}
+        src={imgSrc}
         className={classNames(
           imageClass,
 

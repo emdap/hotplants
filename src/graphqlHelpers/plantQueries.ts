@@ -10,7 +10,9 @@ const _PLANT_FIELDS_FRAGMENT = graphql(
       bloomColors
       bloomTimes
       isPerennial
+      thumbnailUrl
       physicalCharactersticsDump
+      scrapeSources
 
       fullOccurrencesCount
       occurrences {

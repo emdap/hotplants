@@ -23,7 +23,9 @@ const PlantCard = ({
 
   const hasCommonName = Boolean(plant.commonNames?.length);
   const firstOccurrence = plant.occurrences[0];
-  const firstMedia = firstOccurrence?.media[0];
+  const firstMedia = plant.thumbnailUrl
+    ? { url: plant.thumbnailUrl }
+    : firstOccurrence?.media[0];
 
   return (
     <Card

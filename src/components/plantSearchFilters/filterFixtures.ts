@@ -44,6 +44,12 @@ export type FilterInput<
 
 const FILTER_MAPPING: FilterInput[] = [
   {
+    plantDataKey: "scientificName",
+    label: "Scientific name",
+    inputType: "text",
+    isEnabled: true,
+  },
+  {
     plantDataKey: "commonName",
     label: "Common name",
     inputType: "text",
@@ -101,12 +107,6 @@ const FILTER_MAPPING: FilterInput[] = [
     plantDataKey: "lightLevels",
     label: "Light level",
     inputType: "select",
-    advancedFilter: true,
-  },
-  {
-    plantDataKey: "scientificName",
-    label: "Scientific name",
-    inputType: "text",
     advancedFilter: true,
   },
   {

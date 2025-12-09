@@ -28,6 +28,7 @@ type PlantData {
   scrapeSources: [String!]!
   soilTypes: [String!]
   spread: PlantSize
+  thumbnailUrl: String
   updatedTimestamp: Float!
   uses: [String!]
 }

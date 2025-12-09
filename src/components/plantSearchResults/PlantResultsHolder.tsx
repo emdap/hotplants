@@ -51,7 +51,7 @@ const PlantResultsHolder = () => {
       ref={containerRef}
       className={classNames(
         "gap-4 justify-around items-stretch max-md:flex flex-col",
-        "md:grid grid-cols-[repeat(auto-fit,_minmax(320px,max-content))]",
+        "md:grid grid-cols-[repeat(auto-fit,_minmax(320px,1fr))]",
         plantSearchResults.length && "md:pb-20"
       )}
     >
