@@ -6,7 +6,7 @@ const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
   bloomTimes: "Bloom Times",
   isPerennial: "Perennial",
   physicalCharactersticsDump: "General Info",
-  fullOccurrencesCount: "Total Occurrences",
+  fullOccurrencesCount: "Occurrences Found",
 };
 
 const PlantInfo = ({
@@ -26,7 +26,7 @@ const PlantInfo = ({
   return (
     <Card className="overflow-auto flex-grow">
       {showFullInfo ? (
-        <table className="border-separate border-spacing-4 [&_th,td]:p-2">
+        <table className="border-separate border-spacing-4 [&_th,td]:p-2 w-full">
           <thead>
             <tr>
               <th colSpan={2}>{plantHeader}</th>
@@ -37,7 +37,7 @@ const PlantInfo = ({
               {(Object.entries(plant) as [keyof PlantResult, object][]).map(
                 ([key, value], index) =>
                   PLANT_FIELD_LABEL[key] && (
-                    <tr key={index}>
+                    <tr key={index} className="grid grid-cols-[1fr_3fr]">
                       <th>{PLANT_FIELD_LABEL[key]}</th>
                       <td>{JSON.stringify(value)}</td>
                     </tr>

@@ -50,9 +50,12 @@ const PlantResultsHolder = () => {
       key="results-list"
       ref={containerRef}
       className={classNames(
-        "gap-4 justify-around items-stretch max-md:flex flex-col",
-        "md:grid grid-cols-[repeat(auto-fit,_minmax(320px,1fr))]",
-        plantSearchResults.length && "md:pb-20"
+        "gap-4 justify-around items-stretch max-md:flex flex-col md:grid",
+        plantSearchResults.length && "md:pb-20",
+
+        plantSearchResults.length > 3
+          ? "grid-cols-[repeat(auto-fit,_minmax(380px,1fr))]"
+          : "grid-cols-[repeat(auto-fit,_minmax(380px,500px))]"
       )}
     >
       {plantSearchResults.map(
