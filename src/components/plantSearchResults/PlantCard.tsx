@@ -40,7 +40,7 @@ const PlantCard = ({
       onMouseUp={() => (isRightClick.current = false)}
       tabIndex={1}
       className={classNames(
-        "cursor-pointer h-50 outline-white/60 transition-all m-0 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-primary/80 dark:border-transparent bg-transparent",
+        "cursor-pointer h-50 md:h-60 outline-white/60 transition-all m-0 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-primary/80 dark:border-transparent bg-transparent",
 
         isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0"
       )}
