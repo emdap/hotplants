@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import PlantImage, { PlantImageProps } from "components/plantImages/PlantImage";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
@@ -8,6 +7,7 @@ import { PlantResult } from "graphqlHelpers/plantQueries";
 import { capitalize } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
+import PlantCarouselImages from "./PlantCarouselImages";
 
 const PlantImageViewer = ({
   plant,
@@ -26,17 +26,24 @@ const PlantImageViewer = ({
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(
     activeIndexes.mediaIndex ?? 0
   );
+  const [includeThumbnail, setIncludeThumbnail] = useState(
+    Boolean(plant.thumbnailUrl)
+  );
 
   const carouselIndex = activeIndexes.mediaIndex ?? 0;
 
-  const plantImages = useMemo(
+  const PlantImages = useMemo(
     () =>
-      CarouselImages({
-        occurrences: plant.occurrences,
-        thumbnailUrl: plant.thumbnailUrl,
-        _id: plant._id,
+      PlantCarouselImages({
+        plant: {
+          occurrences: plant.occurrences,
+          thumbnailUrl: plant.thumbnailUrl,
+          _id: plant._id,
+        },
+        includeThumbnail,
+        setIncludeThumbnail,
       }),
-    [plant.occurrences, plant.thumbnailUrl, plant._id]
+    [plant.occurrences, plant.thumbnailUrl, plant._id, includeThumbnail]
   );
 
   useEffect(() => {
@@ -54,14 +61,14 @@ const PlantImageViewer = ({
       })}
     >
       {mode === "thumbnail" ? (
-        plantImages[0]
+        PlantImages[0]
       ) : (
         <Carousel
           enableKeyboardEvents={!fullScreenElement}
           carouselIndex={carouselIndex}
           setCarouselIndex={syncActiveMediaIndex}
         >
-          {plantImages}
+          {PlantImages}
         </Carousel>
       )}
       {mode === "carousel" && (
@@ -89,44 +96,11 @@ const PlantImageViewer = ({
           bigButtons
           enableKeyboardEvents
         >
-          {plantImages}
+          {PlantImages}
         </Carousel>
       </Modal>
     </div>
   );
 };
-
-const DEFAULT_IMAGE_PROPS = {
-  showSpinner: true,
-  imageClass: "max-h-full self-center",
-  containerClass: "w-full h-full flex justify-center",
-};
-
-const CarouselImages = (
-  plant: Pick<PlantResult, "occurrences" | "thumbnailUrl" | "_id">
-) =>
-  plant.occurrences.flatMap(({ occurrenceId, media }, occurrenceIndex) =>
-    media.flatMap((mediaObject, index) => {
-      const imageProps: PlantImageProps = {
-        plantId: plant._id,
-        occurrenceId,
-        mediaObject,
-        ...DEFAULT_IMAGE_PROPS,
-      };
-
-      const baseArray =
-        occurrenceIndex === 0 && index === 0 && plant.thumbnailUrl
-          ? [
-              <PlantImage
-                key="thumbnail"
-                thumbnailUrl={plant.thumbnailUrl}
-                {...imageProps}
-              />,
-            ]
-          : [];
-
-      return baseArray.concat(<PlantImage key={index} {...imageProps} />);
-    })
-  );
 
 export default PlantImageViewer;

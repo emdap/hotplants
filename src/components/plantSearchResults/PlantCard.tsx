@@ -6,7 +6,7 @@ import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import { capitalize } from "lodash";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useRef } from "react";
-import PlantImage from "../plantImages/PlantImage";
+import PlantOccurrenceImage from "../plantImages/PlantOccurrenceImage";
 
 const PlantCard = ({
   plant,
@@ -23,9 +23,7 @@ const PlantCard = ({
 
   const hasCommonName = Boolean(plant.commonNames?.length);
   const firstOccurrence = plant.occurrences[0];
-  const firstMedia = plant.thumbnailUrl
-    ? { url: plant.thumbnailUrl }
-    : firstOccurrence?.media[0];
+  const firstMedia = firstOccurrence?.media[0];
 
   return (
     <Card
@@ -48,14 +46,15 @@ const PlantCard = ({
       )}
     >
       {firstOccurrence && (
-        <PlantImage
+        <PlantOccurrenceImage
           plantId={plant._id}
+          thumbnailUrl={plant.thumbnailUrl}
           occurrenceId={firstOccurrence.occurrenceId}
           mediaObject={firstMedia}
           containerClass="absolute w-full h-full flex items-center overflow-hidden z-0"
           imageClass="w-full"
         >
-          {({ isLoaded }) =>
+          {({ isLoaded, isError }) =>
             isLoaded ? (
               <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opacity-0 group-hover:opacity-0 bg-primary-dark/30" />
             ) : (
@@ -64,11 +63,16 @@ const PlantCard = ({
                   className="absolute bottom-0 opacity-30"
                   src={plantPlaceholder}
                 />
-                <div className="absolute h-full w-full bg-gray-600/50 animate-pulse" />
+                <div
+                  className={classNames("absolute h-full w-full", {
+                    "animate-pulse bg-gray-600/50": !isError,
+                    "group-hover:opacity-30 bg-gray-600 opacity-40": isError,
+                  })}
+                />
               </>
             )
           }
-        </PlantImage>
+        </PlantOccurrenceImage>
       )}
 
       <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 md:min-h-20 justify-center bg-primary/70 dark:bg-primary-dark/70 text-shadow-glow relative">
