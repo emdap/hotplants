@@ -9,6 +9,7 @@
   --color-primary: #ad8ce5;
   --color-primary-dark: #a577e3;
   --color-secondary: #b0b0b0;
+  --color-accent: #6f97bc;
 
   --animate-background-shift: background-shift 40s ease infinite;
 
@@ -45,6 +46,7 @@
       --color-primary: #a577e3;
       --color-primary-dark: #5d4995;
       --color-secondary: #868686;
+      --color-accent: #3a595f;
     }
   }
 
