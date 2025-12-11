@@ -9,75 +9,96 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SearchRouteImport } from './routes/search'
-import { Route as LogoutRouteImport } from './routes/logout'
-import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivateRouteImport } from './routes/_private'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as PrivateMyGardenRouteImport } from './routes/_private/my-garden'
+import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
+import { Route as AuthLogoutRouteImport } from './routes/_auth/logout'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LogoutRoute = LogoutRouteImport.update({
-  id: '/logout',
-  path: '/logout',
+const PrivateRoute = PrivateRouteImport.update({
+  id: '/_private',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivateMyGardenRoute = PrivateMyGardenRouteImport.update({
+  id: '/my-garden',
+  path: '/my-garden',
+  getParentRoute: () => PrivateRoute,
+} as any)
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthLogoutRoute = AuthLogoutRouteImport.update({
+  id: '/logout',
+  path: '/logout',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
   '/search': typeof SearchRoute
-  '/signup': typeof SignupRoute
+  '/login': typeof AuthLoginRoute
+  '/logout': typeof AuthLogoutRoute
+  '/signup': typeof AuthSignupRoute
+  '/my-garden': typeof PrivateMyGardenRoute
 }
 export interface FileRoutesByTo {
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
   '/search': typeof SearchRoute
-  '/signup': typeof SignupRoute
+  '/login': typeof AuthLoginRoute
+  '/logout': typeof AuthLogoutRoute
+  '/signup': typeof AuthSignupRoute
+  '/my-garden': typeof PrivateMyGardenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/_private': typeof PrivateRouteWithChildren
   '/search': typeof SearchRoute
-  '/signup': typeof SignupRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_auth/logout': typeof AuthLogoutRoute
+  '/_auth/signup': typeof AuthSignupRoute
+  '/_private/my-garden': typeof PrivateMyGardenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/logout' | '/search' | '/signup'
+  fullPaths: '/search' | '/login' | '/logout' | '/signup' | '/my-garden'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/logout' | '/search' | '/signup'
-  id: '__root__' | '/login' | '/logout' | '/search' | '/signup'
+  to: '/search' | '/login' | '/logout' | '/signup' | '/my-garden'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/_private'
+    | '/search'
+    | '/_auth/login'
+    | '/_auth/logout'
+    | '/_auth/signup'
+    | '/_private/my-garden'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  LoginRoute: typeof LoginRoute
-  LogoutRoute: typeof LogoutRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  PrivateRoute: typeof PrivateRouteWithChildren
   SearchRoute: typeof SearchRoute
-  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -85,28 +106,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/logout': {
-      id: '/logout'
-      path: '/logout'
-      fullPath: '/logout'
-      preLoaderRoute: typeof LogoutRouteImport
+    '/_private': {
+      id: '/_private'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PrivateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_private/my-garden': {
+      id: '/_private/my-garden'
+      path: '/my-garden'
+      fullPath: '/my-garden'
+      preLoaderRoute: typeof PrivateMyGardenRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_auth/signup': {
+      id: '/_auth/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/logout': {
+      id: '/_auth/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof AuthLogoutRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
     }
   }
 }
 
+interface AuthRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthLogoutRoute: typeof AuthLogoutRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthLogoutRoute: AuthLogoutRoute,
+  AuthSignupRoute: AuthSignupRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
+interface PrivateRouteChildren {
+  PrivateMyGardenRoute: typeof PrivateMyGardenRoute
+}
+
+const PrivateRouteChildren: PrivateRouteChildren = {
+  PrivateMyGardenRoute: PrivateMyGardenRoute,
+}
+
+const PrivateRouteWithChildren =
+  PrivateRoute._addFileChildren(PrivateRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  LoginRoute: LoginRoute,
-  LogoutRoute: LogoutRoute,
+  AuthRoute: AuthRouteWithChildren,
+  PrivateRoute: PrivateRouteWithChildren,
   SearchRoute: SearchRoute,
-  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

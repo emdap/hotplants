@@ -1,5 +1,11 @@
 import { MotionProps } from "motion/react";
 
+export const MOTION_SLIDE_LEFT: MotionProps = {
+  initial: { marginLeft: "100%" },
+  animate: { marginLeft: 0 },
+  exit: { marginLeft: "-100%" },
+};
+
 export const MOTION_SLIDE_UP: MotionProps = {
   initial: { marginTop: 10 },
   animate: { marginTop: 0 },

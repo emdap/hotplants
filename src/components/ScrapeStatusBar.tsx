@@ -8,6 +8,7 @@ import {
 } from "hooks/useGetScrollContainer";
 import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
 import { ReactNode, useLayoutEffect, useRef, useState } from "react";
+import { HEADER_HEIGHT } from "util/generalUtil";
 
 const ScrapeStatusBar = ({
   plantQueryStatus,
@@ -30,7 +31,7 @@ const ScrapeStatusBar = ({
   useLayoutEffect(() => {
     const setTransparency = () => {
       const rect = containerRef.current?.getBoundingClientRect();
-      setDisableTransparency(!rect || rect.top === 24);
+      setDisableTransparency(!rect || rect.top === HEADER_HEIGHT);
     };
 
     !isSmallScreen &&
@@ -46,9 +47,10 @@ const ScrapeStatusBar = ({
       key="status-bar"
       disableTransparency={disableTransparency}
       className={classNames(
-        "z-20 w-full h-20 sticky top-6 flex items-center gap-4 transition-all",
+        "z-20 w-full h-20 sticky flex items-center gap-4 transition-all",
         hasResults ? "opacity-100" : "opacity-0"
       )}
+      style={{ top: HEADER_HEIGHT }}
     >
       <span>{plantQueryStatus !== "READY" && <LoadingIcon />}</span>
       {currentResultsCount && (

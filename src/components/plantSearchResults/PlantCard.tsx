@@ -75,10 +75,10 @@ const PlantCard = ({
         </PlantOccurrenceImage>
       )}
 
-      <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 md:min-h-20 justify-center  bg-accent/80 text-shadow-glow relative">
+      <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 md:min-h-20 justify-center bg-accent/80 text-shadow-glow relative">
         {hasCommonName ? (
           <>
-            <h2 className="max-md:text-lg border-b border-white/80 w-full">
+            <h2 className="text-white max-md:text-lg border-b border-white/80 w-full">
               {capitalize(plant.commonNames?.[0])}
             </h2>
             <h6 className="max-md:text-sm text-white/80 self-end italic -mt-1.5 pb-1 text-right">
@@ -86,7 +86,9 @@ const PlantCard = ({
             </h6>
           </>
         ) : (
-          <h2 className="max-md:text-lg italic pb-3">{plant.scientificName}</h2>
+          <h2 className="text-white max-md:text-lg italic pb-3">
+            {plant.scientificName}
+          </h2>
         )}
       </div>
     </Card>

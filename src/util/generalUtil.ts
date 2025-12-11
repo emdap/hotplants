@@ -1,3 +1,5 @@
+export const HEADER_HEIGHT = 32;
+
 export const elementInViewport = (
   element: HTMLElement,
   { xBuffer = 1, yBuffer = 1 }: { xBuffer?: number; yBuffer?: number } = {}

@@ -57,6 +57,7 @@
   body {
     scrollbar-width: thin;
     scrollbar-color: var(--color-scrollbar) transparent;
+    scrollbar-gutter: stable;
 
     @apply h-dvh w-dvw flex flex-col overflow-auto
       scroll-smooth text-default-text;

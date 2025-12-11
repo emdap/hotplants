@@ -25,6 +25,14 @@
   .card:not(.card-transparent) {
     @apply bg-default-background dark:bg-gray-800;
   }
+
+  .card > h1,
+  h2,
+  h3,
+  h4,
+  h6 {
+    @apply text-default-text;
+  }
 }
 
 @utility focus-ring {

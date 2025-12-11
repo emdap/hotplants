@@ -1,9 +1,11 @@
+import { motion } from "motion/react";
 import { ReactNode } from "react";
+import { MOTION_FADE_IN } from "./motionTransitions";
 
 const PageTitle = ({ children }: { children: ReactNode }) => (
-  <h1 className="px-4 text-center pb-2 border-b-2 border-b-white/20 dark:text-white/80">
+  <motion.h1 className="px-4 py-6 dark:text-white/80" {...MOTION_FADE_IN}>
     {children}
-  </h1>
+  </motion.h1>
 );
 
 export default PageTitle;

@@ -1,5 +1,5 @@
 import { Outlet } from "@tanstack/react-router";
-import HeaderMenu from "components/HeaderMenu";
+import HeaderMenu from "components/header/HeaderMenu";
 import { useEffect } from "react";
 import { authClient } from "util/authClient";
 

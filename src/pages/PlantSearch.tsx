@@ -28,6 +28,7 @@ import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { isEmpty, isEqual } from "lodash";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { HEADER_HEIGHT } from "util/generalUtil";
 import { LocationWithPolygon } from "util/schemaTypesUtil";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
@@ -190,14 +191,15 @@ const PlantSearch = () => {
         setFullScreenElement,
       }}
     >
+      <PageTitle>Plant Search</PageTitle>
+
       <main
         ref={containerRef}
         className={classNames(
-          "grow max-md:mr-1 pt-4 px-2 flex flex-col gap-4 max-md:pb-10",
+          "grow max-md:mr-1 px-2 flex flex-col gap-4 max-md:pb-10",
           hasResults && "md:pb-4"
         )}
       >
-        <PageTitle>Plant Search</PageTitle>
         <div
           className={classNames(
             "flex max-md:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow",
@@ -208,10 +210,9 @@ const PlantSearch = () => {
             id="filter-sidebar"
             className={classNames(
               "basis-1/3 md:max-w-lg md:min-w-sm",
-              hasResults
-                ? "md:sticky top-6 md:h-[calc(100dvh-2.5rem)]"
-                : "h-max"
+              hasResults ? "md:sticky md:h-[calc(100dvh-2.5rem)]" : "h-max"
             )}
+            style={{ top: HEADER_HEIGHT }}
           >
             <div
               className={classNames(
