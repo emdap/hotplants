@@ -1,7 +1,7 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import Card from "components/designSystem/Card";
 import LoadingIcon from "components/designSystem/LoadingIcon";
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
 import { authClient } from "util/authClient";
 
 const Logout = () => {
@@ -11,7 +11,7 @@ const Logout = () => {
     authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          navigate("/login");
+          navigate({ to: "/login" });
         },
       },
     });
@@ -28,4 +28,6 @@ const Logout = () => {
   );
 };
 
-export default Logout;
+export const Route = createFileRoute("/logout")({
+  component: Logout,
+});

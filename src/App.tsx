@@ -1,7 +1,6 @@
-import DarkModeToggle from "components/DarkModeToggle";
-import HeaderMenu from "components/designSystem/HeaderMenu";
+import { Outlet } from "@tanstack/react-router";
+import HeaderMenu from "components/HeaderMenu";
 import { useEffect } from "react";
-import { Outlet } from "react-router";
 import { authClient } from "util/authClient";
 
 const App = () => {
@@ -12,10 +11,8 @@ const App = () => {
   return (
     <>
       <div className="fixed -z-10 h-dvh w-[calc(100dvw+20px)] pretty-background"></div>
+      <HeaderMenu />
 
-      <HeaderMenu>
-        <DarkModeToggle />
-      </HeaderMenu>
       <Outlet />
     </>
   );

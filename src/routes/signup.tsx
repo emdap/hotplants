@@ -1,10 +1,10 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import Button from "components/designSystem/Button";
 import Card from "components/designSystem/Card";
 import { capitalize } from "lodash";
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router";
 import { authClient } from "util/authClient";
-import { LoginInfo } from "./Login";
+import { LoginInfo } from "./login";
 
 type UserInfo = LoginInfo & {
   name: string;
@@ -26,7 +26,7 @@ const Signup = () => {
     if (error) {
       window.alert(error.message);
     } else {
-      navigate("/");
+      navigate({ to: "/search" });
     }
   };
 
@@ -58,4 +58,6 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export const Route = createFileRoute("/signup")({
+  component: Signup,
+});
