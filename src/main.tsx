@@ -1,7 +1,7 @@
 import { ApolloClient, HttpLink } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import AppRoutes from "AppRoutes.tsx";
+import AppRoutes from "AppRoutes";
 import { cache } from "graphqlHelpers/cacheConfig";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
