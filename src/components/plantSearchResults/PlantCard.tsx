@@ -28,7 +28,7 @@ const PlantCard = ({
   return (
     <Card
       {...MOTION_FADE_SLIDE}
-      transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.05 }}
+      transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.03 }}
       id={plant.scientificName}
       onClick={setActive}
       onFocus={() => !isRightClick.current && setActive}
@@ -56,7 +56,7 @@ const PlantCard = ({
         >
           {({ isLoaded, isError }) =>
             isLoaded ? (
-              <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opacity-0 group-hover:opacity-0 bg-primary-dark/30" />
+              <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opacity-0 group-hover:opacity-0 max-md:opacity-80 bg-primary-dark/30" />
             ) : (
               <>
                 <img
