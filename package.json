@@ -22,6 +22,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-query": "^5.81.5",
     "@turf/turf": "^7.2.0",
+    "better-auth": "^1.4.6",
     "classnames": "^2.5.1",
     "graphql": "^16.11.0",
     "leaflet": "^1.9.4",
