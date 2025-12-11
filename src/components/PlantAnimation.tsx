@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import LoadingIcon from "designSystem/LoadingIcon";
-import { MOTION_FADE_IN } from "designSystem/motionTransitions";
+import LoadingIcon from "components/designSystem/LoadingIcon";
+import { MOTION_FADE_IN } from "components/designSystem/motionTransitions";
 import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
 import { useLottie } from "lottie-react";
 import { motion } from "motion/react";

@@ -1,10 +1,10 @@
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
-import Button from "designSystem/Button";
-import Card from "designSystem/Card";
+import Button from "components/designSystem/Button";
+import Card from "components/designSystem/Card";
 import {
   mergeMotionProps,
   MOTION_FADE_IN,
-} from "designSystem/motionTransitions";
+} from "components/designSystem/motionTransitions";
+import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence } from "motion/react";
 import { useMemo, useRef } from "react";

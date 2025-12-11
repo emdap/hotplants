@@ -1,8 +1,8 @@
 import { Position } from "geojson";
-import { LocationWithPolygon } from "helpers/schemaTypesUtil";
 import { tooltip, Tooltip as TooltipType } from "leaflet";
 import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
+import { LocationWithPolygon } from "util/schemaTypesUtil";
 
 const crossesMeridian = (coordinates: Position[]) => {
   const hasCoords: Record<string, boolean> = { "180": false, "-180": false };

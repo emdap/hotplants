@@ -1,7 +1,7 @@
 import classNames from "classnames";
+import Card from "components/designSystem/Card";
+import LoadingIcon from "components/designSystem/LoadingIcon";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
-import Card from "designSystem/Card";
-import LoadingIcon from "designSystem/LoadingIcon";
 import {
   MEDIUM_SCREEN_SIZE,
   useGetScrollContainer,

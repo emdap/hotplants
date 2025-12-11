@@ -1,8 +1,8 @@
-import { authClient } from "auth/auth-client";
 import DarkModeToggle from "components/DarkModeToggle";
-import HeaderMenu from "designSystem/HeaderMenu";
+import HeaderMenu from "components/designSystem/HeaderMenu";
 import { useEffect } from "react";
 import { Outlet } from "react-router";
+import { authClient } from "util/authClient";
 
 const App = () => {
   useEffect(() => {

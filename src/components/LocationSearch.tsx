@@ -1,16 +1,16 @@
 import classNames from "classnames";
+import Button from "components/designSystem/Button";
 import {
   FILTER_HOLDER_ID,
   usePlantSearchContext,
 } from "contexts/PlantSearchContext";
-import Button from "designSystem/Button";
 import type { paths } from "generated/schemas/nominatim";
-import { validateNominatimLocation } from "helpers/schemaTypesUtil";
 import { useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useState } from "react";
 import { MdChevronRight } from "react-icons/md";
 import { useDebounce } from "react-use";
+import { validateNominatimLocation } from "util/schemaTypesUtil";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",

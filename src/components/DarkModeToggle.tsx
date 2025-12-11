@@ -1,4 +1,4 @@
-import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
+import { MOTION_FADE_SLIDE } from "components/designSystem/motionTransitions";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { MdDarkMode, MdLightMode } from "react-icons/md";

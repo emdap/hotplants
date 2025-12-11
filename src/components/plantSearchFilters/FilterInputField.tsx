@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import ListboxWrapper from "designSystem/listbox/ListboxWrapper";
+import ListboxWrapper from "components/designSystem/listbox/ListboxWrapper";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { ChangeEvent } from "react";
 import { FilterInput, FilterInputType } from "./filterFixtures";

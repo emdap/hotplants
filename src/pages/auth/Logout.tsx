@@ -1,8 +1,8 @@
-import { authClient } from "auth/auth-client";
-import Card from "designSystem/Card";
-import LoadingIcon from "designSystem/LoadingIcon";
+import Card from "components/designSystem/Card";
+import LoadingIcon from "components/designSystem/LoadingIcon";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { authClient } from "util/authClient";
 
 const Logout = () => {
   const navigate = useNavigate();

@@ -1,8 +1,8 @@
 import classNames from "classnames";
+import Button from "components/designSystem/Button";
+import Carousel from "components/designSystem/Carousel";
+import Modal from "components/designSystem/Modal";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
-import Button from "designSystem/Button";
-import Carousel from "designSystem/Carousel";
-import Modal from "designSystem/Modal";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { capitalize } from "lodash";
 import { useEffect, useMemo, useState } from "react";

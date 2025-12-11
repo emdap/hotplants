@@ -1,5 +1,7 @@
+import ImageWrapper, {
+  ImageWrapperProps,
+} from "components/designSystem/ImageWrapper";
 import PlantOccurrenceImage from "components/plantImages/PlantOccurrenceImage";
-import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 
 const CONTAINER_CLASS = "w-full h-full flex justify-center";

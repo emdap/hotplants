@@ -1,11 +1,13 @@
+import ImageWrapper, {
+  ImageWrapperProps,
+} from "components/designSystem/ImageWrapper";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
-import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
 import { PlantMedia } from "generated/graphql/graphql";
 import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
-import { elementInViewport } from "helpers/generalUtil";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useApolloMutation } from "hooks/useQuery";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { elementInViewport } from "util/generalUtil";
 
 export type PlantOccurrenceImageProps = Omit<
   ImageWrapperProps,

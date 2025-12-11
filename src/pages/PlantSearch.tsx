@@ -1,5 +1,9 @@
 import { centroid } from "@turf/turf";
 import classNames from "classnames";
+import Button from "components/designSystem/Button";
+import Card from "components/designSystem/Card";
+import LoadingIcon from "components/designSystem/LoadingIcon";
+import PageTitle from "components/designSystem/PageTitle";
 import MapProvider from "components/interactiveMap/MapProvider";
 import LocationSearch from "components/LocationSearch";
 import PlantAnimation from "components/PlantAnimation";
@@ -13,14 +17,9 @@ import {
   FullScreenElement,
   PlantSearchContext,
 } from "contexts/PlantSearchContext";
-import Button from "designSystem/Button";
-import Card from "designSystem/Card";
-import LoadingIcon from "designSystem/LoadingIcon";
-import PageTitle from "designSystem/PageTitle";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
-import { LocationWithPolygon } from "helpers/schemaTypesUtil";
 import {
   MEDIUM_SCREEN_SIZE,
   useGetScrollContainer,
@@ -29,6 +28,7 @@ import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { isEmpty, isEqual } from "lodash";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { LocationWithPolygon } from "util/schemaTypesUtil";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 

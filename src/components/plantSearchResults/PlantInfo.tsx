@@ -1,4 +1,4 @@
-import Card from "designSystem/Card";
+import Card from "components/designSystem/Card";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 
 const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {

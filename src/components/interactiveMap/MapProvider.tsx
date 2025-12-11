@@ -1,11 +1,11 @@
 import classNames from "classnames";
+import Card from "components/designSystem/Card";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
-import Card from "designSystem/Card";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import LocationPolygon from "./LocationPolygon";
 import PolygonDrawing from "./PolygonDrawing";
 
-import LoadingOverlay from "designSystem/LoadingOverlay";
+import LoadingOverlay from "components/designSystem/LoadingOverlay";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
