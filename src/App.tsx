@@ -1,6 +1,6 @@
-import AppRoutes from "AppRoutes";
 import DarkModeToggle from "components/DarkModeToggle";
 import HeaderMenu from "designSystem/HeaderMenu";
+import { Outlet } from "react-router";
 
 const App = () => {
   return (
@@ -10,7 +10,7 @@ const App = () => {
       <HeaderMenu>
         <DarkModeToggle />
       </HeaderMenu>
-      <AppRoutes />
+      <Outlet />
     </>
   );
 };
