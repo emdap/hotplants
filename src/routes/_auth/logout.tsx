@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import AuthFormCard from "components/auth/AuthFormCard";
 import Button from "components/designSystem/Button";
-import Card from "components/designSystem/Card";
 import LoadingIcon from "components/designSystem/LoadingIcon";
 import { useEffect } from "react";
 import { authClient, useAuthSession } from "util/authClient";
@@ -14,7 +14,7 @@ const Logout = () => {
   }, []);
 
   return (
-    <Card className="space-y-10 w-md">
+    <AuthFormCard>
       {session.isPending ? (
         <div className="flex gap-4">
           <LoadingIcon />
@@ -25,12 +25,16 @@ const Logout = () => {
           <p className="font-medium font-lg">
             You've been successfully signed out.
           </p>
-          <div className="flex gap-4">
-            <Link to={".."} replace>
-              <Button variant="primary">Back</Button>
+          <div className="w-full flex gap-4 justify-center">
+            <Link to={".."} replace className="flex flex-grow">
+              <Button variant="primary" className="max-w-full w-full">
+                Back
+              </Button>
             </Link>
-            <Link to={"/login"} replace>
-              <Button variant="secondary">Go to Log In page</Button>
+            <Link to={"/login"} className="flex-grow" replace>
+              <Button variant="secondary" className="max-w-full w-full">
+                Go to Log In page
+              </Button>
             </Link>
           </div>
         </>
@@ -42,7 +46,7 @@ const Logout = () => {
           </Button>
         </>
       )}
-    </Card>
+    </AuthFormCard>
   );
 };
 

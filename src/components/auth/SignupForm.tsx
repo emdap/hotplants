@@ -3,7 +3,7 @@ import Button from "components/designSystem/Button";
 import { capitalize } from "lodash";
 import { useMemo, useState } from "react";
 import { authClient, SignupParams } from "util/authClient";
-import Card from "../designSystem/Card";
+import AuthFormCard from "./AuthFormCard";
 
 const DEFAULT_USER_INFO: SignupParams = {
   name: "",
@@ -39,7 +39,7 @@ const SignupForm = ({
       : navigate({ to: "/login", replace: true });
 
   return (
-    <Card className="space-y-10 w-md">
+    <AuthFormCard>
       <h2>Sign Up</h2>
       <div className="space-y-4">
         {Object.entries(userInfo).map(([key, value]) => (
@@ -63,12 +63,12 @@ const SignupForm = ({
       </Button>
       <Button
         variant="text"
-        className="ml-auto"
+        className="ml-auto max-md:mt-8"
         onClick={handleClickExistingAccount}
       >
         I already have an account {">"}
       </Button>
-    </Card>
+    </AuthFormCard>
   );
 };
 

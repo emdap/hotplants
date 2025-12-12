@@ -1,10 +1,10 @@
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import SignupForm from "components/auth/SignupForm";
 import Button from "components/designSystem/Button";
-import Card from "components/designSystem/Card";
 import { capitalize } from "lodash";
 import { useMemo, useState } from "react";
 import { authClient, LoginParams } from "util/authClient";
+import AuthFormCard from "./AuthFormCard";
 
 const DEFAULT_LOGIN_INFO: LoginParams = { email: "", password: "" };
 
@@ -30,48 +30,40 @@ const LoginForm = () => {
     }
   };
 
-  return (
-    <div className="relative">
-      {showForm === "login" ? (
-        <Card key="login" className="space-y-10 w-md">
-          <h2>Log In</h2>
-          <div className="space-y-4">
-            {Object.entries(loginInfo).map(([key, value]) => (
-              <div className="form-item" key={key}>
-                <label className="label" htmlFor={key}>
-                  {capitalize(key)}
-                </label>
-                <input
-                  type={key}
-                  value={value}
-                  onChange={({ target }) =>
-                    setLoginInfo({ ...loginInfo, [key]: target.value })
-                  }
-                  className="styled-input"
-                />
-              </div>
-            ))}
+  return showForm === "login" ? (
+    <AuthFormCard>
+      <h2>Log In</h2>
+      <div className="space-y-4">
+        {Object.entries(loginInfo).map(([key, value]) => (
+          <div className="form-item" key={key}>
+            <label className="label" htmlFor={key}>
+              {capitalize(key)}
+            </label>
+            <input
+              type={key}
+              value={value}
+              onChange={({ target }) =>
+                setLoginInfo({ ...loginInfo, [key]: target.value })
+              }
+              className="styled-input"
+            />
           </div>
+        ))}
+      </div>
 
-          <Button
-            disabled={!formComplete}
-            variant="primary"
-            onClick={loginUser}
-          >
-            Submit
-          </Button>
-          <Button
-            variant="text"
-            className="ml-auto"
-            onClick={() => setShowForm("signup")}
-          >
-            I need an account {">"}
-          </Button>
-        </Card>
-      ) : (
-        <SignupForm onClickExistingAccount={() => setShowForm("login")} />
-      )}
-    </div>
+      <Button disabled={!formComplete} variant="primary" onClick={loginUser}>
+        Submit
+      </Button>
+      <Button
+        variant="text"
+        className="ml-auto max-md:mt-8"
+        onClick={() => setShowForm("signup")}
+      >
+        I need an account {">"}
+      </Button>
+    </AuthFormCard>
+  ) : (
+    <SignupForm onClickExistingAccount={() => setShowForm("login")} />
   );
 };
 
