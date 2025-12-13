@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "vite",
+    "start:auth": "cd ../server && pnpm start &",
+    "stop:auth": "kill $(lsof -t -i:4000)",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
