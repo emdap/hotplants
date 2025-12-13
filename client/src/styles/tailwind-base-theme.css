@@ -59,7 +59,7 @@
     scrollbar-color: var(--color-scrollbar) transparent;
     scrollbar-gutter: stable;
 
-    @apply h-dvh w-dvw flex flex-col overflow-auto
+    @apply h-dvh w-full md:w-dvw flex flex-col overflow-auto
       scroll-smooth text-default-text;
 
     * {
