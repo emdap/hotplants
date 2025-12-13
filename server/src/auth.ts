@@ -1,0 +1,31 @@
+import { betterAuth } from "better-auth";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { MongoClient } from "mongodb";
+
+const client = new MongoClient(process.env.MONGODB_CONNECTION_STRING!);
+
+export const trustedOrigins =
+  process.env.NODE_ENV === "dev"
+    ? ["http://localhost:5173"]
+    : ["https://hotplants.fly.dev"];
+
+const DB_NAME = process.env.NODE_ENV === "dev" ? "dev-auth" : "auth";
+const authDb = client.db(DB_NAME);
+
+export const auth = betterAuth({
+  experimental: { joins: true },
+  database: mongodbAdapter(authDb),
+  trustedOrigins,
+  //  requireEmailVerification: true,
+
+  emailAndPassword: {
+    enabled: true,
+  },
+
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+    },
+  },
+});
