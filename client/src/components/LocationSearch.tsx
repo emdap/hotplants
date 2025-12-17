@@ -16,18 +16,11 @@ const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
 });
 
-const LOCATION_DEFAULT_PARAMS = {
-  format: "json",
-  addressdetails: 1,
-  polygon_geojson: 1,
-  polygon_threshold: 0.5,
-} as const;
-
 const getLocation = (input: string) =>
   locationClient.GET("/search", {
     params: {
       query: {
-        ...LOCATION_DEFAULT_PARAMS,
+        format: "json",
         q: input,
       },
     },
