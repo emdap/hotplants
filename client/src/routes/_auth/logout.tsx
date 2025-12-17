@@ -17,7 +17,7 @@ const Logout = () => {
   return (
     <AuthFormCard>
       {session.isPending ? (
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
           <LoadingIcon />
           Logging you out
         </div>
@@ -41,7 +41,7 @@ const Logout = () => {
         </>
       ) : (
         <>
-          <h4>Sign out was not successful.</h4>
+          <div className="font-medium">Sign out was not successful.</div>
           <AuthLoadingSubmitButton
             variant="primary"
             onClick={() => authClient.signOut()}

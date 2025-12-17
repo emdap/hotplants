@@ -15,7 +15,12 @@ const AuthLoadingSubmitButton = <T extends object | void>({
 
   const handleClick = async (e: MouseEvent) => {
     setLoading(true);
-    await onClick(e);
+    try {
+      await onClick(e);
+    } catch (e) {
+      console.error(e);
+      // TODO: Add error toast :)
+    }
     setLoading(false);
   };
 
