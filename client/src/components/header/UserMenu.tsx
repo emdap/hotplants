@@ -25,7 +25,7 @@ const UserMenu = () => {
   const { data: authData } = useAuthSession();
 
   const menuItemContent = ({ displayText, Icon }: MenuItemContent) => (
-    <div className="cursor-pointer flex gap-2 items-center hover:bg-primary/80 p-2 rounded-md font-medium">
+    <div className="cursor-pointer flex gap-2 items-center hover:bg-primary/40 p-2 rounded-md font-medium">
       <Icon size={16} />
       {displayText}
     </div>

@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { ButtonHTMLAttributes } from "react";
 import LoadingIcon from "./LoadingIcon";
 
-type ButtonProps = {
+export type ButtonProps = {
   variant?: "primary" | "secondary" | "text";
   size?: "small" | "default";
   isLoading?: boolean;
@@ -16,7 +16,7 @@ const getClasses = (props: ButtonProps) =>
     {
       "bg-primary/90 dark:bg-primary/80 enabled:hover:bg-primary outline-primary text-white":
         props.variant === "primary",
-      "bg-secondary/50 enabled:hover:bg-secondary/80 outline-secondary ":
+      "bg-secondary/80 enabled:hover:bg-secondary outline-secondary ":
         props.variant === "secondary",
 
       "text-primary enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
@@ -57,8 +57,8 @@ const Button = ({
 
   const renderButton = ({ children, ...props }: Partial<ButtonProps>) => (
     <button {...props}>
+      {isLoading && <LoadingIcon size={16} containerClassName="-ml-7" />}
       {children}
-      {isLoading && <LoadingIcon size={16} containerClassName="-mr-7" />}
     </button>
   );
 

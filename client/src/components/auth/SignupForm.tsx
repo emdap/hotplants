@@ -4,6 +4,7 @@ import { capitalize } from "lodash";
 import { useMemo, useState } from "react";
 import { authClient, SignupParams } from "util/authClient";
 import AuthFormCard from "./AuthFormCard";
+import AuthLoadingSubmitButton from "./AuthLoadingSubmitButton";
 
 const DEFAULT_USER_INFO: SignupParams = {
   name: "",
@@ -58,9 +59,13 @@ const SignupForm = ({
         ))}
       </div>
 
-      <Button disabled={!formComplete} variant="primary" onClick={createUser}>
+      <AuthLoadingSubmitButton
+        disabled={!formComplete}
+        variant="primary"
+        onClick={createUser}
+      >
         Create Account
-      </Button>
+      </AuthLoadingSubmitButton>
       <Button
         variant="text"
         className="ml-auto max-md:mt-8"

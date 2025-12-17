@@ -5,6 +5,7 @@ import { capitalize } from "lodash";
 import { useMemo, useState } from "react";
 import { authClient, LoginParams } from "util/authClient";
 import AuthFormCard from "./AuthFormCard";
+import AuthLoadingSubmitButton from "./AuthLoadingSubmitButton";
 
 const DEFAULT_LOGIN_INFO: LoginParams = { email: "", password: "" };
 
@@ -51,9 +52,13 @@ const LoginForm = () => {
         ))}
       </div>
 
-      <Button disabled={!formComplete} variant="primary" onClick={loginUser}>
+      <AuthLoadingSubmitButton
+        disabled={!formComplete}
+        variant="primary"
+        onClick={loginUser}
+      >
         Submit
-      </Button>
+      </AuthLoadingSubmitButton>
       <Button
         variant="text"
         className="ml-auto max-md:mt-8"

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import AuthFormCard from "components/auth/AuthFormCard";
+import AuthLoadingSubmitButton from "components/auth/AuthLoadingSubmitButton";
 import Button from "components/designSystem/Button";
 import LoadingIcon from "components/designSystem/LoadingIcon";
 import { useEffect } from "react";
@@ -41,9 +42,12 @@ const Logout = () => {
       ) : (
         <>
           <h4>Sign out was not successful.</h4>
-          <Button variant="primary" onClick={() => authClient.signOut()}>
+          <AuthLoadingSubmitButton
+            variant="primary"
+            onClick={() => authClient.signOut()}
+          >
             Try Again
-          </Button>
+          </AuthLoadingSubmitButton>
         </>
       )}
     </AuthFormCard>
