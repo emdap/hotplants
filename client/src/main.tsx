@@ -13,7 +13,10 @@ const queryClient = new QueryClient({
 });
 
 const apolloClient = new ApolloClient({
-  link: new HttpLink({ uri: `${import.meta.env.VITE_SERVER_URL}/graphql` }),
+  link: new HttpLink({
+    uri: `${import.meta.env.VITE_SERVER_URL}/graphql`,
+    credentials: "include",
+  }),
   cache,
 });
 
