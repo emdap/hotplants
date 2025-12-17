@@ -1,0 +1,6 @@
+/* Headlessui insists on adding padding and hiding html overflow when dialogs are expanded.
+Using html element as the scroll container for Safari compatibility.
+These added styles cause scroll jumping when html is the scroll container. */
+html {
+  @apply max-md:overflow-auto! max-md:scroll-smooth! pr-0!;
+}

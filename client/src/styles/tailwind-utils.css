@@ -35,6 +35,11 @@
   }
 }
 
+@utility stable-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+}
+
 @utility focus-ring {
   transition: outline 0s !important;
 

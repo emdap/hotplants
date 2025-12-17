@@ -4,7 +4,7 @@
   --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 
   --color-default-text: #000;
-  --color-scrollbar: #0000003b;
+  --color-scrollbar: #ffffff85;
   --color-default-background: #fff;
   --color-primary: #ad8ce5;
   --color-primary-dark: #a577e3;
@@ -41,7 +41,6 @@
   * {
     @variant dark {
       --color-default-text: #eee;
-      --color-scrollbar: #ffffff85;
       --color-default-background: #000;
       --color-primary: #a577e3;
       --color-primary-dark: #5d4995;
@@ -51,16 +50,20 @@
   }
 
   html {
-    @apply md:overflow-hidden max-md:scroll-smooth bg-black;
+    scrollbar-color: var(--color-scrollbar) var(--color-accent);
+
+    &.dark {
+      scrollbar-color: var(--color-scrollbar) var(--color-primary-dark);
+    }
+
+    @apply md:overflow-hidden max-md:scroll-smooth bg-black max-md:stable-scrollbar;
   }
 
   body {
-    scrollbar-width: thin;
     scrollbar-color: var(--color-scrollbar) transparent;
-    scrollbar-gutter: stable;
 
-    @apply h-dvh w-full md:w-dvw flex flex-col overflow-auto
-      scroll-smooth text-default-text;
+    @apply md:h-dvh md:w-dvw flex flex-col md:overflow-auto
+      scroll-smooth text-default-text md:stable-scrollbar;
 
     * {
       @apply transition-colors;

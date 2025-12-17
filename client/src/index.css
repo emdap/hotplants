@@ -1,9 +1,0 @@
-@import "tailwindcss";
-@plugin "@tailwindcss/forms";
-
-@import "./styles/tailwind-base-theme.css";
-@import "./styles/tailwind-utils.css";
-
-@import "./styles/form-elements.css";
-@import "./styles/leaflet-overrides.css";
-@import "./styles/old-safari-overrides.css";
