@@ -46,39 +46,30 @@ const PlantSearch = () => {
       <main
         ref={containerRef}
         className={classNames(
-          "grow max-md:mr-1 px-2 flex flex-col gap-4 max-md:pb-10",
-          hasCurrentResults && "md:pb-4"
+          "flex max-md:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow px-2",
+          !hasCurrentResults && "pb-10"
         )}
       >
         <div
           className={classNames(
-            "flex max-md:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow",
-            !hasCurrentResults && "pb-10"
+            "basis-1/3 grow md:max-w-lg lg:min-w-sm",
+            hasCurrentResults ? "md:sticky md:h-[calc(100dvh-2.5rem)]" : "h-max"
+          )}
+          style={{ top: HEADER_HEIGHT }}
+        >
+          <PlantSearchFiltersHolder />
+        </div>
+
+        <div
+          id={RESULTS_HOLDER_ID}
+          className={classNames(
+            "grow flex flex-col gap-6 relative scroll-m-8",
+            !hasCurrentResults && "md:sticky md:top-20 h-screen md:h-fit"
           )}
         >
-          <div
-            className={classNames(
-              "basis-1/3 grow md:max-w-lg lg:min-w-sm",
-              hasCurrentResults
-                ? "md:sticky md:h-[calc(100dvh-2.5rem)]"
-                : "h-max"
-            )}
-            style={{ top: HEADER_HEIGHT }}
-          >
-            <PlantSearchFiltersHolder />
-          </div>
-
-          <div
-            id={RESULTS_HOLDER_ID}
-            className={classNames(
-              "grow flex flex-col gap-6 relative scroll-m-8",
-              !hasCurrentResults && "md:sticky md:top-20 h-fit"
-            )}
-          >
-            <ScrapeStatusBar />
-            <PlantResultsList key="results-holder" />
-            <PlantResultsFooter key="results-footer" />
-          </div>
+          <ScrapeStatusBar />
+          <PlantResultsList key="results-holder" />
+          <PlantResultsFooter key="results-footer" />
         </div>
       </main>
 

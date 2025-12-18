@@ -38,7 +38,7 @@ const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
       disableTransparency={disableTransparency}
       className={classNames(
         "z-20 w-full h-20 sticky flex items-center gap-4 transition-all",
-        totalResultsCount ? "opacity-100" : "opacity-0"
+        totalResultsCount ? "opacity-100" : "opacity-0 max-md:hidden"
       )}
       style={{ top: HEADER_HEIGHT }}
     >
