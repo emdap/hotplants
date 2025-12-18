@@ -115,6 +115,7 @@ export type Query = {
   plant?: Maybe<PlantData>;
   plantOccurrences?: Maybe<PlantOccurrencesResults>;
   plantSearch: PlantSearchResults;
+  searchRecord?: Maybe<SearchRecord>;
 };
 
 
@@ -137,6 +138,24 @@ export type QueryPlantSearchArgs = {
   sort?: InputMaybe<Array<SortInput>>;
   where?: InputMaybe<PlantDataInput>;
 };
+
+
+export type QuerySearchRecordArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type SearchRecord = {
+  _id: Scalars['ObjectId']['output'];
+  jsonStringSearch: Scalars['String']['output'];
+  status: SearchRecordStatus;
+  statusUpdated: Scalars['Float']['output'];
+  totalOccurrences: Scalars['Int']['output'];
+};
+
+export type SearchRecordStatus =
+  | 'COMPLETE'
+  | 'READY'
+  | 'SCRAPING';
 
 export type SortField =
   | 'addedTimestamp'
