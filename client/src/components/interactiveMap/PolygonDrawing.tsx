@@ -1,14 +1,18 @@
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { Feature, Polygon } from "geojson";
 import { DrawEvents } from "leaflet";
 import { FeatureGroup } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 
-const PolygonDrawing = () => {
-  const { setCustomLocationPolygon } = usePlantSearchContext();
+export type SetCustomPolygonFn = (boundingPolygon: Feature<Polygon>) => void;
 
+const PolygonDrawing = ({
+  setCustomPolygon,
+}: {
+  setCustomPolygon: SetCustomPolygonFn;
+}) => {
   const createdDrawing = ({ layer }: DrawEvents.Created) => {
     const geojson = layer.toGeoJSON();
-    setCustomLocationPolygon(geojson);
+    setCustomPolygon(geojson);
     layer.remove();
   };
 

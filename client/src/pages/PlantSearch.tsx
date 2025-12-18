@@ -1,41 +1,23 @@
 import classNames from "classnames";
-import Button from "components/designSystem/Button";
-import Card from "components/designSystem/Card";
-import PageTitle from "components/designSystem/PageTitle";
-import MapProvider from "components/interactiveMap/MapProvider";
-import LocationSearch from "components/LocationSearch";
-import PlantFilters from "components/plantSearchFilters/PlantFilters";
-import ActivePlantPane from "components/plantSearchResults/ActivePlantPane";
-import PlantResultsFooter from "components/plantSearchResults/PlantResultsFooter";
-import PlantResultsHolder from "components/plantSearchResults/PlantResultsHolder";
-import ScrapeStatusBar from "components/ScrapeStatusBar";
-import {
-  FILTER_HOLDER_ID,
-  usePlantSearchContext,
-} from "contexts/PlantSearchContext";
-import { PlantDataInput } from "generated/graphql/graphql";
+import PlantResultsList from "components/plantResults/PlantResultsList";
+import ActivePlantPane from "components/plantSearch/ActivePlantPane";
+import PlantSearchFiltersHolder from "components/plantSearch/PlantSearchFiltersHolder";
+import PlantResultsFooter from "components/plantSearch/PlantSearchFooter";
+import ScrapeStatusBar from "components/plantSearch/ScrapeStatusBar";
+import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
-import { isEqual } from "lodash";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { HEADER_HEIGHT } from "util/generalUtil";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 const RESULTS_HOLDER_ID = "results-pane";
 
 const PlantSearch = () => {
-  const {
-    plantSearchCriteria,
-    hasCurrentResults,
-    searchLocation,
-    searchLocationLoading,
-    searchStatus,
-    setPlantSearchCriteria,
-    fetchNextPlantsPage,
-  } = usePlantSearchContext();
+  const { hasCurrentResults, fetchNextPlantsPage } = usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
 
   const containerRef = useRef<HTMLElement>(null);
-  const [plantFilters, setPlantFilters] = useState<PlantDataInput>({});
 
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -57,25 +39,6 @@ const PlantSearch = () => {
     return () => scrollContainer?.removeEventListener("scroll", handleScroll);
   }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
 
-  const { filtersAreValid, draftCriteria } = useMemo(() => {
-    const draftCriteria = {
-      ...plantFilters,
-      ...(searchLocation && {
-        boundingPolyCoords: searchLocation.boundingPolygon.geometry.coordinates,
-      }),
-    };
-
-    return {
-      draftCriteria,
-      filtersAreValid:
-        Object.keys(draftCriteria).length &&
-        !isEqual(draftCriteria, plantSearchCriteria),
-    };
-  }, [plantFilters, searchLocation, plantSearchCriteria]);
-
-  const applyFilters = () =>
-    filtersAreValid && setPlantSearchCriteria(draftCriteria);
-
   return (
     <>
       <PageTitle>Plant Search</PageTitle>
@@ -94,7 +57,6 @@ const PlantSearch = () => {
           )}
         >
           <div
-            id="filter-sidebar"
             className={classNames(
               "basis-1/3 grow md:max-w-lg lg:min-w-sm",
               hasCurrentResults
@@ -103,37 +65,7 @@ const PlantSearch = () => {
             )}
             style={{ top: HEADER_HEIGHT }}
           >
-            <div
-              className={classNames(
-                "md:h-full max-h-fit space-y-4",
-                hasCurrentResults && "md:overflow-auto md:pb-24"
-              )}
-            >
-              <Card className="flex flex-col gap-2 items-start w-full !p-2">
-                <LocationSearch />
-                <MapProvider
-                  showAllPlants
-                  className="w-full h-[200px] md:h-[300px] grow"
-                />
-              </Card>
-
-              <Card id={FILTER_HOLDER_ID} className="space-y-4 scroll-m-6">
-                <PlantFilters
-                  plantFilters={plantFilters}
-                  setPlantFilters={setPlantFilters}
-                />
-                <Button
-                  linkAddress={`#${RESULTS_HOLDER_ID}`}
-                  disabled={!filtersAreValid}
-                  className="mt-auto"
-                  isLoading={searchLocationLoading || searchStatus !== "READY"}
-                  variant="primary"
-                  onClick={applyFilters}
-                >
-                  Apply filters
-                </Button>
-              </Card>
-            </div>
+            <PlantSearchFiltersHolder />
           </div>
 
           <div
@@ -144,7 +76,7 @@ const PlantSearch = () => {
             )}
           >
             <ScrapeStatusBar />
-            <PlantResultsHolder key="results-holder" />
+            <PlantResultsList key="results-holder" />
             <PlantResultsFooter key="results-footer" />
           </div>
         </div>

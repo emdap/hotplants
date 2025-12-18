@@ -1,4 +1,4 @@
-import Card from "components/designSystem/Card";
+import Card from "designSystem/Card";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 
 const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
@@ -9,7 +9,7 @@ const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
   fullOccurrencesCount: "Occurrences Found",
 };
 
-const PlantInfo = ({
+const PlantInfoCard = ({
   plant,
   showFullInfo,
 }: {
@@ -53,4 +53,4 @@ const PlantInfo = ({
   );
 };
 
-export default PlantInfo;
+export default PlantInfoCard;

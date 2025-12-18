@@ -1,6 +1,6 @@
-import LoadingIcon from "components/designSystem/LoadingIcon";
-import PlantAnimation from "components/PlantAnimation";
+import PlantAnimation from "components/plantSearch/PlantAnimation";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import LoadingIcon from "designSystem/LoadingIcon";
 
 const PlantResultsFooter = () => {
   const {

@@ -5,7 +5,7 @@ import { AnimatePresence } from "motion/react";
 import { useCallback, useRef } from "react";
 import PlantCard from "./PlantCard";
 
-const PlantResultsHolder = () => {
+const PlantResultsList = () => {
   const {
     fullScreenElement,
     plantSearchResults,
@@ -74,4 +74,4 @@ const PlantResultsHolder = () => {
   );
 };
 
-export default PlantResultsHolder;
+export default PlantResultsList;

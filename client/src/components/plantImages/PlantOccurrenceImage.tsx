@@ -1,7 +1,5 @@
-import ImageWrapper, {
-  ImageWrapperProps,
-} from "components/designSystem/ImageWrapper";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
 import { PlantMedia } from "generated/graphql/graphql";
 import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";

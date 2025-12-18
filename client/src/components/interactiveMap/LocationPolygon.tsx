@@ -6,7 +6,6 @@ import {
   rhumbDistance,
   transformTranslate,
 } from "@turf/turf";
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { Feature, Polygon as PolygonType } from "geojson";
 import { LeafletEvent, Marker as MarkerType } from "leaflet";
 import { useEffect, useMemo, useState } from "react";
@@ -16,6 +15,7 @@ import { LocationCoord } from "util/customSchemaTypes";
 import { LocationWithPolygon } from "util/schemaTypesUtil";
 import CrossingMerdianTooltip from "./CrossingMerdianTooltip";
 import { PolygonCenterIcon, PolygonCornerIcon } from "./MarkerIcons";
+import { SetCustomPolygonFn } from "./PolygonDrawing";
 
 // GeoJSON spec dictates lng, lat
 // Leaflet uses lat, lng
@@ -28,12 +28,15 @@ const getOuterCoordinates = (feature: Feature<PolygonType>) =>
 const LocationPolygon = ({
   boundingPolygon,
   locationSource,
-  enableDrag,
-}: LocationWithPolygon & { enableDrag: boolean }) => {
+  isCustomizeable,
+  setCustomPolygon,
+}: LocationWithPolygon & {
+  isCustomizeable?: boolean;
+  setCustomPolygon: SetCustomPolygonFn;
+}) => {
   const map = useMap();
   useMount(() => map.fitBounds(polyCoords));
 
-  const { setCustomLocationPolygon } = usePlantSearchContext();
   const [localPolygon, setLocalPolygon] = useState(boundingPolygon);
 
   useEffect(() => {
@@ -86,7 +89,7 @@ const LocationPolygon = ({
     setLocalPolygon(polygon([swappedCoords]));
   };
 
-  const savePolygon = () => setCustomLocationPolygon(localPolygon);
+  const savePolygon = () => setCustomPolygon(localPolygon);
 
   return (
     <>
@@ -98,7 +101,8 @@ const LocationPolygon = ({
         centerCoords={centerCoords}
         boundingPolygon={localPolygon}
       />
-      {enableDrag && (
+
+      {isCustomizeable && (
         <>
           <Marker
             icon={PolygonCenterIcon}

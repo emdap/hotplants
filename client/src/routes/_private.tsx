@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import LoginForm from "components/auth/LoginForm";
-import Card from "components/designSystem/Card";
+import Card from "designSystem/Card";
 import { useAuthSession } from "util/authClient";
 
 const PrivateRoute = () => {

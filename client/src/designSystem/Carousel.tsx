@@ -4,6 +4,15 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Button from "./Button";
 
+export type CarouselProps = {
+  carouselIndex?: number;
+  setCarouselIndex?: (newIndex: number) => void;
+  maxRenderedChildren?: number;
+  enableKeyboardEvents?: boolean;
+  bigButtons?: boolean;
+  children: ReactNode[];
+};
+
 const Carousel = ({
   carouselIndex = 0,
   setCarouselIndex,
@@ -11,14 +20,7 @@ const Carousel = ({
   enableKeyboardEvents,
   bigButtons,
   children,
-}: {
-  carouselIndex?: number;
-  setCarouselIndex?: (newIndex: number) => void;
-  maxRenderedChildren?: number;
-  enableKeyboardEvents?: boolean;
-  bigButtons?: boolean;
-  children: ReactNode[];
-}) => {
+}: CarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(carouselIndex);
   const childrenInDom = Math.ceil(maxRenderedChildren / 2);
 

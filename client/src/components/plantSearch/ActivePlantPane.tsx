@@ -1,17 +1,17 @@
-import Button from "components/designSystem/Button";
-import Card from "components/designSystem/Card";
+import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import Button from "designSystem/Button";
+import Card from "designSystem/Card";
 import {
   mergeMotionProps,
   MOTION_FADE_IN,
-} from "components/designSystem/motionTransitions";
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+} from "designSystem/motionTransitions";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence } from "motion/react";
 import { useMemo, useRef } from "react";
 import { MdClose } from "react-icons/md";
 import { useClickAway } from "react-use";
 import PlantImageViewer from "../plantImages/PlantImageViewer";
-import PlantInfo from "./PlantInfo";
+import PlantInfoCard from "../plantResults/PlantInfoCard";
 
 const CARD_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
   initial: { right: "-100%" },
@@ -71,7 +71,7 @@ const ActivePlantPane = () => {
             <PlantImageViewer mode="carousel" plant={activePlant} />
             {/* <MapProvider className="min-h-60 w-full" /> */}
             {/* </div> */}
-            <PlantInfo plant={activePlant} showFullInfo />
+            <PlantInfoCard plant={activePlant} showFullInfo />
           </div>
         </Card>
       )}

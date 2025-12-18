@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import SignupForm from "components/auth/SignupForm";
-import Button from "components/designSystem/Button";
+import Button from "designSystem/Button";
 import { capitalize } from "lodash";
 import { useMemo, useState } from "react";
 import { authClient, LoginParams } from "util/authClient";

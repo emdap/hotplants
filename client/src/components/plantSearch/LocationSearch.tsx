@@ -1,9 +1,9 @@
 import classNames from "classnames";
-import Button from "components/designSystem/Button";
 import {
   FILTER_HOLDER_ID,
   usePlantSearchContext,
 } from "contexts/PlantSearchContext";
+import Button from "designSystem/Button";
 import type { paths } from "generated/schemas/nominatim";
 import { useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
@@ -26,9 +26,12 @@ const getLocation = (input: string) =>
     },
   });
 
-const LocationSearch = () => {
-  const { searchLocation, setSearchLocation, setSearchLocationLoading } =
-    usePlantSearchContext();
+const LocationSearch = ({
+  setIsLoading,
+}: {
+  setIsLoading: (isLoading: boolean) => void;
+}) => {
+  const { searchLocation, setSearchLocation } = usePlantSearchContext();
 
   const [enableQuery, setEnableQuery] = useState(
     searchLocation?.locationSource !== "map"
@@ -79,8 +82,8 @@ const LocationSearch = () => {
   });
 
   useEffect(() => {
-    setSearchLocationLoading(locationQuery.isLoading);
-  }, [setSearchLocationLoading, locationQuery.isLoading]);
+    setIsLoading(locationQuery.isLoading);
+  }, [setIsLoading, locationQuery.isLoading]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter" || !(e.target instanceof HTMLInputElement)) {

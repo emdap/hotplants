@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Card from "components/designSystem/Card";
-import PageTitle from "components/designSystem/PageTitle";
+import Card from "designSystem/Card";
+import PageTitle from "designSystem/PageTitle";
 
 const MyGarden = () => {
   return (

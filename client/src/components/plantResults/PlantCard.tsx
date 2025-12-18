@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import Card from "components/designSystem/Card";
-import { MOTION_FADE_SLIDE } from "components/designSystem/motionTransitions";
+import Card from "designSystem/Card";
+import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import { capitalize } from "lodash";

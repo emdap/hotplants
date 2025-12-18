@@ -1,5 +1,5 @@
 import { HEADER_HEIGHT } from "util/generalUtil";
-import DarkModeToggle from "./DarkModeToggle";
+import DarkModeToggle from "../../designSystem/DarkModeToggle";
 import HeaderLinks from "./HeaderLinks";
 import UserMenu from "./UserMenu";
 

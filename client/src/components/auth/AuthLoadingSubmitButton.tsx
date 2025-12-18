@@ -1,4 +1,4 @@
-import Button, { ButtonProps } from "components/designSystem/Button";
+import Button, { ButtonProps } from "designSystem/Button";
 import { MouseEvent, useState } from "react";
 import { useAuthSession } from "util/authClient";
 

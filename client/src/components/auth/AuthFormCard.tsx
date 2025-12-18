@@ -1,4 +1,4 @@
-import Card from "components/designSystem/Card";
+import Card from "designSystem/Card";
 import { ReactNode } from "react";
 
 const AuthFormCard = ({ children }: { children: ReactNode }) => (

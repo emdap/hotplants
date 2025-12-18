@@ -1,11 +1,9 @@
-import { centroid } from "@turf/turf";
 import {
   ActiveIndexes,
   FullScreenElement,
   PlantSearchContext,
 } from "contexts/PlantSearchContext";
 import { PlantDataInput } from "generated/graphql/graphql";
-import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { ReactNode, useEffect, useState } from "react";
@@ -19,7 +17,6 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
 
   const [searchLocation, setSearchLocation] =
     useState<LocationWithPolygon | null>(null);
-  const [searchLocationLoading, setSearchLocationLoading] = useState(false);
 
   const [fullScreenElement, setFullScreenElement] =
     useState<FullScreenElement | null>(null);
@@ -61,16 +58,6 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const setCustomLocationPolygon = (boundingPolygon: Feature<Polygon>) => {
-    const center = centroid(boundingPolygon).geometry.coordinates;
-    const [lat, lng] = center.map((num) => Math.round(num * 100) / 100);
-    setSearchLocation({
-      displayName: `${lat}, ${lng}`,
-      locationSource: "map",
-      boundingPolygon,
-    });
-  };
-
   const applyPlantSearchCriteria = (newCriteria: PlantDataInput) => {
     setPlantSearchCriteria(newCriteria);
     if (plantSearchQuery.error) {
@@ -94,10 +81,6 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
 
         searchLocation,
         setSearchLocation,
-        setCustomLocationPolygon,
-
-        searchLocationLoading,
-        setSearchLocationLoading,
 
         fullScreenElement,
         setFullScreenElement,
