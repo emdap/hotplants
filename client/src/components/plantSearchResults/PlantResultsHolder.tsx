@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { useDocumentListener } from "hooks/useDocumentListener";
+import { AnimatePresence } from "motion/react";
 import { useCallback, useRef } from "react";
 import PlantCard from "./PlantCard";
 
@@ -47,30 +48,28 @@ const PlantResultsHolder = () => {
 
   return (
     <div
-      key="results-list"
       ref={containerRef}
       className={classNames(
-        "gap-4 items-stretch max-md:flex flex-col md:grid",
+        "gap-4 items-stretch max-md:flex flex-col md:grid justify-around grid-cols-[repeat(auto-fit,_minmax(384px,1fr))]",
         plantSearchResults.length && "md:pb-20",
-
-        plantSearchResults.length > 3
-          ? "justify-around grid-cols-[repeat(auto-fit,_minmax(384px,1fr))]"
-          : "grid-cols-[repeat(auto-fit,_minmax(384px,500px))]"
+        plantSearchResults.length < 3 && "max-w-[1000px]"
       )}
     >
-      {plantSearchResults.map(
-        (plant, index) =>
-          plant && (
-            <PlantCard
-              key={`${plant.scientificName}-${index}`}
-              setActive={() =>
-                setActiveIndexes({ plantIndex: index, mediaIndex: null })
-              }
-              isActive={plantIndex === index}
-              {...{ plant, index }}
-            />
-          )
-      )}
+      <AnimatePresence>
+        {plantSearchResults.map(
+          (plant, index) =>
+            plant && (
+              <PlantCard
+                key={`${plant.scientificName}-${index}`}
+                setActive={() =>
+                  setActiveIndexes({ plantIndex: index, mediaIndex: null })
+                }
+                isActive={plantIndex === index}
+                {...{ plant, index }}
+              />
+            )
+        )}
+      </AnimatePresence>
     </div>
   );
 };
