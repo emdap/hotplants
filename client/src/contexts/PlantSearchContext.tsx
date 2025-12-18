@@ -17,10 +17,11 @@ type PlantSearchContextType = {
   hasCurrentResults: boolean;
   totalResultsCount: number;
 
+  plantSearchCriteria: PlantDataInput | null;
+  setPlantSearchCriteria: (newCriteria: PlantDataInput) => void;
+
   activeIndexes: ActiveIndexes;
   setActiveIndexes: Dispatch<SetStateAction<ActiveIndexes>>;
-
-  applyFilters: (newFilters: PlantDataInput) => Promise<void>;
   syncPlant: (plantId: string) => void;
 
   searchLocation: LocationWithPolygon | null;
@@ -42,11 +43,12 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   hasCurrentResults: false,
   totalResultsCount: 0,
 
+  plantSearchCriteria: null,
+  setPlantSearchCriteria: VOID_FUNCTION,
+
   activeIndexes: { plantIndex: null, mediaIndex: null },
   setActiveIndexes: VOID_FUNCTION,
-
   syncPlant: VOID_FUNCTION,
-  applyFilters: VOID_PROMISE_FUNCTION,
 
   searchLocation: null,
   setSearchLocation: VOID_FUNCTION,

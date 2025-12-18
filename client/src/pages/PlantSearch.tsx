@@ -15,7 +15,8 @@ import {
 } from "contexts/PlantSearchContext";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
-import { useLayoutEffect, useRef, useState } from "react";
+import { isEqual } from "lodash";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { HEADER_HEIGHT } from "util/generalUtil";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
@@ -23,10 +24,12 @@ const RESULTS_HOLDER_ID = "results-pane";
 
 const PlantSearch = () => {
   const {
+    plantSearchCriteria,
     hasCurrentResults,
+    searchLocation,
     searchLocationLoading,
     searchStatus,
-    applyFilters,
+    setPlantSearchCriteria,
     fetchNextPlantsPage,
   } = usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
@@ -53,6 +56,25 @@ const PlantSearch = () => {
 
     return () => scrollContainer?.removeEventListener("scroll", handleScroll);
   }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
+
+  const { filtersAreValid, draftCriteria } = useMemo(() => {
+    const draftCriteria = {
+      ...plantFilters,
+      ...(searchLocation && {
+        boundingPolyCoords: searchLocation.boundingPolygon.geometry.coordinates,
+      }),
+    };
+
+    return {
+      draftCriteria,
+      filtersAreValid:
+        Object.keys(draftCriteria).length &&
+        !isEqual(draftCriteria, plantSearchCriteria),
+    };
+  }, [plantFilters, searchLocation, plantSearchCriteria]);
+
+  const applyFilters = () =>
+    filtersAreValid && setPlantSearchCriteria(draftCriteria);
 
   return (
     <>
@@ -102,10 +124,11 @@ const PlantSearch = () => {
                 />
                 <Button
                   linkAddress={`#${RESULTS_HOLDER_ID}`}
+                  disabled={!filtersAreValid}
                   className="mt-auto"
                   isLoading={searchLocationLoading || searchStatus !== "READY"}
                   variant="primary"
-                  onClick={() => applyFilters(plantFilters)}
+                  onClick={applyFilters}
                 >
                   Apply filters
                 </Button>

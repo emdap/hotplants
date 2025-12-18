@@ -8,7 +8,6 @@ import { PlantDataInput } from "generated/graphql/graphql";
 import { Feature, Polygon } from "geojson";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
-import { isEqual } from "lodash";
 import { ReactNode, useEffect, useState } from "react";
 import { LocationWithPolygon } from "util/schemaTypesUtil";
 
@@ -72,22 +71,8 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const applyFilters = async (newFilters: PlantDataInput) => {
-    const draftCriteria = {
-      ...newFilters,
-      ...(searchLocation && {
-        boundingPolyCoords: searchLocation.boundingPolygon.geometry.coordinates,
-      }),
-    };
-
-    if (!Object.keys(draftCriteria).length) {
-      return;
-    }
-
-    if (!isEqual(draftCriteria, plantSearchCriteria)) {
-      setPlantSearchCriteria(draftCriteria);
-    }
-
+  const applyPlantSearchCriteria = (newCriteria: PlantDataInput) => {
+    setPlantSearchCriteria(newCriteria);
     if (plantSearchQuery.error) {
       plantSearchQuery.refetch();
     }
@@ -100,10 +85,11 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
         hasCurrentResults: Boolean(plantSearchResults.length),
         totalResultsCount: plantSearchData?.count ?? 0,
 
+        plantSearchCriteria,
+        setPlantSearchCriteria: applyPlantSearchCriteria,
+
         activeIndexes,
         setActiveIndexes,
-
-        applyFilters,
         syncPlant,
 
         searchLocation,
