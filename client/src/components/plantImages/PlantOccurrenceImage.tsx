@@ -28,7 +28,7 @@ const PlantOccurrenceImage = ({
   ...imageWrapperProps
 }: PlantOccurrenceImageProps) => {
   const plantImageRef = useRef<HTMLDivElement>(null);
-  const { syncPlant } = usePlantSearchContext();
+  const { syncPlant, searchStatus } = usePlantSearchContext();
   const [renderImage, setRenderImage] = useState(true);
   // const [imageNotAvailable, setImageNotAvailable] = useState(false);
   const [useThumbnail, setUseThumbnail] = useState(Boolean(thumbnailUrl));
@@ -59,19 +59,23 @@ const PlantOccurrenceImage = ({
   const { scrollContainer } = useGetScrollContainer();
 
   useLayoutEffect(() => {
-    const imageInViewport = () => {
-      if (plantImageRef.current) {
-        const shouldRenderImage = elementInViewport(plantImageRef.current, {
-          yBuffer: 2,
-        });
-        setRenderImage(shouldRenderImage);
-      }
+    const checkImageInViewport = () => {
+      // TODO: Arbitrary delay to wait for container to finish rendering
+      setTimeout(() => {
+        if (plantImageRef.current) {
+          const shouldRenderImage = elementInViewport(plantImageRef.current, {
+            yBuffer: 2,
+          });
+          setRenderImage(shouldRenderImage);
+        }
+      }, 1000);
     };
 
-    scrollContainer?.addEventListener("scroll", imageInViewport);
+    checkImageInViewport();
+    scrollContainer?.addEventListener("scroll", checkImageInViewport);
 
     return () =>
-      scrollContainer?.removeEventListener("scroll", imageInViewport);
+      scrollContainer?.removeEventListener("scroll", checkImageInViewport);
   }, [scrollContainer]);
 
   return (
