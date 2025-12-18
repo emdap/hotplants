@@ -15,8 +15,9 @@
     "generate-hotplants-types:prod": "npx openapi-typescript https://hotplants-server.fly.dev/swagger.json -o src/generated/schemas/hotplants.d.ts",
     "generate-nominatim-types": "npx openapi-typescript src/generated/schemas/nominatim-schema.json -o src/generated/schemas/nominatim.d.ts",
     "generate-openapi-types": "pnpm generate-hotplants-types && pnpm generate-nominatim-types && pnpm generate-gbif-types",
-    "auth:start": "cd ../server && pnpm dev &",
-    "auth:stop": "kill $(lsof -t -i:4000)"
+    "auth:start": "(cd ../server && pnpm dev &)",
+    "auth:stop": "(kill $(lsof -t -i:4000))",
+    "deploy": "(cd .. && fly deploy)"
   },
   "dependencies": {
     "@apollo/client": "^4.0.2",
