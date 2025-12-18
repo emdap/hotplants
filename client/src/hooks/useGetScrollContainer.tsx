@@ -1,9 +1,7 @@
 import { useLayoutEffect, useState } from "react";
-import { useDocumentListener } from "./useDocumentListener";
 
 export const MEDIUM_SCREEN_SIZE = 768;
 
-// TODO: Duplicate code around assigning scroll listener, any way to simplify this? Always use html/doc as scroller?
 export const useGetScrollContainer = () => {
   const [scrollElements, setElements] = useState<{
     scrollContainer: Document | HTMLElement | null;
@@ -27,9 +25,10 @@ export const useGetScrollContainer = () => {
 
   useLayoutEffect(() => {
     setScrollContainer();
-  }, []);
+    window.addEventListener("resize", setScrollContainer);
 
-  useDocumentListener("resize", setScrollContainer);
+    return () => window.removeEventListener("resize", setScrollContainer);
+  }, []);
 
   return scrollElements;
 };
