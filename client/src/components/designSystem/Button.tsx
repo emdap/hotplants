@@ -23,12 +23,12 @@ const getClasses = (props: ButtonProps) =>
         props.variant === "text",
 
       "cursor-pointer": !props.disabled,
-      "opacity-50 hover:shadow-none!": props.disabled,
+      "opacity-50": props.disabled,
       "px-10": props.isLoading !== undefined,
     },
     props.variant !== "text" && [
-      "hover:shadow-sm focus-ring",
       {
+        "hover:shadow-sm focus-ring": !props.disabled,
         "py-2 px-3": props.size === "default",
         "py-1 px-1.5 text-xs": props.size === "small",
       },

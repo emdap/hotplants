@@ -40,7 +40,7 @@ const PlantCard = ({
       onMouseUp={() => (isRightClick.current = false)}
       tabIndex={1}
       className={classNames(
-        "cursor-pointer h-50 md:h-60 outline-white/60 transition-all m-0 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
+        "cursor-pointer h-[30vh] md:h-60 outline-white/60 transition-all m-0 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
 
         isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0"
       )}
@@ -75,18 +75,18 @@ const PlantCard = ({
         </PlantOccurrenceImage>
       )}
 
-      <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 md:min-h-20 justify-center bg-accent/80 text-shadow-glow relative">
+      <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 min-h-1/4 md:min-h-20 justify-center bg-accent/80 text-shadow-glow relative">
         {hasCommonName ? (
           <>
-            <h2 className="text-white max-md:text-lg border-b border-white/80 w-full">
+            <h2 className="text-white max-sm:text-lg border-b border-white/80 w-full">
               {capitalize(plant.commonNames?.[0])}
             </h2>
-            <h6 className="max-md:text-sm text-white/80 self-end italic -mt-1.5 pb-1 text-right">
+            <h6 className="max-sm:text-sm text-white/80 self-end italic -mt-1.5 pb-1 text-right">
               {plant.scientificName}
             </h6>
           </>
         ) : (
-          <h2 className="text-white max-md:text-lg italic pb-3">
+          <h2 className="text-white max-sm:text-lg italic pb-3">
             {plant.scientificName}
           </h2>
         )}

@@ -32,6 +32,8 @@ import { HEADER_HEIGHT } from "util/generalUtil";
 import { LocationWithPolygon } from "util/schemaTypesUtil";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
+const RESULTS_HOLDER_ID = "results-pane";
+const IS_SMALL_SCREEN = window.innerWidth < MEDIUM_SCREEN_SIZE;
 
 const PlantSearch = () => {
   const containerRef = useRef<HTMLElement>(null);
@@ -121,29 +123,12 @@ const PlantSearch = () => {
     [hasSelectedFilters, draftCriteria, plantSearchCriteria]
   );
 
-  const scrollToTop = () =>
-    new Promise<void>((resolve) => {
-      scrollContainerElement?.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-      const checkScrollInterval = setInterval(() => {
-        if ((scrollContainerElement?.scrollTop ?? 10) <= 10) {
-          clearInterval(checkScrollInterval);
-          resolve();
-        }
-      });
-    });
-
   const applyFilters = async () => {
     if (!searchLocation && !Object.keys(plantFilters).length) {
       return;
     }
 
     if (hasNewCriteria) {
-      hasResults &&
-        window.innerWidth >= MEDIUM_SCREEN_SIZE &&
-        (await scrollToTop());
       setPlantSearchCriteria(draftCriteria);
     }
 
@@ -209,7 +194,7 @@ const PlantSearch = () => {
           <div
             id="filter-sidebar"
             className={classNames(
-              "basis-1/3 md:max-w-lg md:min-w-sm",
+              "basis-1/3 grow md:max-w-lg lg:min-w-sm",
               hasResults ? "md:sticky md:h-[calc(100dvh-2.5rem)]" : "h-max"
             )}
             style={{ top: HEADER_HEIGHT }}
@@ -234,6 +219,7 @@ const PlantSearch = () => {
                   setPlantFilters={setPlantFilters}
                 />
                 <Button
+                  linkAddress={`#${RESULTS_HOLDER_ID}`}
                   className="mt-auto"
                   disabled={!hasNewCriteria}
                   isLoading={searchLocationLoading || status !== "READY"}
@@ -247,9 +233,9 @@ const PlantSearch = () => {
           </div>
 
           <div
-            id="results-pane"
+            id={RESULTS_HOLDER_ID}
             className={classNames(
-              "grow flex flex-col gap-6 sm:mx-auto relative",
+              "grow flex flex-col gap-6 relative scroll-m-8",
               !hasResults && "md:sticky md:top-20 h-fit"
             )}
           >
