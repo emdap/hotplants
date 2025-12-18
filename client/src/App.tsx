@@ -1,5 +1,6 @@
 import { Outlet } from "@tanstack/react-router";
 import HeaderMenu from "components/header/HeaderMenu";
+import PlantSearchProvider from "contexts/PlantSearchProvider";
 import { useEffect } from "react";
 import { authClient } from "util/authClient";
 
@@ -9,12 +10,12 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <PlantSearchProvider>
       <div className="fixed -z-10 h-dvh w-[calc(100dvw+20px)] pretty-background"></div>
       <HeaderMenu />
 
       <Outlet />
-    </>
+    </PlantSearchProvider>
   );
 };
 

@@ -34,7 +34,8 @@ const hotplantsClient = createClient<paths>({
 });
 
 const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
-  const [status, setStatus] = useState<PlantSearchQueryStatus>("READY");
+  const [searchStatus, setSearchStatus] =
+    useState<PlantSearchQueryStatus>("READY");
 
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [autoScrapesRemaining, setAutoScrapesRemaining] = useState(0);
@@ -58,7 +59,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   const plantSearchData = plantSearchQuery.data?.plantSearch;
 
   const setStatusFromRunningQuery = () =>
-    setStatus((prev) =>
+    setSearchStatus((prev) =>
       prev === "SCRAPING_AND_POLLING" ? prev : "CHECKING_STATUS"
     );
 
@@ -126,7 +127,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
       );
 
       if (data?.status === "SCRAPING" && !pollInterval) {
-        setStatus("SCRAPING_AND_POLLING");
+        setSearchStatus("SCRAPING_AND_POLLING");
         startPolling();
       }
 
@@ -147,7 +148,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
 
   useEffect(() => {
     if (!someQueryInProgress) {
-      setStatus("READY");
+      setSearchStatus("READY");
     }
   }, [someQueryInProgress]);
   // #endregion
@@ -200,7 +201,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
       return;
     }
 
-    if ((status === "READY" && unfetchedPlants) || hasNextPage) {
+    if ((searchStatus === "READY" && unfetchedPlants) || hasNextPage) {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
@@ -208,7 +209,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   };
 
   return {
-    status,
+    searchStatus,
     plantSearchData,
     plantSearchQuery,
     searchRecordQuery,
@@ -218,5 +219,9 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     scrapeMoreData: scrapeOccurrencesQuery.refetch,
   };
 };
+
+export type PlantSearchQueriesReturnType = ReturnType<
+  typeof usePlantSearchQueries
+>;
 
 export default usePlantSearchQueries;

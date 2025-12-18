@@ -6,22 +6,12 @@ import {
   MEDIUM_SCREEN_SIZE,
   useGetScrollContainer,
 } from "hooks/useGetScrollContainer";
-import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
 import { ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { HEADER_HEIGHT } from "util/generalUtil";
 
-const ScrapeStatusBar = ({
-  plantQueryStatus,
-  hasResults,
-  currentResultsCount,
-  children,
-}: {
-  plantQueryStatus: PlantSearchQueryStatus;
-  hasResults: boolean;
-  currentResultsCount?: number;
-  children?: ReactNode;
-}) => {
-  const { plantSearchResults } = usePlantSearchContext();
+const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
+  const { plantSearchResults, searchStatus, totalResultsCount } =
+    usePlantSearchContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollContainer } = useGetScrollContainer();
 
@@ -48,15 +38,14 @@ const ScrapeStatusBar = ({
       disableTransparency={disableTransparency}
       className={classNames(
         "z-20 w-full h-20 sticky flex items-center gap-4 transition-all",
-        hasResults ? "opacity-100" : "opacity-0"
+        totalResultsCount ? "opacity-100" : "opacity-0"
       )}
       style={{ top: HEADER_HEIGHT }}
     >
-      <span>{plantQueryStatus !== "READY" && <LoadingIcon />}</span>
-      {currentResultsCount && (
+      <span>{searchStatus !== "READY" && <LoadingIcon />}</span>
+      {totalResultsCount && (
         <span>
-          Viewing {plantSearchResults.length} results out of{" "}
-          {currentResultsCount}
+          Viewing {plantSearchResults.length} results out of {totalResultsCount}
         </span>
       )}
 
