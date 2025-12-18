@@ -1,8 +1,4 @@
-import {
-  ActiveIndexes,
-  FullScreenElement,
-  PlantSearchContext,
-} from "contexts/PlantSearchContext";
+import { ActiveIndexes, PlantSearchContext } from "contexts/PlantSearchContext";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
@@ -18,8 +14,6 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
   const [searchLocation, setSearchLocation] =
     useState<LocationWithPolygon | null>(null);
 
-  const [fullScreenElement, setFullScreenElement] =
-    useState<FullScreenElement | null>(null);
   const [activeIndexes, setActiveIndexes] = useState<ActiveIndexes>({
     plantIndex: null,
     mediaIndex: null,
@@ -81,9 +75,6 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
 
         searchLocation,
         setSearchLocation,
-
-        fullScreenElement,
-        setFullScreenElement,
 
         searchStatus,
         ...searchQueries,

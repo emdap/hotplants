@@ -8,7 +8,6 @@ export const FILTER_HOLDER_ID = "filter-holder";
 export const VOID_FUNCTION = () => {};
 const VOID_PROMISE_FUNCTION = async () => {};
 
-export type FullScreenElement = "IMAGE_VIEWER";
 export type ActiveIndexes = Record<"plantIndex" | "mediaIndex", number | null>;
 
 type PlantSearchContextType = {
@@ -25,9 +24,6 @@ type PlantSearchContextType = {
 
   searchLocation: LocationWithPolygon | null;
   setSearchLocation: (location: LocationWithPolygon | null) => void;
-
-  fullScreenElement: FullScreenElement | null;
-  setFullScreenElement: (element: FullScreenElement | null) => void;
 } & Pick<
   PlantSearchQueriesReturnType,
   "fetchNextPlantsPage" | "hasNextPage" | "searchStatus" | "searchRecordQuery"
@@ -47,9 +43,6 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
 
   searchLocation: null,
   setSearchLocation: VOID_FUNCTION,
-
-  fullScreenElement: null,
-  setFullScreenElement: VOID_FUNCTION,
 
   searchStatus: "READY",
   searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],

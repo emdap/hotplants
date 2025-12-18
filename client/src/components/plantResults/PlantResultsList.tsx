@@ -1,50 +1,16 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
-import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence } from "motion/react";
-import { useCallback, useRef } from "react";
+import { useRef } from "react";
 import PlantCard from "./PlantCard";
 
 const PlantResultsList = () => {
   const {
-    fullScreenElement,
     plantSearchResults,
     activeIndexes: { plantIndex },
     setActiveIndexes,
   } = usePlantSearchContext();
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const iteratePlants = useCallback(
-    (e: KeyboardEvent) => {
-      if (plantIndex === null) {
-        return;
-      }
-
-      let newActiveIndex: null | number = null;
-      if (e.code === "ArrowUp" && plantIndex !== 0) {
-        newActiveIndex = plantIndex - 1;
-      } else if (
-        e.code === "ArrowDown" &&
-        plantIndex < plantSearchResults.length - 1
-      ) {
-        newActiveIndex = plantIndex + 1;
-      }
-
-      if (newActiveIndex !== null) {
-        e.preventDefault();
-        setActiveIndexes({ plantIndex: newActiveIndex, mediaIndex: null });
-        const childNode = containerRef.current?.childNodes[newActiveIndex];
-        childNode instanceof HTMLElement && childNode.focus();
-      }
-    },
-    [plantIndex, setActiveIndexes, plantSearchResults.length]
-  );
-
-  useDocumentListener(
-    "keydown",
-    iteratePlants,
-    !fullScreenElement && plantIndex !== null
-  );
 
   return (
     <div

@@ -31,7 +31,7 @@ const PlantCard = ({
       transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.03 }}
       id={plant.scientificName}
       onClick={setActive}
-      onFocus={() => !isRightClick.current && setActive}
+      onFocus={() => !isRightClick.current && setActive()}
       onMouseDown={(e) => {
         if (e.button === 2) {
           isRightClick.current = true;

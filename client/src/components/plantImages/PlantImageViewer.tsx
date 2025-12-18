@@ -5,24 +5,22 @@ import Carousel from "designSystem/Carousel";
 import Modal from "designSystem/Modal";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { capitalize } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
 import PlantCarouselImages from "./PlantCarouselImages";
 
 const PlantImageViewer = ({
   plant,
   mode,
+  isModalOpen,
+  setIsModalOpen,
 }: {
   plant: PlantResult;
   mode: "thumbnail" | "carousel";
+  isModalOpen: boolean;
+  setIsModalOpen: (isOpen: boolean) => void;
 }) => {
-  const {
-    fullScreenElement,
-    setFullScreenElement,
-    activeIndexes,
-    setActiveIndexes,
-  } = usePlantSearchContext();
-  const [showFullScreen, setShowFullScreen] = useState(false);
+  const { activeIndexes, setActiveIndexes } = usePlantSearchContext();
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(
     activeIndexes.mediaIndex ?? 0
   );
@@ -46,10 +44,6 @@ const PlantImageViewer = ({
     [plant.occurrences, plant.thumbnailUrl, plant._id, includeThumbnail]
   );
 
-  useEffect(() => {
-    setFullScreenElement(showFullScreen ? "IMAGE_VIEWER" : null);
-  }, [showFullScreen, setFullScreenElement]);
-
   const syncActiveMediaIndex = (newIndex: number) =>
     setActiveIndexes((prev) => ({ ...prev, mediaIndex: newIndex }));
 
@@ -64,7 +58,7 @@ const PlantImageViewer = ({
         PlantImages[0]
       ) : (
         <Carousel
-          enableKeyboardEvents={!fullScreenElement}
+          enableKeyboardEvents={!isModalOpen}
           carouselIndex={carouselIndex}
           setCarouselIndex={syncActiveMediaIndex}
         >
@@ -75,7 +69,7 @@ const PlantImageViewer = ({
         <Button
           variant="secondary"
           className="absolute top-0 right-0"
-          onClick={() => setShowFullScreen(true)}
+          onClick={() => setIsModalOpen(true)}
           size="small"
         >
           <MdFullscreen size={24} />
@@ -84,9 +78,9 @@ const PlantImageViewer = ({
 
       <Modal
         title={capitalize(plant.commonNames?.[0] ?? plant.scientificName)}
-        isOpen={showFullScreen}
+        isOpen={isModalOpen}
         onClose={() => {
-          setShowFullScreen(false);
+          setIsModalOpen(false);
           syncActiveMediaIndex(largeCarouselIndex);
         }}
       >
