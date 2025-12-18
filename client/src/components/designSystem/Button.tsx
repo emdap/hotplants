@@ -27,8 +27,9 @@ const getClasses = (props: ButtonProps) =>
       "px-10": props.isLoading !== undefined,
     },
     props.variant !== "text" && [
+      "focus-ring",
       {
-        "hover:shadow-sm focus-ring": !props.disabled,
+        "hover:shadow-sm": !props.disabled,
         "py-2 px-3": props.size === "default",
         "py-1 px-1.5 text-xs": props.size === "small",
       },
@@ -63,8 +64,8 @@ const Button = ({
   );
 
   return linkAddress && !isDisabled ? (
-    <a className={classNames("block w-fit", classes)} href={linkAddress}>
-      {renderButton(directButtonProps)}
+    <a className="block w-fit" href={linkAddress}>
+      {renderButton({ className: classes, ...directButtonProps })}
     </a>
   ) : (
     renderButton({
