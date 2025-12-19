@@ -1,8 +1,8 @@
 import { Outlet } from "@tanstack/react-router";
 import HeaderMenu from "components/header/HeaderMenu";
+import { authClient } from "config/authClient";
 import PlantSearchProvider from "contexts/PlantSearchProvider";
 import { useEffect } from "react";
-import { authClient } from "util/authClient";
 
 const App = () => {
   useEffect(() => {

@@ -2,7 +2,7 @@ import { ApolloClient, HttpLink } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
-import { cache } from "graphqlHelpers/cacheConfig";
+import { cache } from "config/apolloCacheConfig";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { router } from "router";

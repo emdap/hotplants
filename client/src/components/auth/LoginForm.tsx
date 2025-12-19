@@ -1,9 +1,9 @@
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import SignupForm from "components/auth/SignupForm";
+import { authClient, LoginParams } from "config/authClient";
 import Button from "designSystem/Button";
 import { capitalize } from "lodash";
 import { useMemo, useState } from "react";
-import { authClient, LoginParams } from "util/authClient";
 import AuthFormCard from "./AuthFormCard";
 import AuthLoadingSubmitButton from "./AuthLoadingSubmitButton";
 

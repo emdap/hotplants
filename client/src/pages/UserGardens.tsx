@@ -22,6 +22,7 @@ const UserGardens = () => {
 
   useEffect(() => {
     userGardensQuery.refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -36,6 +37,7 @@ const UserGardens = () => {
             <div className="flex flex-wrap gap-4">
               {garden.plants.map((plant, index) => (
                 <PlantCard
+                  key={index}
                   {...{ plant, index }}
                   isActive={false}
                   setActive={VOID_FUNCTION}

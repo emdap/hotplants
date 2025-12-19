@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import AuthFormCard from "components/auth/AuthFormCard";
 import AuthLoadingSubmitButton from "components/auth/AuthLoadingSubmitButton";
+import { authClient, useAuthSession } from "config/authClient";
 import Button from "designSystem/Button";
 import LoadingIcon from "designSystem/LoadingIcon";
 import { useEffect } from "react";
-import { authClient, useAuthSession } from "util/authClient";
 
 const Logout = () => {
   const session = useAuthSession();
