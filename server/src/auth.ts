@@ -9,12 +9,6 @@ const ENV_VARS = {
     serverURL: "http://localhost:3000",
     dbName: "dev-auth",
   },
-  test: {
-    trustedOrigins: ["http://localhost:8080"],
-    baseURL: "http://localhost:8080",
-    serverURL: "http://localhost:3000",
-    dbName: "dev-auth",
-  },
   prod: {
     trustedOrigins: ["https://hotplants.fly.dev"],
     baseURL: "https://hotplants.fly.dev",
