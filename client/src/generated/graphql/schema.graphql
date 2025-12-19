@@ -3,13 +3,41 @@ schema {
   mutation: Mutation
 }
 
+type GardenPlantData implements PlantDataInterface {
+  _id: ObjectId!
+  addedTimestamp: Float!
+  addedToGardenTimestamp: Float!
+  bloomColors: [String!]
+  bloomTimes: [String!]
+  commonNames: [String!]
+  customThumbnailUrl: String
+  fullOccurrencesCount: Int
+  habitat: String
+  hardiness: [Int!]
+  height: PlantSize
+  isPerennial: Boolean
+  lightLevels: [String!]
+  maturityTime: String
+  occurrences: [PlantOccurrence!]!
+  physicalCharactersticsDump: String
+  scientificName: String!
+  scrapeSources: [String!]!
+  soilTypes: [String!]
+  spread: PlantSize
+  thumbnailUrl: String
+  updatedTimestamp: Float!
+  uses: [String!]
+}
+
 type Mutation {
+  addToGarden(gardenName: String, plantId: String!): ObjectId!
+  newGarden(gardenName: String): ObjectId!
   replaceWithProxyUrl(occurrenceId: Float!, plantId: String!, replaceUrl: String!): String
 }
 
 scalar ObjectId
 
-type PlantData {
+type PlantData implements PlantDataInterface {
   _id: ObjectId!
   addedTimestamp: Float!
   bloomColors: [String!]
@@ -55,6 +83,30 @@ input PlantDataInput {
   uses: [String!]
 }
 
+interface PlantDataInterface {
+  _id: ObjectId!
+  addedTimestamp: Float!
+  bloomColors: [String!]
+  bloomTimes: [String!]
+  commonNames: [String!]
+  fullOccurrencesCount: Int
+  habitat: String
+  hardiness: [Int!]
+  height: PlantSize
+  isPerennial: Boolean
+  lightLevels: [String!]
+  maturityTime: String
+  occurrences: [PlantOccurrence!]!
+  physicalCharactersticsDump: String
+  scientificName: String!
+  scrapeSources: [String!]!
+  soilTypes: [String!]
+  spread: PlantSize
+  thumbnailUrl: String
+  updatedTimestamp: Float!
+  uses: [String!]
+}
+
 type PlantMedia {
   isProxyUrl: Boolean
   url: String!
@@ -94,18 +146,20 @@ enum PlantSizeUnit {
 }
 
 type Query {
+  allUserGardens: [UserGarden!]!
   plant(boundingPolyCoords: [[[Float!]!]!], id: String!): PlantData
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
   plantSearch(limit: Int, offset: Int, sort: [SortInput!], where: PlantDataInput): PlantSearchResults!
   searchRecord(id: String!): SearchRecord
+  userGarden(gardenName: String!): UserGarden
 }
 
 type SearchRecord {
   _id: ObjectId!
   jsonStringSearch: String!
+  occurrencesOffset: Int!
   status: SearchRecordStatus!
   statusUpdated: Float!
-  totalOccurrences: Int!
 }
 
 enum SearchRecordStatus {
@@ -123,4 +177,10 @@ enum SortField {
 input SortInput {
   direction: Int!
   field: SortField!
+}
+
+type UserGarden {
+  gardenName: String!
+  plants: [GardenPlantData!]!
+  userId: String!
 }

@@ -7,7 +7,7 @@ const HEADER_LINKS: { displayText: string; path: keyof FileRoutesByTo }[] = [
     displayText: "search",
     path: "/search",
   },
-  { displayText: "garden", path: "/my-garden" },
+  { displayText: "gardens", path: "/gardens" },
 ];
 
 const HeaderLinks = () => {

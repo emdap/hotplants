@@ -41,7 +41,7 @@ const ActivePlantPane = () => {
 
   const closeOnEscape = (e: KeyboardEvent) =>
     e.code === "Escape" && resetActivePlant();
-  useDocumentListener("keydown", closeOnEscape, !!activePlant);
+  useDocumentListener("keyup", closeOnEscape, !!activePlant);
 
   return (
     <>

@@ -29,6 +29,9 @@ const mergeOccurrences: FieldMergeFunction<
 > = (_existing, incoming) => incoming;
 
 export const cache = new InMemoryCache({
+  possibleTypes: {
+    PlantDataInterface: ["PlantData", "GardenPlantData"],
+  },
   typePolicies: {
     Query: {
       fields: {

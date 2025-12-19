@@ -17,8 +17,47 @@ export type Scalars = {
   ObjectId: { input: any; output: any; }
 };
 
+export type GardenPlantData = PlantDataInterface & {
+  _id: Scalars['ObjectId']['output'];
+  addedTimestamp: Scalars['Float']['output'];
+  addedToGardenTimestamp: Scalars['Float']['output'];
+  bloomColors?: Maybe<Array<Scalars['String']['output']>>;
+  bloomTimes?: Maybe<Array<Scalars['String']['output']>>;
+  commonNames?: Maybe<Array<Scalars['String']['output']>>;
+  customThumbnailUrl?: Maybe<Scalars['String']['output']>;
+  fullOccurrencesCount?: Maybe<Scalars['Int']['output']>;
+  habitat?: Maybe<Scalars['String']['output']>;
+  hardiness?: Maybe<Array<Scalars['Int']['output']>>;
+  height?: Maybe<PlantSize>;
+  isPerennial?: Maybe<Scalars['Boolean']['output']>;
+  lightLevels?: Maybe<Array<Scalars['String']['output']>>;
+  maturityTime?: Maybe<Scalars['String']['output']>;
+  occurrences: Array<PlantOccurrence>;
+  physicalCharactersticsDump?: Maybe<Scalars['String']['output']>;
+  scientificName: Scalars['String']['output'];
+  scrapeSources: Array<Scalars['String']['output']>;
+  soilTypes?: Maybe<Array<Scalars['String']['output']>>;
+  spread?: Maybe<PlantSize>;
+  thumbnailUrl?: Maybe<Scalars['String']['output']>;
+  updatedTimestamp: Scalars['Float']['output'];
+  uses?: Maybe<Array<Scalars['String']['output']>>;
+};
+
 export type Mutation = {
+  addToGarden: Scalars['ObjectId']['output'];
+  newGarden: Scalars['ObjectId']['output'];
   replaceWithProxyUrl?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type MutationAddToGardenArgs = {
+  gardenName?: InputMaybe<Scalars['String']['input']>;
+  plantId: Scalars['String']['input'];
+};
+
+
+export type MutationNewGardenArgs = {
+  gardenName?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -28,7 +67,7 @@ export type MutationReplaceWithProxyUrlArgs = {
   replaceUrl: Scalars['String']['input'];
 };
 
-export type PlantData = {
+export type PlantData = PlantDataInterface & {
   _id: Scalars['ObjectId']['output'];
   addedTimestamp: Scalars['Float']['output'];
   bloomColors?: Maybe<Array<Scalars['String']['output']>>;
@@ -74,6 +113,30 @@ export type PlantDataInput = {
   uses?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+export type PlantDataInterface = {
+  _id: Scalars['ObjectId']['output'];
+  addedTimestamp: Scalars['Float']['output'];
+  bloomColors?: Maybe<Array<Scalars['String']['output']>>;
+  bloomTimes?: Maybe<Array<Scalars['String']['output']>>;
+  commonNames?: Maybe<Array<Scalars['String']['output']>>;
+  fullOccurrencesCount?: Maybe<Scalars['Int']['output']>;
+  habitat?: Maybe<Scalars['String']['output']>;
+  hardiness?: Maybe<Array<Scalars['Int']['output']>>;
+  height?: Maybe<PlantSize>;
+  isPerennial?: Maybe<Scalars['Boolean']['output']>;
+  lightLevels?: Maybe<Array<Scalars['String']['output']>>;
+  maturityTime?: Maybe<Scalars['String']['output']>;
+  occurrences: Array<PlantOccurrence>;
+  physicalCharactersticsDump?: Maybe<Scalars['String']['output']>;
+  scientificName: Scalars['String']['output'];
+  scrapeSources: Array<Scalars['String']['output']>;
+  soilTypes?: Maybe<Array<Scalars['String']['output']>>;
+  spread?: Maybe<PlantSize>;
+  thumbnailUrl?: Maybe<Scalars['String']['output']>;
+  updatedTimestamp: Scalars['Float']['output'];
+  uses?: Maybe<Array<Scalars['String']['output']>>;
+};
+
 export type PlantMedia = {
   isProxyUrl?: Maybe<Scalars['Boolean']['output']>;
   url: Scalars['String']['output'];
@@ -112,10 +175,12 @@ export type PlantSizeUnit =
   | 'm';
 
 export type Query = {
+  allUserGardens: Array<UserGarden>;
   plant?: Maybe<PlantData>;
   plantOccurrences?: Maybe<PlantOccurrencesResults>;
   plantSearch: PlantSearchResults;
   searchRecord?: Maybe<SearchRecord>;
+  userGarden?: Maybe<UserGarden>;
 };
 
 
@@ -144,12 +209,17 @@ export type QuerySearchRecordArgs = {
   id: Scalars['String']['input'];
 };
 
+
+export type QueryUserGardenArgs = {
+  gardenName: Scalars['String']['input'];
+};
+
 export type SearchRecord = {
   _id: Scalars['ObjectId']['output'];
   jsonStringSearch: Scalars['String']['output'];
+  occurrencesOffset: Scalars['Int']['output'];
   status: SearchRecordStatus;
   statusUpdated: Scalars['Float']['output'];
-  totalOccurrences: Scalars['Int']['output'];
 };
 
 export type SearchRecordStatus =
@@ -167,7 +237,46 @@ export type SortInput = {
   field: SortField;
 };
 
-export type PlantFieldsFragment = { _id: any, scientificName: string, commonNames?: Array<string> | null, bloomColors?: Array<string> | null, bloomTimes?: Array<string> | null, isPerennial?: boolean | null, thumbnailUrl?: string | null, physicalCharactersticsDump?: string | null, scrapeSources: Array<string>, fullOccurrencesCount?: number | null, occurrences: Array<{ occurrenceId: number, occurrenceCoords: Array<number>, media: Array<{ url: string, isProxyUrl?: boolean | null }> }> };
+export type UserGarden = {
+  gardenName: Scalars['String']['output'];
+  plants: Array<GardenPlantData>;
+  userId: Scalars['String']['output'];
+};
+
+export type GardenPlantFieldsFragment = { addedTimestamp: number, customThumbnailUrl?: string | null, _id: any, scientificName: string, commonNames?: Array<string> | null, bloomColors?: Array<string> | null, bloomTimes?: Array<string> | null, isPerennial?: boolean | null, thumbnailUrl?: string | null, physicalCharactersticsDump?: string | null, scrapeSources: Array<string>, fullOccurrencesCount?: number | null, occurrences: Array<{ occurrenceId: number, occurrenceCoords: Array<number>, media: Array<{ url: string, isProxyUrl?: boolean | null }> }> };
+
+export type GetAllGardensQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllGardensQuery = { allUserGardens: Array<{ gardenName: string, plants: Array<{ addedTimestamp: number, customThumbnailUrl?: string | null, _id: any, scientificName: string, commonNames?: Array<string> | null, bloomColors?: Array<string> | null, bloomTimes?: Array<string> | null, isPerennial?: boolean | null, thumbnailUrl?: string | null, physicalCharactersticsDump?: string | null, scrapeSources: Array<string>, fullOccurrencesCount?: number | null, occurrences: Array<{ occurrenceId: number, occurrenceCoords: Array<number>, media: Array<{ url: string, isProxyUrl?: boolean | null }> }> }> }> };
+
+export type GetGardenQueryVariables = Exact<{
+  gardenName: Scalars['String']['input'];
+}>;
+
+
+export type GetGardenQuery = { userGarden?: { gardenName: string, plants: Array<{ addedTimestamp: number, customThumbnailUrl?: string | null, _id: any, scientificName: string, commonNames?: Array<string> | null, bloomColors?: Array<string> | null, bloomTimes?: Array<string> | null, isPerennial?: boolean | null, thumbnailUrl?: string | null, physicalCharactersticsDump?: string | null, scrapeSources: Array<string>, fullOccurrencesCount?: number | null, occurrences: Array<{ occurrenceId: number, occurrenceCoords: Array<number>, media: Array<{ url: string, isProxyUrl?: boolean | null }> }> }> } | null };
+
+export type CreateGardenMutationVariables = Exact<{
+  gardenName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CreateGardenMutation = { newGarden: any };
+
+export type AddPlantMutationVariables = Exact<{
+  plantId: Scalars['String']['input'];
+  gardenName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type AddPlantMutation = { addToGarden: any };
+
+type PlantFields_GardenPlantData_Fragment = { _id: any, scientificName: string, commonNames?: Array<string> | null, bloomColors?: Array<string> | null, bloomTimes?: Array<string> | null, isPerennial?: boolean | null, thumbnailUrl?: string | null, physicalCharactersticsDump?: string | null, scrapeSources: Array<string>, fullOccurrencesCount?: number | null, occurrences: Array<{ occurrenceId: number, occurrenceCoords: Array<number>, media: Array<{ url: string, isProxyUrl?: boolean | null }> }> };
+
+type PlantFields_PlantData_Fragment = { _id: any, scientificName: string, commonNames?: Array<string> | null, bloomColors?: Array<string> | null, bloomTimes?: Array<string> | null, isPerennial?: boolean | null, thumbnailUrl?: string | null, physicalCharactersticsDump?: string | null, scrapeSources: Array<string>, fullOccurrencesCount?: number | null, occurrences: Array<{ occurrenceId: number, occurrenceCoords: Array<number>, media: Array<{ url: string, isProxyUrl?: boolean | null }> }> };
+
+export type PlantFieldsFragment = PlantFields_GardenPlantData_Fragment | PlantFields_PlantData_Fragment;
 
 export type GetPlantQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -196,7 +305,12 @@ export type ReplaceWithProxyUrlMutationVariables = Exact<{
 
 export type ReplaceWithProxyUrlMutation = { replaceWithProxyUrl?: string | null };
 
-export const PlantFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PlantData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"isPerennial"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"scrapeSources"}},{"kind":"Field","name":{"kind":"Name","value":"fullOccurrencesCount"}},{"kind":"Field","name":{"kind":"Name","value":"occurrences"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceCoords"}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"isProxyUrl"}}]}}]}}]}}]} as unknown as DocumentNode<PlantFieldsFragment, unknown>;
-export const GetPlantDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPlant"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"boundingPolyCoords"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"plant"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"boundingPolyCoords"},"value":{"kind":"Variable","name":{"kind":"Name","value":"boundingPolyCoords"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PlantFields"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PlantData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"isPerennial"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"scrapeSources"}},{"kind":"Field","name":{"kind":"Name","value":"fullOccurrencesCount"}},{"kind":"Field","name":{"kind":"Name","value":"occurrences"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceCoords"}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"isProxyUrl"}}]}}]}}]}}]} as unknown as DocumentNode<GetPlantQuery, GetPlantQueryVariables>;
-export const SearchPlantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"searchPlants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SortInput"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"plantSearch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"results"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PlantFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PlantData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"isPerennial"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"scrapeSources"}},{"kind":"Field","name":{"kind":"Name","value":"fullOccurrencesCount"}},{"kind":"Field","name":{"kind":"Name","value":"occurrences"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceCoords"}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"isProxyUrl"}}]}}]}}]}}]} as unknown as DocumentNode<SearchPlantsQuery, SearchPlantsQueryVariables>;
+export const PlantFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"isPerennial"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"scrapeSources"}},{"kind":"Field","name":{"kind":"Name","value":"fullOccurrencesCount"}},{"kind":"Field","name":{"kind":"Name","value":"occurrences"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceCoords"}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"isProxyUrl"}}]}}]}}]}}]} as unknown as DocumentNode<PlantFieldsFragment, unknown>;
+export const GardenPlantFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"GardenPlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GardenPlantData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addedTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"customThumbnailUrl"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"PlantFields"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"isPerennial"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"scrapeSources"}},{"kind":"Field","name":{"kind":"Name","value":"fullOccurrencesCount"}},{"kind":"Field","name":{"kind":"Name","value":"occurrences"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceCoords"}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"isProxyUrl"}}]}}]}}]}}]} as unknown as DocumentNode<GardenPlantFieldsFragment, unknown>;
+export const GetAllGardensDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllGardens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUserGardens"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gardenName"}},{"kind":"Field","name":{"kind":"Name","value":"plants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"GardenPlantFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"isPerennial"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"scrapeSources"}},{"kind":"Field","name":{"kind":"Name","value":"fullOccurrencesCount"}},{"kind":"Field","name":{"kind":"Name","value":"occurrences"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceCoords"}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"isProxyUrl"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"GardenPlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GardenPlantData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addedTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"customThumbnailUrl"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"PlantFields"}}]}}]} as unknown as DocumentNode<GetAllGardensQuery, GetAllGardensQueryVariables>;
+export const GetGardenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getGarden"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"gardenName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userGarden"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"gardenName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"gardenName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gardenName"}},{"kind":"Field","name":{"kind":"Name","value":"plants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"GardenPlantFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"isPerennial"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"scrapeSources"}},{"kind":"Field","name":{"kind":"Name","value":"fullOccurrencesCount"}},{"kind":"Field","name":{"kind":"Name","value":"occurrences"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceCoords"}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"isProxyUrl"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"GardenPlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GardenPlantData"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addedTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"customThumbnailUrl"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"PlantFields"}}]}}]} as unknown as DocumentNode<GetGardenQuery, GetGardenQueryVariables>;
+export const CreateGardenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createGarden"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"gardenName"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"newGarden"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"gardenName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"gardenName"}}}]}]}}]} as unknown as DocumentNode<CreateGardenMutation, CreateGardenMutationVariables>;
+export const AddPlantDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addPlant"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"plantId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"gardenName"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addToGarden"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"plantId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"plantId"}}},{"kind":"Argument","name":{"kind":"Name","value":"gardenName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"gardenName"}}}]}]}}]} as unknown as DocumentNode<AddPlantMutation, AddPlantMutationVariables>;
+export const GetPlantDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getPlant"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"boundingPolyCoords"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"plant"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"boundingPolyCoords"},"value":{"kind":"Variable","name":{"kind":"Name","value":"boundingPolyCoords"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PlantFields"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"isPerennial"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"scrapeSources"}},{"kind":"Field","name":{"kind":"Name","value":"fullOccurrencesCount"}},{"kind":"Field","name":{"kind":"Name","value":"occurrences"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceCoords"}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"isProxyUrl"}}]}}]}}]}}]} as unknown as DocumentNode<GetPlantQuery, GetPlantQueryVariables>;
+export const SearchPlantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"searchPlants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SortInput"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"plantSearch"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"results"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PlantFields"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PlantFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PlantDataInterface"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"scientificName"}},{"kind":"Field","name":{"kind":"Name","value":"commonNames"}},{"kind":"Field","name":{"kind":"Name","value":"bloomColors"}},{"kind":"Field","name":{"kind":"Name","value":"bloomTimes"}},{"kind":"Field","name":{"kind":"Name","value":"isPerennial"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnailUrl"}},{"kind":"Field","name":{"kind":"Name","value":"physicalCharactersticsDump"}},{"kind":"Field","name":{"kind":"Name","value":"scrapeSources"}},{"kind":"Field","name":{"kind":"Name","value":"fullOccurrencesCount"}},{"kind":"Field","name":{"kind":"Name","value":"occurrences"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"occurrenceId"}},{"kind":"Field","name":{"kind":"Name","value":"occurrenceCoords"}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"isProxyUrl"}}]}}]}}]}}]} as unknown as DocumentNode<SearchPlantsQuery, SearchPlantsQueryVariables>;
 export const ReplaceWithProxyUrlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"replaceWithProxyUrl"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"plantId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"occurrenceId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"replaceUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"replaceWithProxyUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"plantId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"plantId"}}},{"kind":"Argument","name":{"kind":"Name","value":"occurrenceId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"occurrenceId"}}},{"kind":"Argument","name":{"kind":"Name","value":"replaceUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"replaceUrl"}}}]}]}}]} as unknown as DocumentNode<ReplaceWithProxyUrlMutation, ReplaceWithProxyUrlMutationVariables>;

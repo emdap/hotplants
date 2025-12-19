@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/PlantSearchContext";
 import { AnimatePresence } from "motion/react";
-import { useRef } from "react";
 import PlantCard from "./PlantCard";
 
 const PlantResultsList = () => {
@@ -10,11 +9,9 @@ const PlantResultsList = () => {
     activeIndexes: { plantIndex },
     setActiveIndexes,
   } = usePlantSearchContext();
-  const containerRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
-      ref={containerRef}
       className={classNames(
         "gap-4 items-stretch max-md:flex flex-col md:grid justify-around grid-cols-[repeat(auto-fit,_minmax(384px,1fr))]",
         plantSearchResults.length && "md:pb-20",

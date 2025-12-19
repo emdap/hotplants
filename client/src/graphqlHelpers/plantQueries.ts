@@ -3,7 +3,7 @@ import { SearchPlantsQuery } from "generated/graphql/graphql";
 
 const _PLANT_FIELDS_FRAGMENT = graphql(
   `
-    fragment PlantFields on PlantData {
+    fragment PlantFields on PlantDataInterface {
       _id
       scientificName
       commonNames

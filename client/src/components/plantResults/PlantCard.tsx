@@ -1,11 +1,14 @@
 import classNames from "classnames";
 import Card from "designSystem/Card";
 import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
+import { ADD_PLANT_TO_GARDEN } from "graphqlHelpers/gardenQueries";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
+import { useApolloMutation } from "hooks/useQuery";
 import { capitalize } from "lodash";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useRef } from "react";
+import { FaHeart } from "react-icons/fa";
 import PlantOccurrenceImage from "../plantImages/PlantOccurrenceImage";
 
 const PlantCard = ({
@@ -24,6 +27,10 @@ const PlantCard = ({
   const hasCommonName = Boolean(plant.commonNames?.length);
   const firstOccurrence = plant.occurrences[0];
   const firstMedia = firstOccurrence?.media[0];
+
+  const [addPlantToGarden] = useApolloMutation(ADD_PLANT_TO_GARDEN, {
+    variables: { plantId: plant._id },
+  });
 
   return (
     <Card
@@ -90,6 +97,14 @@ const PlantCard = ({
             {plant.scientificName}
           </h2>
         )}
+
+        <FaHeart
+          className="absolute top-2 right-2 text-default-background"
+          onClick={(e) => {
+            e.stopPropagation();
+            addPlantToGarden();
+          }}
+        />
       </div>
     </Card>
   );

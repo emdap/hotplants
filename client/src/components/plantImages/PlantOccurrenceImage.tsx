@@ -28,7 +28,7 @@ const PlantOccurrenceImage = ({
   ...imageWrapperProps
 }: PlantOccurrenceImageProps) => {
   const plantImageRef = useRef<HTMLDivElement>(null);
-  const { syncPlant, searchStatus } = usePlantSearchContext();
+  const { syncPlant } = usePlantSearchContext();
   const [renderImage, setRenderImage] = useState(true);
   // const [imageNotAvailable, setImageNotAvailable] = useState(false);
   const [useThumbnail, setUseThumbnail] = useState(Boolean(thumbnailUrl));

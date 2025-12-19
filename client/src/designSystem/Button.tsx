@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes } from "react";
 import LoadingIcon from "./LoadingIcon";
 
 export type ButtonProps = {
-  variant?: "primary" | "secondary" | "text";
+  variant?: "primary" | "accent" | "secondary" | "text";
   size?: "small" | "default";
   isLoading?: boolean;
   linkAddress?: string;
@@ -16,6 +16,8 @@ const getClasses = (props: ButtonProps) =>
     {
       "bg-primary/90 dark:bg-primary/80 enabled:hover:bg-primary outline-primary text-white":
         props.variant === "primary",
+      "bg-accent/90 dark:bg-accent/80 enabled:hover:bg-accent outline-accent text-white":
+        props.variant === "accent",
       "bg-secondary/80 enabled:hover:bg-secondary outline-secondary ":
         props.variant === "secondary",
 

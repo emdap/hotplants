@@ -44,7 +44,7 @@ const UserMenu = () => {
       <MenuItems
         transition
         anchor="bottom end"
-        className="w-52 origin-top-right rounded-xl border border-default-background/20 bg-default-background p-1 text-sm transition mt-2 focus:outline-none data-closed:scale-95 data-closed:opacity-0"
+        className="z-30 shadow-lg w-52 origin-top-right rounded-md border border-accent/20 bg-default-background p-1 text-sm transition mt-1 focus:outline-none data-closed:scale-95 data-closed:opacity-0"
       >
         {authData && (
           <p className="p-2 ">
