@@ -11,7 +11,7 @@ const ENV_VARS = {
   },
   prod: {
     trustedOrigins: ["https://hotplants.fly.dev"],
-    baseURL: "https://hostplants.fly.dev",
+    baseURL: "https://hotplants.fly.dev",
     domains: "https://hotplants-server.fly.dev",
     dbName: "auth",
   },
