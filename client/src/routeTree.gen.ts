@@ -12,10 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as PrivateGardensRouteImport } from './routes/_private/gardens'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLogoutRouteImport } from './routes/_auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as PrivateGardensChar123GardenNameChar125RouteImport } from './routes/_private/gardens.{-$gardenName}'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -29,11 +29,6 @@ const PrivateRoute = PrivateRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PrivateGardensRoute = PrivateGardensRouteImport.update({
-  id: '/gardens',
-  path: '/gardens',
-  getParentRoute: () => PrivateRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
@@ -50,20 +45,26 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
+const PrivateGardensChar123GardenNameChar125Route =
+  PrivateGardensChar123GardenNameChar125RouteImport.update({
+    id: '/gardens/{-$gardenName}',
+    path: '/gardens/{-$gardenName}',
+    getParentRoute: () => PrivateRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
-  '/gardens': typeof PrivateGardensRoute
+  '/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
-  '/gardens': typeof PrivateGardensRoute
+  '/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -73,13 +74,18 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/logout': typeof AuthLogoutRoute
   '/_auth/signup': typeof AuthSignupRoute
-  '/_private/gardens': typeof PrivateGardensRoute
+  '/_private/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/search' | '/login' | '/logout' | '/signup' | '/gardens'
+  fullPaths:
+    | '/search'
+    | '/login'
+    | '/logout'
+    | '/signup'
+    | '/gardens/{-$gardenName}'
   fileRoutesByTo: FileRoutesByTo
-  to: '/search' | '/login' | '/logout' | '/signup' | '/gardens'
+  to: '/search' | '/login' | '/logout' | '/signup' | '/gardens/{-$gardenName}'
   id:
     | '__root__'
     | '/_auth'
@@ -88,7 +94,7 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/logout'
     | '/_auth/signup'
-    | '/_private/gardens'
+    | '/_private/gardens/{-$gardenName}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -120,13 +126,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_private/gardens': {
-      id: '/_private/gardens'
-      path: '/gardens'
-      fullPath: '/gardens'
-      preLoaderRoute: typeof PrivateGardensRouteImport
-      parentRoute: typeof PrivateRoute
-    }
     '/_auth/signup': {
       id: '/_auth/signup'
       path: '/signup'
@@ -148,6 +147,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_private/gardens/{-$gardenName}': {
+      id: '/_private/gardens/{-$gardenName}'
+      path: '/gardens/{-$gardenName}'
+      fullPath: '/gardens/{-$gardenName}'
+      preLoaderRoute: typeof PrivateGardensChar123GardenNameChar125RouteImport
+      parentRoute: typeof PrivateRoute
+    }
   }
 }
 
@@ -166,11 +172,12 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface PrivateRouteChildren {
-  PrivateGardensRoute: typeof PrivateGardensRoute
+  PrivateGardensChar123GardenNameChar125Route: typeof PrivateGardensChar123GardenNameChar125Route
 }
 
 const PrivateRouteChildren: PrivateRouteChildren = {
-  PrivateGardensRoute: PrivateGardensRoute,
+  PrivateGardensChar123GardenNameChar125Route:
+    PrivateGardensChar123GardenNameChar125Route,
 }
 
 const PrivateRouteWithChildren =

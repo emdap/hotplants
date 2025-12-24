@@ -1,25 +1,33 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import classNames from "classnames";
-import { FileRoutesByTo } from "routeTree.gen";
 
-const HEADER_LINKS: { displayText: string; path: keyof FileRoutesByTo }[] = [
+const HEADER_LINKS: ({ displayText: string } & LinkProps)[] = [
   {
     displayText: "search",
-    path: "/search",
+    to: "/search",
   },
-  { displayText: "gardens", path: "/gardens" },
+  {
+    displayText: "gardens",
+    to: "/gardens/{-$gardenName}",
+    params: { gardenName: undefined },
+  },
 ];
 
 const HeaderLinks = () => {
   const location = useLocation();
 
+  const isActiveLink = (linkTo?: string) =>
+    [location.pathname, location.href].some((path) => linkTo?.includes(path));
+
   return (
     <div className="flex items-center gap-8 text-white text-sm h-full">
-      {HEADER_LINKS.map(({ displayText, path }, index) => (
+      {HEADER_LINKS.map(({ displayText, ...linkProps }, index) => (
         <Link
-          to={path}
+          {...linkProps}
           key={index}
-          className={classNames(location.pathname === path && "font-semibold")}
+          className={classNames({
+            "font-semibold": isActiveLink(linkProps.to),
+          })}
         >
           {displayText}
         </Link>
