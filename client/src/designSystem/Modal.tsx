@@ -54,7 +54,7 @@ const Modal = ({
           />
           <Card
             key="body"
-            disableTransparency
+            solid
             className={classNames(
               "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 h-5/6 flex flex-col gap-2 overflow-auto z-50 p-4",
               className

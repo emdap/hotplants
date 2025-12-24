@@ -4,15 +4,16 @@ import { HTMLProps } from "react";
 
 export type CardProps = Omit<HTMLMotionProps<"div">, "children"> &
   Pick<HTMLProps<HTMLDivElement>, "children"> & {
-    disableTransparency?: boolean;
+    solid?: boolean;
+    solidOnHover?: boolean;
   };
 
-const Card = ({ disableTransparency, className, ...props }: CardProps) => (
+const Card = ({ solid, solidOnHover, className, ...props }: CardProps) => (
   <motion.div
     {...props}
     className={classNames(
       "card",
-      !disableTransparency && "card-transparent",
+      { "card-solid": solid, "hover:card-solid": solidOnHover },
       className
     )}
   />
