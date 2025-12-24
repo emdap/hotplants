@@ -1,11 +1,11 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { Link } from "@tanstack/react-router";
+import { useAuthSession } from "config/authClient";
 import { useMemo } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { IconType } from "react-icons/lib";
 import { MdLogin, MdLogout } from "react-icons/md";
 import { FileRoutesByTo } from "routeTree.gen";
-import { useAuthSession } from "util/authClient";
 
 type MenuItemContent = {
   key: string;

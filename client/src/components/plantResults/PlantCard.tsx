@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
 import { ADD_PLANT_TO_GARDEN } from "graphqlHelpers/gardenQueries";
@@ -28,9 +29,12 @@ const PlantCard = ({
   const firstOccurrence = plant.occurrences[0];
   const firstMedia = firstOccurrence?.media[0];
 
-  const [addPlantToGarden] = useApolloMutation(ADD_PLANT_TO_GARDEN, {
-    variables: { plantId: plant._id },
-  });
+  const [addPlantToGarden, { loading: addPlantLoading }] = useApolloMutation(
+    ADD_PLANT_TO_GARDEN,
+    {
+      variables: { plantId: plant._id },
+    }
+  );
 
   return (
     <Card
@@ -98,13 +102,17 @@ const PlantCard = ({
           </h2>
         )}
 
-        <FaHeart
-          className="absolute top-2 right-2 text-default-background"
+        <Button
+          className="absolute top-2 right-2 text-white"
           onClick={(e) => {
             e.stopPropagation();
             addPlantToGarden();
           }}
-        />
+          variant="text"
+          disabled={addPlantLoading}
+        >
+          <FaHeart />
+        </Button>
       </div>
     </Card>
   );

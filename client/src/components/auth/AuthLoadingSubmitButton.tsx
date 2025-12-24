@@ -1,6 +1,6 @@
+import { useAuthSession } from "config/authClient";
 import Button, { ButtonProps } from "designSystem/Button";
 import { MouseEvent, useState } from "react";
-import { useAuthSession } from "util/authClient";
 
 const AuthLoadingSubmitButton = <T extends object | void>({
   onClick,
