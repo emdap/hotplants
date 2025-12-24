@@ -34,7 +34,11 @@ const MapProvider = ({
       className
     )}
   >
-    <LoadingOverlay show={isLoading} size={40} />
+    <LoadingOverlay
+      show={isLoading}
+      size={40}
+      className="absolute h-full w-full"
+    />
 
     <MapContainer
       className="w-full h-full z-0 !bg-transparent"

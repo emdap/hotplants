@@ -18,7 +18,7 @@ const LoadingOverlay = ({
         key="loading-overlay"
         {...MOTION_FADE_IN}
         className={classNames(
-          "absolute h-full w-full bg-gray-500/80 dark:bg-black/70 z-20 rounded-sm flex justify-center items-center",
+          "bg-gray-500/80 dark:bg-black/70 z-20 rounded-sm flex justify-center items-center",
           className
         )}
       >
