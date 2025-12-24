@@ -83,16 +83,13 @@ const PlantOccurrenceImage = ({
   }, [hideOnScroll, scrollContainer]);
 
   return (
-    <>
-      {imageUrl}
-      <ImageWrapper
-        ref={plantImageRef}
-        className={containerClass}
-        imageUrl={imageUrl}
-        onError={handleImgError}
-        {...imageWrapperProps}
-      />
-    </>
+    <ImageWrapper
+      ref={plantImageRef}
+      className={containerClass}
+      imageUrl={imageUrl}
+      onError={handleImgError}
+      {...imageWrapperProps}
+    />
   );
 };
 
