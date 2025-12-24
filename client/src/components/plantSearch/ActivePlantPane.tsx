@@ -47,7 +47,7 @@ const ActivePlantPane = () => {
 
   const closeOnEscape = (e: KeyboardEvent) =>
     e.code === "Escape" && resetActivePlant();
-  useDocumentListener("keyup", closeOnEscape, !!activePlant);
+  useDocumentListener("keyup", closeOnEscape, !!activePlant && !imageModalOpen);
 
   return (
     <AnimatePresence>

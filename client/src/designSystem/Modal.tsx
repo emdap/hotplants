@@ -37,7 +37,7 @@ const Modal = ({
     }
   };
 
-  useDocumentListener("keydown", closeOnEscape, isOpen, true);
+  useDocumentListener("keyup", closeOnEscape, isOpen, true);
 
   // Using a portal for safety
   // First usecase - modal ancestor had backdrop effects, causing
