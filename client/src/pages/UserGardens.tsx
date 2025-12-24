@@ -51,7 +51,7 @@ const UserGardens = () => {
 
   return (
     <main className="px-2 pb-10 relative">
-      <PageTitle>
+      <PageTitle key={gardenName}>
         {gardenName ? (
           <span className="flex gap-4 items-center">
             <MdArrowBack
