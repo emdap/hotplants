@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal from "designSystem/Modal";
@@ -20,15 +20,15 @@ const PlantImageViewer = ({
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
 }) => {
-  const { activeIndexes, setActiveIndexes } = usePlantSearchContext();
+  const { activeMediaIndex, setActiveMediaIndex } = usePlantSelectionContext();
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(
-    activeIndexes.mediaIndex ?? 0
+    activeMediaIndex ?? 0
   );
   const [includeThumbnail, setIncludeThumbnail] = useState(
     Boolean(plant.thumbnailUrl)
   );
 
-  const carouselIndex = activeIndexes.mediaIndex ?? 0;
+  const carouselIndex = activeMediaIndex ?? 0;
 
   const PlantImages = useMemo(
     () =>
@@ -44,9 +44,6 @@ const PlantImageViewer = ({
     [plant.occurrences, plant.thumbnailUrl, plant._id, includeThumbnail]
   );
 
-  const syncActiveMediaIndex = (newIndex: number) =>
-    setActiveIndexes((prev) => ({ ...prev, mediaIndex: newIndex }));
-
   return (
     <div
       className={classNames("aspect-square", {
@@ -60,7 +57,7 @@ const PlantImageViewer = ({
         <Carousel
           enableKeyboardEvents={!isModalOpen}
           carouselIndex={carouselIndex}
-          setCarouselIndex={syncActiveMediaIndex}
+          setCarouselIndex={setActiveMediaIndex}
         >
           {PlantImages}
         </Carousel>
@@ -81,7 +78,7 @@ const PlantImageViewer = ({
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
-          syncActiveMediaIndex(largeCarouselIndex);
+          setActiveMediaIndex(largeCarouselIndex);
         }}
       >
         <Carousel

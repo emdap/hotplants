@@ -1,4 +1,4 @@
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import { PlantOccurrence } from "generated/graphql/graphql";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useMemo } from "react";
@@ -32,31 +32,33 @@ const PlantOccurrenceMarkers = ({
 }: {
   showAllPlants?: boolean;
 }) => {
-  const { plantSearchResults, activeIndexes, setActiveIndexes } =
-    usePlantSearchContext();
+  const {
+    plantList,
+    activePlantIndex,
+    activeMediaIndex,
+    setActivePlantIndex,
+    setActiveMediaIndex,
+  } = usePlantSelectionContext();
 
   const { isViewingAllPlants, plantOccurrences } = useMemo(() => {
     if (
       showAllPlants ||
-      activeIndexes.plantIndex === null ||
-      !plantSearchResults[activeIndexes.plantIndex]
+      activePlantIndex === null ||
+      !plantList[activePlantIndex]
     ) {
       return {
         isViewingAllPlants: true,
-        plantOccurrences: plantSearchResults.map(occurrenceMediaFlat),
+        plantOccurrences: plantList.map(occurrenceMediaFlat),
       };
     } else {
       return {
         isViewingAllPlants: false,
         plantOccurrences: [
-          occurrenceMediaFlat(
-            plantSearchResults[activeIndexes.plantIndex],
-            activeIndexes.plantIndex
-          ),
+          occurrenceMediaFlat(plantList[activePlantIndex], activePlantIndex),
         ],
       };
     }
-  }, [showAllPlants, plantSearchResults, activeIndexes.plantIndex]);
+  }, [showAllPlants, plantList, activePlantIndex]);
 
   const isActiveOccurrenceMedia = (
     isViewingAllPlants: boolean,
@@ -65,8 +67,7 @@ const PlantOccurrenceMarkers = ({
   ) =>
     isViewingAllPlants
       ? false
-      : plantIndex === activeIndexes.plantIndex &&
-        mediaIndex === activeIndexes.mediaIndex;
+      : plantIndex === activePlantIndex && mediaIndex === activeMediaIndex;
 
   return plantOccurrences.map((occurrences, index) => (
     <MarkerClusterGroup
@@ -86,11 +87,10 @@ const PlantOccurrenceMarkers = ({
               isActiveOccurrenceMedia(isViewingAllPlants, plantIndex, index)
             )}
             eventHandlers={{
-              click: () =>
-                setActiveIndexes({
-                  plantIndex,
-                  mediaIndex,
-                }),
+              click: () => {
+                setActivePlantIndex(plantIndex);
+                setActiveMediaIndex(mediaIndex);
+              },
             }}
           />
         )

@@ -1,4 +1,4 @@
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import {
@@ -20,19 +20,25 @@ const CARD_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
 });
 
 const ActivePlantPane = () => {
-  const { plantSearchResults, activeIndexes, setActiveIndexes } =
-    usePlantSearchContext();
+  const {
+    plantList,
+    activePlantIndex,
+    setActivePlantIndex,
+    setActiveMediaIndex,
+  } = usePlantSelectionContext();
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
   const activePlant = useMemo(() => {
-    return activeIndexes.plantIndex === null
+    return activePlantIndex === null
       ? null
-      : plantSearchResults[activeIndexes.plantIndex] ?? null;
-  }, [plantSearchResults, activeIndexes.plantIndex]);
+      : plantList[activePlantIndex] ?? null;
+  }, [plantList, activePlantIndex]);
 
-  const resetActivePlant = () =>
-    setActiveIndexes({ plantIndex: null, mediaIndex: null });
+  const resetActivePlant = () => {
+    setActivePlantIndex(null);
+    setActiveMediaIndex(null);
+  };
 
   const paneRef = useRef<HTMLDivElement>(null);
   useClickAway(paneRef, () => !imageModalOpen && resetActivePlant(), [
@@ -44,41 +50,39 @@ const ActivePlantPane = () => {
   useDocumentListener("keyup", closeOnEscape, !!activePlant);
 
   return (
-    <>
-      <AnimatePresence>
-        {activePlant && (
-          <Card
-            key="plant-pane"
-            ref={paneRef}
-            className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-3/7 md:max-w-5xl flex flex-col gap-2 overflow-auto z-20"
-            {...CARD_FADE_IN}
+    <AnimatePresence>
+      {activePlant && (
+        <Card
+          key="plant-pane"
+          ref={paneRef}
+          className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-3/7 md:max-w-5xl flex flex-col gap-2 overflow-auto z-20"
+          {...CARD_FADE_IN}
+        >
+          <Button
+            variant="primary"
+            onClick={resetActivePlant}
+            className="-mt-2 cursor-pointer"
           >
-            <Button
-              variant="primary"
-              onClick={resetActivePlant}
-              className="-mt-2 cursor-pointer"
-            >
-              <MdClose />
-            </Button>
-            <div
-              key={activePlant.scientificName}
-              className="grow flex flex-col md:overflow-hidden gap-4"
-            >
-              {/* <div className="flex max-sm:flex-col gap-4 justify-between"> */}
-              <PlantImageViewer
-                mode="carousel"
-                plant={activePlant}
-                isModalOpen={imageModalOpen}
-                setIsModalOpen={setImageModalOpen}
-              />
-              {/* <MapProvider className="min-h-60 w-full" /> */}
-              {/* </div> */}
-              <PlantInfoCard plant={activePlant} showFullInfo />
-            </div>
-          </Card>
-        )}
-      </AnimatePresence>
-    </>
+            <MdClose />
+          </Button>
+          <div
+            key={activePlant.scientificName}
+            className="grow flex flex-col md:overflow-hidden gap-4"
+          >
+            {/* <div className="flex max-sm:flex-col gap-4 justify-between"> */}
+            <PlantImageViewer
+              mode="carousel"
+              plant={activePlant}
+              isModalOpen={imageModalOpen}
+              setIsModalOpen={setImageModalOpen}
+            />
+            {/* <MapProvider className="min-h-60 w-full" /> */}
+            {/* </div> */}
+            <PlantInfoCard plant={activePlant} showFullInfo />
+          </div>
+        </Card>
+      )}
+    </AnimatePresence>
   );
 };
 

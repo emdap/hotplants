@@ -1,11 +1,10 @@
 import { NetworkStatus } from "@apollo/client";
-import { useLazyQuery } from "@apollo/client/react";
 import {
   PlantDataInput,
   QueryPlantSearchArgs,
 } from "generated/graphql/graphql";
 import { paths } from "generated/schemas/hotplants";
-import { GET_PLANT, SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
+import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useRef, useState } from "react";
@@ -42,8 +41,6 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   const [pollInterval, setPollInterval] = useState(0);
 
   // #region Queries
-  const [getPlantQuery] = useLazyQuery(GET_PLANT, { fetchPolicy: "no-cache" });
-
   const hasSearchCriteria = Boolean(
     plantSearchCriteria && Object.keys(plantSearchCriteria).length
   );
@@ -213,7 +210,6 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     plantSearchData,
     plantSearchQuery,
     searchRecordQuery,
-    getPlantQuery,
     fetchNextPlantsPage,
     hasNextPage,
     scrapeMoreData: scrapeOccurrencesQuery.refetch,

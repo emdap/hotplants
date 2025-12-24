@@ -1,4 +1,4 @@
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
 import { PlantMedia } from "generated/graphql/graphql";
 import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
@@ -28,7 +28,7 @@ const PlantOccurrenceImage = ({
   ...imageWrapperProps
 }: PlantOccurrenceImageProps) => {
   const plantImageRef = useRef<HTMLDivElement>(null);
-  const { syncPlant } = usePlantSearchContext();
+  const { syncPlant } = usePlantSelectionContext();
   const [renderImage, setRenderImage] = useState(true);
   // const [imageNotAvailable, setImageNotAvailable] = useState(false);
   const [useThumbnail, setUseThumbnail] = useState(Boolean(thumbnailUrl));

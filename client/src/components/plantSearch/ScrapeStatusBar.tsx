@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
 import {
@@ -10,8 +11,8 @@ import { ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { HEADER_HEIGHT } from "util/generalUtil";
 
 const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
-  const { plantSearchResults, searchStatus, totalResultsCount } =
-    usePlantSearchContext();
+  const { searchStatus, totalResultsCount } = usePlantSearchContext();
+  const { plantList } = usePlantSelectionContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollContainer } = useGetScrollContainer();
 
@@ -45,7 +46,7 @@ const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
       <span>{searchStatus !== "READY" && <LoadingIcon />}</span>
       {totalResultsCount && (
         <span>
-          Viewing {plantSearchResults.length} results out of {totalResultsCount}
+          Viewing {plantList.length} results out of {totalResultsCount}
         </span>
       )}
 

@@ -1,57 +1,31 @@
-import { PlantDataInput } from "generated/graphql/graphql";
+import { VOID_FUNCTION } from "contexts/plantSearch/PlantSearchContext";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
-import { PlantSearchQueriesReturnType } from "hooks/usePlantSearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { LocationWithPolygon } from "util/schemaTypesUtil";
 
-export const FILTER_HOLDER_ID = "filter-holder";
-export const VOID_FUNCTION = () => {};
-const VOID_PROMISE_FUNCTION = async () => {};
+type PlantSelectionContextType = {
+  plantList: PlantQueryResults;
 
-export type ActiveIndexes = Record<"plantIndex" | "mediaIndex", number | null>;
+  activePlantIndex: number | null;
+  activeMediaIndex: number | null;
+  setActivePlantIndex: Dispatch<SetStateAction<number | null>>;
+  setActiveMediaIndex: Dispatch<SetStateAction<number | null>>;
 
-type PlantSearchContextType = {
-  plantSearchResults: PlantQueryResults;
-  hasCurrentResults: boolean;
-  totalResultsCount: number;
-
-  plantSearchCriteria: PlantDataInput | null;
-  setPlantSearchCriteria: (newCriteria: PlantDataInput) => void;
-
-  activeIndexes: ActiveIndexes;
-  setActiveIndexes: Dispatch<SetStateAction<ActiveIndexes>>;
   syncPlant: (plantId: string) => void;
-
-  searchLocation: LocationWithPolygon | null;
-  setSearchLocation: (location: LocationWithPolygon | null) => void;
-} & Pick<
-  PlantSearchQueriesReturnType,
-  "fetchNextPlantsPage" | "hasNextPage" | "searchStatus" | "searchRecordQuery"
->;
-
-const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
-  plantSearchResults: [],
-  hasCurrentResults: false,
-  totalResultsCount: 0,
-
-  plantSearchCriteria: null,
-  setPlantSearchCriteria: VOID_FUNCTION,
-
-  activeIndexes: { plantIndex: null, mediaIndex: null },
-  setActiveIndexes: VOID_FUNCTION,
-  syncPlant: VOID_FUNCTION,
-
-  searchLocation: null,
-  setSearchLocation: VOID_FUNCTION,
-
-  searchStatus: "READY",
-  searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
-  hasNextPage: false,
-  fetchNextPlantsPage: VOID_PROMISE_FUNCTION,
 };
 
-export const PlantSearchContext = createContext<PlantSearchContextType>(
+const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSelectionContextType = {
+  plantList: [],
+
+  activePlantIndex: null,
+  activeMediaIndex: null,
+  setActivePlantIndex: VOID_FUNCTION,
+  setActiveMediaIndex: VOID_FUNCTION,
+
+  syncPlant: VOID_FUNCTION,
+};
+
+export const PlantSelectionContext = createContext<PlantSelectionContextType>(
   DEFAULT_PLANT_SEARCH_CONTEXT
 );
 
-export const usePlantSearchContext = () => useContext(PlantSearchContext);
+export const usePlantSelectionContext = () => useContext(PlantSelectionContext);

@@ -1,51 +1,38 @@
-import {
-  ActiveIndexes,
-  PlantSearchContext,
-} from "contexts/plantSearch/PlantSearchContext";
+import { useLazyQuery } from "@apollo/client/react";
 import { PlantDataInput } from "generated/graphql/graphql";
-import { PlantQueryResults } from "graphqlHelpers/plantQueries";
-import usePlantSearchQueries from "hooks/usePlantSearchQueries";
+import { GET_PLANT, PlantQueryResults } from "graphqlHelpers/plantQueries";
 import { ReactNode, useEffect, useState } from "react";
-import { LocationWithPolygon } from "util/schemaTypesUtil";
+import { PlantSelectionContext } from "./PlantSelectionContext";
 
-const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
-  const [plantSearchResults, setPlantSearchResults] =
-    useState<PlantQueryResults>([]);
-  const [plantSearchCriteria, setPlantSearchCriteria] =
-    useState<PlantDataInput | null>(null);
-
-  const [searchLocation, setSearchLocation] =
-    useState<LocationWithPolygon | null>(null);
-
-  const [activeIndexes, setActiveIndexes] = useState<ActiveIndexes>({
-    plantIndex: null,
-    mediaIndex: null,
-  });
-
-  const {
-    searchStatus,
-    plantSearchData,
-    plantSearchQuery,
-    getPlantQuery,
-    ...searchQueries
-  } = usePlantSearchQueries(plantSearchCriteria);
+const PlantSelectionProvider = ({
+  plantList: originalPlantList,
+  boundingPolygon,
+  children,
+}: {
+  plantList: PlantQueryResults;
+  boundingPolygon?: PlantDataInput["boundingPolyCoords"];
+  children: ReactNode;
+}) => {
+  const [plantList, setPlantList] = useState(originalPlantList);
+  const [activePlantIndex, setActivePlantIndex] = useState<number | null>(null);
+  const [activeMediaIndex, setActiveMediaIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    searchStatus !== "CHECKING_STATUS" &&
-      plantSearchData &&
-      setPlantSearchResults(plantSearchData.results);
-  }, [searchStatus, plantSearchData]);
+    setPlantList(originalPlantList);
+  }, [originalPlantList]);
+
+  const [getPlantQuery] = useLazyQuery(GET_PLANT, { fetchPolicy: "no-cache" });
 
   const syncPlant = async (plantId: string) => {
     const { data } = await getPlantQuery({
       variables: {
         id: plantId,
-        boundingPolyCoords: plantSearchCriteria?.boundingPolyCoords,
+        boundingPolyCoords: boundingPolygon,
       },
     });
 
     if (data?.plant) {
-      setPlantSearchResults((prev) =>
+      setPlantList((prev) =>
         prev.map((plantResult) =>
           data.plant && data.plant._id === plantResult._id
             ? data.plant
@@ -55,37 +42,22 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const applyPlantSearchCriteria = (newCriteria: PlantDataInput) => {
-    setPlantSearchCriteria(newCriteria);
-    if (plantSearchQuery.error) {
-      plantSearchQuery.refetch();
-    }
-  };
-
   return (
-    <PlantSearchContext.Provider
+    <PlantSelectionContext.Provider
       value={{
-        plantSearchResults,
-        hasCurrentResults: Boolean(plantSearchResults.length),
-        totalResultsCount: plantSearchData?.count ?? 0,
+        plantList,
 
-        plantSearchCriteria,
-        setPlantSearchCriteria: applyPlantSearchCriteria,
+        activePlantIndex,
+        activeMediaIndex,
+        setActivePlantIndex,
+        setActiveMediaIndex,
 
-        activeIndexes,
-        setActiveIndexes,
         syncPlant,
-
-        searchLocation,
-        setSearchLocation,
-
-        searchStatus,
-        ...searchQueries,
       }}
     >
       {children}
-    </PlantSearchContext.Provider>
+    </PlantSelectionContext.Provider>
   );
 };
 
-export default PlantSearchProvider;
+export default PlantSelectionProvider;
