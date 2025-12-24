@@ -4,7 +4,7 @@ import ActivePlantPane from "components/plantSearch/ActivePlantPane";
 import PlantSearchFiltersHolder from "components/plantSearch/PlantSearchFiltersHolder";
 import PlantResultsFooter from "components/plantSearch/PlantSearchFooter";
 import ScrapeStatusBar from "components/plantSearch/ScrapeStatusBar";
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useLayoutEffect, useRef } from "react";

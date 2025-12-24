@@ -1,7 +1,7 @@
 import { Outlet } from "@tanstack/react-router";
 import HeaderMenu from "components/header/HeaderMenu";
 import { authClient } from "config/authClient";
-import PlantSearchProvider from "contexts/PlantSearchProvider";
+import PlantSearchProvider from "contexts/plantSearch/PlantSearchProvider";
 import { useEffect } from "react";
 
 const App = () => {

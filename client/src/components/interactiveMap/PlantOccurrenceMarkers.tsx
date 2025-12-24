@@ -1,4 +1,4 @@
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { PlantOccurrence } from "generated/graphql/graphql";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useMemo } from "react";

@@ -2,7 +2,7 @@ import classNames from "classnames";
 import {
   FILTER_HOLDER_ID,
   usePlantSearchContext,
-} from "contexts/PlantSearchContext";
+} from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import type { paths } from "generated/schemas/nominatim";
 import { useReactQuery } from "hooks/useQuery";

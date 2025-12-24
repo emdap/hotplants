@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal from "designSystem/Modal";

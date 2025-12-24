@@ -1,5 +1,5 @@
 import { centroid } from "@turf/turf";
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { LocationWithPolygon } from "util/schemaTypesUtil";
 import LocationPolygon from "./LocationPolygon";
 import PolygonDrawing, { SetCustomPolygonFn } from "./PolygonDrawing";

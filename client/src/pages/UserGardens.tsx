@@ -1,5 +1,5 @@
 import PlantCard from "components/plantResults/PlantCard";
-import { VOID_FUNCTION } from "contexts/PlantSearchContext";
+import { VOID_FUNCTION } from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";

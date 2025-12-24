@@ -1,4 +1,4 @@
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import {

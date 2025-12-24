@@ -1,4 +1,4 @@
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
 import { PlantMedia } from "generated/graphql/graphql";
 import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";

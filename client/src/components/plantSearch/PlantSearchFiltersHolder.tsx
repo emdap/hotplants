@@ -5,7 +5,7 @@ import LocationSearch from "components/plantSearch/LocationSearch";
 import {
   FILTER_HOLDER_ID,
   usePlantSearchContext,
-} from "contexts/PlantSearchContext";
+} from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { PlantDataInput } from "generated/graphql/graphql";

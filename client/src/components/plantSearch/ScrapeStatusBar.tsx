@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { usePlantSearchContext } from "contexts/PlantSearchContext";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
 import {

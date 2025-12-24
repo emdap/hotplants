@@ -1,4 +1,7 @@
-import { ActiveIndexes, PlantSearchContext } from "contexts/PlantSearchContext";
+import {
+  ActiveIndexes,
+  PlantSearchContext,
+} from "contexts/plantSearch/PlantSearchContext";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
