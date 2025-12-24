@@ -56,7 +56,7 @@
       scrollbar-color: var(--color-scrollbar) var(--color-primary-dark);
     }
 
-    @apply md:overflow-hidden max-md:scroll-smooth bg-black max-md:stable-scrollbar;
+    @apply max-md:overflow-visible md:overflow-hidden max-md:scroll-smooth bg-accent max-md:stable-scrollbar;
   }
 
   body {

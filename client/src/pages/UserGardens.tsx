@@ -1,19 +1,43 @@
-import PlantCard from "components/plantResults/PlantCard";
-import { VOID_FUNCTION } from "contexts/plantSearch/PlantSearchContext";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import PlantResultsList from "components/plantResults/PlantResultsList";
+import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
-import { CREATE_GARDEN, GET_ALL_GARDENS } from "graphqlHelpers/gardenQueries";
+import {
+  CREATE_GARDEN,
+  GET_ALL_GARDEN_NAMES,
+  GET_GARDEN,
+} from "graphqlHelpers/gardenQueries";
 import { useApolloMutation, useApolloQuery } from "hooks/useQuery";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { MdArrowBack } from "react-icons/md";
+import { useDebounce } from "react-use";
+
+const route = getRouteApi("/_private/gardens/{-$gardenName}");
 
 const UserGardens = () => {
-  const userGardensQuery = useApolloQuery(GET_ALL_GARDENS, {});
+  const navigate = useNavigate();
+  const { gardenName } = route.useParams();
+  const userGardensQuery = useApolloQuery(GET_ALL_GARDEN_NAMES, {
+    skip: Boolean(gardenName),
+  });
   const allUserGardens = userGardensQuery.data?.allUserGardens;
 
+  const getGardenQuery = useApolloQuery(GET_GARDEN, {
+    variables: { gardenName: gardenName! },
+    skip: !gardenName,
+  });
   const [createGarden, { loading: createGardenLoading }] =
     useApolloMutation(CREATE_GARDEN);
+
+  const [debouncedLoading, setDebouncedLoading] = useState(false);
+  useDebounce(
+    () => setDebouncedLoading(getGardenQuery.loading || createGardenLoading),
+    1000,
+    [getGardenQuery.loading, createGardenLoading]
+  );
 
   const createGardenAndRefetch = async () => {
     await createGarden();
@@ -26,26 +50,52 @@ const UserGardens = () => {
   }, []);
 
   return (
-    <main className="px-2 pb-10">
-      <PageTitle>Gardens</PageTitle>
-      {userGardensQuery.loading ? (
-        <LoadingOverlay show />
+    <main className="px-2 pb-10 relative">
+      <PageTitle>
+        {gardenName ? (
+          <span className="flex gap-4 items-center">
+            <MdArrowBack
+              className="cursor-pointer"
+              onClick={() =>
+                navigate({
+                  to: ".",
+                  params: { gardenName: undefined },
+                })
+              }
+            />
+            {gardenName}
+          </span>
+        ) : (
+          "Gardens"
+        )}
+      </PageTitle>
+
+      <LoadingOverlay
+        size={30}
+        className="absolute w-full h-80 animate-pulse"
+        show={debouncedLoading}
+      />
+
+      {gardenName ? (
+        <PlantSelectionProvider
+          plantList={getGardenQuery.data?.userGarden?.plants ?? []}
+        >
+          <PlantResultsList />
+        </PlantSelectionProvider>
       ) : allUserGardens?.length ? (
-        allUserGardens.map((garden, index) => (
-          <Card key={index}>
-            <h3>{garden.gardenName}</h3>
-            <div className="flex flex-wrap gap-4">
-              {garden.plants.map((plant, index) => (
-                <PlantCard
-                  key={index}
-                  {...{ plant, index }}
-                  isActive={false}
-                  setActive={VOID_FUNCTION}
-                />
-              ))}
-            </div>
-          </Card>
-        ))
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+          {allUserGardens.map(({ gardenName, totalPlants }, index) => (
+            <Card
+              key={index}
+              className="space-y-2 cursor-pointer"
+              solidOnHover
+              onClick={() => navigate({ to: gardenName })}
+            >
+              <h2 className="border-b border-secondary pb-2">{gardenName}</h2>
+              <h4>{totalPlants} plants</h4>
+            </Card>
+          ))}
+        </div>
       ) : (
         <Button
           isLoading={createGardenLoading}

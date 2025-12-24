@@ -1,9 +1,10 @@
 import classNames from "classnames";
+import ActivePlantPane from "components/plantSearch/ActivePlantPane";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import { AnimatePresence } from "motion/react";
 import PlantCard from "./PlantCard";
 
-const PlantResultsList = () => {
+const PlantResultsList = ({ className }: { className?: string }) => {
   const { plantList, activePlantIndex, setActivePlantIndex } =
     usePlantSelectionContext();
 
@@ -11,8 +12,7 @@ const PlantResultsList = () => {
     <div
       className={classNames(
         "gap-4 items-stretch max-md:flex flex-col md:grid justify-around grid-cols-[repeat(auto-fit,_minmax(384px,1fr))]",
-        plantList.length && "md:pb-20",
-        plantList.length < 3 && "max-w-[1000px]"
+        className
       )}
     >
       <AnimatePresence>
@@ -28,6 +28,8 @@ const PlantResultsList = () => {
             )
         )}
       </AnimatePresence>
+
+      <ActivePlantPane />
     </div>
   );
 };

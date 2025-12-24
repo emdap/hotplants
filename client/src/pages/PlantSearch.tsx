@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import PlantResultsList from "components/plantResults/PlantResultsList";
-import ActivePlantPane from "components/plantSearch/ActivePlantPane";
 import PlantSearchFiltersHolder from "components/plantSearch/PlantSearchFiltersHolder";
 import PlantResultsFooter from "components/plantSearch/PlantSearchFooter";
 import ScrapeStatusBar from "components/plantSearch/ScrapeStatusBar";
@@ -14,7 +13,8 @@ const FETCH_MORE_SCROLL_THRESHOLD = 100;
 const RESULTS_HOLDER_ID = "results-pane";
 
 const PlantSearch = () => {
-  const { hasCurrentResults, fetchNextPlantsPage } = usePlantSearchContext();
+  const { hasCurrentResults, totalResultsCount, fetchNextPlantsPage } =
+    usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
 
   const containerRef = useRef<HTMLElement>(null);
@@ -64,16 +64,22 @@ const PlantSearch = () => {
           id={RESULTS_HOLDER_ID}
           className={classNames(
             "grow flex flex-col gap-6 relative scroll-m-8",
-            !hasCurrentResults && "md:sticky md:top-20 h-screen md:h-fit"
+            hasCurrentResults
+              ? "max-lg:basis-2/3"
+              : "md:sticky md:top-20 h-screen md:h-fit md:pb-20"
           )}
         >
           <ScrapeStatusBar />
-          <PlantResultsList key="results-holder" />
+          <PlantResultsList
+            key="results-holder"
+            className={classNames({
+              "md:pb-20": hasCurrentResults,
+              "max-w-[1000px]": totalResultsCount < 3,
+            })}
+          />
           <PlantResultsFooter key="results-footer" />
         </div>
       </main>
-
-      <ActivePlantPane />
     </>
   );
 };
