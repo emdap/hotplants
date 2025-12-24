@@ -7,7 +7,6 @@ import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useLayoutEffect, useRef } from "react";
-import { HEADER_HEIGHT } from "util/generalUtil";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 const RESULTS_HOLDER_ID = "results-pane";
@@ -50,15 +49,7 @@ const PlantSearch = () => {
           !hasCurrentResults && "pb-10"
         )}
       >
-        <div
-          className={classNames(
-            "basis-1/3 grow md:max-w-lg lg:min-w-sm",
-            hasCurrentResults ? "md:sticky md:h-[calc(100dvh-2.5rem)]" : "h-max"
-          )}
-          style={{ top: HEADER_HEIGHT }}
-        >
-          <PlantSearchFiltersHolder />
-        </div>
+        <PlantSearchFiltersHolder />
 
         <div
           id={RESULTS_HOLDER_ID}
