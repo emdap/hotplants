@@ -24,11 +24,6 @@ app.use(
   createProxyMiddleware({
     target: `${serverURL}/graphql`,
     changeOrigin: true,
-    on: {
-      proxyReq: (data) => {
-        console.log("\n\n request", data.path);
-      },
-    },
   })
 );
 
@@ -37,11 +32,6 @@ app.use(
   createProxyMiddleware({
     target: `${serverURL}/api`,
     changeOrigin: true,
-    on: {
-      proxyReq: (data) => {
-        console.log("\n\n request", data.path);
-      },
-    },
   })
 );
 
