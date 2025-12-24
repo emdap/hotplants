@@ -19,17 +19,18 @@ const PlantCarouselImages = ({
   includeThumbnail: boolean;
   setIncludeThumbnail: (includeThumbnail: boolean) => void;
 }) => {
-  const baseArray = includeThumbnail
-    ? [
-        <ImageWrapper
-          key="thumbnail"
-          imageUrl={plant.thumbnailUrl!}
-          className={CONTAINER_CLASS}
-          onError={() => setIncludeThumbnail(false)}
-          {...DEFAULT_IMAGE_PROPS}
-        />,
-      ]
-    : [];
+  const baseArray =
+    includeThumbnail && plant.thumbnailUrl
+      ? [
+          <ImageWrapper
+            key="thumbnail"
+            imageUrl={plant.thumbnailUrl!}
+            className={CONTAINER_CLASS}
+            onError={() => setIncludeThumbnail(false)}
+            {...DEFAULT_IMAGE_PROPS}
+          />,
+        ]
+      : [];
 
   const occurrenceImages = plant.occurrences.flatMap(
     ({ occurrenceId, media }) =>

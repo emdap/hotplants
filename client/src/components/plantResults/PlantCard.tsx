@@ -62,6 +62,7 @@ const PlantCard = ({
           thumbnailUrl={plant.thumbnailUrl}
           occurrenceId={firstOccurrence.occurrenceId}
           mediaObject={firstMedia}
+          hideOnScroll
           containerClass="absolute w-full h-full flex items-center overflow-hidden z-0"
           imageClass="w-full min-h-full"
         >

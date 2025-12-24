@@ -16,6 +16,7 @@ export type PlantOccurrenceImageProps = Omit<
   occurrenceId: number;
   mediaObject: PlantMedia;
   containerClass?: string;
+  hideOnScroll?: boolean;
 };
 
 /** Uses thumbnailUrl if it's provided, otherwise uses the PlantMedia object */
@@ -25,6 +26,7 @@ const PlantOccurrenceImage = ({
   occurrenceId,
   mediaObject,
   containerClass,
+  hideOnScroll,
   ...imageWrapperProps
 }: PlantOccurrenceImageProps) => {
   const plantImageRef = useRef<HTMLDivElement>(null);
@@ -71,21 +73,26 @@ const PlantOccurrenceImage = ({
       }, 1000);
     };
 
-    checkImageInViewport();
-    scrollContainer?.addEventListener("scroll", checkImageInViewport);
+    if (hideOnScroll) {
+      checkImageInViewport();
+      scrollContainer?.addEventListener("scroll", checkImageInViewport);
+    }
 
     return () =>
       scrollContainer?.removeEventListener("scroll", checkImageInViewport);
-  }, [scrollContainer]);
+  }, [hideOnScroll, scrollContainer]);
 
   return (
-    <ImageWrapper
-      ref={plantImageRef}
-      className={containerClass}
-      imageUrl={imageUrl}
-      onError={handleImgError}
-      {...imageWrapperProps}
-    />
+    <>
+      {imageUrl}
+      <ImageWrapper
+        ref={plantImageRef}
+        className={containerClass}
+        imageUrl={imageUrl}
+        onError={handleImgError}
+        {...imageWrapperProps}
+      />
+    </>
   );
 };
 
