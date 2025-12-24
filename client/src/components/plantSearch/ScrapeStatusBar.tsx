@@ -17,12 +17,12 @@ const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
   const { scrollContainer } = useGetScrollContainer();
 
   const isSmallScreen = window.innerWidth < MEDIUM_SCREEN_SIZE;
-  const [disableTransparency, setDisableTransparency] = useState(isSmallScreen);
+  const [solidCard, setSolidCard] = useState(isSmallScreen);
 
   useLayoutEffect(() => {
     const setTransparency = () => {
       const rect = containerRef.current?.getBoundingClientRect();
-      setDisableTransparency(!rect || rect.top === HEADER_HEIGHT);
+      setSolidCard(!rect || rect.top === HEADER_HEIGHT);
     };
 
     !isSmallScreen &&
@@ -36,7 +36,7 @@ const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
     <Card
       ref={containerRef}
       key="status-bar"
-      disableTransparency={disableTransparency}
+      solid={solidCard}
       className={classNames(
         "z-20 w-full h-20 sticky flex items-center gap-4 transition-all",
         totalResultsCount ? "opacity-100" : "opacity-0 max-md:hidden"
