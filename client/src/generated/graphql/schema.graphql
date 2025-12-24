@@ -181,6 +181,8 @@ input SortInput {
 
 type UserGarden {
   gardenName: String!
+  gardenThumbnailUrl: String
   plants: [GardenPlantData!]!
+  totalPlants: Int!
   userId: String!
 }

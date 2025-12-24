@@ -10,13 +10,12 @@ const _GARDEN_PLANT_FIELDS = graphql(
   `
 );
 
-export const GET_ALL_GARDENS = graphql(`
+export const GET_ALL_GARDEN_NAMES = graphql(`
   query getAllGardens {
     allUserGardens {
       gardenName
-      plants {
-        ...GardenPlantFields
-      }
+      totalPlants
+      gardenThumbnailUrl
     }
   }
 `);
@@ -25,6 +24,7 @@ export const GET_GARDEN = graphql(`
   query getGarden($gardenName: String!) {
     userGarden(gardenName: $gardenName) {
       gardenName
+      totalPlants
       plants {
         ...GardenPlantFields
       }
