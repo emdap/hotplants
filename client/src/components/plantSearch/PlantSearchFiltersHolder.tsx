@@ -56,7 +56,7 @@ const PlantSearchFiltersHolder = () => {
         hasCurrentResults
           ? "md:sticky md:h-[calc(100dvh-2.5rem)] md:pr-4 md:mr-2"
           : "h-max",
-        isExpanded ? "md:max-w-lg lg:min-w-sm" : "md:max-w-0 md:min-w-0"
+        isExpanded ? "md:w-sm" : "md:w-0"
       )}
       style={{ top: HEADER_HEIGHT }}
     >
@@ -94,12 +94,17 @@ const PlantSearchFiltersHolder = () => {
         </Card>
       </div>
       {hasCurrentResults && (
-        <div className="max-md:hidden flex flex-col gap-2 h-full absolute top-0 right-0 py-2">
+        <div
+          className={classNames(
+            "max-md:hidden flex flex-col gap-2 h-full absolute top-0 right-0 py-2 transition-all",
+            isExpanded ? "mr-0" : "mr-[7px]"
+          )}
+        >
           <VerticalDivider className="h-4 " />
           <div
             onClick={() => setIsExpanded(!isExpanded)}
             className={classNames(
-              "rounded-full p-2 text-accent bg-default-background/60 cursor-pointer hover:bg-default-background -mr-3.5 transition-all",
+              "rounded-full p-1.5 text-accent bg-default-background/60 cursor-pointer hover:bg-default-background -mr-3 transition-all",
               isExpanded ? "rotate-0" : "rotate-180"
             )}
           >
