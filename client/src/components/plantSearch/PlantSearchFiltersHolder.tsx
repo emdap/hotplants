@@ -104,7 +104,7 @@ const PlantSearchFiltersHolder = () => {
           <div
             onClick={() => setIsExpanded(!isExpanded)}
             className={classNames(
-              "rounded-full p-1.5 text-accent bg-default-background/60 cursor-pointer hover:bg-default-background -mr-3 transition-all",
+              "rounded-full p-1.5 text-accent bg-white/60 cursor-pointer hover:bg-default-background -mr-3 transition-all",
               isExpanded ? "rotate-0" : "rotate-180"
             )}
           >
