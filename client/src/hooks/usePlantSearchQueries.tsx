@@ -188,7 +188,6 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   const unfetchedPlants = plantSearchData
     ? plantSearchData.count - plantSearchData.results.length
     : 0;
-  const hasNextPage = unfetchedPlants >= DEFAULT_PAGE_SIZE;
 
   const fetchNextPlantsPage = async () => {
     if (
@@ -198,7 +197,10 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
       return;
     }
 
-    if ((searchStatus === "READY" && unfetchedPlants) || hasNextPage) {
+    if (
+      (searchStatus === "READY" && unfetchedPlants) ||
+      unfetchedPlants >= DEFAULT_PAGE_SIZE
+    ) {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
@@ -211,7 +213,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
     plantSearchQuery,
     searchRecordQuery,
     fetchNextPlantsPage,
-    hasNextPage,
+    hasNextPage: Boolean(unfetchedPlants),
     scrapeMoreData: scrapeOccurrencesQuery.refetch,
   };
 };
