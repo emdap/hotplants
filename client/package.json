@@ -43,6 +43,7 @@
     "react-leaflet": "^5.0.0",
     "react-leaflet-cluster": "^3.1.1",
     "react-leaflet-draw": "^0.21.0",
+    "react-swipeable": "^7.0.2",
     "react-use": "^17.6.0",
     "rxjs": "^7.8.2",
     "wkt": "^0.1.1"

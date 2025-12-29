@@ -2,11 +2,15 @@ import classNames from "classnames";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { useSwipeable } from "react-swipeable";
 import Button from "./Button";
+
+const CAROUSEL_DIRECTION = ["prev", "next"] as const;
+type CarouselDirection = (typeof CAROUSEL_DIRECTION)[number];
 
 export type CarouselProps = {
   carouselIndex?: number;
-  setCarouselIndex?: (newIndex: number) => void;
+  setCarouselIndex?: React.Dispatch<React.SetStateAction<number>>;
   maxRenderedChildren?: number;
   enableKeyboardEvents?: boolean;
   bigButtons?: boolean;
@@ -15,7 +19,7 @@ export type CarouselProps = {
 
 const Carousel = ({
   carouselIndex = 0,
-  setCarouselIndex,
+  setCarouselIndex = () => null,
   maxRenderedChildren = 5,
   enableKeyboardEvents,
   bigButtons,
@@ -36,28 +40,36 @@ const Carousel = ({
     [children.length, activeIndex]
   );
 
-  const setIndexes = useCallback(
-    (newIndex: number) => {
-      setActiveIndex(newIndex);
-      setCarouselIndex && setCarouselIndex(newIndex);
-    },
-    [setActiveIndex, setCarouselIndex]
-  );
-
   const iterateCarousel = useCallback(
-    (e: KeyboardEvent) => {
-      let newIndex = activeIndex;
-      if (e.key === "ArrowRight" && !disableButtons.next) {
-        newIndex += 1;
-      } else if (e.key === "ArrowLeft" && !disableButtons.prev) {
-        newIndex -= 1;
+    (direction: CarouselDirection) => {
+      let setFn: undefined | ((index: number) => number) = undefined;
+
+      if (direction === "prev" && !disableButtons.prev) {
+        setFn = (index) => index - 1;
+      } else if (direction === "next" && !disableButtons.next) {
+        setFn = (index) => index + 1;
       }
-      setIndexes(newIndex);
+
+      if (setFn) {
+        setActiveIndex(setFn);
+        setCarouselIndex && setCarouselIndex(setFn);
+      }
     },
-    [disableButtons.next, disableButtons.prev, activeIndex, setIndexes]
+    [disableButtons.next, disableButtons.prev, setCarouselIndex]
   );
 
-  useDocumentListener("keydown", iterateCarousel, !!enableKeyboardEvents);
+  useDocumentListener(
+    "keydown",
+    (e: KeyboardEvent) =>
+      ["ArrowLeft", "ArrowRight"].includes(e.key) &&
+      iterateCarousel(e.key === "ArrowLeft" ? "prev" : "next"),
+    enableKeyboardEvents
+  );
+
+  const swipeHandlers = useSwipeable({
+    onSwipedRight: () => iterateCarousel("prev"),
+    onSwipedLeft: () => iterateCarousel("next"),
+  });
 
   const getChildStyle = (childIndex: number) => {
     const renderChild = Math.abs(activeIndex - childIndex) < childrenInDom;
@@ -73,7 +85,10 @@ const Carousel = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 justify-center h-full w-full overflow-hidden relative">
+    <div
+      {...swipeHandlers}
+      className="flex flex-col gap-2 justify-center h-full w-full overflow-hidden relative"
+    >
       <div className="grow overflow-hidden relative">
         {children.map((child, index) => {
           const { renderChild, translate } = getChildStyle(index);
@@ -96,21 +111,16 @@ const Carousel = ({
 
       {children.length > 1 && (
         <div className={"flex gap-8 justify-center"}>
-          {[-1, 1].map((incremenet) => {
-            const isNextButton = incremenet === 1;
-            return (
-              <Button
-                key={incremenet}
-                variant="text"
-                className={classNames({ "text-xl p-4": bigButtons })}
-                disabled={
-                  isNextButton ? disableButtons.next : disableButtons.prev
-                }
-                onClick={() => setIndexes(activeIndex + incremenet)}
-                icon={isNextButton ? <FaArrowRight /> : <FaArrowLeft />}
-              />
-            );
-          })}
+          {CAROUSEL_DIRECTION.map((direction) => (
+            <Button
+              key={direction}
+              variant="text"
+              className={classNames({ "text-xl p-4": bigButtons })}
+              disabled={disableButtons[direction]}
+              onClick={() => iterateCarousel(direction)}
+              icon={direction === "prev" ? <FaArrowLeft /> : <FaArrowRight />}
+            />
+          ))}
         </div>
       )}
     </div>

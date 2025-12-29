@@ -15,7 +15,7 @@ const PlantSelectionProvider = ({
 }) => {
   const [plantList, setPlantList] = useState(originalPlantList);
   const [activePlantIndex, setActivePlantIndex] = useState<number | null>(null);
-  const [activeMediaIndex, setActiveMediaIndex] = useState<number | null>(null);
+  const [activeMediaIndex, setActiveMediaIndex] = useState<number>(0);
 
   useEffect(() => {
     setPlantList(originalPlantList);

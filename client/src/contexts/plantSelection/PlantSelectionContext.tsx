@@ -8,7 +8,7 @@ type PlantSelectionContextType = {
   activePlantIndex: number | null;
   activeMediaIndex: number | null;
   setActivePlantIndex: Dispatch<SetStateAction<number | null>>;
-  setActiveMediaIndex: Dispatch<SetStateAction<number | null>>;
+  setActiveMediaIndex: Dispatch<SetStateAction<number>>;
 
   syncPlant: (plantId: string) => void;
 };
@@ -17,7 +17,7 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSelectionContextType = {
   plantList: [],
 
   activePlantIndex: null,
-  activeMediaIndex: null,
+  activeMediaIndex: 0,
   setActivePlantIndex: VOID_FUNCTION,
   setActiveMediaIndex: VOID_FUNCTION,
 
