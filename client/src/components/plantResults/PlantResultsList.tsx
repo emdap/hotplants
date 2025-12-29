@@ -5,8 +5,12 @@ import { AnimatePresence } from "motion/react";
 import PlantCard from "./PlantCard";
 
 const PlantResultsList = ({ className }: { className?: string }) => {
-  const { plantList, activePlantIndex, setActivePlantIndex } =
-    usePlantSelectionContext();
+  const {
+    plantList,
+    activePlantIndex,
+    setActivePlantIndex,
+    setActiveMediaIndex,
+  } = usePlantSelectionContext();
 
   return (
     <div
@@ -21,7 +25,10 @@ const PlantResultsList = ({ className }: { className?: string }) => {
             plant && (
               <PlantCard
                 key={`${plant.scientificName}-${index}`}
-                setActive={() => setActivePlantIndex(index)}
+                setActive={() => {
+                  setActivePlantIndex(index);
+                  setActiveMediaIndex(0);
+                }}
                 isActive={activePlantIndex === index}
                 {...{ plant, index }}
               />

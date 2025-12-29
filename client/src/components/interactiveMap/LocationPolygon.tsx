@@ -28,10 +28,10 @@ const getOuterCoordinates = (feature: Feature<PolygonType>) =>
 const LocationPolygon = ({
   boundingPolygon,
   locationSource,
-  isCustomizeable,
+  locationCustomizeable,
   setCustomPolygon,
 }: LocationWithPolygon & {
-  isCustomizeable?: boolean;
+  locationCustomizeable?: boolean;
   setCustomPolygon: SetCustomPolygonFn;
 }) => {
   const map = useMap();
@@ -102,7 +102,7 @@ const LocationPolygon = ({
         boundingPolygon={localPolygon}
       />
 
-      {isCustomizeable && (
+      {locationCustomizeable && (
         <>
           <Marker
             icon={PolygonCenterIcon}

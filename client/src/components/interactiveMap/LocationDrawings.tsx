@@ -1,19 +1,14 @@
 import { centroid } from "@turf/turf";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
-import { LocationWithPolygon } from "util/schemaTypesUtil";
 import LocationPolygon from "./LocationPolygon";
 import PolygonDrawing, { SetCustomPolygonFn } from "./PolygonDrawing";
 
-export type LocationDrawingsProps = {
-  isCustomizeable?: boolean;
-  locationArea?: LocationWithPolygon | null;
-};
-
 const LocationDrawings = ({
-  isCustomizeable,
-  locationArea,
-}: LocationDrawingsProps) => {
-  const { setSearchLocation } = usePlantSearchContext();
+  locationCustomizeable,
+}: {
+  locationCustomizeable?: boolean;
+}) => {
+  const { searchLocation, setSearchLocation } = usePlantSearchContext();
 
   const setCustomPolygon: SetCustomPolygonFn = (boundingPolygon) => {
     const center = centroid(boundingPolygon).geometry.coordinates;
@@ -27,14 +22,14 @@ const LocationDrawings = ({
 
   return (
     <>
-      {locationArea && (
+      {searchLocation && (
         <LocationPolygon
-          {...{ isCustomizeable, setCustomPolygon }}
-          {...locationArea}
+          {...{ locationCustomizeable, setCustomPolygon }}
+          {...searchLocation}
         />
       )}
 
-      {isCustomizeable && (
+      {locationCustomizeable && (
         <PolygonDrawing setCustomPolygon={setCustomPolygon} />
       )}
     </>

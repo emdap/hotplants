@@ -1,3 +1,4 @@
+import MapProvider from "components/interactiveMap/MapProvider";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
@@ -55,30 +56,31 @@ const ActivePlantPane = () => {
         <Card
           key="plant-pane"
           ref={paneRef}
-          className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-3/7 md:max-w-5xl flex flex-col gap-2 overflow-auto z-20"
+          className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-4/7 md:max-w-5xl flex flex-col z-20 p-0 overflow-hidden"
           {...CARD_FADE_IN}
         >
-          <Button
-            variant="primary"
-            onClick={resetActivePlant}
-            className="-mt-2 cursor-pointer"
-          >
-            <MdClose />
-          </Button>
+          <h2 className="flex gap-4 items-center pt-2 px-2">
+            <Button
+              variant="icon-white"
+              onClick={resetActivePlant}
+              icon={<MdClose size={24} />}
+            />
+            {activePlant.commonNames?.[0] ?? activePlant.scientificName}
+          </h2>
           <div
             key={activePlant.scientificName}
-            className="grow flex flex-col md:overflow-hidden gap-4"
+            className="flex flex-col overflow-auto lg:overflow-hidden gap-4 p-6"
           >
-            {/* <div className="flex max-sm:flex-col gap-4 justify-between"> */}
-            <PlantImageViewer
-              mode="carousel"
-              plant={activePlant}
-              isModalOpen={imageModalOpen}
-              setIsModalOpen={setImageModalOpen}
-            />
-            {/* <MapProvider className="min-h-60 w-full" /> */}
-            {/* </div> */}
-            <PlantInfoCard plant={activePlant} showFullInfo />
+            <div className="flex max-lg:flex-col-reverse gap-4 justify-between">
+              <PlantImageViewer
+                mode="carousel"
+                plant={activePlant}
+                isModalOpen={imageModalOpen}
+                setIsModalOpen={setImageModalOpen}
+              />
+              <MapProvider className="min-h-60 w-full" showMarkers />
+            </div>
+            <PlantInfoCard plant={activePlant} />
           </div>
         </Card>
       )}

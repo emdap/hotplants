@@ -54,7 +54,7 @@ const PlantSearchFiltersHolder = () => {
       className={classNames(
         "transition-all relative",
         hasCurrentResults
-          ? "md:sticky md:h-[calc(100dvh-2.5rem)] md:pr-4 md:mr-2"
+          ? "md:sticky max-md:top-0! md:h-[calc(100dvh-2.5rem)] md:pr-4 md:mr-2"
           : "h-max",
         isExpanded ? "md:w-sm" : "md:w-0"
       )}
@@ -69,14 +69,13 @@ const PlantSearchFiltersHolder = () => {
         <Card className="flex flex-col gap-2 items-start w-full !p-2">
           <LocationSearch setIsLoading={setSearchLocationLoading} />
           <MapProvider
-            showAllPlants
-            locationArea={searchLocation}
+            locationCustomizeable
             isLoading={searchLocationLoading}
             className="w-full h-[200px] md:h-[300px] grow"
           />
         </Card>
 
-        <Card id={FILTER_HOLDER_ID} className="space-y-4 scroll-m-6">
+        <Card id={FILTER_HOLDER_ID} className="space-y-4 scroll-m-8">
           <PlantFilters
             plantFilters={plantFilters}
             setPlantFilters={setPlantFilters}
@@ -93,6 +92,7 @@ const PlantSearchFiltersHolder = () => {
           </Button>
         </Card>
       </div>
+
       {hasCurrentResults && (
         <div
           className={classNames(

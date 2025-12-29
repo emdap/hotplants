@@ -30,10 +30,10 @@ export const MarkerClusterIcon = (cluster: MarkerCluster) => {
   );
 
   const activeIconUrl = activeChild
-    ? activeChild.options.icon?.options.iconUrl
+    ? activeChild.getIcon().options.iconUrl
     : children[0]?.options.icon?.options.iconUrl;
 
   return activeIconUrl
-    ? OccurrenceMarkerIcon(activeIconUrl, !!activeChild)
+    ? OccurrenceMarkerIcon(activeIconUrl, Boolean(activeChild))
     : new DivIcon({ html: "N/A" });
 };
