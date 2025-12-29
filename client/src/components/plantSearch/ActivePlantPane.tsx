@@ -11,6 +11,7 @@ import { AnimatePresence } from "motion/react";
 import { useMemo, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { useClickAway } from "react-use";
+import { getPlantDisplayName } from "util/generalUtil";
 import PlantImageViewer from "../plantImages/PlantImageViewer";
 import PlantInfoCard from "../plantResults/PlantInfoCard";
 
@@ -38,7 +39,7 @@ const ActivePlantPane = () => {
 
   const resetActivePlant = () => {
     setActivePlantIndex(null);
-    setActiveMediaIndex(null);
+    setActiveMediaIndex(0);
   };
 
   const paneRef = useRef<HTMLDivElement>(null);
@@ -65,7 +66,7 @@ const ActivePlantPane = () => {
               onClick={resetActivePlant}
               icon={<MdClose size={24} />}
             />
-            {activePlant.commonNames?.[0] ?? activePlant.scientificName}
+            {getPlantDisplayName(activePlant)}
           </h2>
           <div
             key={activePlant.scientificName}
@@ -73,7 +74,6 @@ const ActivePlantPane = () => {
           >
             <div className="flex max-lg:flex-col-reverse gap-4 justify-between">
               <PlantImageViewer
-                mode="carousel"
                 plant={activePlant}
                 isModalOpen={imageModalOpen}
                 setIsModalOpen={setImageModalOpen}

@@ -1,3 +1,6 @@
+import { PlantResult } from "graphqlHelpers/plantQueries";
+import { capitalize } from "lodash";
+
 export const HEADER_HEIGHT = 32;
 
 export const elementInViewport = (
@@ -19,4 +22,9 @@ export const elementInViewport = (
     rect.top + buffedHeight + 1000 >= 0 &&
     rect.bottom - buffedHeight - 1000 <= windowHeight
   );
+};
+
+export const getPlantDisplayName = (plant: PlantResult) => {
+  const commonName = plant.commonNames?.[0];
+  return commonName ? capitalize(commonName) : plant.scientificName;
 };

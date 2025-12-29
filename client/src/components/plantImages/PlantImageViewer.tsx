@@ -1,34 +1,32 @@
-import classNames from "classnames";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal from "designSystem/Modal";
 import { PlantResult } from "graphqlHelpers/plantQueries";
-import { capitalize } from "lodash";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
+import { getPlantDisplayName } from "util/generalUtil";
 import PlantCarouselImages from "./PlantCarouselImages";
 
 const PlantImageViewer = ({
   plant,
-  mode,
   isModalOpen,
   setIsModalOpen,
 }: {
   plant: PlantResult;
-  mode: "thumbnail" | "carousel";
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
 }) => {
   const { activeMediaIndex, setActiveMediaIndex } = usePlantSelectionContext();
-  const [largeCarouselIndex, setLargeCarouselIndex] = useState(
-    activeMediaIndex ?? 0
-  );
+  const [largeCarouselIndex, setLargeCarouselIndex] = useState(0);
   const [includeThumbnail, setIncludeThumbnail] = useState(
     Boolean(plant.thumbnailUrl)
   );
 
   const carouselIndex = activeMediaIndex ?? 0;
+  useEffect(() => {
+    setLargeCarouselIndex(carouselIndex);
+  }, [carouselIndex]);
 
   const PlantImages = useMemo(
     () =>
@@ -44,18 +42,12 @@ const PlantImageViewer = ({
     [plant.occurrences, plant.thumbnailUrl, plant._id, includeThumbnail]
   );
 
-  const commonName = plant.commonNames?.[0];
-
   return (
-    <div
-      className={classNames("aspect-square", {
-        "h-full": mode === "thumbnail",
-        "h-70 flex-col relative": mode === "carousel",
-      })}
-    >
-      {mode === "thumbnail" ? (
-        PlantImages[0]
-      ) : (
+    <>
+      <div
+        className="aspect-square h-70 flex-col relative"
+        onDoubleClick={() => setIsModalOpen(true)}
+      >
         <Carousel
           enableKeyboardEvents={!isModalOpen}
           carouselIndex={carouselIndex}
@@ -63,8 +55,7 @@ const PlantImageViewer = ({
         >
           {PlantImages}
         </Carousel>
-      )}
-      {mode === "carousel" && (
+
         <Button
           variant="secondary"
           className="absolute top-0 right-0"
@@ -72,10 +63,10 @@ const PlantImageViewer = ({
           size="small"
           icon={<MdFullscreen size={24} />}
         />
-      )}
+      </div>
 
       <Modal
-        title={commonName ? capitalize(commonName) : plant.scientificName}
+        title={getPlantDisplayName(plant)}
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
@@ -91,7 +82,7 @@ const PlantImageViewer = ({
           {PlantImages}
         </Carousel>
       </Modal>
-    </div>
+    </>
   );
 };
 
