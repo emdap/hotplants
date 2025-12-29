@@ -2,7 +2,7 @@ import PlantAnimation from "components/plantSearch/PlantAnimation";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 
-const PlantResultsFooter = () => {
+const PlantSearchFooter = () => {
   const {
     hasCurrentResults,
     hasNextPage,
@@ -10,11 +10,9 @@ const PlantResultsFooter = () => {
     searchRecordQuery: { dataUpdatedAt },
   } = usePlantSearchContext();
   return hasNextPage && searchStatus !== "CHECKING_STATUS" ? (
-    <LoadingIcon
-      key="loading-icon"
-      size={25}
-      containerClassName="text-white mx-auto mt-auto pb-4"
-    />
+    <div className="pb-4 mx-auto -mt-10 mb-10">
+      <LoadingIcon key="loading-icon" size={25} className="text-white" />
+    </div>
   ) : (
     <PlantAnimation
       key="plant-animation"
@@ -25,4 +23,4 @@ const PlantResultsFooter = () => {
   );
 };
 
-export default PlantResultsFooter;
+export default PlantSearchFooter;

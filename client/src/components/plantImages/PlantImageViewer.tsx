@@ -44,6 +44,8 @@ const PlantImageViewer = ({
     [plant.occurrences, plant.thumbnailUrl, plant._id, includeThumbnail]
   );
 
+  const commonName = plant.commonNames?.[0];
+
   return (
     <div
       className={classNames("aspect-square", {
@@ -73,7 +75,7 @@ const PlantImageViewer = ({
       )}
 
       <Modal
-        title={capitalize(plant.commonNames?.[0] ?? plant.scientificName)}
+        title={commonName ? capitalize(commonName) : plant.scientificName}
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);

@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useIsSignedIn } from "config/authClient";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
@@ -25,16 +26,8 @@ const PlantCard = ({
 }) => {
   const isRightClick = useRef(false);
 
-  const hasCommonName = Boolean(plant.commonNames?.length);
   const firstOccurrence = plant.occurrences[0];
   const firstMedia = firstOccurrence?.media[0];
-
-  const [addPlantToGarden, { loading: addPlantLoading }] = useApolloMutation(
-    ADD_PLANT_TO_GARDEN,
-    {
-      variables: { plantId: plant._id },
-    }
-  );
 
   return (
     <Card
@@ -87,35 +80,51 @@ const PlantCard = ({
         </PlantOccurrenceImage>
       )}
 
-      <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 min-h-1/4 md:min-h-20 justify-center bg-accent/80 text-shadow-glow relative">
-        {hasCommonName ? (
-          <>
-            <h2 className="text-white max-sm:text-lg border-b border-white/80 w-full">
-              {capitalize(plant.commonNames?.[0])}
-            </h2>
-            <h6 className="max-sm:text-sm text-white/80 self-end italic -mt-1.5 pb-1 text-right">
-              {plant.scientificName}
-            </h6>
-          </>
-        ) : (
-          <h2 className="text-white max-sm:text-lg italic pb-3">
-            {plant.scientificName}
-          </h2>
-        )}
+      <PlantCardHeader plant={plant} />
+    </Card>
+  );
+};
 
+const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
+  const isSignedIn = useIsSignedIn();
+  const commonName = plant.commonNames?.[0];
+
+  const [addPlantToGarden, { loading: addPlantLoading }] = useApolloMutation(
+    ADD_PLANT_TO_GARDEN,
+    {
+      variables: { plantId: plant._id },
+    }
+  );
+
+  return (
+    <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 min-h-1/4 md:min-h-20 justify-center bg-accent/80 text-shadow-glow relative">
+      <h2
+        className={classNames(
+          "text-white max-sm:text-lg",
+          isSignedIn && "pr-6",
+          commonName ? "border-b border-white/80 w-full" : "italic pb-3"
+        )}
+      >
+        {commonName ? capitalize(commonName) : plant.scientificName}
+      </h2>
+      {commonName && (
+        <h6 className="max-sm:text-sm text-white/80 self-end italic -mt-1.5 pb-1 text-right">
+          {plant.scientificName}
+        </h6>
+      )}
+      {isSignedIn && (
         <Button
-          className="absolute top-2 right-2 text-white"
+          className="absolute top-0 right-0 text-white!"
           onClick={(e) => {
             e.stopPropagation();
             addPlantToGarden();
           }}
-          variant="text"
+          variant="icon-white"
           disabled={addPlantLoading}
-        >
-          <FaHeart />
-        </Button>
-      </div>
-    </Card>
+          icon={<FaHeart />}
+        />
+      )}
+    </div>
   );
 };
 

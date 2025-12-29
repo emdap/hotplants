@@ -126,7 +126,7 @@ const ListboxWrapper = ({
           />
           {customOptionInput && (
             <Button
-              variant="icon-filled"
+              variant="icon-primary"
               size="small"
               onClick={saveCustomOption}
               icon={<MdAdd className="size-3" />}

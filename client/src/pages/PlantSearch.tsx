@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import PlantResultsList from "components/plantResults/PlantResultsList";
 import PlantSearchFiltersHolder from "components/plantSearch/PlantSearchFiltersHolder";
-import PlantResultsFooter from "components/plantSearch/PlantSearchFooter";
+import PlantSearchFooter from "components/plantSearch/PlantSearchFooter";
 import ScrapeStatusBar from "components/plantSearch/ScrapeStatusBar";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import PageTitle from "designSystem/PageTitle";
@@ -68,7 +68,7 @@ const PlantSearch = () => {
               "max-w-[1000px]": totalResultsCount < 3,
             })}
           />
-          <PlantResultsFooter key="results-footer" />
+          <PlantSearchFooter key="results-footer" />
         </div>
       </main>
     </>

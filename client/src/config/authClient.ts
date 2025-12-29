@@ -15,3 +15,7 @@ export type LoginParams = Pick<
 >;
 
 export const useAuthSession = authClient.useSession;
+export const useIsSignedIn = () => {
+  const session = useAuthSession();
+  return Boolean(session.data);
+};

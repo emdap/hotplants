@@ -61,9 +61,9 @@ const Modal = ({
           >
             <h2 className="text-default-text flex items-center gap-4">
               <Button
-                variant="icon-filled"
+                variant="icon-white"
                 onClick={onClose}
-                icon={<MdClose size={16} />}
+                icon={<MdClose size={24} />}
               />
               {title}
             </h2>
