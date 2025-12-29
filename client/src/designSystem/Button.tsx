@@ -7,7 +7,7 @@ type ButtonVariant =
   | "accent"
   | "secondary"
   | "text"
-  | "icon-filled"
+  | "icon-primary"
   | "icon-white";
 
 export type ButtonProps = {
@@ -37,8 +37,8 @@ const getClasses = (props: ButtonProps) => {
 
       "p-2": props.variant?.includes("icon"),
       "bg-primary/80 enabled:hover:bg-primary text-white":
-        props.variant === "icon-filled",
-      "enabled:hover:bg-white/20 text-white": props.variant === "icon-white",
+        props.variant === "icon-primary",
+      "enabled:hover:bg-white/20": props.variant === "icon-white",
 
       "text-primary enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
         isTextVariant,
