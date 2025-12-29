@@ -29,6 +29,10 @@
   h6 {
     @apply text-default-text;
   }
+
+  a {
+    @apply focus-visible:focus-ring outline-inherit rounded-sm;
+  }
 }
 
 @utility stable-scrollbar {

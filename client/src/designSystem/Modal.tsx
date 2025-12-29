@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import { useDocumentListener } from "hooks/useDocumentListener";
 import { AnimatePresence, motion } from "motion/react";
-import { HTMLProps } from "react";
 import { createPortal } from "react-dom";
 import { MdClose } from "react-icons/md";
 import Button from "./Button";
@@ -12,7 +11,6 @@ export type ModalProps = {
   title?: string;
   isOpen?: boolean;
   onClose?: () => void;
-  headerProps?: HTMLProps<HTMLDivElement>;
 } & CardProps;
 
 const MODAL_BODY_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
@@ -25,7 +23,6 @@ const Modal = ({
   title,
   isOpen,
   onClose,
-  headerProps: { className: headerClassName, ...headerProps } = {},
   children,
   className,
   ...bodyProps
@@ -62,22 +59,14 @@ const Modal = ({
             {...MODAL_BODY_FADE_IN}
             {...bodyProps}
           >
-            <div
-              className={classNames(
-                "flex items-center mb-2 relative",
-                headerClassName
-              )}
-              {...headerProps}
-            >
+            <h2 className="text-default-text flex items-center gap-4">
               <Button
-                className="absolute top-0 left-0"
-                variant="secondary"
+                variant="icon-filled"
                 onClick={onClose}
-              >
-                <MdClose size={16} />
-              </Button>
-              {title && <h2 className="text-default-text mx-auto">{title}</h2>}
-            </div>
+                icon={<MdClose size={16} />}
+              />
+              {title}
+            </h2>
             {children}
           </Card>
         </>

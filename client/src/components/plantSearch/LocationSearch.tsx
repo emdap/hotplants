@@ -119,11 +119,10 @@ const LocationSearch = ({
         {searchLocation && (
           <Button
             linkAddress={`#${FILTER_HOLDER_ID}`}
-            className="md:hidden sticky top-0 z-20 justify-self-end text-sm"
-            variant="primary"
-          >
-            <MdChevronRight className="rotate-90" />
-          </Button>
+            className="md:hidden sticky top-0 z-20 justify-self-end"
+            variant="icon-filled"
+            icon={<MdChevronRight className="rotate-90" size={16} />}
+          />
         )}
       </div>
 

@@ -1,16 +1,30 @@
 import classNames from "classnames";
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, ReactNode } from "react";
 import LoadingIcon from "./LoadingIcon";
 
+type ButtonVariant =
+  | "primary"
+  | "accent"
+  | "secondary"
+  | "text"
+  | "icon-filled"
+  | "icon-white";
+
 export type ButtonProps = {
-  variant?: "primary" | "accent" | "secondary" | "text";
+  variant?: ButtonVariant;
+  icon?: ReactNode;
   size?: "small" | "default";
   isLoading?: boolean;
   linkAddress?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const getClasses = (props: ButtonProps) =>
-  classNames(
+const getClasses = (props: ButtonProps) => {
+  const hasChildren = Boolean(props.children);
+  const isTextVariant = props.variant === "text";
+  const loadingWithText = hasChildren && props.isLoading !== undefined;
+  const iconWithText = Boolean(hasChildren && props.icon);
+
+  return classNames(
     "rounded-md max-w-fit flex gap-3 items-center justify-center font-medium text-sm",
     props.className,
     {
@@ -21,22 +35,29 @@ const getClasses = (props: ButtonProps) =>
       "bg-secondary/80 enabled:hover:bg-secondary outline-secondary ":
         props.variant === "secondary",
 
+      "p-2": props.variant?.includes("icon"),
+      "bg-primary/80 enabled:hover:bg-primary text-white":
+        props.variant === "icon-filled",
+      "enabled:hover:bg-white/20 text-white": props.variant === "icon-white",
+
       "text-primary enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
-        props.variant === "text",
+        isTextVariant,
 
       "cursor-pointer": !props.disabled,
       "opacity-50": props.disabled,
-      "px-10": props.isLoading !== undefined,
+      "pl-10 [&_.icon-wrapper]:-ml-7": loadingWithText || iconWithText,
+      "pr-10": loadingWithText,
+
+      "focus-ring": !isTextVariant,
+      "hover:shadow-sm": !isTextVariant && !props.disabled,
     },
-    props.variant !== "text" && [
-      "focus-ring",
-      {
-        "hover:shadow-sm": !props.disabled,
-        "py-2 px-3": props.size === "default",
-        "py-1 px-1.5 text-xs": props.size === "small",
-      },
-    ]
+
+    hasChildren && {
+      "py-2 px-3": props.size === "default",
+      "py-1 px-1.5 text-xs": props.size === "small",
+    }
   );
+};
 
 const Button = ({
   variant = "primary",
@@ -58,9 +79,13 @@ const Button = ({
     ...directButtonProps,
   });
 
-  const renderButton = ({ children, ...props }: Partial<ButtonProps>) => (
+  const renderButton = ({ children, icon, ...props }: Partial<ButtonProps>) => (
     <button {...props}>
-      {isLoading && <LoadingIcon size={16} containerClassName="-ml-7" />}
+      {(isLoading || icon) && (
+        <div className="icon-wrapper">
+          {isLoading ? <LoadingIcon size={16} /> : icon}
+        </div>
+      )}
       {children}
     </button>
   );

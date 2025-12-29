@@ -125,9 +125,12 @@ const ListboxWrapper = ({
             }}
           />
           {customOptionInput && (
-            <Button variant="secondary" size="small" onClick={saveCustomOption}>
-              <MdAdd className="size-3" />
-            </Button>
+            <Button
+              variant="icon-filled"
+              size="small"
+              onClick={saveCustomOption}
+              icon={<MdAdd className="size-3" />}
+            />
           )}
         </div>
 

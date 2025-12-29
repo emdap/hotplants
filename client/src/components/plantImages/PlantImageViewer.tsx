@@ -68,9 +68,8 @@ const PlantImageViewer = ({
           className="absolute top-0 right-0"
           onClick={() => setIsModalOpen(true)}
           size="small"
-        >
-          <MdFullscreen size={24} />
-        </Button>
+          icon={<MdFullscreen size={24} />}
+        />
       )}
 
       <Modal

@@ -38,7 +38,7 @@ const UserMenu = () => {
 
   return (
     <Menu>
-      <MenuButton className="text-white/60 hover:text-white/80 data-open:text-white/80 transition-colors">
+      <MenuButton className="text-white/60 hover:text-white/80 data-open:text-white/80 transition-colors focus-ring outline-white/80 rounded-sm">
         <FaUserCircle size={20} />
       </MenuButton>
       <MenuItems

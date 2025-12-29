@@ -107,9 +107,8 @@ const Carousel = ({
                   isNextButton ? disableButtons.next : disableButtons.prev
                 }
                 onClick={() => setIndexes(activeIndex + incremenet)}
-              >
-                {isNextButton ? <FaArrowRight /> : <FaArrowLeft />}
-              </Button>
+                icon={isNextButton ? <FaArrowRight /> : <FaArrowLeft />}
+              />
             );
           })}
         </div>
