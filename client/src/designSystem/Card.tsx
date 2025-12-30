@@ -1,12 +1,11 @@
 import classNames from "classnames";
-import { HTMLMotionProps, motion } from "motion/react";
-import { HTMLProps } from "react";
+import { motion } from "motion/react";
+import { CommonMotionDivProps } from "util/generalUtil";
 
-export type CardProps = Omit<HTMLMotionProps<"div">, "children"> &
-  Pick<HTMLProps<HTMLDivElement>, "children"> & {
-    solid?: boolean;
-    solidOnHover?: boolean;
-  };
+export type CardProps = CommonMotionDivProps & {
+  solid?: boolean;
+  solidOnHover?: boolean;
+};
 
 const Card = ({ solid, solidOnHover, className, ...props }: CardProps) => (
   <motion.div

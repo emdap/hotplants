@@ -1,7 +1,10 @@
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { capitalize } from "lodash";
+import { HTMLMotionProps } from "motion/react";
+import { HTMLProps } from "react";
 
-export const HEADER_HEIGHT = 32;
+export type CommonMotionDivProps = Omit<HTMLMotionProps<"div">, "children"> &
+  Pick<HTMLProps<HTMLDivElement>, "children">;
 
 export const elementInViewport = (
   element: HTMLElement,
@@ -28,3 +31,6 @@ export const getPlantDisplayName = (plant: PlantResult) => {
   const commonName = plant.commonNames?.[0];
   return commonName ? capitalize(commonName) : plant.scientificName;
 };
+
+export const MEDIUM_SCREEN_SIZE = 768;
+export const isSmallScreen = () => window.innerWidth < MEDIUM_SCREEN_SIZE;

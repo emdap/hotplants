@@ -35,6 +35,22 @@
   }
 }
 
+@theme {
+  --height-header: 32px;
+}
+
+@utility h-header {
+  height: var(--height-header);
+}
+
+@utility top-header {
+  top: var(--height-header);
+}
+
+@utility h-dvh-header {
+  height: calc(100dvh - var(--height-header));
+}
+
 @utility stable-scrollbar {
   scrollbar-width: thin;
   scrollbar-gutter: stable;
@@ -44,6 +60,15 @@
   transition: outline 0s !important;
 
   @apply focus-visible:outline-offset-2 focus-visible:outline-2 focus:outline-offset-2 focus:outline-2 [button]:m-1;
+}
+
+@utility px-safe-* {
+  padding-right: max(--spacing(--value(integer)), env(safe-area-inset-right));
+  padding-left: max(--spacing(--value(integer)), env(safe-area-inset-left));
+}
+
+@utility page-wrapper {
+  @apply pb-10 w-full px-safe-2;
 }
 
 @utility card {

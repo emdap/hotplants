@@ -6,7 +6,8 @@ import {
   mergeMotionProps,
   MOTION_FADE_IN,
 } from "designSystem/motionTransitions";
-import { useDocumentListener } from "hooks/useDocumentListener";
+import { useCloseOnEscape } from "hooks/useCloseOnEscape";
+import { useDisableHtmlScroll } from "hooks/useDisableHtmlScroll";
 import { AnimatePresence } from "motion/react";
 import { useMemo, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
@@ -42,14 +43,13 @@ const ActivePlantPane = () => {
     setActiveMediaIndex(0);
   };
 
+  useCloseOnEscape(resetActivePlant, !!activePlant && !imageModalOpen);
+  useDisableHtmlScroll(Boolean(activePlant));
+
   const paneRef = useRef<HTMLDivElement>(null);
   useClickAway(paneRef, () => !imageModalOpen && resetActivePlant(), [
     "mouseup",
   ]);
-
-  const closeOnEscape = (e: KeyboardEvent) =>
-    e.code === "Escape" && resetActivePlant();
-  useDocumentListener("keyup", closeOnEscape, !!activePlant && !imageModalOpen);
 
   return (
     <AnimatePresence>
@@ -70,7 +70,7 @@ const ActivePlantPane = () => {
           </h2>
           <div
             key={activePlant.scientificName}
-            className="flex flex-col overflow-auto lg:overflow-hidden gap-4 p-6"
+            className="flex flex-col overflow-auto lg:overflow-hidden gap-4 py-6 px-safe-6"
           >
             <div className="flex max-lg:flex-col-reverse gap-4 justify-between">
               <PlantImageViewer

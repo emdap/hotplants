@@ -3,12 +3,9 @@ import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
-import {
-  MEDIUM_SCREEN_SIZE,
-  useGetScrollContainer,
-} from "hooks/useGetScrollContainer";
+import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { ReactNode, useLayoutEffect, useRef, useState } from "react";
-import { HEADER_HEIGHT } from "util/generalUtil";
+import { isSmallScreen } from "util/generalUtil";
 
 const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
   const { searchStatus, totalResultsCount } = usePlantSearchContext();
@@ -16,21 +13,21 @@ const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollContainer } = useGetScrollContainer();
 
-  const isSmallScreen = window.innerWidth < MEDIUM_SCREEN_SIZE;
-  const [solidCard, setSolidCard] = useState(isSmallScreen);
+  const [solidCard, setSolidCard] = useState(isSmallScreen());
 
   useLayoutEffect(() => {
     const setTransparency = () => {
-      const rect = containerRef.current?.getBoundingClientRect();
-      setSolidCard(!rect || rect.top === HEADER_HEIGHT);
+      const rect = containerRef.current?.offsetParent?.getBoundingClientRect();
+
+      setSolidCard(!rect || rect.top <= 0);
     };
 
-    !isSmallScreen &&
+    !isSmallScreen() &&
       scrollContainer?.addEventListener("scroll", setTransparency);
 
     return () =>
       scrollContainer?.removeEventListener("scroll", setTransparency);
-  }, [scrollContainer, isSmallScreen]);
+  }, [scrollContainer]);
 
   return (
     <Card
@@ -38,10 +35,9 @@ const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
       key="status-bar"
       solid={solidCard}
       className={classNames(
-        "z-20 w-full h-20 sticky flex items-center gap-4 transition-all",
-        totalResultsCount ? "opacity-100" : "opacity-0 max-md:hidden"
+        "tall:z-20 w-full h-20 tall:sticky top-header items-center gap-4 transition-all",
+        totalResultsCount ? "opacity-100" : "opacity-0 hidden tall:flex"
       )}
-      style={{ top: HEADER_HEIGHT }}
     >
       <span>{searchStatus !== "READY" && <LoadingIcon />}</span>
       {totalResultsCount && (

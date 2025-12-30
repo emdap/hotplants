@@ -119,7 +119,7 @@ const LocationSearch = ({
         {searchLocation && (
           <Button
             linkAddress={`#${FILTER_HOLDER_ID}`}
-            className="md:hidden sticky top-0 z-20 justify-self-end"
+            className="md:hidden justify-self-end"
             variant="icon-primary"
             icon={<MdChevronRight className="rotate-90" size={16} />}
           />

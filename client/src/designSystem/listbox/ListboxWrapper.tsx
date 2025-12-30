@@ -76,7 +76,7 @@ const ListboxWrapper = ({
         className="styled-input focus:ring-1 focus:border-1 flex justify-end items-center data-focus:ring-1 relative"
       >
         {({ open }) => {
-          open && customInputRef.current?.focus();
+          open && customInputRef.current?.focus({ preventScroll: true });
           return (
             <>
               <SelectedOptions {...{ listboxValue, removeValue }} />

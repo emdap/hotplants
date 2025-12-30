@@ -1,11 +1,12 @@
 import classNames from "classnames";
-import { useDocumentListener } from "hooks/useDocumentListener";
-import { AnimatePresence, motion } from "motion/react";
+import { useCloseOnEscape } from "hooks/useCloseOnEscape";
+import { AnimatePresence } from "motion/react";
 import { createPortal } from "react-dom";
 import { MdClose } from "react-icons/md";
 import Button from "./Button";
 import Card, { CardProps } from "./Card";
 import { mergeMotionProps, MOTION_FADE_IN } from "./motionTransitions";
+import OverlayMask from "./OverlayMask";
 
 export type ModalProps = {
   title?: string;
@@ -27,14 +28,16 @@ const Modal = ({
   className,
   ...bodyProps
 }: ModalProps) => {
-  const closeOnEscape = (e: KeyboardEvent) => {
-    if (onClose && e.code === "Escape") {
-      e.stopPropagation();
-      onClose();
-    }
-  };
-
-  useDocumentListener("keyup", closeOnEscape, isOpen, true);
+  useCloseOnEscape(
+    (e) => {
+      if (onClose) {
+        e.stopPropagation();
+        onClose();
+      }
+    },
+    !!isOpen,
+    true
+  );
 
   // Using a portal for safety
   // First usecase - modal ancestor had backdrop effects, causing
@@ -43,14 +46,9 @@ const Modal = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
-            key="mask"
-            className="fixed top-0 left-0 h-dvh w-dvw bg-black/60 backdrop-blur-2xl z-50"
-            onClick={onClose}
-            {...MOTION_FADE_IN}
-          />
+          <OverlayMask key="mask" />
           <Card
-            key="body"
+            key="card"
             solid
             className={classNames(
               "fixed left-1/2 -translate-1/2 w-5/6 sm:w-3/4 h-5/6 flex flex-col gap-2 overflow-auto z-50 p-4",

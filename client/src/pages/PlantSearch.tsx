@@ -9,14 +9,14 @@ import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useLayoutEffect, useRef } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
-const RESULTS_HOLDER_ID = "results-pane";
+const RESULTS_PANE_ID = "results-pane";
 
 const PlantSearch = () => {
   const { hasCurrentResults, totalResultsCount, fetchNextPlantsPage } =
     usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
 
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -39,25 +39,22 @@ const PlantSearch = () => {
   }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
 
   return (
-    <>
+    <main className="page-wrapper">
       <PageTitle>Plant Search</PageTitle>
 
-      <main
+      <div
         ref={containerRef}
-        className={classNames(
-          "flex max-md:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow px-2",
-          !hasCurrentResults && "pb-10"
-        )}
+        className="flex max-md:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow"
       >
         <PlantSearchFiltersHolder />
 
         <div
-          id={RESULTS_HOLDER_ID}
+          id={RESULTS_PANE_ID}
           className={classNames(
             "grow flex flex-col gap-6 relative scroll-m-8",
             hasCurrentResults
               ? "max-lg:basis-2/3"
-              : "md:sticky md:top-20 h-screen md:h-fit md:pb-20"
+              : "md:sticky md:top-0 tall:top-20 h-screen tall:h-fit md:pb-20"
           )}
         >
           <ScrapeStatusBar />
@@ -70,8 +67,8 @@ const PlantSearch = () => {
           />
           <PlantSearchFooter key="results-footer" />
         </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 };
 

@@ -1,5 +1,5 @@
 @utility form-item {
-  @apply p-0.5 text-sm flex flex-col gap-y-1.5 gap-x-4;
+  @apply p-0.5 flex flex-col gap-y-1.5 gap-x-4;
 
   label {
     @apply font-medium;
@@ -7,7 +7,7 @@
 }
 
 @utility styled-input {
-  @apply min-w-[230px] px-2 h-8 text-base md:text-sm;
+  @apply min-w-[230px] px-2 h-8 text-base;
   @apply rounded-md border-transparent outline-none ring-primary/50 ring-offset-1 ring-offset-primary;
   @apply bg-white/60 dark:bg-white/10 focus:bg-white/70 dark:focus:bg-white/15;
   @apply autofill:shadow-[inset_0_0_0px_1000px_#e8f0fe];

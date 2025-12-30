@@ -13,7 +13,6 @@ import { PlantDataInput } from "generated/graphql/graphql";
 import { isEqual } from "lodash";
 import { useMemo, useState } from "react";
 import { MdChevronLeft } from "react-icons/md";
-import { HEADER_HEIGHT } from "util/generalUtil";
 
 const RESULTS_HOLDER_ID = "results-pane";
 
@@ -52,13 +51,12 @@ const PlantSearchFiltersHolder = () => {
   return (
     <div
       className={classNames(
-        "transition-all relative",
+        "transition-all relative w-full",
         hasCurrentResults
-          ? "md:sticky max-md:top-0! md:h-[calc(100dvh-2.5rem)] md:pr-4 md:mr-2"
+          ? "md:sticky md:top-header md:h-dvh-header md:pr-4 md:mr-2"
           : "h-max",
         isExpanded ? "md:w-sm" : "md:w-0"
       )}
-      style={{ top: HEADER_HEIGHT }}
     >
       <div
         className={classNames(

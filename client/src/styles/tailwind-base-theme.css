@@ -1,4 +1,5 @@
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant tall (@media (min-height: 600px));
 @theme {
   --font-sans: InterVariable, sans-serif;
   --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11";
@@ -62,8 +63,8 @@
   body {
     scrollbar-color: var(--color-scrollbar) transparent;
 
-    @apply md:h-dvh md:w-dvw flex flex-col md:overflow-auto
-      scroll-smooth text-default-text md:stable-scrollbar;
+    @apply md:h-dvh md:w-dvw md:overflow-auto md:stable-scrollbar;
+    @apply scroll-smooth text-default-text;
 
     * {
       @apply transition-colors;

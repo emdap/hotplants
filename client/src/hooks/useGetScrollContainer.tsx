@@ -1,6 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-
-export const MEDIUM_SCREEN_SIZE = 768;
+import { isSmallScreen } from "util/generalUtil";
 
 export const useGetScrollContainer = () => {
   const [scrollElements, setElements] = useState<{
@@ -9,7 +8,7 @@ export const useGetScrollContainer = () => {
   }>({ scrollContainer: null, scrollContainerElement: null });
 
   const setScrollContainer = () => {
-    if (window.innerWidth < MEDIUM_SCREEN_SIZE) {
+    if (isSmallScreen()) {
       setElements({
         scrollContainer: document,
         scrollContainerElement: document.documentElement,

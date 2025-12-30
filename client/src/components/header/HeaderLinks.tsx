@@ -20,7 +20,7 @@ const HeaderLinks = () => {
     [location.pathname, location.href].some((path) => linkTo?.includes(path));
 
   return (
-    <div className="flex items-center gap-8 text-white text-sm h-full">
+    <nav className="mx-auto flex items-center gap-8 text-white text-sm h-full">
       {HEADER_LINKS.map(({ displayText, ...linkProps }, index) => (
         <Link
           {...linkProps}
@@ -32,7 +32,7 @@ const HeaderLinks = () => {
           {displayText}
         </Link>
       ))}
-    </div>
+    </nav>
   );
 };
 
