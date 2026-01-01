@@ -44,7 +44,7 @@ const PlantSearch = () => {
 
       <div
         ref={containerRef}
-        className="flex max-md:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow"
+        className="flex max-lg:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow"
       >
         <PlantSearchFiltersHolder />
 
@@ -54,14 +54,14 @@ const PlantSearch = () => {
             "grow flex flex-col gap-6 relative scroll-m-8",
             hasCurrentResults
               ? "max-lg:basis-2/3"
-              : "md:sticky md:top-0 tall:top-20 h-screen tall:h-fit md:pb-20"
+              : "lg:sticky lg:top-0 big-screen:top-20 h-screen big-screen:h-fit lg:pb-20"
           )}
         >
           <ScrapeStatusBar />
           <PlantResultsList
             key="results-holder"
             className={classNames({
-              "md:pb-20": hasCurrentResults,
+              "lg:pb-20": hasCurrentResults,
               "max-w-[1000px]": totalResultsCount < 3,
             })}
           />

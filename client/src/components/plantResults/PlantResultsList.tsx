@@ -15,7 +15,7 @@ const PlantResultsList = ({ className }: { className?: string }) => {
   return (
     <div
       className={classNames(
-        "gap-4 items-stretch max-md:flex flex-col md:grid justify-around grid-cols-[repeat(auto-fit,_minmax(300px,1fr))]",
+        "gap-4 items-stretch grid justify-around grid-cols-[repeat(auto-fit,_minmax(300px,1fr))]",
         plantList.length && "pb-20",
         className
       )}

@@ -73,7 +73,7 @@ const NavSideBar = ({
       {isExpanded && (
         <OverlayMask
           key="mask"
-          className="lg:hidden"
+          className="big-screen:hidden bg-accent/10!"
           onClick={() => setIsExpanded(false)}
         />
       )}
@@ -82,17 +82,19 @@ const NavSideBar = ({
         key="nav-sidebar"
         {...swipeHandlers}
         className={classNames(
-          "[&_*]:text-white! sticky top-header flex flex-col max-lg:gap-2 transition-all duration-300 pb-8",
-          "max-lg:bg-primary-dark bg-gradient-to-t from-default-background/30 to-90% lg:border-r border-white/10 ",
-          "max-lg:fixed max-lg:z-50 h-dvh lg:h-dvh-header max-lg:top-0 overflow-auto",
+          "[&_*]:text-white! sticky top-header flex flex-col  transition-all duration-300 pb-8 overflow-auto",
+          "small-screen:gap-2 small-screen:fixed small-screen:z-50 small-screen:top-0 small-screen:h-dvh small-screen:bg-primary-dark",
+          "small-screen:px-safe-2 small-screen:pr-0! small-screen:w-xs",
+          "big-screen:h-dvh-header big-screen:border-r border-white/10",
+          "bg-gradient-to-t from-default-background/30 to-90%",
           {
-            "max-lg:px-safe-2 max-lg:w-xs lg:min-w-[300px] lg:w-[300px] lg:bg-primary-dark/40":
+            "big-screen:min-w-[300px] big-screen:w-[300px] small-screen:translate-x-0":
               isExpanded,
-            "max-lg:w-0 lg:w-header": !isExpanded,
+            "big-screen:w-header small-screen:-translate-x-full": !isExpanded,
           }
         )}
       >
-        <div className="sticky top-0 place-self-end max-lg:bg-inherit py-1 px-1.5">
+        <div className="sticky top-0 place-self-end small-screen:bg-inherit py-1 px-1.5">
           <Button
             variant="text"
             className={classNames(
@@ -101,7 +103,7 @@ const NavSideBar = ({
             onClick={() => setIsExpanded(!isExpanded)}
             icon={
               <MdKeyboardDoubleArrowLeft
-                className={classNames(!isExpanded && "lg:rotate-180")}
+                className={classNames(!isExpanded && "big-screen:rotate-180")}
               />
             }
           />
@@ -116,11 +118,11 @@ const NavSideBar = ({
             <Button
               variant="icon-white"
               className={classNames(
-                "transition-all! outline-none overflow-hidden focus:bg-white/20 h-12! justify-start lg:[&_.icon-wrapper]:m-0!",
+                "transition-all! outline-none overflow-hidden focus:bg-white/20 h-12! justify-start big-screen:[&_.icon-wrapper]:m-0! w-[calc(100%-1rem)]",
                 {
-                  "lg:ml-0! lg:pl-6! lg:rounded-l-none w-[calc(100%-1rem)]":
+                  "big-screen:ml-0! big-screen:pl-6! big-screen:rounded-l-none":
                     isExpanded,
-                  "lg:p-2! lg:pl-2! lg:rounded-none lg:mx-0! w-full":
+                  "big-screen:p-2! big-screen:pl-2! big-screen:rounded-none big-screen:mx-0! big-screen:w-full":
                     !isExpanded,
                   "bg-white/10": isActiveLink(item),
                 }
@@ -133,7 +135,9 @@ const NavSideBar = ({
                 key="nav-item-text"
                 className={classNames(
                   "whitespace-nowrap transition-opacity",
-                  isExpanded ? "lg:opacity-100" : "lg:opacity-0 w-0"
+                  isExpanded
+                    ? "big-screen:opacity-100"
+                    : "big-screen:opacity-0 big-screen:w-0"
                 )}
               >
                 {item.text}

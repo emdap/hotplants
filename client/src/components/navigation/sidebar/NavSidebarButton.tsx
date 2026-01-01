@@ -4,7 +4,7 @@ import { MdOutlineMenu } from "react-icons/md";
 const NavSidebarButton = ({ openSidebar }: { openSidebar: () => void }) => (
   <Button
     variant="text"
-    className="text-white/60 hover:text-white/80 lg:hidden p-0!"
+    className="text-white/60 hover:text-white/80 big-screen:hidden p-0!"
     onClick={openSidebar}
     icon={<MdOutlineMenu size={24} />}
   />

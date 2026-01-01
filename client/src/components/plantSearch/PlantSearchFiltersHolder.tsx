@@ -58,15 +58,15 @@ const PlantSearchFiltersHolder = () => {
       className={classNames(
         "transition-all relative w-full",
         hasCurrentResults
-          ? "md:sticky md:top-header md:h-dvh-header md:pr-4 md:mr-2"
+          ? "lg:sticky lg:top-header lg:h-dvh-header lg:pr-4 lg:mr-2"
           : "h-max pb-20",
-        isExpanded ? "md:w-sm" : "md:w-0"
+        isExpanded ? "lg:w-sm" : "lg:w-0"
       )}
     >
       <div
         className={classNames(
-          "md:h-full max-h-fit space-y-4",
-          hasCurrentResults && "md:overflow-auto md:pb-24"
+          "lg:h-full max-h-fit space-y-4",
+          hasCurrentResults && "lg:overflow-auto lg:pb-24"
         )}
       >
         <Card className="flex flex-col gap-2 items-start w-full !p-2">
@@ -74,7 +74,7 @@ const PlantSearchFiltersHolder = () => {
           <MapProvider
             locationCustomizeable
             isLoading={searchLocationLoading}
-            className="w-full h-[200px] md:h-[300px] grow"
+            className="w-full h-[200px] lg:h-[300px] grow"
           />
         </Card>
 
@@ -99,7 +99,7 @@ const PlantSearchFiltersHolder = () => {
       {hasCurrentResults && (
         <div
           className={classNames(
-            "max-md:hidden flex flex-col gap-2 h-full absolute top-0 py-2 transition-all",
+            "max-lg:hidden flex flex-col gap-2 h-full absolute top-0 py-2 transition-all",
             isExpanded ? "right-0" : "right-6"
           )}
         >

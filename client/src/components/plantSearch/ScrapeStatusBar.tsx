@@ -35,8 +35,8 @@ const ScrapeStatusBar = ({ children }: { children?: ReactNode }) => {
       key="status-bar"
       solid={solidCard}
       className={classNames(
-        "tall:z-20 w-full h-20 tall:sticky top-header items-center gap-4 transition-all",
-        totalResultsCount ? "opacity-100" : "opacity-0 hidden tall:flex"
+        "big-screen:z-20 w-full h-20 big-screen:sticky top-header items-center gap-4 transition-all",
+        totalResultsCount ? "opacity-100" : "opacity-0 hidden big-screen:flex"
       )}
     >
       <span>{searchStatus !== "READY" && <LoadingIcon />}</span>

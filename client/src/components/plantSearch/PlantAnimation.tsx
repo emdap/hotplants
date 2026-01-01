@@ -40,7 +40,7 @@ const PlantAnimation = ({
   const Lottie = useLottie({
     name: lottieAnimation,
     animationData: lottieAnimation === "STILL" ? stillPlant : movingPlant,
-    className: "w-[200px] lg:w-[300px] max-h-3/4 transition-opacity",
+    className: "w-[200px] xl:w-[300px] max-h-3/4 transition-opacity",
   });
 
   useEffect(() => {
@@ -69,14 +69,14 @@ const PlantAnimation = ({
   return (
     <motion.div
       {...MOTION_FADE_IN}
-      className="grow flex flex-col gap-4 tall:gap-10 pt-6 tall:py-10 pb-6 my-auto items-center justify-center transition-opacity max-h-full tall:max-h-[unset]"
+      className="grow flex flex-col gap-4 big-screen:gap-10 pt-6 big-screen:py-10 pb-6 my-auto items-center justify-center transition-opacity max-h-full big-screen:max-h-[unset]"
     >
       {Lottie.View}
       <motion.h4
         key={descriptionKey}
         {...MOTION_FADE_IN}
         className={classNames(
-          "text-white text-center px-4 text-base tall:text-lg min-h-fit",
+          "text-white text-center px-4 text-base big-screen:text-lg min-h-fit",
           lottieAnimation === "MOVING" && "animate-pulse"
         )}
       >

@@ -1,8 +1,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant tall (@media (min-height: 600px));
-@custom-variant max-tall (@media (max-height: 599px));
-@custom-variant small-screen (@media (height < 600px), (width < 768px));
-@custom-variant big-screen (@media (height >= 600px), (width >= 768px));
+
+@custom-variant small-screen (@media (height < 600px) or (width < 768px));
+@custom-variant big-screen (@media (height >= 600px) and (width >= 768px));
 
 @theme {
   --font-sans: InterVariable, sans-serif;
