@@ -3,10 +3,8 @@ import { useDocumentListener } from "hooks/useDocumentListener";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useSwipeable } from "react-swipeable";
+import { ITERATE_DIRECTION, IterateDirection } from "util/generalUtil";
 import Button from "./Button";
-
-const CAROUSEL_DIRECTION = ["prev", "next"] as const;
-type CarouselDirection = (typeof CAROUSEL_DIRECTION)[number];
 
 export type CarouselProps = {
   carouselIndex?: number;
@@ -41,7 +39,7 @@ const Carousel = ({
   );
 
   const iterateCarousel = useCallback(
-    (direction: CarouselDirection) => {
+    (direction: IterateDirection) => {
       let setFn: undefined | ((index: number) => number) = undefined;
 
       if (direction === "prev" && !disableButtons.prev) {
@@ -111,7 +109,7 @@ const Carousel = ({
 
       {children.length > 1 && (
         <div className={"flex gap-8 justify-center"}>
-          {CAROUSEL_DIRECTION.map((direction) => (
+          {ITERATE_DIRECTION.map((direction) => (
             <Button
               key={direction}
               variant="text"

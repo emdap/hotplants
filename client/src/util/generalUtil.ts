@@ -6,6 +6,9 @@ import { HTMLProps } from "react";
 export type CommonMotionDivProps = Omit<HTMLMotionProps<"div">, "children"> &
   Pick<HTMLProps<HTMLDivElement>, "children">;
 
+export const ITERATE_DIRECTION = ["prev", "next"] as const;
+export type IterateDirection = (typeof ITERATE_DIRECTION)[number];
+
 export const elementInViewport = (
   element: HTMLElement,
   { xBuffer = 1, yBuffer = 1 }: { xBuffer?: number; yBuffer?: number } = {}
@@ -33,4 +36,7 @@ export const getPlantDisplayName = (plant: PlantResult) => {
 };
 
 export const MEDIUM_SCREEN_SIZE = 768;
-export const isSmallScreen = () => window.innerWidth < MEDIUM_SCREEN_SIZE;
+const TALL_SCREEN_SIZE = 600;
+export const isSmallScreen = () =>
+  window.innerWidth < MEDIUM_SCREEN_SIZE ||
+  window.innerHeight < TALL_SCREEN_SIZE;

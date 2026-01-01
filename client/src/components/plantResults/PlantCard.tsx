@@ -8,7 +8,7 @@ import { PlantResult } from "graphqlHelpers/plantQueries";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { FaHeart } from "react-icons/fa";
 import { getPlantDisplayName } from "util/generalUtil";
 import PlantOccurrenceImage from "../plantImages/PlantOccurrenceImage";
@@ -24,14 +24,20 @@ const PlantCard = ({
   isActive: boolean;
   setActive: () => void;
 }) => {
+  const plantCardRef = useRef<HTMLDivElement>(null);
   const isRightClick = useRef(false);
 
   const firstOccurrence = plant.occurrences[0];
   const firstMedia = firstOccurrence?.media[0];
 
+  useEffect(() => {
+    isActive && plantCardRef.current?.focus();
+  }, [isActive]);
+
   return (
     <Card
       {...MOTION_FADE_SLIDE}
+      ref={plantCardRef}
       transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.03 }}
       id={plant.scientificName}
       onClick={setActive}
@@ -44,7 +50,7 @@ const PlantCard = ({
       onMouseUp={() => (isRightClick.current = false)}
       tabIndex={1}
       className={classNames(
-        "cursor-pointer h-[30vh] md:h-60 outline-white/60 transition-all relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
+        "cursor-pointer h-[30vh] small-screen:h-50vh md:h-60 outline-white/60 transition-all relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
 
         isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0"
       )}

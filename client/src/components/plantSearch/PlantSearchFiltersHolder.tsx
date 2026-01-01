@@ -13,6 +13,7 @@ import { PlantDataInput } from "generated/graphql/graphql";
 import { isEqual } from "lodash";
 import { useMemo, useState } from "react";
 import { MdChevronLeft } from "react-icons/md";
+import { useSwipeable } from "react-swipeable";
 
 const RESULTS_HOLDER_ID = "results-pane";
 
@@ -28,6 +29,9 @@ const PlantSearchFiltersHolder = () => {
   const [plantFilters, setPlantFilters] = useState<PlantDataInput>({});
   const [searchLocationLoading, setSearchLocationLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => setIsExpanded(false),
+  });
 
   const { filtersAreValid, draftCriteria } = useMemo(() => {
     const draftCriteria = {
@@ -50,6 +54,7 @@ const PlantSearchFiltersHolder = () => {
 
   return (
     <div
+      {...swipeHandlers}
       className={classNames(
         "transition-all relative w-full",
         hasCurrentResults
@@ -94,11 +99,11 @@ const PlantSearchFiltersHolder = () => {
       {hasCurrentResults && (
         <div
           className={classNames(
-            "max-md:hidden flex flex-col gap-2 h-full absolute top-0 right-0 py-2 transition-all",
-            isExpanded ? "mr-0" : "mr-[7px]"
+            "max-md:hidden flex flex-col gap-2 h-full absolute top-0 py-2 transition-all",
+            isExpanded ? "right-0" : "right-6"
           )}
         >
-          <VerticalDivider className="h-4 " />
+          <VerticalDivider className="h-4" />
           <Button
             variant="text"
             size="small"

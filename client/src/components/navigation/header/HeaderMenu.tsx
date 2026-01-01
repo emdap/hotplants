@@ -7,7 +7,7 @@ const HeaderMenu = ({ openSidebar }: { openSidebar: () => void }) => (
     <NavSidebarButton openSidebar={openSidebar} />
     <div className="h-header py-2 max-lg:ml-auto max-lg:pl-8 flex gap-2 items-center">
       <img src="/favicon/apple-icon.png" className="h-full" />
-      <span className="font-mono text-white/80">hotplants</span>
+      <h6 className="font-mono text-white/80!">hotplants</h6>
     </div>
     <div className="flex gap-4 items-center ml-auto">
       <DarkModeToggle />

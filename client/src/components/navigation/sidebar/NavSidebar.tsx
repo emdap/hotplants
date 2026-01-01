@@ -13,6 +13,7 @@ import {
 } from "react-icons/md";
 import { TbPlant2 } from "react-icons/tb";
 import { useSwipeable } from "react-swipeable";
+import { isSmallScreen } from "util/generalUtil";
 import OverlayMask from "../../../designSystem/OverlayMask";
 
 type SidebarNavItem = { icon: IconType; text: string } & LinkProps;
@@ -73,7 +74,6 @@ const NavSideBar = ({
         <OverlayMask
           key="mask"
           className="lg:hidden"
-          animate={{ opacity: 0.9 }}
           onClick={() => setIsExpanded(false)}
         />
       )}
@@ -82,7 +82,7 @@ const NavSideBar = ({
         key="nav-sidebar"
         {...swipeHandlers}
         className={classNames(
-          "text-white sticky top-header flex flex-col max-lg:gap-2 transition-all duration-300 pb-20",
+          "[&_*]:text-white! sticky top-header flex flex-col max-lg:gap-2 transition-all duration-300 pb-8",
           "max-lg:bg-primary-dark bg-gradient-to-t from-default-background/30 to-90% lg:border-r border-white/10 ",
           "max-lg:fixed max-lg:z-50 h-dvh lg:h-dvh-header max-lg:top-0 overflow-auto",
           {
@@ -96,7 +96,7 @@ const NavSideBar = ({
           <Button
             variant="text"
             className={classNames(
-              "transition-all outline-none text-white p-1! mb-2 rounded-full! hover:border-white/40 border border-transparent aspect-square"
+              "transition-all outline-none p-1! mb-2 rounded-full! hover:border-white/40 border border-transparent aspect-square"
             )}
             onClick={() => setIsExpanded(!isExpanded)}
             icon={
@@ -108,7 +108,11 @@ const NavSideBar = ({
         </div>
 
         {SIDEBAR_ITEMS.map(({ icon, ...item }, index) => (
-          <Link key={index} {...item}>
+          <Link
+            key={index}
+            {...item}
+            onClick={() => isSmallScreen() && setIsExpanded(false)}
+          >
             <Button
               variant="icon-white"
               className={classNames(

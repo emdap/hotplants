@@ -1,5 +1,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant tall (@media (min-height: 600px));
+@custom-variant max-tall (@media (max-height: 599px));
+@custom-variant small-screen (@media (height < 600px), (width < 768px));
+@custom-variant big-screen (@media (height >= 600px), (width >= 768px));
+
 @theme {
   --font-sans: InterVariable, sans-serif;
   --font-sans--font-feature-settings: "cv02", "cv03", "cv04", "cv11";
@@ -57,13 +61,13 @@
       scrollbar-color: var(--color-scrollbar) var(--color-primary-dark);
     }
 
-    @apply max-md:overflow-visible md:overflow-hidden max-md:scroll-smooth bg-accent max-md:stable-scrollbar;
+    @apply small-screen:overflow-visible big-screen:overflow-hidden small-screen:scroll-smooth bg-accent small-screen:stable-scrollbar;
   }
 
   body {
     scrollbar-color: var(--color-scrollbar) transparent;
 
-    @apply md:h-dvh md:w-dvw md:overflow-auto md:stable-scrollbar;
+    @apply big-screen:h-dvh big-screen:w-dvw big-screen:overflow-auto big-screen:stable-scrollbar;
     @apply scroll-smooth text-default-text;
 
     * {

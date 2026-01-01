@@ -9,10 +9,11 @@ import {
 import { useCloseOnEscape } from "hooks/useCloseOnEscape";
 import { useDisableHtmlScroll } from "hooks/useDisableHtmlScroll";
 import { AnimatePresence } from "motion/react";
-import { useMemo, useRef, useState } from "react";
-import { MdClose } from "react-icons/md";
+import { Fragment, useMemo, useRef, useState } from "react";
+import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
+import { useSwipeable } from "react-swipeable";
 import { useClickAway } from "react-use";
-import { getPlantDisplayName } from "util/generalUtil";
+import { getPlantDisplayName, ITERATE_DIRECTION } from "util/generalUtil";
 import PlantImageViewer from "../plantImages/PlantImageViewer";
 import PlantInfoCard from "../plantResults/PlantInfoCard";
 
@@ -43,6 +44,9 @@ const ActivePlantPane = () => {
     setActiveMediaIndex(0);
   };
 
+  const swipeHandlers = useSwipeable({
+    onSwipedRight: resetActivePlant,
+  });
   useCloseOnEscape(resetActivePlant, !!activePlant && !imageModalOpen);
   useDisableHtmlScroll(Boolean(activePlant));
 
@@ -51,38 +55,82 @@ const ActivePlantPane = () => {
     "mouseup",
   ]);
 
+  const iteratePlant = (direction: "prev" | "next") => {
+    if (activePlantIndex !== null) {
+      setActiveMediaIndex(0);
+      setActivePlantIndex(
+        activePlantIndex + (direction === "prev" ? -1 : 1) * 1
+      );
+    }
+  };
+
+  const disableIterate = useMemo(
+    () => ({
+      next: activePlantIndex === plantList.length - 1,
+      prev: activePlantIndex === 0,
+    }),
+    [activePlantIndex, plantList.length]
+  );
+
   return (
     <AnimatePresence>
       {activePlant && (
-        <Card
-          key="plant-pane"
-          ref={paneRef}
-          className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-4/7 md:max-w-5xl flex flex-col z-20 p-0 overflow-hidden"
-          {...CARD_FADE_IN}
-        >
-          <h2 className="flex gap-4 items-center pt-2 px-2">
-            <Button
-              variant="icon-white"
-              onClick={resetActivePlant}
-              icon={<MdClose size={24} />}
-            />
-            {getPlantDisplayName(activePlant)}
-          </h2>
-          <div
-            key={activePlant.scientificName}
-            className="flex flex-col overflow-auto lg:overflow-hidden gap-4 py-6 px-safe-6"
+        <div {...swipeHandlers}>
+          <Card
+            key="plant-pane"
+            ref={paneRef}
+            className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-4/7 md:max-w-5xl flex flex-col z-20 p-0 overflow-hidden"
+            {...CARD_FADE_IN}
           >
-            <div className="flex max-lg:flex-col-reverse gap-4 justify-between">
-              <PlantImageViewer
-                plant={activePlant}
-                isModalOpen={imageModalOpen}
-                setIsModalOpen={setImageModalOpen}
+            <h2 className="flex gap-4 items-center pt-2 px-2">
+              <Button
+                variant="icon-white"
+                onClick={resetActivePlant}
+                icon={<MdClose size={24} />}
               />
-              <MapProvider className="min-h-60 w-full" showMarkers />
+              {getPlantDisplayName(activePlant)}
+              <div className="ml-auto flex items-center gap-1">
+                {ITERATE_DIRECTION.map((direction) => (
+                  <Fragment key={direction}>
+                    P
+                    <Button
+                      key={direction}
+                      disabled={disableIterate[direction]}
+                      variant="text"
+                      onClick={() => iteratePlant(direction)}
+                      icon={
+                        direction === "prev" ? (
+                          <MdChevronLeft />
+                        ) : (
+                          <MdChevronRight />
+                        )
+                      }
+                    />
+                    {direction === "prev" && (
+                      <span className="font-mono text-xs text-primary-dark">
+                        browse
+                      </span>
+                    )}
+                  </Fragment>
+                ))}
+              </div>
+            </h2>
+            <div
+              key={activePlant.scientificName}
+              className="flex flex-col overflow-auto lg:overflow-hidden gap-4 py-6 px-safe-6"
+            >
+              <div className="flex max-lg:flex-col-reverse gap-4 justify-between">
+                <PlantImageViewer
+                  plant={activePlant}
+                  isModalOpen={imageModalOpen}
+                  setIsModalOpen={setImageModalOpen}
+                />
+                <MapProvider className="min-h-60 w-full" showMarkers />
+              </div>
+              <PlantInfoCard plant={activePlant} />
             </div>
-            <PlantInfoCard plant={activePlant} />
-          </div>
-        </Card>
+          </Card>
+        </div>
       )}
     </AnimatePresence>
   );

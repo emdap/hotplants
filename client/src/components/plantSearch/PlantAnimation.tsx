@@ -69,7 +69,7 @@ const PlantAnimation = ({
   return (
     <motion.div
       {...MOTION_FADE_IN}
-      className="grow flex flex-col gap-4 tall:gap-10 pt-6 tall:py-10 my-auto items-center justify-center transition-opacity max-h-full tall:max-h-[unset]"
+      className="grow flex flex-col gap-4 tall:gap-10 pt-6 tall:py-10 pb-6 my-auto items-center justify-center transition-opacity max-h-full tall:max-h-[unset]"
     >
       {Lottie.View}
       <motion.h4

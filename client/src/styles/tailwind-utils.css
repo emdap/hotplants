@@ -74,7 +74,7 @@
 }
 
 @utility page-wrapper {
-  @apply w-full px-safe-2 md:pl-8;
+  @apply w-full px-safe-2 big-screen:pl-8;
 }
 
 @utility card {
