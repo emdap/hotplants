@@ -36,11 +36,17 @@
 }
 
 @theme {
-  --height-header: 32px;
+  --height-header: --spacing(10);
 }
 
 @utility h-header {
   height: var(--height-header);
+  min-height: var(--height-header);
+}
+
+@utility w-header {
+  width: var(--height-header);
+  min-width: var(--height-header);
 }
 
 @utility top-header {
@@ -68,7 +74,7 @@
 }
 
 @utility page-wrapper {
-  @apply pb-10 w-full px-safe-2;
+  @apply w-full px-safe-2 md:pl-8;
 }
 
 @utility card {

@@ -54,7 +54,7 @@ const PlantSearchFiltersHolder = () => {
         "transition-all relative w-full",
         hasCurrentResults
           ? "md:sticky md:top-header md:h-dvh-header md:pr-4 md:mr-2"
-          : "h-max",
+          : "h-max pb-20",
         isExpanded ? "md:w-sm" : "md:w-0"
       )}
     >
@@ -99,15 +99,16 @@ const PlantSearchFiltersHolder = () => {
           )}
         >
           <VerticalDivider className="h-4 " />
-          <div
+          <Button
+            variant="text"
+            size="small"
+            icon={<MdChevronLeft size={16} />}
             onClick={() => setIsExpanded(!isExpanded)}
             className={classNames(
-              "rounded-full p-1.5 text-accent bg-white/60 cursor-pointer hover:bg-white -mr-3 transition-all",
+              "text-white! p-1! !-mr-3 border hover:border-white/60 border-transparent rounded-full! transition-all",
               isExpanded ? "rotate-0" : "rotate-180"
             )}
-          >
-            <MdChevronLeft size={12} />
-          </div>
+          />
           <VerticalDivider className="grow" />
         </div>
       )}

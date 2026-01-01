@@ -46,7 +46,7 @@ const Modal = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          <OverlayMask key="mask" />
+          <OverlayMask key="mask" onClick={onClose} />
           <Card
             key="card"
             solid

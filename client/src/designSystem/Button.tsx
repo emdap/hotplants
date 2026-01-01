@@ -18,14 +18,30 @@ export type ButtonProps = {
   linkAddress?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
+const BUTTON_SIZES = {
+  default: "py-2 px-3",
+  small: "py-1 px-1.5 text-sm",
+  icon: {
+    default: "p-2",
+    small: "p-1",
+  },
+};
+
 const getClasses = (props: ButtonProps) => {
   const hasChildren = Boolean(props.children);
-  const isTextVariant = props.variant === "text";
   const loadingWithText = hasChildren && props.isLoading !== undefined;
   const iconWithText = Boolean(hasChildren && props.icon);
 
+  const isTextVariant = props.variant === "text";
+  const isIconVariant = props.variant?.includes("icon");
+
+  const buttonSizeKey = props.size ?? "default";
+  const buttonSize = isIconVariant
+    ? BUTTON_SIZES.icon[buttonSizeKey]
+    : BUTTON_SIZES[buttonSizeKey];
+
   return classNames(
-    "rounded-md max-w-fit flex gap-3 items-center justify-center font-medium text-sm",
+    "rounded-md flex gap-3 items-center justify-center font-medium",
     props.className,
     {
       "bg-primary/90 dark:bg-primary/80 enabled:hover:bg-primary outline-primary text-white":
@@ -35,10 +51,10 @@ const getClasses = (props: ButtonProps) => {
       "bg-secondary/80 enabled:hover:bg-secondary outline-secondary ":
         props.variant === "secondary",
 
-      "p-2": props.variant?.includes("icon"),
       "bg-primary/80 enabled:hover:bg-primary text-white":
         props.variant === "icon-primary",
-      "enabled:hover:bg-white/20": props.variant === "icon-white",
+      "enabled:hover:bg-white/20 outline-primary":
+        props.variant === "icon-white",
 
       "text-primary enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
         isTextVariant,
@@ -51,11 +67,8 @@ const getClasses = (props: ButtonProps) => {
       "focus-ring": !isTextVariant,
       "hover:shadow-sm": !isTextVariant && !props.disabled,
     },
-
-    hasChildren && {
-      "py-2 px-3": props.size === "default",
-      "py-1 px-1.5 text-xs": props.size === "small",
-    }
+    loadingWithText ? "pr-10" : iconWithText && "pr-3",
+    buttonSize
   );
 };
 

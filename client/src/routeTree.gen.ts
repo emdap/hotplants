@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as SearchBrowseRouteImport } from './routes/search_.browse'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLogoutRouteImport } from './routes/_auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
@@ -28,6 +29,11 @@ const PrivateRoute = PrivateRouteImport.update({
 } as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchBrowseRoute = SearchBrowseRouteImport.update({
+  id: '/search_/browse',
+  path: '/search/browse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
+  '/search/browse': typeof SearchBrowseRoute
   '/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRoutesByTo {
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
+  '/search/browse': typeof SearchBrowseRoute
   '/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRoutesById {
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/logout': typeof AuthLogoutRoute
   '/_auth/signup': typeof AuthSignupRoute
+  '/search_/browse': typeof SearchBrowseRoute
   '/_private/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRouteTypes {
@@ -83,9 +92,16 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/signup'
+    | '/search/browse'
     | '/gardens/{-$gardenName}'
   fileRoutesByTo: FileRoutesByTo
-  to: '/search' | '/login' | '/logout' | '/signup' | '/gardens/{-$gardenName}'
+  to:
+    | '/search'
+    | '/login'
+    | '/logout'
+    | '/signup'
+    | '/search/browse'
+    | '/gardens/{-$gardenName}'
   id:
     | '__root__'
     | '/_auth'
@@ -94,6 +110,7 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/logout'
     | '/_auth/signup'
+    | '/search_/browse'
     | '/_private/gardens/{-$gardenName}'
   fileRoutesById: FileRoutesById
 }
@@ -101,6 +118,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   PrivateRoute: typeof PrivateRouteWithChildren
   SearchRoute: typeof SearchRoute
+  SearchBrowseRoute: typeof SearchBrowseRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -124,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search_/browse': {
+      id: '/search_/browse'
+      path: '/search/browse'
+      fullPath: '/search/browse'
+      preLoaderRoute: typeof SearchBrowseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/signup': {
@@ -187,6 +212,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PrivateRoute: PrivateRouteWithChildren,
   SearchRoute: SearchRoute,
+  SearchBrowseRoute: SearchBrowseRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

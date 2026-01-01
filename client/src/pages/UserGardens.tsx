@@ -87,7 +87,7 @@ const UserGardens = () => {
           {allUserGardens.map(({ gardenName, totalPlants }, index) => (
             <Card
               key={index}
-              className="space-y-2 cursor-pointer"
+              className="space-y-2 cursor-pointer min-w-xs"
               solidOnHover
               onClick={() => navigate({ to: gardenName })}
             >
