@@ -17,7 +17,7 @@
     "generate-openapi-types": "pnpm generate-hotplants-types && pnpm generate-nominatim-types && pnpm generate-gbif-types",
     "auth:start": "(cd ../server && pnpm dev &)",
     "auth:stop": "(kill $(lsof -t -i:4000))",
-    "deploy": "(cd .. && fly deploy)"
+    "fly-deploy": "(cd .. && fly deploy)"
   },
   "dependencies": {
     "@apollo/client": "^4.0.2",
