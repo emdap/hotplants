@@ -80,7 +80,7 @@ const ActivePlantPane = () => {
           <Card
             key="plant-pane"
             ref={paneRef}
-            className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-4/7 md:max-w-5xl flex flex-col z-20 p-0 overflow-hidden"
+            className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-4/7 md:max-w-5xl flex flex-col z-30 p-0 overflow-hidden"
             {...CARD_FADE_IN}
           >
             <header className="flex flex-wrap pt-2 pl-2 items-center">
