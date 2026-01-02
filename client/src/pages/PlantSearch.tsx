@@ -51,17 +51,14 @@ const PlantSearch = () => {
         <div
           id={RESULTS_PANE_ID}
           className={classNames(
-            "grow flex flex-col gap-6 relative scroll-m-8",
-            hasCurrentResults
-              ? "max-lg:basis-2/3"
-              : "lg:sticky lg:top-0 big-screen:top-20 h-screen big-screen:h-fit lg:pb-20"
+            "grow flex flex-col relative scroll-m-header",
+            hasCurrentResults ? "max-lg:basis-2/3 gap-6" : "pb-20s"
           )}
         >
           <ScrapeStatusBar />
           <PlantResultsList
             key="results-holder"
             className={classNames({
-              "lg:pb-20": hasCurrentResults,
               "max-w-[1000px]": totalResultsCount < 3,
             })}
           />

@@ -59,7 +59,7 @@ const PlantSearchFiltersHolder = () => {
         "transition-all relative w-full",
         hasCurrentResults
           ? "lg:sticky lg:top-header lg:h-dvh-header lg:pr-4 lg:mr-2"
-          : "h-max pb-20",
+          : "h-max lg:pb-20",
         isExpanded ? "lg:w-sm" : "lg:w-0"
       )}
     >
@@ -78,7 +78,7 @@ const PlantSearchFiltersHolder = () => {
           />
         </Card>
 
-        <Card id={FILTER_HOLDER_ID} className="space-y-4 scroll-m-8">
+        <Card id={FILTER_HOLDER_ID} className="space-y-4 scroll-m-header">
           <PlantFilters
             plantFilters={plantFilters}
             setPlantFilters={setPlantFilters}

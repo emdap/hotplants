@@ -33,11 +33,14 @@ const ActivePlantPane = () => {
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
-  const activePlant = useMemo(() => {
-    return activePlantIndex === null
-      ? null
-      : plantList[activePlantIndex] ?? null;
-  }, [plantList, activePlantIndex]);
+  const { activePlant, typesafeActiveIndex } = useMemo(
+    () => ({
+      activePlant:
+        (activePlantIndex !== null && plantList[activePlantIndex]) ?? null,
+      typesafeActiveIndex: activePlantIndex ?? 0,
+    }),
+    [plantList, activePlantIndex]
+  );
 
   const resetActivePlant = () => {
     setActivePlantIndex(null);
@@ -55,22 +58,20 @@ const ActivePlantPane = () => {
     "mouseup",
   ]);
 
-  const iteratePlant = (direction: "prev" | "next") => {
-    if (activePlantIndex !== null) {
-      setActiveMediaIndex(0);
-      setActivePlantIndex(
-        activePlantIndex + (direction === "prev" ? -1 : 1) * 1
-      );
-    }
-  };
-
   const disableIterate = useMemo(
     () => ({
-      next: activePlantIndex === plantList.length - 1,
-      prev: activePlantIndex === 0,
+      next: typesafeActiveIndex === plantList.length - 1,
+      prev: !typesafeActiveIndex,
     }),
-    [activePlantIndex, plantList.length]
+    [typesafeActiveIndex, plantList.length]
   );
+
+  const iteratePlant = (direction: "prev" | "next") => {
+    setActiveMediaIndex(0);
+    setActivePlantIndex(
+      typesafeActiveIndex + (direction === "prev" ? -1 : 1) * 1
+    );
+  };
 
   return (
     <AnimatePresence>
@@ -82,17 +83,18 @@ const ActivePlantPane = () => {
             className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-4/7 md:max-w-5xl flex flex-col z-20 p-0 overflow-hidden"
             {...CARD_FADE_IN}
           >
-            <h2 className="flex gap-4 items-center pt-2 px-2">
-              <Button
-                variant="icon-white"
-                onClick={resetActivePlant}
-                icon={<MdClose size={24} />}
-              />
-              {getPlantDisplayName(activePlant)}
+            <header className="flex flex-wrap pt-2 pl-2 items-center">
+              <h2 className="flex gap-4 items-center">
+                <Button
+                  variant="icon-white"
+                  onClick={resetActivePlant}
+                  icon={<MdClose size={24} />}
+                />
+                {getPlantDisplayName(activePlant)}
+              </h2>
               <div className="ml-auto flex items-center gap-1">
                 {ITERATE_DIRECTION.map((direction) => (
                   <Fragment key={direction}>
-                    P
                     <Button
                       key={direction}
                       disabled={disableIterate[direction]}
@@ -107,14 +109,14 @@ const ActivePlantPane = () => {
                       }
                     />
                     {direction === "prev" && (
-                      <span className="font-mono text-xs text-primary-dark">
-                        browse
+                      <span className="font-mono text-xs text-primary-dark dark:text-white/60">
+                        {typesafeActiveIndex + 1} / {plantList.length}
                       </span>
                     )}
                   </Fragment>
                 ))}
               </div>
-            </h2>
+            </header>
             <div
               key={activePlant.scientificName}
               className="flex flex-col overflow-auto lg:overflow-hidden gap-4 py-6 px-safe-6"

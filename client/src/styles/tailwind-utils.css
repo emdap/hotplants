@@ -53,6 +53,10 @@
   top: var(--height-header);
 }
 
+@utility scroll-m-header {
+  scroll-margin: var(--height-header);
+}
+
 @utility h-dvh-header {
   height: calc(100dvh - var(--height-header));
 }
@@ -74,7 +78,7 @@
 }
 
 @utility page-wrapper {
-  @apply w-full px-safe-2 big-screen:pl-8;
+  @apply w-full px-safe-2 big-screen:px-8;
 }
 
 @utility card {
