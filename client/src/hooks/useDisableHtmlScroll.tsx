@@ -1,22 +1,17 @@
 import { useEffect } from "react";
 
-export const useDisableHtmlScroll = (toggleDisabled?: boolean) => {
-  const hideHtmlScrollbar = () =>
-    document.documentElement.classList.add("max-md:overflow-hidden!");
-
-  const showHtmlScrollbar = () =>
-    document.documentElement.classList.remove("max-md:overflow-hidden!");
+export const useDisableHtmlScroll = (hideScroll?: boolean) => {
+  const toggleHideScroll = (hide?: boolean) =>
+    document.documentElement.classList.toggle(
+      "max-md:overflow-hidden!",
+      Boolean(hide)
+    );
 
   useEffect(() => {
-    if (toggleDisabled === true) {
-      hideHtmlScrollbar();
-    } else if (toggleDisabled === false) {
-      showHtmlScrollbar();
-    }
-  }, [toggleDisabled]);
+    toggleHideScroll(hideScroll);
+  }, [hideScroll]);
 
   return {
-    hideHtmlScrollbar,
-    showHtmlScrollbar,
+    toggleHideScroll,
   };
 };
