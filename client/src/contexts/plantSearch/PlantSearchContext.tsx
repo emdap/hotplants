@@ -9,7 +9,7 @@ const VOID_PROMISE_FUNCTION = async () => {};
 
 export type ActiveIndexes = Record<"plantIndex" | "mediaIndex", number | null>;
 
-type PlantSearchContextType = {
+export type PlantSearchContextType = {
   hasCurrentResults: boolean;
   totalResultsCount: number;
 

@@ -3,7 +3,7 @@ import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvid
 import { PlantDataInput } from "generated/graphql/graphql";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { LocationWithPolygon } from "util/schemaTypesUtil";
 
 const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
@@ -15,8 +15,17 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
   const [searchLocation, setSearchLocation] =
     useState<LocationWithPolygon | null>(null);
 
+  // TODO: More elegant solution for saving this
+  const searchLocationName = useMemo(
+    () =>
+      searchLocation?.locationSource === "search"
+        ? `Custom Location, ${searchLocation.displayName}`
+        : searchLocation?.displayName,
+    [searchLocation?.displayName, searchLocation?.locationSource]
+  );
+
   const { searchStatus, plantSearchData, plantSearchQuery, ...searchQueries } =
-    usePlantSearchQueries(plantSearchCriteria);
+    usePlantSearchQueries(plantSearchCriteria, searchLocationName);
 
   useEffect(() => {
     searchStatus !== "CHECKING_STATUS" &&

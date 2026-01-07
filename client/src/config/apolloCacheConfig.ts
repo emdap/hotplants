@@ -5,13 +5,13 @@ import {
 } from "@apollo/client";
 import {
   PlantOccurrence,
-  PlantSearchResults,
+  PlantSearchQueryResults,
   SearchPlantsQueryVariables,
 } from "generated/graphql/graphql";
 
 const mergePlantSearch: FieldMergeFunction<
-  PlantSearchResults,
-  PlantSearchResults,
+  PlantSearchQueryResults,
+  PlantSearchQueryResults,
   FieldFunctionOptions<SearchPlantsQueryVariables, SearchPlantsQueryVariables>
 > = (existing, incoming, { variables }) => {
   const count = incoming.count;

@@ -1,4 +1,5 @@
 import MapProvider from "components/interactiveMap/MapProvider";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
@@ -24,6 +25,7 @@ const CARD_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
 });
 
 const ActivePlantPane = () => {
+  const { searchLocation, setSearchLocation } = usePlantSearchContext();
   const {
     plantList,
     activePlantIndex,
@@ -127,7 +129,11 @@ const ActivePlantPane = () => {
                   isModalOpen={imageModalOpen}
                   setIsModalOpen={setImageModalOpen}
                 />
-                <MapProvider className="min-h-60 w-full" showMarkers />
+                <MapProvider
+                  className="min-h-60 w-full"
+                  showMarkers
+                  {...{ searchLocation, setSearchLocation }}
+                />
               </div>
               <PlantInfoCard plant={activePlant} />
             </div>

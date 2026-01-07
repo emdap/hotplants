@@ -11,9 +11,8 @@ import {
   GET_GARDEN,
 } from "graphqlHelpers/gardenQueries";
 import { useApolloMutation, useApolloQuery } from "hooks/useQuery";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MdArrowBack } from "react-icons/md";
-import { useDebounce } from "react-use";
 
 const route = getRouteApi("/_private/gardens/{-$gardenName}");
 
@@ -31,13 +30,6 @@ const UserGardens = () => {
   });
   const [createGarden, { loading: createGardenLoading }] =
     useApolloMutation(CREATE_GARDEN);
-
-  const [debouncedLoading, setDebouncedLoading] = useState(false);
-  useDebounce(
-    () => setDebouncedLoading(getGardenQuery.loading || createGardenLoading),
-    1000,
-    [getGardenQuery.loading, createGardenLoading]
-  );
 
   const createGardenAndRefetch = async () => {
     await createGarden();
@@ -71,9 +63,10 @@ const UserGardens = () => {
       </PageTitle>
 
       <LoadingOverlay
+        debounceShow
+        show={getGardenQuery.loading || createGardenLoading}
         size={30}
         className="absolute w-full h-80 animate-pulse"
-        show={debouncedLoading}
       />
 
       {gardenName ? (

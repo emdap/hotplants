@@ -32,7 +32,10 @@ const hotplantsClient = createClient<paths>({
   baseUrl: `${import.meta.env.VITE_SERVER_URL}/api`,
 });
 
-const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
+const usePlantSearchQueries = (
+  plantSearchCriteria: PlantDataInput | null,
+  locationName?: string
+) => {
   const [searchStatus, setSearchStatus] =
     useState<PlantSearchQueryStatus>("READY");
 
@@ -69,13 +72,21 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
   const searchRecordQuery = useReactQuery({
     queryKey: ["search-record", plantSearchCriteria],
     refetchInterval: pollInterval,
-    enabled: hasSearchCriteria,
+    enabled: Boolean(
+      hasSearchCriteria &&
+        plantSearchCriteria?.boundingPolyCoords &&
+        locationName
+    ),
 
     queryFn: async () => {
       setStatusFromRunningQuery();
 
       const { data } = await hotplantsClient.POST("/plants/getSearchRecord", {
-        body: plantSearchCriteria!,
+        body: {
+          locationName: locationName!.trim(),
+          ...plantSearchCriteria!,
+          boundingPolyCoords: plantSearchCriteria!.boundingPolyCoords!,
+        },
       });
 
       if (data?.status !== "SCRAPING" && pollInterval) {
@@ -119,7 +130,7 @@ const usePlantSearchQueries = (plantSearchCriteria: PlantDataInput | null) => {
       setStatusFromRunningQuery();
 
       const { data } = await hotplantsClient.GET(
-        "/plants/scrapeOccurrences/{searchRecordId}",
+        "/plants/runSearch/{searchRecordId}",
         { params: { path: { searchRecordId: searchRecordData!.id } } }
       );
 

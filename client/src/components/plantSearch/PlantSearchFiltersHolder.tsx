@@ -21,8 +21,9 @@ const PlantSearchFiltersHolder = () => {
   const {
     plantSearchCriteria,
     hasCurrentResults,
-    searchLocation,
     searchStatus,
+    searchLocation,
+    setSearchLocation,
     setPlantSearchCriteria,
   } = usePlantSearchContext();
 
@@ -44,13 +45,13 @@ const PlantSearchFiltersHolder = () => {
     return {
       draftCriteria,
       filtersAreValid:
-        Object.keys(draftCriteria).length &&
+        Boolean(draftCriteria.boundingPolyCoords) &&
         !isEqual(draftCriteria, plantSearchCriteria),
     };
   }, [plantFilters, searchLocation, plantSearchCriteria]);
 
   const applyFilters = () =>
-    filtersAreValid && setPlantSearchCriteria(draftCriteria);
+    draftCriteria && filtersAreValid && setPlantSearchCriteria(draftCriteria);
 
   return (
     <div
@@ -74,6 +75,7 @@ const PlantSearchFiltersHolder = () => {
           <MapProvider
             locationCustomizeable
             isLoading={searchLocationLoading}
+            {...{ searchLocation, setSearchLocation }}
             className="w-full h-[200px] lg:h-[300px] grow"
           />
         </Card>

@@ -1,6 +1,6 @@
 import { centroid } from "@turf/turf";
 import classNames from "classnames";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { PlantSearchContextType } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import "leaflet-draw/dist/leaflet.draw.css";
@@ -22,18 +22,26 @@ type MapProviderProps = {
   isLoading?: boolean;
   showMarkers?: boolean;
   locationCustomizeable?: boolean;
-} & MapContainerProps;
+} & Partial<
+  Pick<PlantSearchContextType, "searchLocation" | "setSearchLocation">
+> &
+  MapContainerProps;
 
 const MapProvider = ({
+  searchLocation,
+  setSearchLocation,
+
   isLoading,
   showMarkers,
   locationCustomizeable,
   className,
   ...containerProps
 }: MapProviderProps) => {
-  const { searchLocation, setSearchLocation } = usePlantSearchContext();
-
   const setCustomPolygon: SetCustomPolygonFn = (boundingPolygon) => {
+    if (!setSearchLocation) {
+      return;
+    }
+
     const center = centroid(boundingPolygon).geometry.coordinates;
     const [lat, lng] = center.map((num) => Math.round(num * 100) / 100);
     setSearchLocation({
@@ -57,7 +65,7 @@ const MapProvider = ({
       />
 
       <MapContainer
-        className="w-full h-full z-0 !bg-transparent"
+        className="min-w-full min-h-full z-0 !bg-transparent"
         {...{ ...DEFAULT_CONTAINER_PROPS, ...containerProps }}
       >
         <TileLayer

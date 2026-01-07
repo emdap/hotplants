@@ -20,15 +20,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/plants/scrapeOccurrences/{searchRecordId}": {
+    "/plants/runSearch/{searchRecordId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Initiate a new scrape of occurrences from GBIF and combine with PFAF data. */
-        get: operations["ScrapeOccurrences"];
+        /** @description Initiate a new search of occurrences from GBIF and combine with PFAF data. */
+        get: operations["RunSearch"];
         put?: never;
         post?: never;
         delete?: never;
@@ -42,251 +42,25 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         /** @enum {string} */
-        SearchRecordStatus: "READY" | "SCRAPING" | "COMPLETE";
+        SearchRecordStatus: "COMPLETE" | "READY" | "SCRAPING";
         /** @description From T, pick a set of properties whose keys are in the union K */
         "Pick_SearchRecordDocument.status-or-occurrencesOffset_": {
-            status: components["schemas"]["SearchRecordStatus"];
             /** Format: double */
             occurrencesOffset: number;
+            status: components["schemas"]["SearchRecordStatus"];
         };
-        SearchRecordResponse: {
+        SearchRecordSummary: {
             id: string;
         } & components["schemas"]["Pick_SearchRecordDocument.status-or-occurrencesOffset_"];
-        /** @description Construct a type with a set of properties K of type T */
-        "Record_string.never_": Record<string, never>;
-        /** @description From T, pick a set of properties whose keys are in the union K */
-        "Pick_GbifOccurrenceSearchParams.Exclude_keyofGbifOccurrenceSearchParams.geometry-or-scientificName__": {
-            /** @example 2476674 */
-            acceptedTaxonKey?: number[];
-            associatedSequences?: string[];
-            basisOfRecord?: ("PRESERVED_SPECIMEN" | "FOSSIL_SPECIMEN" | "LIVING_SPECIMEN" | "OBSERVATION" | "HUMAN_OBSERVATION" | "MACHINE_OBSERVATION" | "MATERIAL_SAMPLE" | "LITERATURE" | "MATERIAL_CITATION" | "OCCURRENCE" | "UNKNOWN")[];
-            bed?: string[];
-            catalogNumber?: string[];
-            /** @example 212 */
-            classKey?: number[];
-            collectionCode?: string[];
-            collectionKey?: string[];
-            continent?: ("AFRICA" | "ANTARCTICA" | "ASIA" | "OCEANIA" | "EUROPE" | "NORTH_AMERICA" | "SOUTH_AMERICA")[];
-            coordinateUncertaintyInMeters?: components["schemas"]["Record_string.never_"];
-            country?: ("AF" | "AX" | "AL" | "DZ" | "AS" | "AD" | "AO" | "AI" | "AQ" | "AG" | "AR" | "AM" | "AW" | "AU" | "AT" | "AZ" | "BS" | "BH" | "BD" | "BB" | "BY" | "BE" | "BZ" | "BJ" | "BM" | "BT" | "BO" | "BQ" | "BA" | "BW" | "BV" | "BR" | "IO" | "BN" | "BG" | "BF" | "BI" | "KH" | "CM" | "CA" | "CV" | "KY" | "CF" | "TD" | "CL" | "CN" | "CX" | "CC" | "CO" | "KM" | "CD" | "CG" | "CK" | "CR" | "CI" | "HR" | "CU" | "CW" | "CY" | "CZ" | "DK" | "DJ" | "DM" | "DO" | "EC" | "EG" | "SV" | "GQ" | "ER" | "EE" | "ET" | "FK" | "FO" | "FJ" | "FI" | "FR" | "GF" | "PF" | "TF" | "GA" | "GM" | "GE" | "DE" | "GH" | "GI" | "GR" | "GL" | "GD" | "GP" | "GU" | "GT" | "GG" | "GN" | "GW" | "GY" | "HT" | "HM" | "VA" | "HN" | "HK" | "HU" | "IS" | "IN" | "ID" | "IR" | "IQ" | "IE" | "IM" | "IL" | "IT" | "JM" | "JP" | "JE" | "JO" | "KZ" | "KE" | "KI" | "KP" | "KR" | "KW" | "KG" | "LA" | "LV" | "LB" | "LS" | "LR" | "LY" | "LI" | "LT" | "LU" | "MO" | "MK" | "MG" | "MW" | "MY" | "MV" | "ML" | "MT" | "MH" | "MQ" | "MR" | "MU" | "YT" | "MX" | "FM" | "MD" | "MC" | "MN" | "ME" | "MS" | "MA" | "MZ" | "MM" | "NA" | "NR" | "NP" | "NL" | "NC" | "NZ" | "NI" | "NE" | "NG" | "NU" | "NF" | "MP" | "NO" | "OM" | "PK" | "PW" | "PS" | "PA" | "PG" | "PY" | "PE" | "PH" | "PN" | "PL" | "PT" | "PR" | "QA" | "RE" | "RO" | "RU" | "RW" | "BL" | "SH" | "KN" | "LC" | "MF" | "PM" | "VC" | "WS" | "SM" | "ST" | "SA" | "SN" | "RS" | "SC" | "SL" | "SG" | "SX" | "SK" | "SI" | "SB" | "SO" | "ZA" | "GS" | "SS" | "ES" | "LK" | "SD" | "SR" | "SJ" | "SZ" | "SE" | "CH" | "SY" | "TW" | "TJ" | "TZ" | "TH" | "TL" | "TG" | "TK" | "TO" | "TT" | "TN" | "TR" | "TM" | "TC" | "TV" | "UG" | "UA" | "AE" | "GB" | "US" | "UM" | "UY" | "UZ" | "VU" | "VE" | "VN" | "VG" | "VI" | "WF" | "EH" | "YE" | "ZM" | "ZW" | "AA" | "XK" | "XZ" | "ZZ")[];
-            /** @example 1 */
-            crawlId?: number[];
-            datasetId?: string[];
-            datasetKey?: string[];
-            datasetName?: string[];
-            /** @example 15 */
-            day?: number[];
-            decimalLatitude?: components["schemas"]["Record_string.never_"];
-            degreeOfEstablishment?: string[];
-            decimalLongitude?: components["schemas"]["Record_string.never_"];
-            depth?: components["schemas"]["Record_string.never_"];
-            distanceFromCentroidInMeters?: components["schemas"]["Record_string.never_"];
-            dwcaExtension?: string[];
-            earliestEonOrLowestEonothem?: string[];
-            earliestEraOrLowestErathem?: string[];
-            earliestPeriodOrLowestSystem?: string[];
-            earliestEpochOrLowestSeries?: string[];
-            earliestAgeOrLowestStage?: string[];
-            elevation?: components["schemas"]["Record_string.never_"];
-            /** @example 6 */
-            endDayOfYear?: number[];
-            establishmentMeans?: string[];
-            eventDate?: string[];
-            eventId?: string[];
-            /** @example 2405 */
-            familyKey?: number[];
-            fieldNumber?: string[];
-            formation?: string[];
-            gadmGid?: string[];
-            gadmLevel0Gid?: string[];
-            gadmLevel1Gid?: string[];
-            gadmLevel2Gid?: string[];
-            gadmLevel3Gid?: string[];
-            /**
-             * Format: double
-             * @example 2005380410
-             */
-            gbifId?: number;
-            gbifRegion?: ("AFRICA" | "ANTARCTICA" | "ASIA" | "OCEANIA" | "EUROPE" | "NORTH_AMERICA" | "LATIN_AMERICA")[];
-            /** @example 2877951 */
-            genusKey?: number[];
-            geoDistance?: string;
-            georeferencedBy?: string[];
-            group?: string[];
-            /** @example true */
-            hasCoordinate?: boolean;
-            higherGeography?: string[];
-            highestBiostratigraphicZone?: string[];
-            /** @example true */
-            hasGeospatialIssue?: boolean;
-            hostingOrganizationKey?: string[];
-            identifiedBy?: string[];
-            identifiedByID?: string[];
-            installationKey?: string[];
-            institutionCode?: string[];
-            institutionKey?: string[];
-            issue?: ("ZERO_COORDINATE" | "COORDINATE_OUT_OF_RANGE" | "COORDINATE_INVALID" | "COORDINATE_ROUNDED" | "GEODETIC_DATUM_INVALID" | "GEODETIC_DATUM_ASSUMED_WGS84" | "COORDINATE_REPROJECTED" | "COORDINATE_REPROJECTION_FAILED" | "COORDINATE_REPROJECTION_SUSPICIOUS" | "COORDINATE_ACCURACY_INVALID" | "COORDINATE_PRECISION_INVALID" | "COORDINATE_UNCERTAINTY_METERS_INVALID" | "COORDINATE_PRECISION_UNCERTAINTY_MISMATCH" | "FOOTPRINT_SRS_INVALID" | "FOOTPRINT_WKT_MISMATCH" | "FOOTPRINT_WKT_INVALID" | "COUNTRY_COORDINATE_MISMATCH" | "COUNTRY_MISMATCH" | "COUNTRY_INVALID" | "COUNTRY_DERIVED_FROM_COORDINATES" | "CONTINENT_COORDINATE_MISMATCH" | "CONTINENT_COUNTRY_MISMATCH" | "CONTINENT_INVALID" | "CONTINENT_DERIVED_FROM_COUNTRY" | "CONTINENT_DERIVED_FROM_COORDINATES" | "PRESUMED_SWAPPED_COORDINATE" | "PRESUMED_NEGATED_LONGITUDE" | "PRESUMED_NEGATED_LATITUDE" | "RECORDED_DATE_MISMATCH" | "RECORDED_DATE_INVALID" | "RECORDED_DATE_UNLIKELY" | "TAXON_MATCH_FUZZY" | "TAXON_MATCH_HIGHERRANK" | "TAXON_MATCH_AGGREGATE" | "TAXON_MATCH_SCIENTIFIC_NAME_ID_IGNORED" | "TAXON_MATCH_TAXON_CONCEPT_ID_IGNORED" | "TAXON_MATCH_TAXON_ID_IGNORED" | "SCIENTIFIC_NAME_ID_NOT_FOUND" | "TAXON_CONCEPT_ID_NOT_FOUND" | "TAXON_ID_NOT_FOUND" | "SCIENTIFIC_NAME_AND_ID_INCONSISTENT" | "TAXON_MATCH_NONE" | "TAXON_MATCH_NAME_AND_ID_AMBIGUOUS" | "DEPTH_NOT_METRIC" | "DEPTH_UNLIKELY" | "DEPTH_MIN_MAX_SWAPPED" | "DEPTH_NON_NUMERIC" | "ELEVATION_UNLIKELY" | "ELEVATION_MIN_MAX_SWAPPED" | "ELEVATION_NOT_METRIC" | "ELEVATION_NON_NUMERIC" | "MODIFIED_DATE_INVALID" | "MODIFIED_DATE_UNLIKELY" | "IDENTIFIED_DATE_UNLIKELY" | "IDENTIFIED_DATE_INVALID" | "BASIS_OF_RECORD_INVALID" | "TYPE_STATUS_INVALID" | "SUSPECTED_TYPE" | "MULTIMEDIA_DATE_INVALID" | "MULTIMEDIA_URI_INVALID" | "REFERENCES_URI_INVALID" | "INTERPRETATION_ERROR" | "INDIVIDUAL_COUNT_INVALID" | "INDIVIDUAL_COUNT_CONFLICTS_WITH_OCCURRENCE_STATUS" | "OCCURRENCE_STATUS_UNPARSABLE" | "OCCURRENCE_STATUS_INFERRED_FROM_INDIVIDUAL_COUNT" | "OCCURRENCE_STATUS_INFERRED_FROM_BASIS_OF_RECORD" | "GEOREFERENCED_DATE_UNLIKELY" | "GEOREFERENCED_DATE_INVALID" | "AMBIGUOUS_INSTITUTION" | "AMBIGUOUS_COLLECTION" | "INSTITUTION_MATCH_NONE" | "COLLECTION_MATCH_NONE" | "INSTITUTION_MATCH_FUZZY" | "COLLECTION_MATCH_FUZZY" | "INSTITUTION_COLLECTION_MISMATCH" | "POSSIBLY_ON_LOAN" | "DIFFERENT_OWNER_INSTITUTION" | "ERA_OR_ERATHEM_INFERRED_FROM_PARENT_RANK" | "PERIOD_OR_SYSTEM_INFERRED_FROM_PARENT_RANK" | "EPOCH_OR_SERIES_INFERRED_FROM_PARENT_RANK" | "AGE_OR_STAGE_INFERRED_FROM_PARENT_RANK" | "EON_OR_EONOTHEM_RANK_MISMATCH" | "ERA_OR_ERATHEM_RANK_MISMATCH" | "PERIOD_OR_SYSTEM_RANK_MISMATCH" | "EPOCH_OR_SERIES_RANK_MISMATCH" | "AGE_OR_STAGE_RANK_MISMATCH" | "EON_OR_EONOTHEM_INVALID_RANGE" | "ERA_OR_ERATHEM_INVALID_RANGE" | "PERIOD_OR_SYSTEM_INVALID_RANGE" | "EPOCH_OR_SERIES_INVALID_RANGE" | "AGE_OR_STAGE_INVALID_RANGE" | "EON_OR_EONOTHEM_AND_ERA_OR_ERATHEM_MISMATCH" | "ERA_OR_ERATHEM_AND_PERIOD_OR_SYSTEM_MISMATCH" | "PERIOD_OR_SYSTEM_AND_EPOCH_OR_SERIES_MISMATCH" | "EPOCH_OR_SERIES_AND_AGE_OR_STAGE_MISMATCH")[];
-            /** @example true */
-            isInCluster?: boolean;
-            island?: string[];
-            islandGroup?: string[];
-            /** @example true */
-            isSequenced?: boolean;
-            iucnRedListCategory?: ("EXTINCT" | "EXTINCT_IN_THE_WILD" | "REGIONALLY_EXTINCT" | "CRITICALLY_ENDANGERED" | "ENDANGERED" | "VULNERABLE" | "NEAR_THREATENED" | "LEAST_CONCERN" | "DATA_DEFICIENT" | "NOT_APPLICABLE" | "NOT_EVALUATED")[];
-            /** @example 5 */
-            kingdomKey?: number[];
-            lastInterpreted?: string[];
-            latestEonOrHighestEonothem?: string[];
-            latestEraOrHighestErathem?: string[];
-            latestPeriodOrHighestSystem?: string[];
-            latestEpochOrHighestSeries?: string[];
-            latestAgeOrHighestStage?: string[];
-            license?: ("CC0_1_0" | "CC_BY_4_0" | "CC_BY_NC_4_0" | "UNSPECIFIED" | "UNSUPPORTED")[];
-            lifeStage?: string[];
-            locality?: string[];
-            lowestBiostratigraphicZone?: string[];
-            mediaType?: {
-                concrete?: boolean;
-                charset?: {
-                    registered?: boolean;
-                };
-                wildcardSubtype?: boolean;
-                wildcardType?: boolean;
-                /** Format: double */
-                qualityValue?: number;
-                parameters?: {
-                    [key: string]: string;
-                };
-                subtype?: string;
-                type?: string;
-            }[];
-            member?: string[];
-            modified?: string[];
-            /** @example 5 */
-            month?: number[];
-            networkKey?: string[];
-            occurrenceId?: string[];
-            /** @enum {string} */
-            occurrenceStatus?: "PRESENT" | "ABSENT";
-            /** @example 1448 */
-            orderKey?: number[];
-            organismId?: string[];
-            /** @example 1 */
-            organismQuantity?: string[];
-            organismQuantityType?: string[];
-            otherCatalogNumbers?: string[];
-            parentEventId?: string[];
-            pathway?: string[];
-            /** @example 44 */
-            phylumKey?: number[];
-            preparations?: string[];
-            previousIdentifications?: string[];
-            programme?: string[];
-            projectId?: string[];
-            protocol?: ("EML" | "FEED" | "WFS" | "WMS" | "TCS_RDF" | "TCS_XML" | "DWC_ARCHIVE" | "DIGIR" | "DIGIR_MANIS" | "TAPIR" | "BIOCASE" | "BIOCASE_XML_ARCHIVE" | "OAI_PMH" | "COLDP" | "CAMTRAP_DP" | "BIOM_1_0" | "BIOM_2_1" | "ACEF" | "TEXT_TREE" | "OTHER")[];
-            publishedByGbifRegion?: ("AFRICA" | "ANTARCTICA" | "ASIA" | "OCEANIA" | "EUROPE" | "NORTH_AMERICA" | "LATIN_AMERICA")[];
-            publishingOrg?: string[];
-            recordedBy?: string[];
-            recordedByID?: string[];
-            /** @example 1 */
-            recordNumber?: string[];
-            relativeOrganismQuantity?: string[];
-            /** @example true */
-            repatriated?: boolean;
-            sampleSizeUnit?: string[];
-            /** @example 50.5 */
-            sampleSizeValue?: number[];
-            samplingProtocol?: string[];
-            sex?: string[];
-            /** @example 2476674 */
-            speciesKey?: number[];
-            /** @example 5 */
-            startDayOfYear?: number[];
-            stateProvince?: string[];
-            taxonConceptId?: string[];
-            /** @example 2476674 */
-            taxonKey?: number[];
-            taxonId?: string[];
-            taxonomicStatus?: ("ACCEPTED" | "DOUBTFUL" | "SYNONYM" | "HETEROTYPIC_SYNONYM" | "HOMOTYPIC_SYNONYM" | "PROPARTE_SYNONYM" | "MISAPPLIED")[];
-            typeStatus?: string[];
-            verbatimScientificName?: string[];
-            waterBody?: string[];
-            /** @example 1998 */
-            year?: number[];
-            geologicalTime?: string;
-            lithostratigraphy?: string;
-            biostratigraphy?: string;
-            /** @example true */
-            matchCase?: boolean;
-            shuffle?: string;
-            /** @example true */
-            hl?: boolean;
-            /** Format: double */
-            limit?: number;
-            /** Format: double */
-            offset?: number;
-            facet?: string;
-            /** Format: double */
-            facetMincount?: number;
-            facetMultiselect?: boolean;
-            /** Format: double */
-            facetLimit?: number;
-            /** Format: double */
-            facetOffset?: number;
-        };
-        /** @description Construct a type with the properties of T except for those in type K. */
-        "Omit_GbifOccurrenceSearchParams.geometry-or-scientificName_": components["schemas"]["Pick_GbifOccurrenceSearchParams.Exclude_keyofGbifOccurrenceSearchParams.geometry-or-scientificName__"];
         Maybe_string_: string | null;
-        InputMaybe_string_: components["schemas"]["Maybe_string_"];
-        /** Format: double */
-        Maybe_number_: number | null;
-        InputMaybe_number_: components["schemas"]["Maybe_number_"];
-        "Maybe_string-Array_": string[] | null;
-        "InputMaybe_string-Array_": components["schemas"]["Maybe_string-Array_"];
-        "Maybe_number-Array-Array-Array_": number[][][] | null;
-        "InputMaybe_number-Array-Array-Array_": components["schemas"]["Maybe_number-Array-Array-Array_"];
-        "Maybe_number-Array_": number[] | null;
-        "InputMaybe_number-Array_": components["schemas"]["Maybe_number-Array_"];
-        /** Format: double */
-        "Maybe_Scalars-at-Int_91_input_93__": number | null;
-        "InputMaybe_Scalars-at-Int_91_input_93__": components["schemas"]["Maybe_Scalars-at-Int_91_input_93__"];
-        /** @enum {string} */
-        PlantSizeUnit: "cm" | "ft" | "in" | "m";
-        Maybe_PlantSizeUnit_: components["schemas"]["PlantSizeUnit"] | null;
-        InputMaybe_PlantSizeUnit_: components["schemas"]["Maybe_PlantSizeUnit_"];
-        PlantSizeInput: {
-            unit?: components["schemas"]["InputMaybe_PlantSizeUnit_"];
-            amount?: components["schemas"]["InputMaybe_Scalars-at-Int_91_input_93__"];
-        };
-        Maybe_PlantSizeInput_: components["schemas"]["PlantSizeInput"] | null;
-        InputMaybe_PlantSizeInput_: components["schemas"]["Maybe_PlantSizeInput_"];
-        Maybe_boolean_: boolean | null;
-        InputMaybe_boolean_: components["schemas"]["Maybe_boolean_"];
         /** @description From T, pick a set of properties whose keys are in the union K */
-        "Pick_PlantDataInput.Exclude_keyofPlantDataInput.__": {
-            scientificName?: components["schemas"]["InputMaybe_string_"];
-            _id?: unknown;
-            addedTimestamp?: components["schemas"]["InputMaybe_number_"];
-            bloomColors?: components["schemas"]["InputMaybe_string-Array_"];
-            bloomTimes?: components["schemas"]["InputMaybe_string-Array_"];
-            boundingPolyCoords?: components["schemas"]["InputMaybe_number-Array-Array-Array_"];
-            commonName?: components["schemas"]["InputMaybe_string_"];
-            habitat?: components["schemas"]["InputMaybe_string_"];
-            hardiness?: components["schemas"]["InputMaybe_number-Array_"];
-            height?: components["schemas"]["InputMaybe_PlantSizeInput_"];
-            isPerennial?: components["schemas"]["InputMaybe_boolean_"];
-            lightLevels?: components["schemas"]["InputMaybe_string-Array_"];
-            maturityTime?: components["schemas"]["InputMaybe_string_"];
-            physicalCharactersticsDump?: components["schemas"]["InputMaybe_string_"];
-            scrapeSources?: components["schemas"]["InputMaybe_string-Array_"];
-            soilTypes?: components["schemas"]["InputMaybe_string-Array_"];
-            spread?: components["schemas"]["InputMaybe_PlantSizeInput_"];
-            updatedTimestamp?: components["schemas"]["InputMaybe_number_"];
-            uses?: components["schemas"]["InputMaybe_string-Array_"];
+        "Pick_SearchRecordDocument.locationName-or-commonName-or-scientificName-or-boundingPolyCoords_": {
+            boundingPolyCoords: number[][][];
+            commonName?: components["schemas"]["Maybe_string_"];
+            locationName: string;
+            scientificName?: components["schemas"]["Maybe_string_"];
         };
-        /** @description Construct a type with the properties of T except for those in type K. */
-        "Omit_PlantDataInput._": components["schemas"]["Pick_PlantDataInput.Exclude_keyofPlantDataInput.__"];
-        PlantSearchParams: components["schemas"]["Omit_GbifOccurrenceSearchParams.geometry-or-scientificName_"] & components["schemas"]["Omit_PlantDataInput._"];
+        PlantSearchParams: components["schemas"]["Pick_SearchRecordDocument.locationName-or-commonName-or-scientificName-or-boundingPolyCoords_"];
     };
     responses: never;
     parameters: never;
@@ -303,7 +77,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
                 "application/json": components["schemas"]["PlantSearchParams"];
             };
@@ -315,7 +89,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SearchRecordResponse"];
+                    "application/json": components["schemas"]["SearchRecordSummary"];
                 };
             };
             500: {
@@ -328,7 +102,7 @@ export interface operations {
             };
         };
     };
-    ScrapeOccurrences: {
+    RunSearch: {
         parameters: {
             query?: never;
             header?: never;
@@ -345,7 +119,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SearchRecordResponse"];
+                    "application/json": components["schemas"]["SearchRecordSummary"];
                 };
             };
             500: {

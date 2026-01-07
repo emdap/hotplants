@@ -29,6 +29,11 @@ type GardenPlantData implements PlantDataInterface {
   uses: [String!]
 }
 
+enum LocationType {
+  CUSTOM
+  MAP
+}
+
 type Mutation {
   addToGarden(gardenName: String, plantId: String!): ObjectId!
   newGarden(gardenName: String): ObjectId!
@@ -123,7 +128,7 @@ type PlantOccurrencesResults {
   results: [PlantOccurrence!]!
 }
 
-type PlantSearchResults {
+type PlantSearchQueryResults {
   count: Float!
   results: [PlantData!]!
 }
@@ -145,38 +150,61 @@ enum PlantSizeUnit {
   m
 }
 
+enum PlantSortField {
+  addedTimestamp
+  scientificName
+  updatedTimestamp
+}
+
+input PlantSortInput {
+  direction: Int!
+  field: PlantSortField!
+}
+
 type Query {
+  allSearchRecords(limit: Int, offset: Int, sort: [SearchRecordSortInput!]): SearchRecordQueryResults!
   allUserGardens: [UserGarden!]!
   plant(boundingPolyCoords: [[[Float!]!]!], id: String!): PlantData
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
-  plantSearch(limit: Int, offset: Int, sort: [SortInput!], where: PlantDataInput): PlantSearchResults!
+  plantSearch(limit: Int, offset: Int, sort: [PlantSortInput!], where: PlantDataInput): PlantSearchQueryResults!
   searchRecord(id: String!): SearchRecord
   userGarden(gardenName: String!): UserGarden
 }
 
 type SearchRecord {
   _id: ObjectId!
-  jsonStringSearch: String!
+  boundingPolyCoords: [[[Float!]!]!]!
+  commonName: String
+  createdTimestamp: Float!
+  locationName: String!
   occurrencesOffset: Int!
+  scientificName: String
   status: SearchRecordStatus!
-  statusUpdated: Float!
+  statusUpdatedTimestamp: Float!
+  taxonKeys: [Int!]
+  totalOccurrences: Int!
+}
+
+type SearchRecordQueryResults {
+  count: Float!
+  results: [SearchRecord!]!
+}
+
+enum SearchRecordSortField {
+  createdTimestamp
+  status
+  statusUpdatedTimestamp
+}
+
+input SearchRecordSortInput {
+  direction: Int!
+  field: SearchRecordSortField!
 }
 
 enum SearchRecordStatus {
   COMPLETE
   READY
   SCRAPING
-}
-
-enum SortField {
-  addedTimestamp
-  scientificName
-  updatedTimestamp
-}
-
-input SortInput {
-  direction: Int!
-  field: SortField!
 }
 
 type UserGarden {
