@@ -1,4 +1,5 @@
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant theme-added (&:where(.theme-added, .theme-added *));
 
 @custom-variant small-screen (@media (height < 600px) or (width < 768px));
 @custom-variant big-screen (@media (height >= 600px) and (width >= 768px));
@@ -60,6 +61,10 @@
       scrollbar-color: var(--color-scrollbar) var(--color-primary-dark);
     }
 
+    &.theme-loaded * {
+      @apply transition-colors;
+    }
+
     @apply small-screen:overflow-visible big-screen:overflow-hidden small-screen:scroll-smooth bg-accent small-screen:stable-scrollbar;
   }
 
@@ -68,9 +73,5 @@
 
     @apply big-screen:h-dvh big-screen:w-dvw big-screen:overflow-auto big-screen:stable-scrollbar;
     @apply scroll-smooth text-default-text;
-
-    * {
-      @apply transition-colors;
-    }
   }
 }

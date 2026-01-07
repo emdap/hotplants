@@ -18,6 +18,10 @@ const DarkModeToggle = () => {
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDarkMode);
+
+    setTimeout(() => {
+      document.documentElement.classList.toggle("theme-loaded", true);
+    }, 500);
   }, [isDarkMode]);
 
   useEffect(() => {
