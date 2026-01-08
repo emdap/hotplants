@@ -24,7 +24,7 @@ const PlantSearchFiltersHolder = () => {
       className={classNames(
         "transition-all relative w-full",
         hasCurrentResults
-          ? "lg:sticky lg:top-header lg:h-dvh-header lg:pr-4 lg:mr-2"
+          ? "lg:sticky lg:top-header-2 lg:h-dvh-header-2 lg:pr-4 lg:mr-2"
           : "h-max lg:pb-20",
         isExpanded ? "lg:w-sm" : "lg:w-0"
       )}

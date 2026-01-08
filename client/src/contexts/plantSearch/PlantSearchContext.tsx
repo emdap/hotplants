@@ -10,6 +10,7 @@ const VOID_PROMISE_FUNCTION = async () => {};
 export type PlantSearchContextType = {
   hasCurrentResults: boolean;
   totalResultsCount: number;
+  page?: number;
 
   searchParams: PlantSearchParams | null;
 

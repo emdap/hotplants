@@ -2,7 +2,7 @@ import classNames from "classnames";
 import PlantResultsList from "components/plantResults/PlantResultsList";
 import PlantSearchFiltersHolder from "components/plantSearch/PlantSearchFiltersHolder";
 import PlantSearchFooter from "components/plantSearch/PlantSearchFooter";
-import ScrapeStatusBar from "components/plantSearch/ScrapeStatusBar";
+import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import {
   RESULTS_PANE_ID,
   usePlantSearchContext,
@@ -41,14 +41,17 @@ const PlantSearch = () => {
   }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
 
   return (
-    <main className="page-wrapper">
+    <main>
       <PageTitle>Plant Search</PageTitle>
+      <PlantSearchHeader className="max-lg:hidden bg-header border-header mb-4" />
 
       <div
         ref={containerRef}
-        className="flex max-lg:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow"
+        className="page-wrapper flex max-lg:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow"
       >
         <PlantSearchFiltersHolder />
+
+        <PlantSearchHeader className="lg:hidden card card-solid" />
 
         <div
           id={RESULTS_PANE_ID}
@@ -57,11 +60,10 @@ const PlantSearch = () => {
             hasCurrentResults ? "max-lg:basis-2/3 gap-6" : "pb-20s"
           )}
         >
-          <ScrapeStatusBar />
           <PlantResultsList
             key="results-holder"
             className={classNames({
-              "max-w-[1000px]": totalResultsCount < 3,
+              "xl:max-w-[1000px]": totalResultsCount < 3,
             })}
           />
           <PlantSearchFooter key="results-footer" />

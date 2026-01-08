@@ -39,6 +39,14 @@
   --height-header: --spacing(10);
 }
 
+@utility border-header {
+  @apply border-white/10;
+}
+
+@utility bg-header {
+  @apply bg-fixed bg-top pretty-background border-b;
+}
+
 @utility h-header {
   height: var(--height-header);
   min-height: var(--height-header);
@@ -53,12 +61,20 @@
   top: var(--height-header);
 }
 
+@utility top-header-* {
+  top: calc(var(--height-header) * --value(integer));
+}
+
 @utility scroll-m-header {
   scroll-margin: var(--height-header);
 }
 
 @utility h-dvh-header {
   height: calc(100dvh - var(--height-header));
+}
+
+@utility h-dvh-header-* {
+  height: calc(100dvh - (var(--height-header)) * --value(integer));
 }
 
 @utility stable-scrollbar {

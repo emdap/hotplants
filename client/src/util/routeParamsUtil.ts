@@ -10,6 +10,7 @@ type PlantSearchRouteParams =
   | {
       search: PlantSearchParams;
       filters: PlantSearchFilters;
+      page?: number;
     }
   | Partial<typeof DEFAULT_PLANT_SEARCH_PARAMS>;
 
