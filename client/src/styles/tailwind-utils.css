@@ -36,6 +36,7 @@
 }
 
 @theme {
+  --spacing-header: --spacing(10);
   --height-header: --spacing(10);
 }
 
@@ -45,11 +46,6 @@
 
 @utility bg-header {
   @apply bg-fixed bg-top pretty-background border-b;
-}
-
-@utility h-header {
-  height: var(--height-header);
-  min-height: var(--height-header);
 }
 
 @utility w-header {
@@ -65,8 +61,12 @@
   top: calc(var(--height-header) * --value(integer));
 }
 
-@utility scroll-m-header {
-  scroll-margin: var(--height-header);
+@utility grid-centered {
+  @apply grid grid-cols-[1fr_auto_1fr];
+}
+
+@utility scroll-m-header-* {
+  scroll-margin: calc(var(--height-header) * --value(integer));
 }
 
 @utility h-dvh-header {

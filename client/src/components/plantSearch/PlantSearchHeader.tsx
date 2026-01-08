@@ -3,28 +3,46 @@ import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import LoadingIcon from "designSystem/LoadingIcon";
+import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
+import { FaGlobe } from "react-icons/fa";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
-const PlantSearchHeader = ({ className }: { className?: string }) => {
+const PlantSearchHeader = ({
+  openSidebar,
+  className,
+}: {
+  openSidebar?: () => void;
+  className: string;
+}) => {
   const { page, searchStatus, hasCurrentResults, totalResultsCount } =
     usePlantSearchContext();
 
   const LAST_PAGE = Math.ceil(totalResultsCount / DEFAULT_PAGE_SIZE);
 
   return hasCurrentResults ? (
-    <div
+    <header
       className={classNames(
-        "h-header flex gap-4 items-center sticky top-header z-20",
+        "lg:text-white lg:h-header grid-centered gap-4 items-center justify-center sticky top-header z-20 px-8 py-2 lg:px-2",
         className
       )}
     >
-      <div className="flex items-center gap-1 mx-auto">
+      {openSidebar && (
+        <OpenSidebarButton
+          openSidebar={openSidebar}
+          className="lg:hidden max-lg:text-black! dark:text-white/80! max-lg:hover:text-black/80! dark:hover:text-white/80! mr-auto"
+          icon={<FaGlobe size={16} />}
+        />
+      )}
+
+      <div className="flex items-center gap-1 col-start-2">
         {searchStatus !== "READY" && <LoadingIcon />}
         {totalResultsCount} Plants
       </div>
+
       {page !== undefined && <PagePaginator page={page} lastPage={LAST_PAGE} />}
-    </div>
+      <span className="ml-auto" />
+    </header>
   ) : null;
 };
 
