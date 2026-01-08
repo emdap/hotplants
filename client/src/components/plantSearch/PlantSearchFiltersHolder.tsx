@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import PlantFilters from "components/plantFilters/PlantSearchFilters";
+import PlantSearchFilters from "components/plantFilters/PlantSearchFilters";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
@@ -38,7 +38,7 @@ const PlantSearchFiltersHolder = () => {
         <LocationSearchCard />
 
         <Card className="space-y-4 scroll-m-header">
-          <PlantFilters
+          <PlantSearchFilters
             plantFilters={plantFilters}
             setPlantFilters={setPlantFilters}
           />

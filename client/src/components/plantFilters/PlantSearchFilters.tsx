@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { ENABLED_FILTERS } from "./filterFixtures";
 import FilterInputField from "./FilterInputField";
 
-const PlantFilters = ({
+const PlantSearchFilters = ({
   plantFilters,
   setPlantFilters,
 }: {
@@ -49,4 +49,4 @@ const PlantFilters = ({
   );
 };
 
-export default PlantFilters;
+export default PlantSearchFilters;

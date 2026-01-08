@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import PlantFilters from "components/plantFilters/PlantSearchFilters";
+import PlantSearchFilters from "components/plantFilters/PlantSearchFilters";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
 import OverlayMask from "designSystem/OverlayMask";
@@ -52,7 +52,7 @@ const PlantSearchSidebar = (props: SidebarProps) => {
           <LocationSearchCard />
 
           <Card className="space-y-4 scroll-m-header">
-            <PlantFilters
+            <PlantSearchFilters
               plantFilters={plantFilters}
               setPlantFilters={setPlantFilters}
             />
