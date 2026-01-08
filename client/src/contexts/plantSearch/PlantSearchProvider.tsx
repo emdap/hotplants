@@ -29,7 +29,6 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
 
   const { boundingPolyCoords, locationName, locationSource } =
     searchParamsDraft;
-
   useEffect(() => {
     if (boundingPolyCoords && locationName && locationSource) {
       setSearchParams((prev) => ({

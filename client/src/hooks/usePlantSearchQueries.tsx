@@ -56,10 +56,6 @@ const usePlantSearchQueries = (
     },
   });
   const plantSearchData = plantSearchQuery.data?.plantSearch;
-  console.log(
-    plantSearchData?.count,
-    plantSearchQuery.previousData?.plantSearch.count
-  );
 
   const setStatusFromRunningQuery = () =>
     setSearchStatus((prev) =>

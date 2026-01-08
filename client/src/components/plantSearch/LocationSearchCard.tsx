@@ -119,10 +119,11 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
 
       <Link
         to="."
+        replace
         onClick={() =>
           document.getElementById(RESULTS_PANE_ID)?.scrollIntoView()
         }
-        disabled={!searchParams}
+        disabled={!searchParams || locationQuery.isLoading}
         search={{ search: searchParams }}
       >
         <Button variant="primary">Search</Button>
