@@ -2,7 +2,7 @@ import NavSidebarButton from "components/navigation/sidebar/NavSidebarButton";
 import DarkModeToggle from "designSystem/DarkModeToggle";
 import UserMenu from "./UserMenu";
 
-const HeaderMenu = ({ openSidebar }: { openSidebar: () => void }) => (
+const AppHeader = ({ openSidebar }: { openSidebar: () => void }) => (
   <header className="h-header w-full bg-header flex items-center gap-4 px-safe-2 sticky top-0 z-30 border-header">
     <NavSidebarButton openSidebar={openSidebar} />
     <div className="h-header py-2 small-screen:ml-auto small-screen:pl-8 flex gap-2 items-center">
@@ -16,4 +16,4 @@ const HeaderMenu = ({ openSidebar }: { openSidebar: () => void }) => (
   </header>
 );
 
-export default HeaderMenu;
+export default AppHeader;

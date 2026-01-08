@@ -1,5 +1,5 @@
 import { Outlet } from "@tanstack/react-router";
-import HeaderMenu from "components/navigation/header/HeaderMenu";
+import AppHeader from "components/navigation/header/AppHeader";
 import NavSideBar from "components/navigation/sidebar/NavSidebar";
 import { authClient } from "config/authClient";
 import PlantSearchProvider from "contexts/plantSearch/PlantSearchProvider";
@@ -15,7 +15,7 @@ const App = () => {
   return (
     <PlantSearchProvider>
       <div className="fixed -z-10 h-dvh w-dvw pretty-background"></div>
-      <HeaderMenu openSidebar={() => setSidebarExpanded(true)} />
+      <AppHeader openSidebar={() => setSidebarExpanded(true)} />
       <div id="content-wrapper" className="flex [&_main]:grow">
         <NavSideBar
           isExpanded={sidebarExpanded}
