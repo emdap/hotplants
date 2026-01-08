@@ -29,9 +29,9 @@ type GardenPlantData implements PlantDataInterface {
   uses: [String!]
 }
 
-enum LocationType {
-  CUSTOM
-  MAP
+enum LocationSource {
+  custom
+  search
 }
 
 type Mutation {
@@ -177,6 +177,7 @@ type SearchRecord {
   commonName: String
   createdTimestamp: Float!
   locationName: String!
+  locationSource: LocationSource!
   occurrencesOffset: Int!
   scientificName: String
   status: SearchRecordStatus!

@@ -8,6 +8,7 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
+import { PlantSearchParams } from "util/customSchemaTypes";
 import LocationPolygon from "./LocationPolygon";
 import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
 import PolygonDrawing, { SetCustomPolygonFn } from "./PolygonDrawing";
@@ -22,14 +23,16 @@ type MapProviderProps = {
   isLoading?: boolean;
   showMarkers?: boolean;
   locationCustomizeable?: boolean;
+  searchParams: PlantSearchParams | null;
+  setSearchParams?: (newParams: PlantSearchParams) => void;
 } & Partial<
-  Pick<PlantSearchContextType, "searchLocation" | "setSearchLocation">
+  Pick<PlantSearchContextType, "searchParams" | "updateSearchParamsDraft">
 > &
   MapContainerProps;
 
 const MapProvider = ({
-  searchLocation,
-  setSearchLocation,
+  searchParams,
+  setSearchParams,
 
   isLoading,
   showMarkers,
@@ -38,16 +41,17 @@ const MapProvider = ({
   ...containerProps
 }: MapProviderProps) => {
   const setCustomPolygon: SetCustomPolygonFn = (boundingPolygon) => {
-    if (!setSearchLocation) {
+    if (!setSearchParams) {
       return;
     }
 
     const center = centroid(boundingPolygon).geometry.coordinates;
     const [lat, lng] = center.map((num) => Math.round(num * 100) / 100);
-    setSearchLocation({
-      displayName: `${lat}, ${lng}`,
-      locationSource: "map",
-      boundingPolygon,
+    setSearchParams({
+      ...searchParams,
+      locationName: `${lat}, ${lng}`,
+      locationSource: "custom",
+      boundingPolyCoords: boundingPolygon.geometry.coordinates,
     });
   };
 
@@ -73,12 +77,12 @@ const MapProvider = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {searchLocation && (
+        {searchParams && (
           <LocationPolygon
             {...{
               locationCustomizeable,
               setCustomPolygon,
-              ...searchLocation,
+              ...searchParams,
             }}
           />
         )}

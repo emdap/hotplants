@@ -2,7 +2,7 @@ import { Position } from "geojson";
 import { tooltip, Tooltip as TooltipType } from "leaflet";
 import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
-import { LocationWithPolygon } from "util/schemaTypesUtil";
+import { LocationSearchParams } from "util/locationUtil";
 
 const crossesMeridian = (coordinates: Position[]) => {
   const hasCoords: Record<string, boolean> = { "180": false, "-180": false };
@@ -18,16 +18,16 @@ const crossesMeridian = (coordinates: Position[]) => {
 };
 
 const CrossingMerdianTooltip = ({
-  boundingPolygon,
+  boundingPolyCoords,
   centerCoords,
-}: Pick<LocationWithPolygon, "boundingPolygon"> & {
+}: Pick<LocationSearchParams, "boundingPolyCoords"> & {
   centerCoords: [number, number];
 }) => {
   const map = useMap();
   const meridanTooltip = useRef<TooltipType>(null);
 
   useEffect(() => {
-    const coordinates = boundingPolygon.geometry.coordinates[0];
+    const coordinates = boundingPolyCoords[0];
 
     if (!crossesMeridian(coordinates)) {
       meridanTooltip.current?.remove();
@@ -40,7 +40,7 @@ const CrossingMerdianTooltip = ({
         .setLatLng(centerCoords)
         .addTo(map);
     }
-  }, [boundingPolygon.geometry.coordinates, centerCoords, map]);
+  }, [boundingPolyCoords, centerCoords, map]);
 
   return null;
 };

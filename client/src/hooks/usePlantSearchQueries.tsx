@@ -1,13 +1,11 @@
 import { NetworkStatus } from "@apollo/client";
-import {
-  PlantDataInput,
-  QueryPlantSearchArgs,
-} from "generated/graphql/graphql";
+import { QueryPlantSearchArgs } from "generated/graphql/graphql";
 import { paths } from "generated/schemas/hotplants";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useRef, useState } from "react";
+import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
 
 export type PlantSearchQueryStatus =
   | "READY"
@@ -33,8 +31,8 @@ const hotplantsClient = createClient<paths>({
 });
 
 const usePlantSearchQueries = (
-  plantSearchCriteria: PlantDataInput | null,
-  locationName?: string
+  searchParams: PlantSearchParams | null = null,
+  plantFilters: PlantSearchFilters
 ) => {
   const [searchStatus, setSearchStatus] =
     useState<PlantSearchQueryStatus>("READY");
@@ -44,16 +42,17 @@ const usePlantSearchQueries = (
   const [pollInterval, setPollInterval] = useState(0);
 
   // #region Queries
-  const hasSearchCriteria = Boolean(
-    plantSearchCriteria && Object.keys(plantSearchCriteria).length
-  );
-
   const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
     pollInterval,
-    skip: !hasSearchCriteria,
+    skip: !searchParams,
     variables: {
       ...DEFAULT_PLANT_SEARCH_GQL_VARS,
-      where: plantSearchCriteria,
+      where: {
+        boundingPolyCoords: searchParams?.boundingPolyCoords,
+        commonName: searchParams?.commonName,
+        scientificName: searchParams?.scientificName,
+        ...plantFilters,
+      },
     },
   });
   const plantSearchData = plantSearchQuery.data?.plantSearch;
@@ -70,23 +69,15 @@ const usePlantSearchQueries = (
   }, [plantSearchQuery.loading, plantSearchQuery.networkStatus]);
 
   const searchRecordQuery = useReactQuery({
-    queryKey: ["search-record", plantSearchCriteria],
+    queryKey: ["search-record", searchParams],
     refetchInterval: pollInterval,
-    enabled: Boolean(
-      hasSearchCriteria &&
-        plantSearchCriteria?.boundingPolyCoords &&
-        locationName
-    ),
+    enabled: Boolean(searchParams),
 
     queryFn: async () => {
       setStatusFromRunningQuery();
 
       const { data } = await hotplantsClient.POST("/plants/getSearchRecord", {
-        body: {
-          locationName: locationName!.trim(),
-          ...plantSearchCriteria!,
-          boundingPolyCoords: plantSearchCriteria!.boundingPolyCoords!,
-        },
+        body: searchParams!,
       });
 
       if (data?.status !== "SCRAPING" && pollInterval) {

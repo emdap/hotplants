@@ -30,7 +30,10 @@ const SignupForm = ({
     if (error) {
       window.alert(error.message);
     } else {
-      navigate({ to: "/search", replace: true });
+      navigate({
+        to: "/plant-search",
+        replace: true,
+      });
     }
   };
 

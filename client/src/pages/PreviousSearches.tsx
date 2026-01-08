@@ -22,7 +22,7 @@ const PreviousSearches = () => {
           {allSearchRecords.count}
           <div className="flex flex-col lg:grid grid-cols-[repeat(auto-fit,_minmax(400px,1fr))] gap-4">
             {allSearchRecords.results.map((searchRecord, index) => (
-              <SearchRecordCard key={index} searchRecord={searchRecord} />
+              <SearchRecordCard key={index} {...searchRecord} />
             ))}
           </div>
         </div>

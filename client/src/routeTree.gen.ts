@@ -9,18 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchRouteImport } from './routes/search'
+import { Route as PreviousSearchesRouteImport } from './routes/previous-searches'
+import { Route as PlantSearchRouteImport } from './routes/plant-search'
 import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as SearchBrowseRouteImport } from './routes/search_.browse'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
 import { Route as AuthLogoutRouteImport } from './routes/_auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as PrivateGardensChar123GardenNameChar125RouteImport } from './routes/_private/gardens.{-$gardenName}'
 
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
+const PreviousSearchesRoute = PreviousSearchesRouteImport.update({
+  id: '/previous-searches',
+  path: '/previous-searches',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlantSearchRoute = PlantSearchRouteImport.update({
+  id: '/plant-search',
+  path: '/plant-search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivateRoute = PrivateRouteImport.update({
@@ -29,11 +34,6 @@ const PrivateRoute = PrivateRouteImport.update({
 } as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SearchBrowseRoute = SearchBrowseRouteImport.update({
-  id: '/search_/browse',
-  path: '/search/browse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
@@ -59,75 +59,82 @@ const PrivateGardensChar123GardenNameChar125Route =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/search': typeof SearchRoute
+  '/plant-search': typeof PlantSearchRoute
+  '/previous-searches': typeof PreviousSearchesRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
-  '/search/browse': typeof SearchBrowseRoute
   '/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRoutesByTo {
-  '/search': typeof SearchRoute
+  '/plant-search': typeof PlantSearchRoute
+  '/previous-searches': typeof PreviousSearchesRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
-  '/search/browse': typeof SearchBrowseRoute
   '/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/_private': typeof PrivateRouteWithChildren
-  '/search': typeof SearchRoute
+  '/plant-search': typeof PlantSearchRoute
+  '/previous-searches': typeof PreviousSearchesRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/logout': typeof AuthLogoutRoute
   '/_auth/signup': typeof AuthSignupRoute
-  '/search_/browse': typeof SearchBrowseRoute
   '/_private/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/search'
+    | '/plant-search'
+    | '/previous-searches'
     | '/login'
     | '/logout'
     | '/signup'
-    | '/search/browse'
     | '/gardens/{-$gardenName}'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/search'
+    | '/plant-search'
+    | '/previous-searches'
     | '/login'
     | '/logout'
     | '/signup'
-    | '/search/browse'
     | '/gardens/{-$gardenName}'
   id:
     | '__root__'
     | '/_auth'
     | '/_private'
-    | '/search'
+    | '/plant-search'
+    | '/previous-searches'
     | '/_auth/login'
     | '/_auth/logout'
     | '/_auth/signup'
-    | '/search_/browse'
     | '/_private/gardens/{-$gardenName}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   PrivateRoute: typeof PrivateRouteWithChildren
-  SearchRoute: typeof SearchRoute
-  SearchBrowseRoute: typeof SearchBrowseRoute
+  PlantSearchRoute: typeof PlantSearchRoute
+  PreviousSearchesRoute: typeof PreviousSearchesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
+    '/previous-searches': {
+      id: '/previous-searches'
+      path: '/previous-searches'
+      fullPath: '/previous-searches'
+      preLoaderRoute: typeof PreviousSearchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plant-search': {
+      id: '/plant-search'
+      path: '/plant-search'
+      fullPath: '/plant-search'
+      preLoaderRoute: typeof PlantSearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_private': {
@@ -142,13 +149,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/search_/browse': {
-      id: '/search_/browse'
-      path: '/search/browse'
-      fullPath: '/search/browse'
-      preLoaderRoute: typeof SearchBrowseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/signup': {
@@ -211,8 +211,8 @@ const PrivateRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PrivateRoute: PrivateRouteWithChildren,
-  SearchRoute: SearchRoute,
-  SearchBrowseRoute: SearchBrowseRoute,
+  PlantSearchRoute: PlantSearchRoute,
+  PreviousSearchesRoute: PreviousSearchesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

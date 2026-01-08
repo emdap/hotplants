@@ -21,13 +21,13 @@ type SidebarNavItem = { icon: IconType; text: string } & LinkProps;
 const SIDEBAR_ITEMS: SidebarNavItem[] = [
   {
     icon: MdOutlineSearch,
-    text: "New Search",
-    to: "/search",
+    text: "Plant Search",
+    to: "/plant-search",
   },
   {
     icon: MdOutlineYoutubeSearchedFor,
     text: "Previous Searches",
-    to: "/search/browse",
+    to: "/previous-searches",
   },
   {
     icon: TbPlant2,

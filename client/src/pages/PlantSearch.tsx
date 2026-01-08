@@ -3,13 +3,15 @@ import PlantResultsList from "components/plantResults/PlantResultsList";
 import PlantSearchFiltersHolder from "components/plantSearch/PlantSearchFiltersHolder";
 import PlantSearchFooter from "components/plantSearch/PlantSearchFooter";
 import ScrapeStatusBar from "components/plantSearch/ScrapeStatusBar";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import {
+  RESULTS_PANE_ID,
+  usePlantSearchContext,
+} from "contexts/plantSearch/PlantSearchContext";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useLayoutEffect, useRef } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
-const RESULTS_PANE_ID = "results-pane";
 
 const PlantSearch = () => {
   const { hasCurrentResults, totalResultsCount, fetchNextPlantsPage } =

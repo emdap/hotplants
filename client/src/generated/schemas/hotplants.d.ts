@@ -53,14 +53,17 @@ export interface components {
             id: string;
         } & components["schemas"]["Pick_SearchRecordDocument.status-or-occurrencesOffset_"];
         Maybe_string_: string | null;
+        /** @enum {string} */
+        LocationSource: "custom" | "search";
         /** @description From T, pick a set of properties whose keys are in the union K */
-        "Pick_SearchRecordDocument.locationName-or-commonName-or-scientificName-or-boundingPolyCoords_": {
+        "Pick_SearchRecordDocument.locationName-or-locationSource-or-boundingPolyCoords-or-commonName-or-scientificName_": {
             boundingPolyCoords: number[][][];
             commonName?: components["schemas"]["Maybe_string_"];
             locationName: string;
+            locationSource: components["schemas"]["LocationSource"];
             scientificName?: components["schemas"]["Maybe_string_"];
         };
-        PlantSearchParams: components["schemas"]["Pick_SearchRecordDocument.locationName-or-commonName-or-scientificName-or-boundingPolyCoords_"];
+        PlantSearchParams: components["schemas"]["Pick_SearchRecordDocument.locationName-or-locationSource-or-boundingPolyCoords-or-commonName-or-scientificName_"];
     };
     responses: never;
     parameters: never;

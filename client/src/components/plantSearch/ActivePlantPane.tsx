@@ -25,7 +25,7 @@ const CARD_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
 });
 
 const ActivePlantPane = () => {
-  const { searchLocation, setSearchLocation } = usePlantSearchContext();
+  const { searchParams } = usePlantSearchContext();
   const {
     plantList,
     activePlantIndex,
@@ -130,9 +130,9 @@ const ActivePlantPane = () => {
                   setIsModalOpen={setImageModalOpen}
                 />
                 <MapProvider
-                  className="min-h-60 w-full"
                   showMarkers
-                  {...{ searchLocation, setSearchLocation }}
+                  className="min-h-60 w-full"
+                  searchParams={searchParams}
                 />
               </div>
               <PlantInfoCard plant={activePlant} />

@@ -1,31 +1,51 @@
-import { PlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { getRouteApi } from "@tanstack/react-router";
+import {
+  PlantSearchContext,
+  PlantSearchContextType,
+} from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
-import { PlantDataInput } from "generated/graphql/graphql";
 import { PlantQueryResults } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
-import { ReactNode, useEffect, useMemo, useState } from "react";
-import { LocationWithPolygon } from "util/schemaTypesUtil";
+import { ReactNode, useEffect, useState } from "react";
+import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+
+const route = getRouteApi("__root__");
 
 const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
+  const { search: routeSearchParams, filters: routeFilters = {} } =
+    route.useSearch();
+
+  const [plantFilters, setPlantFilters] =
+    useState<PlantSearchFilters>(routeFilters);
+
+  const [searchParams, setSearchParams] = useState<PlantSearchParams | null>(
+    null
+  );
+  const [searchParamsDraft, setSearchParamsDraft] = useState<
+    Partial<PlantSearchParams>
+  >(routeSearchParams ?? {});
+  const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =
+    (newParams) => setSearchParamsDraft((prev) => ({ ...prev, ...newParams }));
+
+  const { boundingPolyCoords, locationName, locationSource } =
+    searchParamsDraft;
+
+  useEffect(() => {
+    if (boundingPolyCoords && locationName && locationSource) {
+      setSearchParams((prev) => ({
+        ...prev,
+        boundingPolyCoords,
+        locationName,
+        locationSource,
+      }));
+    }
+  }, [boundingPolyCoords, locationName, locationSource]);
+
+  const { searchStatus, plantSearchData, ...searchQueries } =
+    usePlantSearchQueries(routeSearchParams, plantFilters);
+
   const [plantSearchResults, setPlantSearchResults] =
     useState<PlantQueryResults>([]);
-  const [plantSearchCriteria, setPlantSearchCriteria] =
-    useState<PlantDataInput | null>(null);
-
-  const [searchLocation, setSearchLocation] =
-    useState<LocationWithPolygon | null>(null);
-
-  // TODO: More elegant solution for saving this
-  const searchLocationName = useMemo(
-    () =>
-      searchLocation?.locationSource === "search"
-        ? `Custom Location, ${searchLocation.displayName}`
-        : searchLocation?.displayName,
-    [searchLocation?.displayName, searchLocation?.locationSource]
-  );
-
-  const { searchStatus, plantSearchData, plantSearchQuery, ...searchQueries } =
-    usePlantSearchQueries(plantSearchCriteria, searchLocationName);
 
   useEffect(() => {
     searchStatus !== "CHECKING_STATUS" &&
@@ -33,24 +53,19 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
       setPlantSearchResults(plantSearchData.results);
   }, [searchStatus, plantSearchData]);
 
-  const applyPlantSearchCriteria = (newCriteria: PlantDataInput) => {
-    setPlantSearchCriteria(newCriteria);
-    if (plantSearchQuery.error) {
-      plantSearchQuery.refetch();
-    }
-  };
-
   return (
     <PlantSearchContext.Provider
       value={{
         hasCurrentResults: Boolean(plantSearchResults.length),
         totalResultsCount: plantSearchData?.count ?? 0,
 
-        plantSearchCriteria,
-        setPlantSearchCriteria: applyPlantSearchCriteria,
+        searchParams,
+        searchParamsDraft,
+        updateSearchParamsDraft,
+        setSearchParamsDraft,
 
-        searchLocation,
-        setSearchLocation,
+        plantFilters,
+        setPlantFilters,
 
         searchStatus,
         ...searchQueries,
@@ -58,7 +73,7 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
     >
       <PlantSelectionProvider
         plantList={plantSearchResults}
-        boundingPolygon={plantSearchCriteria?.boundingPolyCoords}
+        boundingPolygon={boundingPolyCoords}
       >
         {children}
       </PlantSelectionProvider>

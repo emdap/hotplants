@@ -11,7 +11,6 @@ const Logout = () => {
 
   useEffect(() => {
     authClient.signOut();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

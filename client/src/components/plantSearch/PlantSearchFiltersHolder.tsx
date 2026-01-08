@@ -1,57 +1,22 @@
 import classNames from "classnames";
-import MapProvider from "components/interactiveMap/MapProvider";
 import PlantFilters from "components/plantFilters/PlantSearchFilters";
-import LocationSearch from "components/plantSearch/LocationSearch";
-import {
-  FILTER_HOLDER_ID,
-  usePlantSearchContext,
-} from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import VerticalDivider from "designSystem/VerticalDivider";
-import { PlantDataInput } from "generated/graphql/graphql";
-import { isEqual } from "lodash";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { MdChevronLeft } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
-
-const RESULTS_HOLDER_ID = "results-pane";
+import LocationSearchCard from "./LocationSearchCard";
 
 const PlantSearchFiltersHolder = () => {
-  const {
-    plantSearchCriteria,
-    hasCurrentResults,
-    searchStatus,
-    searchLocation,
-    setSearchLocation,
-    setPlantSearchCriteria,
-  } = usePlantSearchContext();
+  const { hasCurrentResults, plantFilters, setPlantFilters } =
+    usePlantSearchContext();
 
-  const [plantFilters, setPlantFilters] = useState<PlantDataInput>({});
-  const [searchLocationLoading, setSearchLocationLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => setIsExpanded(false),
   });
-
-  const { filtersAreValid, draftCriteria } = useMemo(() => {
-    const draftCriteria = {
-      ...plantFilters,
-      ...(searchLocation && {
-        boundingPolyCoords: searchLocation.boundingPolygon.geometry.coordinates,
-      }),
-    };
-
-    return {
-      draftCriteria,
-      filtersAreValid:
-        Boolean(draftCriteria.boundingPolyCoords) &&
-        !isEqual(draftCriteria, plantSearchCriteria),
-    };
-  }, [plantFilters, searchLocation, plantSearchCriteria]);
-
-  const applyFilters = () =>
-    draftCriteria && filtersAreValid && setPlantSearchCriteria(draftCriteria);
 
   return (
     <div
@@ -70,31 +35,13 @@ const PlantSearchFiltersHolder = () => {
           hasCurrentResults && "lg:overflow-auto lg:pb-24"
         )}
       >
-        <Card className="flex flex-col gap-2 items-start w-full !p-2">
-          <LocationSearch setIsLoading={setSearchLocationLoading} />
-          <MapProvider
-            locationCustomizeable
-            isLoading={searchLocationLoading}
-            {...{ searchLocation, setSearchLocation }}
-            className="w-full h-[200px] lg:h-[300px] grow"
-          />
-        </Card>
+        <LocationSearchCard />
 
-        <Card id={FILTER_HOLDER_ID} className="space-y-4 scroll-m-header">
+        <Card className="space-y-4 scroll-m-header">
           <PlantFilters
             plantFilters={plantFilters}
             setPlantFilters={setPlantFilters}
           />
-          <Button
-            linkAddress={`#${RESULTS_HOLDER_ID}`}
-            disabled={!filtersAreValid}
-            className="mt-auto"
-            isLoading={searchLocationLoading || searchStatus !== "READY"}
-            variant="primary"
-            onClick={applyFilters}
-          >
-            Apply filters
-          </Button>
         </Card>
       </div>
 

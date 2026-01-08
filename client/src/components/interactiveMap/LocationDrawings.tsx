@@ -8,24 +8,25 @@ const LocationDrawings = ({
 }: {
   locationCustomizeable?: boolean;
 }) => {
-  const { searchLocation, setSearchLocation } = usePlantSearchContext();
+  const { searchParams, updateSearchParamsDraft } = usePlantSearchContext();
 
   const setCustomPolygon: SetCustomPolygonFn = (boundingPolygon) => {
     const center = centroid(boundingPolygon).geometry.coordinates;
     const [lat, lng] = center.map((num) => Math.round(num * 100) / 100);
-    setSearchLocation({
-      displayName: `${lat}, ${lng}`,
-      locationSource: "map",
-      boundingPolygon,
+
+    updateSearchParamsDraft({
+      locationName: `${lat}, ${lng}`,
+      locationSource: "custom",
+      boundingPolyCoords: boundingPolygon.geometry.coordinates,
     });
   };
 
   return (
     <>
-      {searchLocation && (
+      {searchParams && (
         <LocationPolygon
           {...{ locationCustomizeable, setCustomPolygon }}
-          {...searchLocation}
+          {...searchParams}
         />
       )}
 

@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Marker, Polygon, useMap } from "react-leaflet";
 import { useMount } from "react-use";
 import { LocationCoord } from "util/customSchemaTypes";
-import { LocationWithPolygon } from "util/schemaTypesUtil";
+import { LocationSearchParams } from "util/locationUtil";
 import CrossingMerdianTooltip from "./CrossingMerdianTooltip";
 import { PolygonCenterIcon, PolygonCornerIcon } from "./MarkerIcons";
 import { SetCustomPolygonFn } from "./PolygonDrawing";
@@ -26,17 +26,21 @@ const getOuterCoordinates = (feature: Feature<PolygonType>) =>
   feature.geometry.coordinates[0];
 
 const LocationPolygon = ({
-  boundingPolygon,
+  boundingPolyCoords,
   locationSource,
   locationCustomizeable,
   setCustomPolygon,
-}: LocationWithPolygon & {
+}: LocationSearchParams & {
   locationCustomizeable?: boolean;
   setCustomPolygon: SetCustomPolygonFn;
 }) => {
   const map = useMap();
   useMount(() => map.fitBounds(polyCoords));
 
+  const boundingPolygon = useMemo(
+    () => polygon(boundingPolyCoords),
+    [boundingPolyCoords]
+  );
   const [localPolygon, setLocalPolygon] = useState(boundingPolygon);
 
   useEffect(() => {
@@ -99,7 +103,7 @@ const LocationPolygon = ({
       />
       <CrossingMerdianTooltip
         centerCoords={centerCoords}
-        boundingPolygon={localPolygon}
+        boundingPolyCoords={localPolygon.geometry.coordinates}
       />
 
       {locationCustomizeable && (

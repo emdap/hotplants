@@ -11,6 +11,7 @@ export const GET_ALL_SEARCH_RECORDS = graphql(`
         statusUpdatedTimestamp
 
         locationName
+        locationSource
         boundingPolyCoords
         scientificName
         commonName
