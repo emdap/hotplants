@@ -56,7 +56,8 @@ const AppSidebar = (props: SidebarProps) => {
           {
             "big-screen:min-w-[300px] big-screen:w-[300px] small-screen:translate-x-0":
               isExpanded,
-            "big-screen:w-header small-screen:-translate-x-full": !isExpanded,
+            "big-screen:w-header big-screen:min-w-header small-screen:-translate-x-full":
+              !isExpanded,
           },
 
           "small-screen:gap-2 small-screen:fixed small-screen:z-50 small-screen:top-0 small-screen:h-dvh small-screen:bg-primary-dark",

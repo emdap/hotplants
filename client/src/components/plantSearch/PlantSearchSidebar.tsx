@@ -32,7 +32,7 @@ const PlantSearchSidebar = (props: SidebarProps) => {
           ],
           {
             "max-lg:translate-x-0 lg:w-md": isExpanded,
-            "max-lg:-translate-x-full lg:w-header lg:overflow-hidden":
+            "max-lg:-translate-x-full lg:w-header lg:min-w-header lg:overflow-hidden":
               !isExpanded,
           }
         )
