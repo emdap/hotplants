@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
 import {
@@ -8,7 +8,7 @@ import {
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { useReactQuery } from "hooks/useQuery";
-import { ReactNode, useEffect, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import {
   lookupLocationInput,
@@ -16,6 +16,7 @@ import {
 } from "util/locationUtil";
 
 const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
+  const navigate = useNavigate();
   const {
     searchParams,
     searchParamsDraft,
@@ -78,9 +79,23 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
     setDebouncedInput(e.target.value);
   };
 
+  const disableSubmit = !searchParams || locationQuery.isLoading;
+
+  const submitLocation = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!disableSubmit) {
+      console.log("submit");
+      document.getElementById(RESULTS_PANE_ID)?.scrollIntoView();
+      navigate({ to: ".", search: { search: searchParams } });
+    }
+  };
+
   return (
-    <Card className="flex flex-col gap-2 items-start w-full !p-2">
-      <div className="flex flex-col pl-2 md:pr-4 w-full overflow-auto">
+    <Card className="p-2">
+      <form
+        onSubmit={submitLocation}
+        className="flex flex-col gap-2 pl-2 md:pr-4 w-full overflow-auto"
+      >
         <div className="form-item flex-row items-center">
           <label htmlFor="search-location">Location</label>
           <input
@@ -97,7 +112,7 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
             placeholder={
               searchParamsDraft.locationSource === "custom"
                 ? `Custom Location: (${searchParamsDraft.locationName})`
-                : searchParamsDraft.locationName ?? "Search for a location"
+                : searchParamsDraft.locationName ?? "Enter Location"
             }
           />
         </div>
@@ -107,29 +122,27 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
             ? "Error loading location"
             : locationInvalid && "Cannot find location"}
         </div>
-      </div>
 
-      <MapProvider
-        locationCustomizeable
-        isLoading={locationQuery.isLoading}
-        searchParams={searchParams}
-        setSearchParams={updateSearchParamsDraft}
-        className="w-full h-[200px] lg:h-[300px] grow"
-      />
+        <MapProvider
+          locationCustomizeable
+          isLoading={locationQuery.isLoading}
+          searchParams={searchParams}
+          setSearchParams={updateSearchParamsDraft}
+          className="w-full h-[200px] lg:h-[300px] grow"
+        />
 
-      <Link
-        to="."
-        replace
-        onClick={() =>
-          document.getElementById(RESULTS_PANE_ID)?.scrollIntoView()
-        }
-        disabled={!searchParams || locationQuery.isLoading}
-        search={{ search: searchParams }}
-      >
-        <Button variant="primary">Search</Button>
-      </Link>
+        <Button
+          className="self-start"
+          isLoading={locationQuery.isLoading}
+          disabled={disableSubmit}
+          type="submit"
+          variant="primary"
+        >
+          Search
+        </Button>
 
-      {children}
+        {children}
+      </form>
     </Card>
   );
 };

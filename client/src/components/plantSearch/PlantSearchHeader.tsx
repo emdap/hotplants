@@ -15,12 +15,11 @@ const PlantSearchHeader = ({
   openSidebar?: () => void;
   className: string;
 }) => {
-  const { page, searchStatus, hasCurrentResults, totalResultsCount } =
-    usePlantSearchContext();
+  const { page, searchStatus, totalResultsCount } = usePlantSearchContext();
 
   const LAST_PAGE = Math.ceil(totalResultsCount / DEFAULT_PAGE_SIZE);
 
-  return hasCurrentResults ? (
+  return (
     <header
       className={classNames(
         "lg:text-white lg:h-header grid-centered gap-4 items-center justify-center sticky top-header z-20 px-8 py-2 lg:px-2",
@@ -30,7 +29,7 @@ const PlantSearchHeader = ({
       {openSidebar && (
         <OpenSidebarButton
           openSidebar={openSidebar}
-          className="lg:hidden max-lg:text-black! dark:text-white/80! max-lg:hover:text-black/80! dark:hover:text-white/80! mr-auto"
+          className="lg:hidden dark:text-white/80! dark:hover:text-white/80! mr-auto"
           icon={<FaGlobe size={16} />}
         />
       )}
@@ -43,7 +42,7 @@ const PlantSearchHeader = ({
       {page !== undefined && <PagePaginator page={page} lastPage={LAST_PAGE} />}
       <span className="ml-auto" />
     </header>
-  ) : null;
+  );
 };
 
 const PagePaginator = ({

@@ -14,7 +14,7 @@ const OpenSidebarButton = ({
   <Button
     variant="text"
     onClick={openSidebar}
-    className={classNames("text-white/60 hover:text-white/80 p-0!", className)}
+    className={classNames("p-0!", className)}
     {...buttonProps}
   />
 );

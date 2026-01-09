@@ -20,7 +20,7 @@ const getDescription = (args: Partial<PlantAnimationProps>) => {
   } else if (args.queryStatus === "SCRAPING_AND_POLLING") {
     return [1, `Searching for ${args.hasCurrentResults ? "more " : ""}plants`];
   } else if (args.isInitialSearch) {
-    return [2, "Search for some plants to get started!"];
+    return [2, "Search for a location to get started!"];
   } else if (!args.hasCurrentResults) {
     return [3, "No plants found, try adjusting your filters."];
   } else {
@@ -70,8 +70,8 @@ const PlantAnimation = ({
     <motion.div
       {...MOTION_FADE_IN}
       className={classNames(
-        "grow flex flex-col gap-4 big-screen:gap-10 my-auto items-center justify-center transition-opacity max-h-full big-screen:max-h-[unset] max-lg:pb-20",
-        hasCurrentResults ? "pb-20" : "lg:sticky lg:bottom-0"
+        "grow flex flex-col gap-4 big-screen:gap-10 my-auto items-center justify-center transition-opacity max-h-full big-screen:max-h-[unset]",
+        hasCurrentResults ? "lg:pb-20" : "lg:sticky lg:bottom-0"
       )}
     >
       {Lottie.View}

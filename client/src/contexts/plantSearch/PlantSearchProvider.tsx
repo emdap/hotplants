@@ -4,7 +4,7 @@ import {
   PlantSearchContextType,
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
-import { PlantQueryResults } from "graphqlHelpers/plantQueries";
+import { PlantQueryData } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { ReactNode, useEffect, useState } from "react";
 import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
@@ -12,14 +12,17 @@ import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
 const route = getRouteApi("__root__");
 
 const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
-  const { search: routeSearchParams, filters: routeFilters = {} } =
-    route.useSearch();
+  const {
+    // page,
+    search: routeSearchParams = null,
+    filters: routeFilters = {},
+  } = route.useSearch();
 
   const [plantFilters, setPlantFilters] =
     useState<PlantSearchFilters>(routeFilters);
 
   const [searchParams, setSearchParams] = useState<PlantSearchParams | null>(
-    null
+    routeSearchParams
   );
   const [searchParamsDraft, setSearchParamsDraft] = useState<
     Partial<PlantSearchParams>
@@ -43,20 +46,22 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
   const { searchStatus, plantSearchData, ...searchQueries } =
     usePlantSearchQueries(routeSearchParams, plantFilters);
 
-  const [plantSearchResults, setPlantSearchResults] =
-    useState<PlantQueryResults>([]);
+  const [cachedPlantData, setCachedPlantData] = useState<PlantQueryData>({
+    count: 0,
+    results: [],
+  });
 
   useEffect(() => {
     searchStatus !== "CHECKING_STATUS" &&
       plantSearchData &&
-      setPlantSearchResults(plantSearchData.results);
+      setCachedPlantData(plantSearchData);
   }, [searchStatus, plantSearchData]);
 
   return (
     <PlantSearchContext.Provider
       value={{
-        hasCurrentResults: Boolean(plantSearchResults.length),
-        totalResultsCount: plantSearchData?.count ?? 0,
+        hasCurrentResults: Boolean(cachedPlantData.count),
+        totalResultsCount: cachedPlantData.count,
 
         searchParams,
         searchParamsDraft,
@@ -71,7 +76,7 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       <PlantSelectionProvider
-        plantList={plantSearchResults}
+        plantList={cachedPlantData.results}
         boundingPolygon={boundingPolyCoords}
       >
         {children}

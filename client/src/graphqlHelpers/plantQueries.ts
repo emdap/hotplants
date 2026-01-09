@@ -65,5 +65,6 @@ export const REPLACE_WITH_PROXY_URL = graphql(`
   }
 `);
 
-export type PlantQueryResults = SearchPlantsQuery["plantSearch"]["results"];
+export type PlantQueryData = SearchPlantsQuery["plantSearch"];
+export type PlantQueryResults = PlantQueryData["results"];
 export type PlantResult = PlantQueryResults[number];

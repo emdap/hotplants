@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import PlantResultsList from "components/plantResults/PlantResultsList";
+import LocationSearchCard from "components/plantSearch/LocationSearchCard";
 import PlantSearchFooter from "components/plantSearch/PlantSearchFooter";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
@@ -45,35 +46,40 @@ const PlantSearch = () => {
   return (
     <main>
       <PageTitle>Plant Search</PageTitle>
-      <PlantSearchHeader className="max-lg:hidden bg-header border-header" />
-
-      <div
-        ref={containerRef}
-        className="small-screen:page-wrapper flex max-lg:flex-col grow"
-      >
-        <PlantSearchSidebar
-          isExpanded={sidebarExpanded}
-          setIsExpanded={setSidebarExpanded}
-        />
-
+      {hasCurrentResults && (
         <PlantSearchHeader
           openSidebar={() => setSidebarExpanded(true)}
-          className="lg:hidden card card-solid"
+          className="lg:bg-header lg:border-header max-lg:card max-lg:card-solid max-lg:mx-2 max-lg:py-1"
         />
+      )}
+      <div
+        ref={containerRef}
+        className="small-screen:page-wrapper flex max-lg:flex-col max-lg:justify-between max-lg:h-full grow"
+      >
+        {hasCurrentResults ? (
+          <PlantSearchSidebar
+            isExpanded={sidebarExpanded}
+            setIsExpanded={setSidebarExpanded}
+          />
+        ) : (
+          <div className="lg:ml-8">
+            <LocationSearchCard />
+          </div>
+        )}
 
         <div
           id={RESULTS_PANE_ID}
-          className={classNames(
-            "grow flex flex-col relative scroll-m-header-2 pt-1 px-4",
-            hasCurrentResults ? "max-lg:basis-2/3 gap-6" : "pb-20"
-          )}
+          className="grow flex flex-col relative scroll-m-header-2 py-4 px-4 max-lg:basis-2/3 gap-6"
         >
-          <PlantResultsList
-            key="results-holder"
-            className={classNames({
-              "xl:max-w-[1000px]": totalResultsCount < 3,
-            })}
-          />
+          {hasCurrentResults && (
+            <PlantResultsList
+              key="results-holder"
+              className={classNames({
+                "xl:max-w-[1000px]": totalResultsCount < 3,
+              })}
+            />
+          )}
+
           <PlantSearchFooter key="results-footer" />
         </div>
       </div>

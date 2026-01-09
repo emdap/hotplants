@@ -4,7 +4,11 @@ import { PlantSearchFilters, PlantSearchParams } from "./customSchemaTypes";
 
 const validateString = (input: unknown) => String(input || "") || undefined;
 
-export const DEFAULT_PLANT_SEARCH_PARAMS = { search: null, filters: {} };
+export const DEFAULT_PLANT_SEARCH_PARAMS = {
+  page: null,
+  search: null,
+  filters: {},
+};
 
 type PlantSearchRouteParams =
   | {
@@ -74,7 +78,13 @@ export const validatePlantSearchParams = (
 
   if (search) {
     const filters = validateFilters(params.filters);
-    return { search, filters };
+    const numberPage = Number(params.page);
+
+    return {
+      page: isNaN(numberPage) ? undefined : numberPage,
+      search,
+      filters,
+    };
   }
 
   return { search, filters: {} };

@@ -10,7 +10,7 @@ const AppHeader = ({
 }: Pick<OpenSidebarButtonProps, "openSidebar">) => (
   <header className="h-header min-h-header w-full bg-header small-screen:grid-centered flex items-center gap-4 px-safe-2 sticky top-0 z-30 border-header text-white">
     <OpenSidebarButton
-      className="big-screen:hidden mr-auto"
+      className="big-screen:hidden mr-auto text-white/60 hover:text-white/80"
       icon={<MdOutlineMenu size={24} />}
       openSidebar={openSidebar}
     />
