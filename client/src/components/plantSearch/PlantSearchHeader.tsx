@@ -5,31 +5,47 @@ import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
+import { useLayoutEffect, useRef } from "react";
 import { FaGlobe } from "react-icons/fa";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
 
-const PlantSearchHeader = ({
-  openSidebar,
-  className,
-}: {
-  openSidebar?: () => void;
-  className: string;
-}) => {
+const PlantSearchHeader = ({ openSidebar }: { openSidebar?: () => void }) => {
   const { page, searchStatus, totalResultsCount } = usePlantSearchContext();
+
+  const headerRef = useRef<HTMLHeadingElement>(null);
+  useLayoutEffect(() => {
+    const syncAnimation = document
+      .getAnimations()
+      .find(
+        (animation) =>
+          animation instanceof CSSAnimation &&
+          animation.effect instanceof KeyframeEffect &&
+          animation.effect.target?.id === BACKGROUND_ANIMATION_ID
+      );
+
+    const headerAnimation = headerRef.current?.getAnimations()[0];
+
+    if (headerAnimation && syncAnimation) {
+      headerAnimation.currentTime = syncAnimation.currentTime;
+    }
+  }, []);
 
   const LAST_PAGE = Math.ceil(totalResultsCount / DEFAULT_PAGE_SIZE);
 
   return (
     <header
+      ref={headerRef}
       className={classNames(
-        "lg:text-white lg:h-header grid-centered gap-4 items-center justify-center sticky top-header z-20 px-8 py-2 lg:px-2",
-        className
+        "grid-centered gap-4 items-center justify-center sticky top-header z-20",
+        "big-screen:text-white big-screen:h-header big-screen:border-header big-screen:bg-header big-screen:px-2 big-screen:py-2",
+        "small-screen:card small-screen:card-solid small-screen:mx-2 small-screen:px-8 small-screen:py-1"
       )}
     >
       {openSidebar && (
         <OpenSidebarButton
           openSidebar={openSidebar}
-          className="lg:hidden dark:text-white/80! dark:hover:text-white/80! mr-auto"
+          className="text-accent/80! hover:text-accent big-screen:hidden dark:text-white/80! dark:hover:text-white! mr-auto"
           icon={<FaGlobe size={16} />}
         />
       )}

@@ -37,6 +37,7 @@
 
 @theme {
   --spacing-header: --spacing(10);
+  --max-width-page: 1500px;
 }
 
 @utility border-header {
@@ -84,7 +85,7 @@
 }
 
 @utility page-wrapper {
-  @apply w-full px-safe-2 big-screen:px-8;
+  @apply xl:mx-auto xl:max-w-page w-full max-xl:px-safe-2;
 }
 
 @utility card {

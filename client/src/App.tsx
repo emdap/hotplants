@@ -4,6 +4,7 @@ import AppHeader from "components/navigation/header/AppHeader";
 import { authClient } from "config/authClient";
 import PlantSearchProvider from "contexts/plantSearch/PlantSearchProvider";
 import { useEffect, useState } from "react";
+import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
 
 const App = () => {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
@@ -14,7 +15,10 @@ const App = () => {
 
   return (
     <PlantSearchProvider>
-      <div className="fixed -z-10 h-dvh w-dvw pretty-background" />
+      <div
+        id={BACKGROUND_ANIMATION_ID}
+        className="fixed -z-10 h-dvh w-dvw pretty-background"
+      />
       <AppHeader openSidebar={() => setSidebarExpanded(true)} />
       <div className="flex [&_main]:grow">
         <AppSidebar

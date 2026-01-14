@@ -10,7 +10,7 @@ const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
 };
 
 const PlantInfoCard = ({ plant }: { plant: PlantResult }) => (
-  <Card className="lg:overflow-auto flex-grow">
+  <Card className="big-screen:overflow-auto flex-grow">
     <table className="border-separate border-spacing-4 [&_th,td]:p-2 w-full">
       <tbody>
         {(Object.entries(plant) as [keyof PlantResult, object][]).map(

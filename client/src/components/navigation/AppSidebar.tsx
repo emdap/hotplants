@@ -1,7 +1,6 @@
 import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import classNames from "classnames";
 import Button from "designSystem/Button";
-import OverlayMask from "designSystem/OverlayMask";
 import Sidebar, { SidebarProps } from "designSystem/sidebar/Sidebar";
 import { IconType } from "react-icons/lib";
 import { MdOutlineSearch, MdOutlineYoutubeSearchedFor } from "react-icons/md";
@@ -42,27 +41,14 @@ const AppSidebar = (props: SidebarProps) => {
   return (
     <Sidebar
       {...props}
-      overlay={({ isExpanded, setIsExpanded }) => (
-        <OverlayMask
-          show={isExpanded}
-          key="mask"
-          className="big-screen:hidden bg-accent/10!"
-          onClick={() => setIsExpanded(false)}
-        />
-      )}
       className={(isExpanded) =>
         classNames(
           "[&_*]:text-white! border-r sticky top-header overflow-auto pb-3",
+          "small-screen:bg-primary-dark small-screen:px-safe-2 small-screen:pr-0! small-screen:w-xs",
+          "big-screen:h-dvh-header big-screen:border-r small-screen:border-none",
           {
-            "big-screen:min-w-[300px] big-screen:w-[300px] small-screen:translate-x-0":
-              isExpanded,
-            "big-screen:w-header big-screen:min-w-header small-screen:-translate-x-full":
-              !isExpanded,
-          },
-
-          "small-screen:gap-2 small-screen:fixed small-screen:z-50 small-screen:top-0 small-screen:h-dvh small-screen:bg-primary-dark",
-          "small-screen:px-safe-2 small-screen:pr-0! small-screen:w-xs",
-          "big-screen:h-dvh-header big-screen:border-r small-screen:border-none"
+            "big-screen:min-w-[300px] big-screen:w-[300px]": isExpanded,
+          }
         )
       }
     >

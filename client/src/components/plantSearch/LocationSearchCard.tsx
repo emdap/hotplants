@@ -46,6 +46,7 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
     queryKey: ["location-search", debouncedInput],
     enabled:
       debouncedInput !== null && searchParams?.locationName !== debouncedInput,
+    retry: false,
     queryFn: async () => {
       setLocationInvalid(false);
 
@@ -84,7 +85,6 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
   const submitLocation = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!disableSubmit) {
-      console.log("submit");
       document.getElementById(RESULTS_PANE_ID)?.scrollIntoView();
       navigate({ to: ".", search: { search: searchParams } });
     }
@@ -132,8 +132,7 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
         />
 
         <Button
-          className="self-start"
-          isLoading={locationQuery.isLoading}
+          className="self-start px-8"
           disabled={disableSubmit}
           type="submit"
           variant="primary"

@@ -66,7 +66,7 @@ const Carousel = ({
 
   const swipeHandlers = useSwipeable({
     onSwipedRight: ({ event }) => {
-      event.stopPropagation();
+      !disableButtons.prev && event.stopPropagation();
       iterateCarousel("prev");
     },
     onSwipedLeft: () => iterateCarousel("next"),

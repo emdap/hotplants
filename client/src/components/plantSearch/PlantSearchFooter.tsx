@@ -9,6 +9,7 @@ const PlantSearchFooter = () => {
     searchStatus,
     searchRecordQuery: { dataUpdatedAt },
   } = usePlantSearchContext();
+
   return hasNextPage && searchStatus !== "CHECKING_STATUS" ? (
     <div className="pb-4 mx-auto -mt-10 mb-10">
       <LoadingIcon key="loading-icon" size={25} className="text-white" />

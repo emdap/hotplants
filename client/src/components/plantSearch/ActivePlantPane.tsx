@@ -34,6 +34,7 @@ const ActivePlantPane = () => {
   } = usePlantSelectionContext();
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
+  const isTouchingMap = useRef(false);
 
   const { activePlant, typesafeActiveIndex } = useMemo(
     () => ({
@@ -50,7 +51,7 @@ const ActivePlantPane = () => {
   };
 
   const swipeHandlers = useSwipeable({
-    onSwipedRight: resetActivePlant,
+    onSwipedRight: () => !isTouchingMap.current && resetActivePlant(),
   });
   useCloseOnEscape(resetActivePlant, !!activePlant && !imageModalOpen);
   useDisableHtmlScroll(Boolean(activePlant));
@@ -82,7 +83,7 @@ const ActivePlantPane = () => {
           <Card
             key="plant-pane"
             ref={paneRef}
-            className="backdrop-blur-2xl max-md:rounded-l-none rounded-r-none h-full w-full fixed top-0 md:w-4/7 md:max-w-5xl flex flex-col z-30 p-0 overflow-hidden"
+            className="backdrop-blur-2xl small-screen:rounded-l-none rounded-r-none h-full small-screen:w-full fixed top-0 big-screen:w-4/7 big-screen:max-w-5xl flex flex-col z-30 p-0 overflow-hidden"
             {...CARD_FADE_IN}
           >
             <header className="flex flex-wrap pt-2 pl-2 items-center">
@@ -121,9 +122,17 @@ const ActivePlantPane = () => {
             </header>
             <div
               key={activePlant.scientificName}
-              className="flex flex-col overflow-auto lg:overflow-hidden gap-4 py-6 px-safe-6"
+              className="flex flex-col small-screen:overflow-auto big-screen:overflow-hidden gap-4 py-6 px-safe-6"
             >
-              <div className="flex max-lg:flex-col-reverse gap-4 justify-between">
+              <div
+                onTouchStart={() => {
+                  isTouchingMap.current = true;
+                }}
+                onTouchEnd={() => {
+                  isTouchingMap.current = false;
+                }}
+                className="flex max-lg:flex-col-reverse gap-4 justify-between"
+              >
                 <PlantImageViewer
                   plant={activePlant}
                   isModalOpen={imageModalOpen}

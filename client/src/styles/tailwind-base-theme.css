@@ -1,8 +1,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant theme-added (&:where(.theme-added, .theme-added *));
 
-@custom-variant small-screen (@media (height < 600px) or (width < 768px));
-@custom-variant big-screen (@media (height >= 600px) and (width >= 768px));
+/* Needs to be kept in sync with generalUtil.ts */
+@custom-variant small-screen (@media (height < 600px) or (width < 1024px));
+@custom-variant big-screen (@media (height >= 600px) and (width >= 1024px));
 
 @theme {
   --font-sans: InterVariable, sans-serif;

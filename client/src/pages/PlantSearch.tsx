@@ -10,18 +10,26 @@ import {
 } from "contexts/plantSearch/PlantSearchContext";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { isSmallScreen } from "util/generalUtil";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [sidebarExpanded, setSidebarExpanded] = useState(!isSmallScreen());
 
   const { hasCurrentResults, totalResultsCount, fetchNextPlantsPage } =
     usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const toggleSidebar = () => setSidebarExpanded(!isSmallScreen());
+
+    window.addEventListener("resize", toggleSidebar);
+    return () => window.removeEventListener("resize", toggleSidebar);
+  }, []);
 
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -45,16 +53,20 @@ const PlantSearch = () => {
 
   return (
     <main>
-      <PageTitle>Plant Search</PageTitle>
+      <PageTitle className={hasCurrentResults ? "mx-0" : "page-wrapper"}>
+        Plant Search
+      </PageTitle>
       {hasCurrentResults && (
-        <PlantSearchHeader
-          openSidebar={() => setSidebarExpanded(true)}
-          className="lg:bg-header lg:border-header max-lg:card max-lg:card-solid max-lg:mx-2 max-lg:py-1"
-        />
+        <PlantSearchHeader openSidebar={() => setSidebarExpanded(true)} />
       )}
       <div
         ref={containerRef}
-        className="small-screen:page-wrapper flex max-lg:flex-col max-lg:justify-between max-lg:h-full grow"
+        className={classNames("flex grow", {
+          "small-screen:page-wrapper small-screen:flex-col small-screen:justify-between small-screen:h-full":
+            hasCurrentResults,
+          "page-wrapper px-4 max-md:flex-col max-md:justify-between":
+            !hasCurrentResults,
+        })}
       >
         {hasCurrentResults ? (
           <PlantSearchSidebar
@@ -62,7 +74,7 @@ const PlantSearch = () => {
             setIsExpanded={setSidebarExpanded}
           />
         ) : (
-          <div className="lg:ml-8">
+          <div className="basis-1/2 max-w-2xl">
             <LocationSearchCard />
           </div>
         )}
@@ -75,7 +87,7 @@ const PlantSearch = () => {
             <PlantResultsList
               key="results-holder"
               className={classNames({
-                "xl:max-w-[1000px]": totalResultsCount < 3,
+                "max-w-page": totalResultsCount < 3,
               })}
             />
           )}

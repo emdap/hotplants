@@ -35,8 +35,8 @@ export const getPlantDisplayName = (plant: PlantResult) => {
   return commonName ? capitalize(commonName) : plant.scientificName;
 };
 
-export const MEDIUM_SCREEN_SIZE = 768;
-const TALL_SCREEN_SIZE = 600;
+export const BACKGROUND_ANIMATION_ID = "background-animation";
+
+// Needs to be kept in sync with tailwind-base-theme.css
 export const isSmallScreen = () =>
-  window.innerWidth < MEDIUM_SCREEN_SIZE ||
-  window.innerHeight < TALL_SCREEN_SIZE;
+  window.innerWidth < 1024 || window.innerHeight < 600;

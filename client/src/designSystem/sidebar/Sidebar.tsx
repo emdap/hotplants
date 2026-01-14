@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import Button from "designSystem/Button";
+import OverlayMask from "designSystem/OverlayMask";
 import { useCloseOnEscape } from "hooks/useCloseOnEscape";
 import { AnimatePresence } from "motion/react";
 import { ReactNode, useEffect, useState } from "react";
@@ -16,7 +17,6 @@ type SidebarChild = (props: Required<SidebarProps>) => ReactNode;
 type SidebarReactiveProps = {
   className?: string | ((isExpanded: boolean) => string);
   children: ReactNode | SidebarChild;
-  overlay?: SidebarChild;
 };
 
 const Sidebar = ({
@@ -24,7 +24,6 @@ const Sidebar = ({
   setIsExpanded: setIsExpandedProp,
   className,
   children,
-  overlay,
 }: SidebarProps & SidebarReactiveProps) => {
   const [isExpanded, setIsExpanded] = useState(Boolean(isExpandedProp));
 
@@ -45,13 +44,25 @@ const Sidebar = ({
 
   return (
     <AnimatePresence>
-      {overlay && overlay(childrenProps)}
+      <OverlayMask
+        show={isExpanded}
+        key="mask"
+        className="big-screen:hidden bg-accent/10!"
+        onClick={() => setIsExpanded(false)}
+      />
+
       <nav
         key="sidebar"
         {...swipeHandlers}
         className={classNames(
           "border-header bg-gradient-to-t from-default-background/30 to-90%",
           "flex flex-col transition-all duration-300",
+          "small-screen:gap-2 small-screen:fixed small-screen:z-50 small-screen:top-0 small-screen:h-dvh",
+          {
+            "small-screen:translate-x-0": isExpanded,
+            "small-screen:-translate-x-full big-screen:w-header big-screen:min-w-header":
+              !isExpanded,
+          },
           typeof className === "function" ? className(isExpanded) : className
         )}
       >
