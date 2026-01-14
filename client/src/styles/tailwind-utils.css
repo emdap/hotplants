@@ -37,6 +37,8 @@
 
 @theme {
   --spacing-header: --spacing(10);
+  --spacing-safe-right: env(safe-area-inset-right);
+  --spacing-safe-left: env(safe-area-inset-left);
   --max-width-page: 1500px;
 }
 
@@ -80,8 +82,13 @@
 }
 
 @utility px-safe-* {
-  padding-right: max(--spacing(--value(integer)), env(safe-area-inset-right));
-  padding-left: max(--spacing(--value(integer)), env(safe-area-inset-left));
+  padding-right: max(--spacing(--value(integer)), var(--spacing-safe-right));
+  padding-left: max(--spacing(--value(integer)), var(--spacing-safe-left));
+}
+
+@utility mx-safe-* {
+  margin-right: max(--spacing(--value(integer)), var(--spacing-safe-right));
+  margin-left: max(--spacing(--value(integer)), var(--spacing-safe-left));
 }
 
 @utility page-wrapper {

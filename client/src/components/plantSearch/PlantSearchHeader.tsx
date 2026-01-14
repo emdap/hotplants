@@ -39,18 +39,18 @@ const PlantSearchHeader = ({ openSidebar }: { openSidebar?: () => void }) => {
       className={classNames(
         "grid-centered gap-4 items-center justify-center sticky top-header z-20",
         "big-screen:text-white big-screen:h-header big-screen:border-header big-screen:bg-header big-screen:px-2 big-screen:py-2",
-        "small-screen:card small-screen:card-solid small-screen:mx-2 small-screen:px-8 small-screen:py-1"
+        "small-screen:card small-screen:card-solid mx-safe-2 small-screen:px-8 small-screen:py-1"
       )}
     >
       {openSidebar && (
         <OpenSidebarButton
           openSidebar={openSidebar}
-          className="text-accent/80! hover:text-accent big-screen:hidden dark:text-white/80! dark:hover:text-white! mr-auto"
+          className="text-accent/80! hover:text-accent! big-screen:hidden dark:text-white/80! dark:hover:text-white! mr-auto"
           icon={<FaGlobe size={16} />}
         />
       )}
 
-      <div className="flex items-center gap-1 col-start-2">
+      <div className="small-screen:text-default-text flex items-center gap-1 col-start-2">
         {searchStatus !== "READY" && <LoadingIcon />}
         {totalResultsCount} Plants
       </div>

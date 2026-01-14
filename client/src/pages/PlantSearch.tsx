@@ -52,10 +52,8 @@ const PlantSearch = () => {
   }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
 
   return (
-    <main>
-      <PageTitle className={hasCurrentResults ? "mx-0" : "page-wrapper"}>
-        Plant Search
-      </PageTitle>
+    <main className={hasCurrentResults ? "[&_h1]:px-6" : "page-wrapper"}>
+      <PageTitle>Plant Search</PageTitle>
       {hasCurrentResults && (
         <PlantSearchHeader openSidebar={() => setSidebarExpanded(true)} />
       )}
@@ -64,7 +62,7 @@ const PlantSearch = () => {
         className={classNames("flex grow", {
           "small-screen:page-wrapper small-screen:flex-col small-screen:justify-between small-screen:h-full":
             hasCurrentResults,
-          "page-wrapper px-4 max-md:flex-col max-md:justify-between":
+          "max-md:flex-col max-md:justify-between px-4 pb-20":
             !hasCurrentResults,
         })}
       >
