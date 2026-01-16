@@ -66,6 +66,7 @@ const Sidebar = ({
               !isExpanded,
             "big-screen:relative small-screen:overflow-auto":
               externalCollapseButton,
+            "big-screen:mr-4": externalCollapseButton && isExpanded,
             "overflow-auto": !externalCollapseButton,
           },
           typeof className === "function" ? className(isExpanded) : className
@@ -78,10 +79,16 @@ const Sidebar = ({
             "text-white transition-all outline-none p-1! mb-2 rounded-full! hover:border-white/40 border border-transparent aspect-square",
             {
               "bg-inherit": isExpanded,
-              "sticky right-1.5": !isExpanded || !externalCollapseButton,
-              "big-screen:absolute big-screen:translate-x-1/2 small-screen:sticky small-screen:right-1.5":
-                isExpanded && externalCollapseButton,
-            }
+              "sticky right-1.5": !externalCollapseButton,
+            },
+            externalCollapseButton && [
+              "big-screen:absolute",
+              {
+                "right-1.5": !isExpanded,
+                "big-screen:absolute big-screen:translate-x-1/2 small-screen:sticky small-screen:right-1.5":
+                  isExpanded,
+              },
+            ]
           )}
           onClick={() => setIsExpanded(!isExpanded)}
           icon={

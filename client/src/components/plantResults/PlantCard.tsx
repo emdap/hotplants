@@ -37,7 +37,6 @@ const PlantCard = ({
   return (
     <Card
       {...MOTION_FADE_SLIDE}
-      key={plant.scientificName}
       ref={plantCardRef}
       transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.03 }}
       id={plant.scientificName}

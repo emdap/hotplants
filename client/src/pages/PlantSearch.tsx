@@ -51,7 +51,7 @@ const PlantSearch = () => {
       <div
         ref={containerRef}
         className={classNames("flex grow", {
-          "small-screen:page-wrapper small-screen:flex-col small-screen:justify-between small-screen:h-full":
+          "small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full":
             hasCurrentResults,
           "max-md:flex-col max-md:justify-between px-safe-4 pb-20 gap-8":
             !hasCurrentResults,

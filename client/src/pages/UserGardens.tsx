@@ -42,7 +42,7 @@ const UserGardens = () => {
   }, []);
 
   return (
-    <main className="page-wrapper relative">
+    <main className="page-buffer relative">
       <PageTitle key={gardenName}>
         {gardenName ? (
           <span className="flex gap-4 items-center">

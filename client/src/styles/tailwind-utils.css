@@ -99,8 +99,8 @@
   margin-left: max(--spacing(--value(integer)), var(--spacing-safe-left));
 }
 
-@utility page-wrapper {
-  @apply xl:mx-auto xl:max-w-page w-full max-xl:px-safe-2;
+@utility page-buffer {
+  @apply w-full px-safe-4 lg:px-safe-6;
 }
 
 @utility card {

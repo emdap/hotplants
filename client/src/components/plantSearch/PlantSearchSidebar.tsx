@@ -1,15 +1,11 @@
 import classNames from "classnames";
-import PlantSearchFilters from "components/plantFilters/PlantSearchFilters";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
-import Card from "designSystem/Card";
 import Sidebar from "designSystem/sidebar/Sidebar";
 import LocationSearchCard from "./LocationSearchCard";
 
 const PlantSearchSidebar = () => {
   const {
     hasCurrentResults,
-    plantFilters,
-    applyPlantFilters,
 
     sidebarExpanded,
     setSidebarExpanded,
@@ -39,7 +35,7 @@ const PlantSearchSidebar = () => {
       {({ isExpanded }) => (
         <div
           className={classNames(
-            "big-screen:h-full max-h-fit big-screen:overflow-auto space-y-4 big-screen:pl-4 big-screen:pr-2 big-screen:mr-4 big-screen:pt-4 transition-opacity",
+            "big-screen:h-full max-h-fit big-screen:overflow-auto space-y-4 big-screen:pl-6 big-screen:pr-2 big-screen:mr-4 big-screen:pt-4 transition-opacity",
             "small-screen:pr-safe-right",
             hasCurrentResults && {
               "big-screen:pb-24 opacity-100 big-screen:delay-150 pb-20":
@@ -50,12 +46,12 @@ const PlantSearchSidebar = () => {
         >
           <LocationSearchCard />
 
-          <Card className="space-y-4 scroll-m-header">
+          {/* <Card className="space-y-4 scroll-m-header">
             <PlantSearchFilters
               plantFilters={plantFilters}
               setPlantFilters={applyPlantFilters}
             />
-          </Card>
+          </Card> */}
         </div>
       )}
     </Sidebar>

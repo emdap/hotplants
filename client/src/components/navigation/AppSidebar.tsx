@@ -17,8 +17,8 @@ const SIDEBAR_ITEMS: SidebarNavItem[] = [
   },
   {
     icon: MdOutlineYoutubeSearchedFor,
-    text: "Previous Searches",
-    to: "/previous-searches",
+    text: "Search Archive",
+    to: "/archive",
   },
   {
     icon: TbPlant2,

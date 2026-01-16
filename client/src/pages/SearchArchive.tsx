@@ -4,13 +4,13 @@ import PageTitle from "designSystem/PageTitle";
 import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 
-const PreviousSearches = () => {
+const SearchArchive = () => {
   const { data: { allSearchRecords } = {}, ...allSearchRecordsQuery } =
     useApolloQuery(GET_ALL_SEARCH_RECORDS);
 
   return (
-    <main className="page-wrapper">
-      <PageTitle>Previous Searches</PageTitle>
+    <main className="page-buffer">
+      <PageTitle>Search Archive</PageTitle>
       <LoadingOverlay
         debounceShow
         show={allSearchRecordsQuery.loading}
@@ -18,17 +18,14 @@ const PreviousSearches = () => {
       />
 
       {allSearchRecords && (
-        <div>
-          {allSearchRecords.count}
-          <div className="flex flex-col lg:grid grid-cols-[repeat(auto-fit,_minmax(400px,1fr))] gap-4">
-            {allSearchRecords.results.map((searchRecord, index) => (
-              <SearchRecordCard key={index} {...searchRecord} />
-            ))}
-          </div>
+        <div className="flex flex-col lg:grid grid-cols-[repeat(auto-fit,_minmax(400px,1fr))] gap-4">
+          {allSearchRecords.results.map((searchRecord, index) => (
+            <SearchRecordCard key={index} {...searchRecord} />
+          ))}
         </div>
       )}
     </main>
   );
 };
 
-export default PreviousSearches;
+export default SearchArchive;

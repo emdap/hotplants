@@ -1,9 +1,6 @@
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
-import {
-  RESULTS_PANE_ID,
-  usePlantSearchContext,
-} from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { useReactQuery } from "hooks/useQuery";
@@ -85,7 +82,6 @@ const LocationSearchCard = () => {
   const submitLocation = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!disableSubmit) {
-      document.getElementById(RESULTS_PANE_ID)?.scrollIntoView();
       applySearchParams();
     }
   };

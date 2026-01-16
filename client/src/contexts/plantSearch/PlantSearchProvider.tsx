@@ -2,12 +2,13 @@ import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import {
   PlantSearchContext,
   PlantSearchContextType,
+  RESULTS_PANE_ID,
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import { PlantQueryData } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
 import { ReactNode, useCallback, useEffect, useState } from "react";
-import { PlantSearchParams } from "util/customSchemaTypes";
+import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("__root__");
@@ -23,19 +24,32 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
   const [searchParamsDraft, setSearchParamsDraft] =
     useState<PlantSearchParams | null>(searchParams);
 
-  const applySearchParams = useCallback(() => {
-    navigate({ to: ".", search: { search: searchParamsDraft } });
-    isSmallScreen() && setSidebarExpanded(false);
-  }, [navigate, searchParamsDraft]);
+  const applySearchParams = useCallback(
+    (params?: PlantSearchParams) => {
+      const applyParams = params || searchParamsDraft;
+      if (applyParams) {
+        document
+          .getElementById(RESULTS_PANE_ID)
+          ?.scrollIntoView({ behavior: "instant" });
+
+        navigate({
+          to: "/plant-search",
+          search: { search: applyParams, filters: {} },
+        });
+        isSmallScreen() && setSidebarExpanded(false);
+      }
+    },
+    [navigate, searchParamsDraft]
+  );
 
   const applyPlantFilters = useCallback(
-    () =>
+    (filters?: PlantSearchFilters) =>
       searchParams &&
       navigate({
         to: ".",
-        search: { search: searchParams, filters: plantFilters },
+        search: { search: searchParams, filters },
       }),
-    [navigate, searchParams, plantFilters]
+    [navigate, searchParams]
   );
 
   const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =

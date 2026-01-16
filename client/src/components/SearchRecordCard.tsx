@@ -1,3 +1,4 @@
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
 import { SearchRecordResult } from "graphqlHelpers/searchRecordQueries";
 import { useMemo } from "react";
@@ -8,6 +9,8 @@ const SearchRecordCard = ({
   totalOccurrences,
   ...searchParams
 }: SearchRecordResult) => {
+  const { applySearchParams } = usePlantSearchContext();
+
   const { title, subTitle } = useMemo(() => {
     const splitName = searchParams.locationName.split(", ");
     return {
@@ -17,7 +20,7 @@ const SearchRecordCard = ({
   }, [searchParams.locationName]);
 
   return (
-    <Card>
+    <Card onClick={() => applySearchParams(searchParams)}>
       <h2>{title}</h2>
       <h4>{subTitle}</h4>
       <div className="flex gap-4">

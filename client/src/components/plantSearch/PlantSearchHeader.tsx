@@ -5,6 +5,7 @@ import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
+import pluralize from "pluralize";
 import { useLayoutEffect, useRef } from "react";
 import { FaGlobe } from "react-icons/fa";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
@@ -59,8 +60,8 @@ const PlantSearchHeader = () => {
       />
 
       <div className="small-screen:text-default-text flex items-center gap-1 col-start-2">
+        {pluralize("Plant", totalResultsCount, true)}
         {searchStatus !== "READY" && <LoadingIcon />}
-        {totalResultsCount} Plants
       </div>
 
       {page !== undefined && <PagePaginator page={page} lastPage={LAST_PAGE} />}

@@ -25,10 +25,10 @@ export type PlantSearchContextType = {
       "boundingPolyCoords" | "locationName" | "locationSource"
     >
   ) => void;
-  applySearchParams: () => void;
+  applySearchParams: (params?: PlantSearchParams) => void;
 
   plantFilters: PlantSearchFilters;
-  applyPlantFilters: () => void;
+  applyPlantFilters: (filters?: PlantSearchFilters) => void;
 } & Pick<
   PlantSearchQueriesReturnType,
   "fetchNextPlantsPage" | "hasNextPage" | "searchStatus" | "searchRecordQuery"
