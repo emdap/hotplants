@@ -10,9 +10,12 @@ import { useSwipeable } from "react-swipeable";
 export type SidebarProps = {
   isExpanded?: boolean;
   setIsExpanded?: (expanded: boolean) => void;
+  externalCollapseButton?: boolean;
 };
 
-type SidebarChild = (props: Required<SidebarProps>) => ReactNode;
+type SidebarChild = (
+  props: Required<Omit<SidebarProps, "externalCollapseButton">>
+) => ReactNode;
 
 type SidebarReactiveProps = {
   className?: string | ((isExpanded: boolean) => string);
@@ -22,6 +25,7 @@ type SidebarReactiveProps = {
 const Sidebar = ({
   isExpanded: isExpandedProp,
   setIsExpanded: setIsExpandedProp,
+  externalCollapseButton,
   className,
   children,
 }: SidebarProps & SidebarReactiveProps) => {
@@ -40,8 +44,6 @@ const Sidebar = ({
     setIsExpandedProp && setIsExpandedProp(isExpanded);
   }, [isExpanded, setIsExpandedProp]);
 
-  const childrenProps = { isExpanded, setIsExpanded };
-
   return (
     <AnimatePresence>
       <OverlayMask
@@ -56,32 +58,42 @@ const Sidebar = ({
         {...swipeHandlers}
         className={classNames(
           "border-header bg-gradient-to-t from-default-background/30 to-90%",
-          "flex flex-col transition-all duration-300",
-          "small-screen:gap-2 small-screen:fixed small-screen:z-50 small-screen:top-0 small-screen:h-dvh",
+          "flex flex-col transition-all duration-300 z-50",
+          "small-screen:gap-2 small-screen:fixed small-screen:top-0 small-screen:h-dvh small-screen:pl-safe-4 small-screen:pr-4",
           {
             "small-screen:translate-x-0": isExpanded,
             "small-screen:-translate-x-full big-screen:w-header big-screen:min-w-header":
               !isExpanded,
+            "big-screen:relative small-screen:overflow-auto":
+              externalCollapseButton,
+            "overflow-auto": !externalCollapseButton,
           },
           typeof className === "function" ? className(isExpanded) : className
         )}
       >
-        <div className="sticky top-0 place-self-end small-screen:bg-inherit py-1 px-1.5">
-          <Button
-            variant="text"
-            className={classNames(
-              "text-white transition-all outline-none p-1! mb-2 rounded-full! hover:border-white/40 border border-transparent aspect-square"
-            )}
-            onClick={() => setIsExpanded(!isExpanded)}
-            icon={
-              <MdKeyboardDoubleArrowLeft
-                className={classNames(!isExpanded && "big-screen:rotate-180")}
-              />
+        <Button
+          variant="text"
+          className={classNames(
+            "sidebar-button place-self-end top-1 z-50",
+            "text-white transition-all outline-none p-1! mb-2 rounded-full! hover:border-white/40 border border-transparent aspect-square",
+            {
+              "bg-inherit": isExpanded,
+              "sticky right-1.5": !isExpanded || !externalCollapseButton,
+              "big-screen:absolute big-screen:translate-x-1/2 small-screen:sticky small-screen:right-1.5":
+                isExpanded && externalCollapseButton,
             }
-          />
-        </div>
+          )}
+          onClick={() => setIsExpanded(!isExpanded)}
+          icon={
+            <MdKeyboardDoubleArrowLeft
+              className={classNames(!isExpanded && "big-screen:rotate-180")}
+            />
+          }
+        />
 
-        {typeof children === "function" ? children(childrenProps) : children}
+        {typeof children === "function"
+          ? children({ isExpanded, setIsExpanded })
+          : children}
       </nav>
     </AnimatePresence>
   );

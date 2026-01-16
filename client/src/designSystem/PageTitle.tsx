@@ -11,7 +11,7 @@ const PageTitle = ({
   className?: string;
 }) => (
   <motion.h1
-    className={classNames("px-4 py-6 dark:text-white/80", className)}
+    className={classNames("py-6 dark:text-white/80", className)}
     {...MOTION_FADE_IN}
   >
     {children}

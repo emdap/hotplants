@@ -37,6 +37,7 @@ const PlantCard = ({
   return (
     <Card
       {...MOTION_FADE_SLIDE}
+      key={plant.scientificName}
       ref={plantCardRef}
       transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.03 }}
       id={plant.scientificName}
@@ -50,7 +51,7 @@ const PlantCard = ({
       onMouseUp={() => (isRightClick.current = false)}
       tabIndex={1}
       className={classNames(
-        "cursor-pointer h-[30vh] small-screen:h-50vh md:h-60 outline-white/60 transition-all relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
+        "cursor-pointer h-[30vh] small-screen:h-50vh md:h-60 outline-white/60 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
 
         isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0"
       )}

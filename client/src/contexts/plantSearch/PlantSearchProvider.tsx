@@ -1,4 +1,4 @@
-import { getRouteApi } from "@tanstack/react-router";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import {
   PlantSearchContext,
   PlantSearchContextType,
@@ -6,45 +6,44 @@ import {
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import { PlantQueryData } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
-import { ReactNode, useEffect, useState } from "react";
-import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+import { ReactNode, useCallback, useEffect, useState } from "react";
+import { PlantSearchParams } from "util/customSchemaTypes";
+import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("__root__");
 
 const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
+  const navigate = useNavigate();
   const {
     // page,
-    search: routeSearchParams = null,
-    filters: routeFilters = {},
+    search: searchParams = null,
+    filters: plantFilters = {},
   } = route.useSearch();
 
-  const [plantFilters, setPlantFilters] =
-    useState<PlantSearchFilters>(routeFilters);
+  const [searchParamsDraft, setSearchParamsDraft] =
+    useState<PlantSearchParams | null>(searchParams);
 
-  const [searchParams, setSearchParams] = useState<PlantSearchParams | null>(
-    routeSearchParams
+  const applySearchParams = useCallback(() => {
+    navigate({ to: ".", search: { search: searchParamsDraft } });
+    isSmallScreen() && setSidebarExpanded(false);
+  }, [navigate, searchParamsDraft]);
+
+  const applyPlantFilters = useCallback(
+    () =>
+      searchParams &&
+      navigate({
+        to: ".",
+        search: { search: searchParams, filters: plantFilters },
+      }),
+    [navigate, searchParams, plantFilters]
   );
-  const [searchParamsDraft, setSearchParamsDraft] = useState<
-    Partial<PlantSearchParams>
-  >(routeSearchParams ?? {});
-  const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =
-    (newParams) => setSearchParamsDraft((prev) => ({ ...prev, ...newParams }));
 
-  const { boundingPolyCoords, locationName, locationSource } =
-    searchParamsDraft;
-  useEffect(() => {
-    if (boundingPolyCoords && locationName && locationSource) {
-      setSearchParams((prev) => ({
-        ...prev,
-        boundingPolyCoords,
-        locationName,
-        locationSource,
-      }));
-    }
-  }, [boundingPolyCoords, locationName, locationSource]);
+  const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =
+    (locationParams) =>
+      setSearchParamsDraft((prev) => ({ ...prev, ...locationParams }));
 
   const { searchStatus, plantSearchData, ...searchQueries } =
-    usePlantSearchQueries(routeSearchParams, plantFilters);
+    usePlantSearchQueries(searchParams, plantFilters);
 
   const [cachedPlantData, setCachedPlantData] = useState<PlantQueryData>({
     count: 0,
@@ -57,19 +56,31 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
       setCachedPlantData(plantSearchData);
   }, [searchStatus, plantSearchData]);
 
+  const [sidebarExpanded, setSidebarExpanded] = useState(!isSmallScreen());
+  useEffect(() => {
+    const toggleSidebar = () => setSidebarExpanded(!isSmallScreen());
+
+    window.addEventListener("resize", toggleSidebar);
+    return () => window.removeEventListener("resize", toggleSidebar);
+  }, []);
+
   return (
     <PlantSearchContext.Provider
       value={{
         hasCurrentResults: Boolean(cachedPlantData.count),
         totalResultsCount: cachedPlantData.count,
 
+        sidebarExpanded,
+        setSidebarExpanded,
+
         searchParams,
         searchParamsDraft,
         updateSearchParamsDraft,
         setSearchParamsDraft,
+        applySearchParams,
 
         plantFilters,
-        setPlantFilters,
+        applyPlantFilters,
 
         searchStatus,
         ...searchQueries,
@@ -77,7 +88,7 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
     >
       <PlantSelectionProvider
         plantList={cachedPlantData.results}
-        boundingPolygon={boundingPolyCoords}
+        boundingPolygon={searchParams?.boundingPolyCoords}
       >
         {children}
       </PlantSelectionProvider>

@@ -48,7 +48,7 @@ const PlantOccurrenceMarkers = ({
     ) {
       return {
         isViewingAllPlants: true,
-        plantOccurrences: plantList.map(occurrenceMediaFlat),
+        plantOccurrences: [], // TODO: TEMP
       };
     } else {
       return {

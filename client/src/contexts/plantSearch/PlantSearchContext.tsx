@@ -1,6 +1,7 @@
 import { PlantSearchQueriesReturnType } from "hooks/usePlantSearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+import { isSmallScreen } from "util/generalUtil";
 
 export const RESULTS_PANE_ID = "results-pane";
 
@@ -12,14 +13,22 @@ export type PlantSearchContextType = {
   totalResultsCount: number;
   page?: number;
 
-  searchParams: PlantSearchParams | null;
+  sidebarExpanded: boolean;
+  setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
 
-  searchParamsDraft: Partial<PlantSearchParams>;
-  updateSearchParamsDraft: (newParams: Partial<PlantSearchParams>) => void;
-  setSearchParamsDraft: Dispatch<SetStateAction<Partial<PlantSearchParams>>>;
+  searchParams: PlantSearchParams | null;
+  searchParamsDraft: PlantSearchParams | null;
+  setSearchParamsDraft: Dispatch<SetStateAction<PlantSearchParams | null>>;
+  updateSearchParamsDraft: (
+    locationParams: Pick<
+      PlantSearchParams,
+      "boundingPolyCoords" | "locationName" | "locationSource"
+    >
+  ) => void;
+  applySearchParams: () => void;
 
   plantFilters: PlantSearchFilters;
-  setPlantFilters: Dispatch<SetStateAction<PlantSearchFilters>>;
+  applyPlantFilters: () => void;
 } & Pick<
   PlantSearchQueriesReturnType,
   "fetchNextPlantsPage" | "hasNextPage" | "searchStatus" | "searchRecordQuery"
@@ -31,12 +40,16 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
 
   searchParams: null,
 
-  searchParamsDraft: {},
-  updateSearchParamsDraft: VOID_FUNCTION,
+  sidebarExpanded: !isSmallScreen(),
+  setSidebarExpanded: VOID_FUNCTION,
+
+  searchParamsDraft: null,
   setSearchParamsDraft: VOID_FUNCTION,
+  updateSearchParamsDraft: VOID_FUNCTION,
+  applySearchParams: VOID_FUNCTION,
 
   plantFilters: {},
-  setPlantFilters: VOID_FUNCTION,
+  applyPlantFilters: VOID_FUNCTION,
 
   searchStatus: "READY",
   searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],

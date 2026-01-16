@@ -43,8 +43,8 @@ const AppSidebar = (props: SidebarProps) => {
       {...props}
       className={(isExpanded) =>
         classNames(
-          "[&_*]:text-white! border-r sticky top-header overflow-auto pb-3",
-          "small-screen:bg-primary-dark small-screen:px-safe-2 small-screen:pr-0! small-screen:w-xs",
+          "[&_*]:text-white! border-r sticky top-header pb-3",
+          "small-screen:bg-primary-dark small-screen:w-xs",
           "big-screen:h-dvh-header big-screen:border-r small-screen:border-none",
           {
             "big-screen:min-w-[300px] big-screen:w-[300px]": isExpanded,

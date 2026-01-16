@@ -81,6 +81,14 @@
   @apply focus-visible:outline-offset-2 focus-visible:outline-2 focus:outline-offset-2 focus:outline-2 [button]:m-1;
 }
 
+@utility pl-safe-* {
+  padding-left: max(--spacing(--value(integer)), var(--spacing-safe-left));
+}
+
+@utility pr-safe-* {
+  padding-right: max(--spacing(--value(integer)), var(--spacing-safe-right));
+}
+
 @utility px-safe-* {
   padding-right: max(--spacing(--value(integer)), var(--spacing-safe-right));
   padding-left: max(--spacing(--value(integer)), var(--spacing-safe-left));

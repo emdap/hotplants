@@ -10,26 +10,16 @@ import {
 } from "contexts/plantSearch/PlantSearchContext";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { isSmallScreen } from "util/generalUtil";
+import { useLayoutEffect, useRef } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
-  const [sidebarExpanded, setSidebarExpanded] = useState(!isSmallScreen());
-
   const { hasCurrentResults, totalResultsCount, fetchNextPlantsPage } =
     usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
 
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const toggleSidebar = () => setSidebarExpanded(!isSmallScreen());
-
-    window.addEventListener("resize", toggleSidebar);
-    return () => window.removeEventListener("resize", toggleSidebar);
-  }, []);
 
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -52,25 +42,23 @@ const PlantSearch = () => {
   }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
 
   return (
-    <main className={hasCurrentResults ? "[&_h1]:px-6" : "page-wrapper"}>
-      <PageTitle>Plant Search</PageTitle>
-      {hasCurrentResults && (
-        <PlantSearchHeader openSidebar={() => setSidebarExpanded(true)} />
-      )}
+    <main className="w-full">
+      <PageTitle className={hasCurrentResults ? "px-safe-6" : "px-safe-4"}>
+        Plant Search
+      </PageTitle>
+      {hasCurrentResults && <PlantSearchHeader />}
+
       <div
         ref={containerRef}
         className={classNames("flex grow", {
           "small-screen:page-wrapper small-screen:flex-col small-screen:justify-between small-screen:h-full":
             hasCurrentResults,
-          "max-md:flex-col max-md:justify-between px-4 pb-20":
+          "max-md:flex-col max-md:justify-between px-safe-4 pb-20 gap-8":
             !hasCurrentResults,
         })}
       >
         {hasCurrentResults ? (
-          <PlantSearchSidebar
-            isExpanded={sidebarExpanded}
-            setIsExpanded={setSidebarExpanded}
-          />
+          <PlantSearchSidebar />
         ) : (
           <div className="basis-1/2 max-w-2xl">
             <LocationSearchCard />

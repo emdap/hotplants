@@ -2,27 +2,35 @@ import classNames from "classnames";
 import PlantSearchFilters from "components/plantFilters/PlantSearchFilters";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
-import Sidebar, { SidebarProps } from "designSystem/sidebar/Sidebar";
+import Sidebar from "designSystem/sidebar/Sidebar";
 import LocationSearchCard from "./LocationSearchCard";
 
-const PlantSearchSidebar = (props: SidebarProps) => {
-  const { hasCurrentResults, plantFilters, setPlantFilters } =
-    usePlantSearchContext();
+const PlantSearchSidebar = () => {
+  const {
+    hasCurrentResults,
+    plantFilters,
+    applyPlantFilters,
+
+    sidebarExpanded,
+    setSidebarExpanded,
+  } = usePlantSearchContext();
 
   return (
     <Sidebar
-      {...props}
+      isExpanded={sidebarExpanded}
+      setIsExpanded={setSidebarExpanded}
+      externalCollapseButton
       className={(isExpanded) =>
         classNames(
-          hasCurrentResults
-            ? "big-screen:sticky big-screen:top-header-2 big-screen:h-dvh-header-2 border-r"
-            : "h-max",
           [
-            "small-screen:bg-accent small-screen:w-2/3 small-screen:min-w-fit",
-            "small-screen:left-0 small-screen:px-safe-4 pr-0!",
+            "small-screen:bg-light-accent small-screen:w-2/3 small-screen:min-w-fit small-screen:left-0",
           ],
           {
-            "big-screen:w-md": isExpanded,
+            "big-screen:sticky big-screen:top-header-2 big-screen:h-dvh-header-2 border-r":
+              hasCurrentResults,
+            "h-max": !hasCurrentResults,
+
+            "big-screen:w-md [&_.sidebar-button]:bg-light-accent": isExpanded,
             "big-screen:overflow-hidden": !isExpanded,
           }
         )
@@ -31,9 +39,10 @@ const PlantSearchSidebar = (props: SidebarProps) => {
       {({ isExpanded }) => (
         <div
           className={classNames(
-            "big-screen:h-full max-h-fit space-y-4 big-screen:pl-4 pr-4 transition-opacity",
+            "big-screen:h-full max-h-fit big-screen:overflow-auto space-y-4 big-screen:pl-4 big-screen:pr-2 big-screen:mr-4 big-screen:pt-4 transition-opacity",
+            "small-screen:pr-safe-right",
             hasCurrentResults && {
-              "overflow-auto big-screen:pb-24 opacity-100 big-screen:delay-150 pb-20":
+              "big-screen:pb-24 opacity-100 big-screen:delay-150 pb-20":
                 isExpanded,
               "big-screen:opacity-0": !isExpanded,
             }
@@ -44,7 +53,7 @@ const PlantSearchSidebar = (props: SidebarProps) => {
           <Card className="space-y-4 scroll-m-header">
             <PlantSearchFilters
               plantFilters={plantFilters}
-              setPlantFilters={setPlantFilters}
+              setPlantFilters={applyPlantFilters}
             />
           </Card>
         </div>

@@ -1,4 +1,3 @@
-import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
 import {
@@ -8,20 +7,20 @@ import {
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { useReactQuery } from "hooks/useQuery";
-import { FormEvent, ReactNode, useEffect, useState } from "react";
+import _ from "lodash";
+import { FormEvent, useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import {
   lookupLocationInput,
   validateNominatimLocation,
 } from "util/locationUtil";
 
-const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
-  const navigate = useNavigate();
+const LocationSearchCard = () => {
   const {
     searchParams,
     searchParamsDraft,
     updateSearchParamsDraft,
-    setSearchParamsDraft,
+    applySearchParams,
   } = usePlantSearchContext();
 
   const [searchInput, setSearchInput] = useState("");
@@ -37,10 +36,15 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
   );
 
   useEffect(() => {
-    if (searchParamsDraft.locationSource === "custom") {
+    if (searchParamsDraft?.locationSource === "custom") {
       setLocationInvalid(false);
     }
-  }, [searchParamsDraft.locationSource]);
+  }, [searchParamsDraft?.locationSource]);
+
+  useEffect(() => {
+    setSearchInput(searchParams?.locationName ?? "");
+    setDebouncedInput(searchParams?.locationName ?? "");
+  }, [searchParams?.locationName]);
 
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
@@ -61,14 +65,6 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
         }
       }
 
-      setSearchParamsDraft(
-        ({
-          locationName: _l1,
-          locationSource: _l2,
-          boundingPolyCoords: _l3,
-          ...rest
-        }) => rest
-      );
       return null;
     },
   });
@@ -80,13 +76,17 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
     setDebouncedInput(e.target.value);
   };
 
-  const disableSubmit = !searchParams || locationQuery.isLoading;
+  const disableSubmit =
+    !searchParamsDraft ||
+    _.isEqual(searchParamsDraft, searchParams) ||
+    searchInput !== debouncedInput ||
+    locationQuery.isLoading;
 
   const submitLocation = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!disableSubmit) {
       document.getElementById(RESULTS_PANE_ID)?.scrollIntoView();
-      navigate({ to: ".", search: { search: searchParams } });
+      applySearchParams();
     }
   };
 
@@ -110,9 +110,9 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
             onKeyDown={handleKeyDown}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder={
-              searchParamsDraft.locationSource === "custom"
+              searchParamsDraft?.locationSource === "custom"
                 ? `Custom Location: (${searchParamsDraft.locationName})`
-                : searchParamsDraft.locationName ?? "Enter Location"
+                : "Enter Location"
             }
           />
         </div>
@@ -125,8 +125,8 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
 
         <MapProvider
           locationCustomizeable
-          isLoading={locationQuery.isLoading}
-          searchParams={searchParams}
+          isLoading={locationQuery.isLoading || locationQuery.isFetching}
+          searchParams={searchParamsDraft}
           setSearchParams={updateSearchParamsDraft}
           className="w-full h-[200px] lg:h-[300px] grow"
         />
@@ -139,8 +139,6 @@ const LocationSearchCard = ({ children }: { children?: ReactNode }) => {
         >
           Search
         </Button>
-
-        {children}
       </form>
     </Card>
   );
