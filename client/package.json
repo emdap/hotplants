@@ -29,6 +29,7 @@
     "@turf/turf": "^7.2.0",
     "better-auth": "^1.4.6",
     "classnames": "^2.5.1",
+    "date-fns": "^4.1.0",
     "graphql": "^16.11.0",
     "leaflet": "^1.9.4",
     "leaflet-draw": "^1.0.4",

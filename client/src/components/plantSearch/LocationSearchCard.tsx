@@ -8,6 +8,7 @@ import _ from "lodash";
 import { FormEvent, useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import {
+  customLocationDisplay,
   lookupLocationInput,
   validateNominatimLocation,
 } from "util/locationUtil";
@@ -107,7 +108,7 @@ const LocationSearchCard = () => {
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder={
               searchParamsDraft?.locationSource === "custom"
-                ? `Custom Location: (${searchParamsDraft.locationName})`
+                ? customLocationDisplay(searchParamsDraft)
                 : "Enter Location"
             }
           />

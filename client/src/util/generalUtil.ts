@@ -11,7 +11,7 @@ export type IterateDirection = (typeof ITERATE_DIRECTION)[number];
 
 export const elementInViewport = (
   element: HTMLElement,
-  { xBuffer = 1, yBuffer = 1 }: { xBuffer?: number; yBuffer?: number } = {}
+  { xBuffer = 1, yBuffer = 1 }: { xBuffer?: number; yBuffer?: number } = {},
 ) => {
   const rect = element.getBoundingClientRect();
 
@@ -36,6 +36,8 @@ export const getPlantDisplayName = (plant: PlantResult) => {
 };
 
 export const BACKGROUND_ANIMATION_ID = "background-animation";
+
+export const DEFAULT_DATE_FORMAT = "LLL d, yyyy";
 
 // Needs to be kept in sync with tailwind-base-theme.css
 export const isSmallScreen = () =>

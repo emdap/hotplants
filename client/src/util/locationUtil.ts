@@ -47,3 +47,7 @@ export const validateNominatimLocation = (
     boundingPolyCoords,
   };
 };
+
+export const customLocationDisplay = (
+  location: Pick<LocationSearchParams, "locationName">
+) => `Custom Location: (${location.locationName})`;

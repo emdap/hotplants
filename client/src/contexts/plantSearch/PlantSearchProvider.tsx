@@ -24,6 +24,10 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
   const [searchParamsDraft, setSearchParamsDraft] =
     useState<PlantSearchParams | null>(searchParams);
 
+  useEffect(() => {
+    setSearchParamsDraft(searchParams);
+  }, [searchParams]);
+
   const applySearchParams = useCallback(
     (params?: PlantSearchParams) => {
       const applyParams = params || searchParamsDraft;
@@ -39,7 +43,7 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
         isSmallScreen() && setSidebarExpanded(false);
       }
     },
-    [navigate, searchParamsDraft]
+    [navigate, searchParamsDraft],
   );
 
   const applyPlantFilters = useCallback(
@@ -49,7 +53,7 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
         to: ".",
         search: { search: searchParams, filters },
       }),
-    [navigate, searchParams]
+    [navigate, searchParams],
   );
 
   const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =
