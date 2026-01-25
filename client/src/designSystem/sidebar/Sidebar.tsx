@@ -14,7 +14,7 @@ export type SidebarProps = {
 };
 
 type SidebarChild = (
-  props: Required<Omit<SidebarProps, "externalCollapseButton">>
+  props: Required<Omit<SidebarProps, "externalCollapseButton">>,
 ) => ReactNode;
 
 type SidebarReactiveProps = {
@@ -69,7 +69,7 @@ const Sidebar = ({
             "big-screen:mr-4": externalCollapseButton && isExpanded,
             "overflow-auto": !externalCollapseButton,
           },
-          typeof className === "function" ? className(isExpanded) : className
+          typeof className === "function" ? className(isExpanded) : className,
         )}
       >
         <Button
@@ -88,7 +88,7 @@ const Sidebar = ({
                 "big-screen:absolute big-screen:translate-x-1/2 small-screen:sticky small-screen:right-1.5":
                   isExpanded,
               },
-            ]
+            ],
           )}
           onClick={() => setIsExpanded(!isExpanded)}
           icon={

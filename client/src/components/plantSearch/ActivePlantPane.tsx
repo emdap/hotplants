@@ -42,7 +42,7 @@ const ActivePlantPane = () => {
         (activePlantIndex !== null && plantList[activePlantIndex]) ?? null,
       typesafeActiveIndex: activePlantIndex ?? 0,
     }),
-    [plantList, activePlantIndex]
+    [plantList, activePlantIndex],
   );
 
   const resetActivePlant = () => {
@@ -72,13 +72,13 @@ const ActivePlantPane = () => {
       next: typesafeActiveIndex === plantList.length - 1,
       prev: !typesafeActiveIndex,
     }),
-    [typesafeActiveIndex, plantList.length]
+    [typesafeActiveIndex, plantList.length],
   );
 
   const iteratePlant = (direction: "prev" | "next") => {
     setActiveMediaIndex(0);
     setActivePlantIndex(
-      typesafeActiveIndex + (direction === "prev" ? -1 : 1) * 1
+      typesafeActiveIndex + (direction === "prev" ? -1 : 1) * 1,
     );
   };
 
@@ -87,7 +87,7 @@ const ActivePlantPane = () => {
       {activePlant && (
         <Card
           key="plant-pane"
-          className="backdrop-blur-2xl small-screen:rounded-l-none rounded-r-none h-full small-screen:w-full fixed top-0 big-screen:w-4/7 big-screen:max-w-5xl flex flex-col z-30 p-0 overflow-hidden"
+          className="backdrop-blur-2xl small-screen:rounded-l-none rounded-r-none h-full small-screen:w-full fixed top-0 big-screen:w-4/7 big-screen:max-w-5xl flex flex-col z-50 p-0 overflow-hidden"
           {...CARD_SLIDE_IN}
           {...swipeHandlers}
           ref={refPassthrough}
