@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-router";
 import App from "App";
 import {
-  DEFAULT_PLANT_SEARCH_PARAMS,
+  DEFAULT_PLANT_SEARCH_ROUTE_PARAMS,
   validatePlantSearchParams,
 } from "util/routeParamsUtil";
 
@@ -19,6 +19,8 @@ export const Route = createRootRoute({
       });
     }
   },
-  search: { middlewares: [stripSearchParams(DEFAULT_PLANT_SEARCH_PARAMS)] },
+  search: {
+    middlewares: [stripSearchParams(DEFAULT_PLANT_SEARCH_ROUTE_PARAMS)],
+  },
   validateSearch: validatePlantSearchParams,
 });

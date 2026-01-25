@@ -4,7 +4,7 @@ import { PlantSearchFilters, PlantSearchParams } from "./customSchemaTypes";
 
 const validateString = (input: unknown) => String(input || "") || undefined;
 
-export const DEFAULT_PLANT_SEARCH_PARAMS = {
+export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
   page: null,
   search: null,
   filters: {},
@@ -16,7 +16,25 @@ type PlantSearchRouteParams =
       filters: PlantSearchFilters;
       page?: number;
     }
-  | Partial<typeof DEFAULT_PLANT_SEARCH_PARAMS>;
+  | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>;
+
+const STRING_SEARCH_PARAMS: (keyof PlantSearchParams)[] = [
+  "commonName",
+  "scientificName",
+];
+
+const extractStringParams = (
+  searchParams: object
+): Partial<PlantSearchParams> =>
+  STRING_SEARCH_PARAMS.reduce<Partial<PlantSearchParams>>((prev, cur) => {
+    if (cur in searchParams) {
+      const typesafeKey = cur as keyof typeof searchParams;
+      if (searchParams[typesafeKey]) {
+        return { ...prev, [typesafeKey]: searchParams[typesafeKey] };
+      }
+    }
+    return prev;
+  }, {});
 
 const validateSearch = (searchParams: unknown): PlantSearchParams | null => {
   if (typeof searchParams === "object" && searchParams !== null) {
@@ -53,7 +71,7 @@ const validateSearch = (searchParams: unknown): PlantSearchParams | null => {
     }
 
     return {
-      ...searchParams,
+      ...extractStringParams(searchParams),
       locationName,
       locationSource,
       boundingPolyCoords,
