@@ -14,6 +14,7 @@ export type ButtonProps = {
   variant?: ButtonVariant;
   icon?: ReactNode;
   size?: "small" | "default";
+  opaque?: boolean;
   isLoading?: boolean;
   linkAddress?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
@@ -44,31 +45,47 @@ const getClasses = (props: ButtonProps) => {
     "rounded-md flex gap-3 items-center justify-center font-medium",
     props.className,
     {
-      "bg-primary/90 dark:bg-primary/80 enabled:hover:bg-primary outline-primary text-white":
+      "enabled:hover:bg-primary outline-primary text-white":
         props.variant === "primary",
-      "bg-accent/90 dark:bg-accent/80 enabled:hover:bg-accent outline-accent text-white":
+      "enabled:hover:bg-accent outline-accent text-white":
         props.variant === "accent",
-      "bg-secondary/80 enabled:hover:bg-secondary outline-secondary ":
+      "enabled:hover:bg-secondary outline-secondary ":
         props.variant === "secondary",
 
-      "bg-primary/80 enabled:hover:bg-primary text-white":
-        props.variant === "icon-primary",
-      "enabled:hover:bg-white/20 outline-primary":
-        props.variant === "icon-white",
+      "enabled:hover:bg-primary text-white": props.variant === "icon-primary",
+      "outline-primary": props.variant === "icon-white",
 
       "text-primary enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
         isTextVariant,
 
       "cursor-pointer": !props.disabled,
-      "opacity-50": props.disabled,
       "pl-10 [&_.icon-wrapper]:-ml-7": loadingWithText || iconWithText,
       "pr-10": loadingWithText,
 
       "focus-ring": !isTextVariant,
       "hover:shadow-sm": !isTextVariant && !props.disabled,
     },
+    props.opaque
+      ? {
+          "bg-primary-faded":
+            props.variant === "primary" || props.variant === "icon-primary",
+          "bg-accent-faded": props.variant === "accent",
+          "bg-secondary-faded": props.variant === "secondary",
+
+          "enabled:hover:bg-gray-100": props.variant === "icon-white",
+          "opacity-90": props.disabled,
+        }
+      : {
+          "bg-primary/90 dark:bg-primary/80": props.variant === "primary",
+          "bg-accent/90 dark:bg-accent/80": props.variant === "accent",
+          "bg-secondary/80": props.variant === "secondary",
+
+          "bg-primary/80": props.variant === "icon-primary",
+          "enabled:hover:bg-white/20": props.variant === "icon-white",
+          "opacity-50": props.disabled,
+        },
     loadingWithText ? "pr-10" : iconWithText && "pr-3",
-    buttonSize
+    buttonSize,
   );
 };
 
@@ -79,6 +96,7 @@ const Button = ({
   linkAddress,
   className,
   disabled,
+  opaque,
   ...directButtonProps
 }: ButtonProps) => {
   const isDisabled = isLoading || disabled;
@@ -89,6 +107,7 @@ const Button = ({
     className,
     disabled: isDisabled,
     isLoading,
+    opaque,
     ...directButtonProps,
   });
 
