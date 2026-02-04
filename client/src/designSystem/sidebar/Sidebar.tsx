@@ -82,10 +82,10 @@ const Sidebar = ({
               "sticky right-1.5": !externalCollapseButton,
             },
             externalCollapseButton && [
-              "big-screen:absolute",
+              "big-screen:absolute small-screen:sticky",
               {
-                "right-1.5": !isExpanded,
-                "big-screen:absolute big-screen:translate-x-1/2 small-screen:sticky small-screen:right-1.5":
+                "big-screen:right-1.5": !isExpanded,
+                "big-screen:absolute big-screen:translate-x-1/2 small-screen:right-1.5":
                   isExpanded,
               },
             ],
