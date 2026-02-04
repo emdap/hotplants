@@ -79,8 +79,6 @@ const PlantSearchProvider = () => {
   const { searchStatus, plantSearchData, ...searchQueries } =
     usePlantSearchQueries(searchParams, plantFilters);
 
-  console.log(plantSearchData);
-
   const [cachedPlantData, setCachedPlantData] = useState<PlantQueryData>({
     count: 0,
     results: [],

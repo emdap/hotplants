@@ -82,9 +82,7 @@ const usePlantSearchQueries = (
 
       if (data?.status !== "SCRAPING" && pollInterval) {
         stopPolling();
-        console.log("fetch one more", plantSearchQuery.networkStatus);
         plantSearchQuery.refetch();
-        console.log(plantSearchQuery.networkStatus);
       }
 
       return data;
