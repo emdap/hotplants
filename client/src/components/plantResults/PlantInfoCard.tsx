@@ -2,11 +2,12 @@ import Card from "designSystem/Card";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 
 const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
+  fullOccurrencesCount: "Occurrences Found",
+  commonNames: "Common Names",
   bloomColors: "Bloom Colors",
   bloomTimes: "Bloom Times",
   isPerennial: "Perennial",
   physicalCharactersticsDump: "General Info",
-  fullOccurrencesCount: "Occurrences Found",
 };
 
 const PlantInfoCard = ({ plant }: { plant: PlantResult }) => (
@@ -18,9 +19,13 @@ const PlantInfoCard = ({ plant }: { plant: PlantResult }) => (
             PLANT_FIELD_LABEL[key] && (
               <tr key={index} className="grid grid-cols-[2fr_3fr]">
                 <th className="text-left">{PLANT_FIELD_LABEL[key]}</th>
-                <td className="text-right">{JSON.stringify(value)}</td>
+                <td className="text-right">
+                  {Array.isArray(value)
+                    ? value.join(", ")
+                    : JSON.stringify(value)}
+                </td>
               </tr>
-            )
+            ),
         )}
       </tbody>
     </table>
