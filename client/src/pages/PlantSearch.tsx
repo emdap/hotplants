@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import PlantResultsList from "components/plantResults/PlantResultsList";
-import LocationSearchCard from "components/plantSearch/LocationSearchCard";
 import PlantSearchFooter from "components/plantSearch/PlantSearchFooter";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
+import SearchParamsInput from "components/plantSearch/SearchParamsInput";
 import {
   RESULTS_PANE_ID,
   usePlantSearchContext,
@@ -53,7 +53,7 @@ const PlantSearch = () => {
         className={classNames("flex grow", {
           "small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full":
             hasCurrentResults,
-          "max-md:flex-col max-md:justify-between px-safe-4 pb-20 gap-8":
+          "max-md:flex-col max-md:justify-between px-safe-4 pb-8 gap-8":
             !hasCurrentResults,
         })}
       >
@@ -61,13 +61,13 @@ const PlantSearch = () => {
           <PlantSearchSidebar />
         ) : (
           <div className="basis-1/2 max-w-2xl">
-            <LocationSearchCard />
+            <SearchParamsInput />
           </div>
         )}
 
         <div
           id={RESULTS_PANE_ID}
-          className="grow flex flex-col relative scroll-m-header-2 py-4 px-4 max-lg:basis-2/3 gap-6"
+          className="grow flex flex-col relative scroll-m-header-2 py-4 big-screen:px-4 max-lg:basis-2/3 gap-6"
         >
           {hasCurrentResults && (
             <PlantResultsList

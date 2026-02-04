@@ -12,11 +12,15 @@ import {
   lookupLocationInput,
   validateNominatimLocation,
 } from "util/locationUtil";
+import OptionalSearchParamsInput from "./OptionalSearchParamsInput";
 
-const LocationSearchCard = () => {
+const SearchParamsInput = () => {
   const {
+    searchStatus,
+    hasCurrentResults,
     searchParams,
     searchParamsDraft,
+    validatedSearchParamsDraft,
     updateSearchParamsDraft,
     applySearchParams,
   } = usePlantSearchContext();
@@ -30,7 +34,7 @@ const LocationSearchCard = () => {
       (debouncedInput !== null || searchInput) &&
       setDebouncedInput(searchInput),
     1000,
-    [searchInput]
+    [searchInput],
   );
 
   useEffect(() => {
@@ -88,20 +92,22 @@ const LocationSearchCard = () => {
   };
 
   return (
-    <Card className="p-2">
-      <form
-        onSubmit={submitLocation}
-        className="flex flex-col gap-2 pl-2 md:pr-4 w-full overflow-auto"
-      >
-        <div className="form-item flex-row items-center">
-          <label htmlFor="search-location">Location</label>
+    <form
+      onSubmit={submitLocation}
+      className="h-full flex flex-col gap-4 overflow-auto pb-4 [&_.card]:pt-4"
+    >
+      <Card className="flex flex-col gap-2">
+        <div className="form-item">
+          <label htmlFor="search-location" className="max-w-fit pb-2">
+            <h2>Location</h2>
+          </label>
           <input
             id="search-location"
             value={searchInput}
             className={classNames(
               "styled-input flex-grow min-w-20",
               (locationQuery.isError || locationInvalid) &&
-                "dark:!border-red-700 ring-offset-red-500/70 !border-red-500"
+                "dark:!border-red-700 ring-offset-red-500/70 !border-red-500",
             )}
             onBlur={() => setDebouncedInput(searchInput)}
             onKeyDown={handleKeyDown}
@@ -123,22 +129,27 @@ const LocationSearchCard = () => {
         <MapProvider
           locationCustomizeable
           isLoading={locationQuery.isLoading || locationQuery.isFetching}
-          searchParams={searchParamsDraft}
+          searchParams={validatedSearchParamsDraft}
           setSearchParams={updateSearchParamsDraft}
           className="w-full h-[200px] lg:h-[300px] grow"
         />
+      </Card>
 
+      <OptionalSearchParamsInput />
+
+      {(hasCurrentResults || searchParamsDraft) && (
         <Button
-          className="self-start px-8"
+          className="small-screen:mt-auto!"
           disabled={disableSubmit}
+          isLoading={searchStatus !== "READY"}
           type="submit"
           variant="primary"
         >
-          Search
+          <span className="z-1">Search</span>
         </Button>
-      </form>
-    </Card>
+      )}
+    </form>
   );
 };
 
-export default LocationSearchCard;
+export default SearchParamsInput;

@@ -168,7 +168,7 @@ type Query {
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
   plantSearch(limit: Int, offset: Int, sort: [PlantSortInput!], where: PlantDataInput): PlantSearchQueryResults!
   searchRecord(id: String!): SearchRecord
-  searchRecordPlantCount(id: String!): Int!
+  searchRecordDataCounts(id: String!): SearchRecordPlantCountResults!
   userGarden(gardenName: String!): UserGarden
 }
 
@@ -185,6 +185,11 @@ type SearchRecord {
   statusUpdatedTimestamp: Float
   taxonKeys: [Int!]
   totalOccurrences: Int!
+}
+
+type SearchRecordPlantCountResults {
+  occurrenceCount: Float!
+  plantCount: Float!
 }
 
 type SearchRecordQueryResults {

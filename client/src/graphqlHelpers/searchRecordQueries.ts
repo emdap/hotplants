@@ -25,8 +25,11 @@ export const GET_ALL_SEARCH_RECORDS = graphql(`
 `);
 
 export const GET_SEARCH_RECORD_PLANT_COUNT = graphql(`
-  query getSearchRecordPlantCount($id: String!) {
-    searchRecordPlantCount(id: $id)
+  query getSearchRecordDataCounts($id: String!) {
+    searchRecordDataCounts(id: $id) {
+      plantCount
+      occurrenceCount
+    }
   }
 `);
 

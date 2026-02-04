@@ -13,22 +13,19 @@ export type PlantSearchContextType = {
   totalResultsCount: number;
   page?: number;
 
-  sidebarExpanded: boolean;
-  setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
-
   searchParams: PlantSearchParams | null;
-  searchParamsDraft: PlantSearchParams | null;
-  setSearchParamsDraft: Dispatch<SetStateAction<PlantSearchParams | null>>;
-  updateSearchParamsDraft: (
-    locationParams: Pick<
-      PlantSearchParams,
-      "boundingPolyCoords" | "locationName" | "locationSource"
-    >
-  ) => void;
-  applySearchParams: (params?: PlantSearchParams) => void;
+
+  searchParamsDraft: Partial<PlantSearchParams> | null;
+  validatedSearchParamsDraft: PlantSearchParams | null;
+
+  updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
+  applySearchParams: (params?: Partial<PlantSearchParams>) => void;
 
   plantFilters: PlantSearchFilters;
   applyPlantFilters: (filters?: PlantSearchFilters) => void;
+
+  sidebarExpanded: boolean;
+  setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
 } & Pick<
   PlantSearchQueriesReturnType,
   "fetchNextPlantsPage" | "hasNextPage" | "searchStatus" | "searchRecordQuery"
@@ -40,11 +37,9 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
 
   searchParams: null,
 
-  sidebarExpanded: !isSmallScreen(),
-  setSidebarExpanded: VOID_FUNCTION,
-
   searchParamsDraft: null,
-  setSearchParamsDraft: VOID_FUNCTION,
+  validatedSearchParamsDraft: null,
+
   updateSearchParamsDraft: VOID_FUNCTION,
   applySearchParams: VOID_FUNCTION,
 
@@ -55,10 +50,13 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
   hasNextPage: false,
   fetchNextPlantsPage: VOID_PROMISE_FUNCTION,
+
+  sidebarExpanded: !isSmallScreen(),
+  setSidebarExpanded: VOID_FUNCTION,
 };
 
 export const PlantSearchContext = createContext<PlantSearchContextType>(
-  DEFAULT_PLANT_SEARCH_CONTEXT
+  DEFAULT_PLANT_SEARCH_CONTEXT,
 );
 
 export const usePlantSearchContext = () => useContext(PlantSearchContext);

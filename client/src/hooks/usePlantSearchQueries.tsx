@@ -32,7 +32,7 @@ const hotplantsClient = createClient<paths>({
 
 const usePlantSearchQueries = (
   searchParams: PlantSearchParams | null = null,
-  plantFilters: PlantSearchFilters
+  plantFilters: PlantSearchFilters,
 ) => {
   const [searchStatus, setSearchStatus] =
     useState<PlantSearchQueryStatus>("READY");
@@ -59,7 +59,7 @@ const usePlantSearchQueries = (
 
   const setStatusFromRunningQuery = () =>
     setSearchStatus((prev) =>
-      prev === "SCRAPING_AND_POLLING" ? prev : "CHECKING_STATUS"
+      prev === "SCRAPING_AND_POLLING" ? prev : "CHECKING_STATUS",
     );
 
   useEffect(() => {
@@ -82,6 +82,9 @@ const usePlantSearchQueries = (
 
       if (data?.status !== "SCRAPING" && pollInterval) {
         stopPolling();
+        console.log("fetch one more", plantSearchQuery.networkStatus);
+        plantSearchQuery.refetch();
+        console.log(plantSearchQuery.networkStatus);
       }
 
       return data;
@@ -113,8 +116,8 @@ const usePlantSearchQueries = (
     ],
     enabled: Boolean(
       searchRecordData?.id &&
-        searchRecordData.status === "READY" &&
-        autoScrapesRemaining > 0
+      searchRecordData.status === "READY" &&
+      autoScrapesRemaining > 0,
     ),
 
     queryFn: async () => {
@@ -122,7 +125,7 @@ const usePlantSearchQueries = (
 
       const { data } = await hotplantsClient.GET(
         "/plants/runSearch/{searchRecordId}",
-        { params: { path: { searchRecordId: searchRecordData!.id } } }
+        { params: { path: { searchRecordId: searchRecordData!.id } } },
       );
 
       if (data?.status === "SCRAPING" && !pollInterval) {
@@ -168,7 +171,7 @@ const usePlantSearchQueries = (
     stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
     stopPollingTimeout.current = setTimeout(
       stopPolling,
-      DEFAULT_POLL_INTERVAL * MAX_POLLS
+      DEFAULT_POLL_INTERVAL * MAX_POLLS,
     );
   };
 

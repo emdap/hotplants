@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Sidebar from "designSystem/sidebar/Sidebar";
-import LocationSearchCard from "./LocationSearchCard";
+import SearchParamsInput from "./SearchParamsInput";
 
 const PlantSearchSidebar = () => {
   const {
@@ -28,30 +28,22 @@ const PlantSearchSidebar = () => {
 
             "big-screen:w-md [&_.sidebar-button]:bg-light-accent": isExpanded,
             "big-screen:overflow-hidden": !isExpanded,
-          }
+          },
         )
       }
     >
       {({ isExpanded }) => (
         <div
           className={classNames(
-            "big-screen:h-full max-h-fit big-screen:overflow-auto space-y-4 big-screen:pl-6 big-screen:pr-2 big-screen:mr-4 big-screen:pt-4 transition-opacity",
+            "grow big-screen:h-full big-screen:overflow-auto space-y-4 big-screen:pl-6 big-screen:pr-2 big-screen:mr-4 big-screen:pt-4 transition-opacity",
             "small-screen:pr-safe-right",
             hasCurrentResults && {
-              "big-screen:pb-24 opacity-100 big-screen:delay-150 pb-20":
-                isExpanded,
+              "opacity-100 big-screen:delay-150": isExpanded,
               "big-screen:opacity-0": !isExpanded,
-            }
+            },
           )}
         >
-          <LocationSearchCard />
-
-          {/* <Card className="space-y-4 scroll-m-header">
-            <PlantSearchFilters
-              plantFilters={plantFilters}
-              setPlantFilters={applyPlantFilters}
-            />
-          </Card> */}
+          <SearchParamsInput />
         </div>
       )}
     </Sidebar>

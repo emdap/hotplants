@@ -24,7 +24,7 @@ export const lookupLocationInput = (input: string) =>
   });
 
 export const validateNominatimLocation = (
-  location?: LocationData
+  location?: LocationData,
 ): null | LocationSearchParams => {
   if (!location?.display_name || !location?.boundingbox) {
     return null;
@@ -49,5 +49,5 @@ export const validateNominatimLocation = (
 };
 
 export const customLocationDisplay = (
-  location: Pick<LocationSearchParams, "locationName">
-) => `Custom Location: (${location.locationName})`;
+  location: Partial<LocationSearchParams>,
+) => `Custom Location: (${location.locationName ?? "N/A"})`;

@@ -7,7 +7,7 @@ import {
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import { PlantQueryData } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
@@ -22,15 +22,30 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
   } = route.useSearch();
 
   const [searchParamsDraft, setSearchParamsDraft] =
-    useState<PlantSearchParams | null>(searchParams);
+    useState<Partial<PlantSearchParams> | null>(searchParams);
+
+  const validateSearchParams = (
+    params?: Partial<PlantSearchParams> | null,
+  ): PlantSearchParams | null =>
+    params?.boundingPolyCoords && params.locationName && params.locationSource
+      ? (params as PlantSearchParams)
+      : null;
+
+  const validatedSearchParamsDraft = useMemo(
+    () => validateSearchParams(searchParamsDraft),
+    [searchParamsDraft],
+  );
 
   useEffect(() => {
     setSearchParamsDraft(searchParams);
   }, [searchParams]);
 
   const applySearchParams = useCallback(
-    (params?: PlantSearchParams) => {
-      const applyParams = params || searchParamsDraft;
+    (params?: Partial<PlantSearchParams>) => {
+      const applyParams = validateSearchParams({
+        ...searchParamsDraft,
+        ...params,
+      });
       if (applyParams) {
         document
           .getElementById(RESULTS_PANE_ID)
@@ -57,8 +72,8 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =
-    (locationParams) =>
-      setSearchParamsDraft((prev) => ({ ...prev, ...locationParams }));
+    (searchParams) =>
+      setSearchParamsDraft((prev) => ({ ...prev, ...searchParams }));
 
   const { searchStatus, plantSearchData, ...searchQueries } =
     usePlantSearchQueries(searchParams, plantFilters);
@@ -88,13 +103,12 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
         hasCurrentResults: Boolean(cachedPlantData.count),
         totalResultsCount: cachedPlantData.count,
 
-        sidebarExpanded,
-        setSidebarExpanded,
-
         searchParams,
+
         searchParamsDraft,
+        validatedSearchParamsDraft,
+
         updateSearchParamsDraft,
-        setSearchParamsDraft,
         applySearchParams,
 
         plantFilters,
@@ -102,6 +116,9 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
 
         searchStatus,
         ...searchQueries,
+
+        sidebarExpanded,
+        setSidebarExpanded,
       }}
     >
       <PlantSelectionProvider

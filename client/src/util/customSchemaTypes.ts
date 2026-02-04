@@ -11,3 +11,5 @@ export type PlantSearchParams =
   Hotplants.components["schemas"]["PlantSearchParams"];
 
 export type PlantSearchFilters = Omit<PlantDataInput, keyof PlantSearchParams>;
+
+export type PlantDataKey = keyof PlantDataInput;

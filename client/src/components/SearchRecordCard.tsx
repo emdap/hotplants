@@ -13,6 +13,7 @@ import { MdDoubleArrow } from "react-icons/md";
 import { DEFAULT_DATE_FORMAT } from "util/generalUtil";
 import { customLocationDisplay } from "util/locationUtil";
 import MapProvider from "./interactiveMap/MapProvider";
+import { OPTIONAL_SEARCH_PARAM_FILTERS } from "./plantFilters/filterFixtures";
 
 const SearchRecordCard = ({
   occurrencesOffset,
@@ -21,9 +22,19 @@ const SearchRecordCard = ({
 }: SearchRecordResult) => {
   const { applySearchParams } = usePlantSearchContext();
 
-  const plantCount = useApolloQuery(GET_SEARCH_RECORD_PLANT_COUNT, {
-    variables: { id: searchParams._id },
-  });
+  const { data: { searchRecordDataCounts } = {}, loading: plantCountLoading } =
+    useApolloQuery(GET_SEARCH_RECORD_PLANT_COUNT, {
+      variables: { id: searchParams._id },
+    });
+
+  const maxPlantCounts = useMemo(() => {
+    const actualOccurrences = searchRecordDataCounts?.occurrenceCount ?? 0;
+
+    return {
+      total: Math.max(actualOccurrences, totalOccurrences),
+      offset: Math.max(actualOccurrences, occurrencesOffset),
+    };
+  }, [searchRecordDataCounts, totalOccurrences, occurrencesOffset]);
 
   const { title, subTitle } = useMemo(() => {
     if (searchParams.locationSource === "custom") {
@@ -53,19 +64,32 @@ const SearchRecordCard = ({
       <div className="flex flex-wrap gap-x-8 gap-y-4">
         <MapProvider className="h-60 w-xs grow" searchParams={searchParams} />
         <div className="flex flex-col gap-4 [&_div]:space-y-0.5 grow">
-          <InfoRow
-            title="Unique plants found in area"
-            value={
-              plantCount.loading ? (
-                <LoadingIcon />
-              ) : (
-                plantCount.data?.searchRecordPlantCount
-              )
-            }
-          />
+          <div>
+            <InfoRow
+              title="Unique plants found in area"
+              value={
+                plantCountLoading ? (
+                  <LoadingIcon />
+                ) : (
+                  searchRecordDataCounts?.plantCount
+                )
+              }
+            />
+
+            {OPTIONAL_SEARCH_PARAM_FILTERS.map(({ plantDataKey, label }) => (
+              <InfoRow
+                key={plantDataKey}
+                title={label}
+                value={
+                  searchParams[plantDataKey] ?? (
+                    <span className="italic font-normal">N/A</span>
+                  )
+                }
+              />
+            ))}
+          </div>
 
           <div className="mt-auto">
-            <InfoRow title="Status" value={searchParams.status} />
             <InfoRow
               title="Search created"
               value={format(searchParams.createdTimestamp, DEFAULT_DATE_FORMAT)}
@@ -81,13 +105,18 @@ const SearchRecordCard = ({
                   : "N/A"
               }
             />
+            <InfoRow title="Status" value={searchParams.status} />
           </div>
-
           <ProgressBar
             className="mt-auto w-full"
             title="Scraping progress"
-            amount={occurrencesOffset}
-            total={Math.max(0, totalOccurrences)}
+            unitTitle="Plant Occurrences"
+            isLoading={plantCountLoading}
+            amount={maxPlantCounts.offset}
+            total={maxPlantCounts.total}
+            isError={
+              searchParams.status === "COMPLETE" && maxPlantCounts?.total === 0
+            }
           />
         </div>
       </div>

@@ -7,14 +7,14 @@ import { FilterInput, FilterInputType } from "./filterFixtures";
 const DEFAULT_INPUT_TYPE = ["text", "number", "checkbox"];
 
 const FilterInputField = <
+  K extends keyof PlantDataInput,
   T extends FilterInputType,
-  K extends keyof PlantDataInput
 >({
   filterInput,
   value,
   onChange,
 }: {
-  filterInput: FilterInput<T, K>;
+  filterInput: FilterInput<K, T>;
   value: PlantDataInput[K];
   onChange: (value: PlantDataInput[K]) => void;
 }) => {
@@ -41,7 +41,7 @@ const FilterInputField = <
       className={classNames(
         "form-item",
         ["checkbox", "range"].includes(filterInput.inputType) &&
-          "flex-row items-center gap-4"
+          "flex-row items-center gap-4",
       )}
     >
       <label htmlFor={plantDataKey}>{filterInput.label}</label>
