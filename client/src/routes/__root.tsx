@@ -1,13 +1,5 @@
-import {
-  createRootRoute,
-  redirect,
-  stripSearchParams,
-} from "@tanstack/react-router";
+import { createRootRoute, redirect } from "@tanstack/react-router";
 import App from "App";
-import {
-  DEFAULT_PLANT_SEARCH_ROUTE_PARAMS,
-  validatePlantSearchParams,
-} from "util/routeParamsUtil";
 
 export const Route = createRootRoute({
   component: App,
@@ -19,8 +11,8 @@ export const Route = createRootRoute({
       });
     }
   },
-  search: {
-    middlewares: [stripSearchParams(DEFAULT_PLANT_SEARCH_ROUTE_PARAMS)],
-  },
-  validateSearch: validatePlantSearchParams,
+  // search: {
+  //   middlewares: [stripSearchParams(DEFAULT_PLANT_SEARCH_ROUTE_PARAMS)],
+  // },
+  // validateSearch: validatePlantSearchParams,
 });

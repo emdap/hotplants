@@ -7,13 +7,14 @@ import {
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import { PlantQueryData } from "graphqlHelpers/plantQueries";
 import usePlantSearchQueries from "hooks/usePlantSearchQueries";
-import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import PlantSearch from "pages/PlantSearch";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
-const route = getRouteApi("__root__");
+const route = getRouteApi("/plant-search");
 
-const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
+const PlantSearchProvider = () => {
   const navigate = useNavigate();
   const {
     // page,
@@ -78,6 +79,8 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
   const { searchStatus, plantSearchData, ...searchQueries } =
     usePlantSearchQueries(searchParams, plantFilters);
 
+  console.log(plantSearchData);
+
   const [cachedPlantData, setCachedPlantData] = useState<PlantQueryData>({
     count: 0,
     results: [],
@@ -125,7 +128,7 @@ const PlantSearchProvider = ({ children }: { children: ReactNode }) => {
         plantList={cachedPlantData.results}
         boundingPolygon={searchParams?.boundingPolyCoords}
       >
-        {children}
+        <PlantSearch />
       </PlantSelectionProvider>
     </PlantSearchContext.Provider>
   );

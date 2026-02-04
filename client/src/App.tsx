@@ -2,7 +2,6 @@ import { Outlet } from "@tanstack/react-router";
 import AppSidebar from "components/navigation/AppSidebar";
 import AppHeader from "components/navigation/header/AppHeader";
 import { authClient } from "config/authClient";
-import PlantSearchProvider from "contexts/plantSearch/PlantSearchProvider";
 import { useEffect, useState } from "react";
 import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
 
@@ -14,7 +13,7 @@ const App = () => {
   }, []);
 
   return (
-    <PlantSearchProvider>
+    <>
       <div
         id={BACKGROUND_ANIMATION_ID}
         className="fixed -z-10 h-dvh w-dvw pretty-background"
@@ -27,7 +26,7 @@ const App = () => {
         />
         <Outlet />
       </div>
-    </PlantSearchProvider>
+    </>
   );
 };
 
