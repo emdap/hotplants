@@ -11,6 +11,16 @@ import { FaGlobe } from "react-icons/fa";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
 
+const findBackgroundAnimation = (element: Document | Element | null) =>
+  element
+    ?.getAnimations()
+    .find(
+      (animation) =>
+        animation instanceof CSSAnimation &&
+        animation.effect instanceof KeyframeEffect &&
+        animation.animationName === "background-shift",
+    );
+
 const PlantSearchHeader = () => {
   const { page, searchStatus, totalResultsCount, setSidebarExpanded } =
     usePlantSearchContext();
@@ -18,17 +28,12 @@ const PlantSearchHeader = () => {
   const headerRef = useRef<HTMLHeadingElement>(null);
   useLayoutEffect(() => {
     const syncAnimation = () => {
-      const headerAnimation = headerRef.current?.getAnimations()[0];
+      const headerAnimation = findBackgroundAnimation(headerRef.current);
 
       if (headerAnimation) {
-        const backgroundAnimation = document
-          .getAnimations()
-          .find(
-            (animation) =>
-              animation instanceof CSSAnimation &&
-              animation.effect instanceof KeyframeEffect &&
-              animation.effect.target?.id === BACKGROUND_ANIMATION_ID
-          );
+        const backgroundAnimation = findBackgroundAnimation(
+          document.getElementById(BACKGROUND_ANIMATION_ID),
+        );
 
         if (backgroundAnimation) {
           headerAnimation.currentTime = backgroundAnimation.currentTime;
@@ -50,7 +55,7 @@ const PlantSearchHeader = () => {
       className={classNames(
         "grid-centered gap-4 items-center justify-center sticky top-header z-20",
         "big-screen:text-white big-screen:h-header big-screen:border-header big-screen:bg-header big-screen:px-2 big-screen:py-2",
-        "small-screen:card small-screen:card-solid small-screen:mx-safe-2 small-screen:px-8 small-screen:py-1"
+        "small-screen:card small-screen:card-solid small-screen:mx-safe-2 small-screen:px-8 small-screen:py-1",
       )}
     >
       <OpenSidebarButton
