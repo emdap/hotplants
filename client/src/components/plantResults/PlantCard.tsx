@@ -1,17 +1,12 @@
 import classNames from "classnames";
-import { useIsSignedIn } from "config/authClient";
-import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
-import { ADD_PLANT_TO_GARDEN } from "graphqlHelpers/gardenQueries";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
-import { useApolloMutation } from "hooks/useQuery";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useEffect, useRef } from "react";
-import { FaHeart } from "react-icons/fa";
-import { getPlantDisplayName } from "util/generalUtil";
 import PlantOccurrenceImage from "../plantImages/PlantOccurrenceImage";
+import PlantCardHeader from "./PlantCardHeader";
 
 const PlantCard = ({
   plant,
@@ -52,7 +47,7 @@ const PlantCard = ({
       className={classNames(
         "cursor-pointer h-[30vh] small-screen:h-50vh md:h-60 outline-white/60 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
 
-        isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0"
+        isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0",
       )}
     >
       {firstOccurrence && (
@@ -88,49 +83,6 @@ const PlantCard = ({
 
       <PlantCardHeader plant={plant} />
     </Card>
-  );
-};
-
-const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
-  const isSignedIn = useIsSignedIn();
-  const hasCommonName = plant.commonNames?.length;
-
-  const [addPlantToGarden, { loading: addPlantLoading }] = useApolloMutation(
-    ADD_PLANT_TO_GARDEN,
-    {
-      variables: { plantId: plant._id },
-    }
-  );
-
-  return (
-    <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 min-h-1/4 md:min-h-20 justify-center bg-accent/80 text-shadow-glow relative">
-      <h2
-        className={classNames(
-          "text-white max-sm:text-lg",
-          isSignedIn && "pr-6",
-          hasCommonName ? "border-b border-white/80 w-full" : "italic pb-3"
-        )}
-      >
-        {getPlantDisplayName(plant)}
-      </h2>
-      {hasCommonName && (
-        <h6 className="max-sm:text-sm text-white/80 self-end italic -mt-1.5 pb-1 text-right">
-          {plant.scientificName}
-        </h6>
-      )}
-      {isSignedIn && (
-        <Button
-          className="absolute top-0 right-0 text-white!"
-          onClick={(e) => {
-            e.stopPropagation();
-            addPlantToGarden();
-          }}
-          variant="icon-white"
-          disabled={addPlantLoading}
-          icon={<FaHeart />}
-        />
-      )}
-    </div>
   );
 };
 
