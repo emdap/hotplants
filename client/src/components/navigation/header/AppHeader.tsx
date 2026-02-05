@@ -1,4 +1,4 @@
-import DarkModeToggle from "designSystem/DarkModeToggle";
+import DarkModeToggle from "designSystem/darkMode/DarkModeToggle";
 import OpenSidebarButton, {
   OpenSidebarButtonProps,
 } from "designSystem/sidebar/OpenSidebarButton";

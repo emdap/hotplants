@@ -3,6 +3,7 @@ import { ApolloProvider } from "@apollo/client/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
 import { cache } from "config/apolloCacheConfig";
+import DarkModeProvider from "designSystem/darkMode/DarkModeProvider";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { router } from "router";
@@ -27,9 +28,11 @@ if (rootElement && !rootElement.innerHTML) {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <ApolloProvider client={apolloClient}>
-          <RouterProvider router={router} />
+          <DarkModeProvider>
+            <RouterProvider router={router} />
+          </DarkModeProvider>
         </ApolloProvider>
       </QueryClientProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 }
