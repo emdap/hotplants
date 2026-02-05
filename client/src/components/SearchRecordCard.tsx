@@ -10,21 +10,31 @@ import {
 import { useApolloQuery } from "hooks/useQuery";
 import { ReactNode, useMemo } from "react";
 import { MdDoubleArrow } from "react-icons/md";
+import { useMount } from "react-use";
 import { DEFAULT_DATE_FORMAT } from "util/generalUtil";
 import { customLocationDisplay } from "util/locationUtil";
 import MapProvider from "./interactiveMap/MapProvider";
 import { OPTIONAL_SEARCH_PARAM_FILTERS } from "./plantFilters/filterFixtures";
 
 const SearchRecordCard = ({
+  isActiveRecord,
+  _id,
   occurrencesOffset,
   totalOccurrences,
   ...searchParams
-}: SearchRecordResult) => {
+}: SearchRecordResult & { isActiveRecord: boolean }) => {
   const navigate = useNavigate();
+
+  useMount(() => {
+    if (isActiveRecord) {
+      document.getElementById(_id)?.scrollIntoView({ behavior: "instant" });
+      navigate({ to: ".", replace: true });
+    }
+  });
 
   const { data: { searchRecordDataCounts } = {}, loading: plantCountLoading } =
     useApolloQuery(GET_SEARCH_RECORD_PLANT_COUNT, {
-      variables: { id: searchParams._id },
+      variables: { id: _id },
     });
 
   const maxPlantCounts = useMemo(() => {
@@ -48,16 +58,23 @@ const SearchRecordCard = ({
     };
   }, [searchParams]);
 
+  const openSearchRecord = async () => {
+    await navigate({
+      to: ".",
+      search: { lastOpened: _id },
+      replace: true,
+    });
+    navigate({
+      to: "/plant-search",
+      search: { search: searchParams, filters: {} },
+    });
+  };
+
   return (
-    <Card className="flex flex-col gap-4 text-sm">
+    <Card id={_id} className="flex flex-col gap-4 text-sm scroll-m-header-1">
       <div
         className="border-b border-transparent hover:border-white/80 cursor-pointer pb-0.5 flex gap-4 justify-between items-center"
-        onClick={() =>
-          navigate({
-            to: "/plant-search",
-            search: { search: searchParams, filters: {} },
-          })
-        }
+        onClick={openSearchRecord}
       >
         <span>
           <h2>{title}</h2>
