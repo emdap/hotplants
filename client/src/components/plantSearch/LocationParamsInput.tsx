@@ -50,6 +50,7 @@ const LocationParamsInput = ({
     queryKey: ["location-search", debouncedInput],
     enabled:
       debouncedInput !== null &&
+      searchParams?.locationSource !== "custom" &&
       searchParams?.locationName !== null &&
       searchParams?.locationName !== debouncedInput,
     retry: false,
