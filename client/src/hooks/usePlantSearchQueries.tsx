@@ -5,6 +5,7 @@ import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
 
 export type PlantSearchQueryStatus =
@@ -180,7 +181,21 @@ const usePlantSearchQueries = (
       scrapeOccurrencesQuery.error
     ) {
       stopPolling();
-      console.error("TODO: Tell user there was an error :)");
+      const errors = [
+        searchRecordQuery.error,
+        plantSearchQuery.error,
+        scrapeOccurrencesQuery.error,
+      ];
+      console.error(errors);
+
+      toast.error(
+        <>
+          Error(s) occurred while scraping: <br />
+          {errors.flatMap((error, index) =>
+            error?.message ? <div key={index}>{error.message}</div> : [],
+          )}
+        </>,
+      );
     }
   }, [
     searchRecordQuery.error,

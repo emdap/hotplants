@@ -3,6 +3,13 @@ schema {
   mutation: Mutation
 }
 
+type AddToGardenResult {
+  _id: ObjectId!
+  gardenName: String!
+  totalPlants: Int!
+  userId: String!
+}
+
 type GardenPlantData implements PlantDataInterface {
   _id: ObjectId!
   addedTimestamp: Float!
@@ -35,7 +42,7 @@ enum LocationSource {
 }
 
 type Mutation {
-  addToGarden(gardenName: String, plantId: String!): ObjectId!
+  addToGarden(gardenName: String, plantId: String!): AddToGardenResult
   newGarden(gardenName: String): ObjectId!
   replaceWithProxyUrl(occurrenceId: Float!, plantId: String!, replaceUrl: String!): String
 }
