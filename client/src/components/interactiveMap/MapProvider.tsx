@@ -1,6 +1,5 @@
 import { centroid } from "@turf/turf";
 import classNames from "classnames";
-import { PlantSearchContextType } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import "leaflet-draw/dist/leaflet.draw.css";
@@ -25,10 +24,7 @@ type MapProviderProps = {
   locationCustomizeable?: boolean;
   searchParams: PlantSearchParams | null;
   setSearchParams?: (newParams: PlantSearchParams) => void;
-} & Partial<
-  Pick<PlantSearchContextType, "searchParams" | "updateSearchParamsDraft">
-> &
-  MapContainerProps;
+} & MapContainerProps;
 
 const MapProvider = ({
   searchParams,
@@ -59,7 +55,7 @@ const MapProvider = ({
     <Card
       className={classNames(
         "min-h-60 min-w-30 p-0 overflow-hidden relative",
-        className
+        className,
       )}
     >
       <LoadingOverlay

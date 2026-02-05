@@ -11,8 +11,4 @@ export const Route = createRootRoute({
       });
     }
   },
-  // search: {
-  //   middlewares: [stripSearchParams(DEFAULT_PLANT_SEARCH_ROUTE_PARAMS)],
-  // },
-  // validateSearch: validatePlantSearchParams,
 });

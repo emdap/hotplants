@@ -1,4 +1,4 @@
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
@@ -20,7 +20,7 @@ const SearchRecordCard = ({
   totalOccurrences,
   ...searchParams
 }: SearchRecordResult) => {
-  const { applySearchParams } = usePlantSearchContext();
+  const navigate = useNavigate();
 
   const { data: { searchRecordDataCounts } = {}, loading: plantCountLoading } =
     useApolloQuery(GET_SEARCH_RECORD_PLANT_COUNT, {
@@ -52,7 +52,12 @@ const SearchRecordCard = ({
     <Card className="flex flex-col gap-4 text-sm">
       <div
         className="border-b border-transparent hover:border-white/80 cursor-pointer pb-0.5 flex gap-4 justify-between items-center"
-        onClick={() => applySearchParams(searchParams)}
+        onClick={() =>
+          navigate({
+            to: "/plant-search",
+            search: { search: searchParams, filters: {} },
+          })
+        }
       >
         <span>
           <h2>{title}</h2>
