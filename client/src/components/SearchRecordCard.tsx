@@ -73,7 +73,7 @@ const SearchRecordCard = ({
   return (
     <Card id={_id} className="flex flex-col gap-4 text-sm scroll-m-header-1">
       <div
-        className="border-b border-transparent hover:border-white/80 cursor-pointer pb-0.5 flex gap-4 justify-between items-center"
+        className="border-b border-transparent hover:border-default-text/80 cursor-pointer pb-0.5 flex gap-4 justify-between items-center"
         onClick={openSearchRecord}
       >
         <span>
