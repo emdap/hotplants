@@ -43,9 +43,7 @@ const PlantSearch = () => {
 
   return (
     <main className="w-full">
-      <PageTitle className={hasCurrentResults ? "px-safe-6" : "px-safe-4"}>
-        Plant Search
-      </PageTitle>
+      <PageTitle className="page-buffer">Plant Search</PageTitle>
       {hasCurrentResults && <PlantSearchHeader />}
 
       <div
@@ -53,7 +51,7 @@ const PlantSearch = () => {
         className={classNames("flex grow", {
           "small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full":
             hasCurrentResults,
-          "max-md:flex-col max-md:justify-between px-safe-4 pb-8 gap-8":
+          "max-md:flex-col max-md:justify-between page-buffer pb-8 gap-8":
             !hasCurrentResults,
         })}
       >
