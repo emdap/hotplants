@@ -14,6 +14,11 @@ import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("/plant-search");
 
+const DEFAULT_CACHED_PLANT_DATA = {
+  count: 0,
+  results: [],
+};
+
 const PlantSearchProvider = () => {
   const navigate = useNavigate();
   const {
@@ -24,6 +29,29 @@ const PlantSearchProvider = () => {
 
   const [searchParamsDraft, setSearchParamsDraft] =
     useState<Partial<PlantSearchParams> | null>(searchParams);
+
+  useEffect(() => {
+    setSearchParamsDraft(searchParams);
+  }, [searchParams]);
+
+  const [cachedPlantData, setCachedPlantData] = useState<PlantQueryData>(
+    DEFAULT_CACHED_PLANT_DATA,
+  );
+
+  const { hasCurrentResults, totalResultsCount } = useMemo(
+    () => ({
+      hasCurrentResults: Boolean(cachedPlantData.count),
+      totalResultsCount: cachedPlantData.count,
+    }),
+    [cachedPlantData.count],
+  );
+
+  useEffect(() => {
+    if (!searchParams && hasCurrentResults) {
+      setSearchParamsDraft(null);
+      setCachedPlantData(DEFAULT_CACHED_PLANT_DATA);
+    }
+  }, [searchParams, hasCurrentResults]);
 
   const validateSearchParams = (
     params?: Partial<PlantSearchParams> | null,
@@ -36,10 +64,6 @@ const PlantSearchProvider = () => {
     () => validateSearchParams(searchParamsDraft),
     [searchParamsDraft],
   );
-
-  useEffect(() => {
-    setSearchParamsDraft(searchParams);
-  }, [searchParams]);
 
   const applySearchParams = useCallback(
     (params?: Partial<PlantSearchParams>) => {
@@ -79,11 +103,6 @@ const PlantSearchProvider = () => {
   const { searchStatus, plantSearchData, ...searchQueries } =
     usePlantSearchQueries(searchParams, plantFilters);
 
-  const [cachedPlantData, setCachedPlantData] = useState<PlantQueryData>({
-    count: 0,
-    results: [],
-  });
-
   useEffect(() => {
     searchStatus !== "CHECKING_STATUS" &&
       plantSearchData &&
@@ -101,8 +120,8 @@ const PlantSearchProvider = () => {
   return (
     <PlantSearchContext.Provider
       value={{
-        hasCurrentResults: Boolean(cachedPlantData.count),
-        totalResultsCount: cachedPlantData.count,
+        hasCurrentResults,
+        totalResultsCount,
 
         searchParams,
 

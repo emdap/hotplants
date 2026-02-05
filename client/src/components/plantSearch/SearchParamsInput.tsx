@@ -51,7 +51,9 @@ const SearchParamsInput = () => {
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
     enabled:
-      debouncedInput !== null && searchParams?.locationName !== debouncedInput,
+      debouncedInput !== null &&
+      searchParams?.locationName !== null &&
+      searchParams?.locationName !== debouncedInput,
     retry: false,
     queryFn: async () => {
       setLocationInvalid(false);
