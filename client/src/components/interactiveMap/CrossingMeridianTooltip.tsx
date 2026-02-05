@@ -1,23 +1,9 @@
-import { Position } from "geojson";
 import { tooltip, Tooltip as TooltipType } from "leaflet";
 import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
-import { LocationSearchParams } from "util/locationUtil";
+import { crossesMeridian, LocationSearchParams } from "util/locationUtil";
 
-const crossesMeridian = (coordinates: Position[]) => {
-  const hasCoords: Record<string, boolean> = { "180": false, "-180": false };
-  return coordinates.some(([lng]) => {
-    const lngKey = String(lng);
-    if (lngKey in hasCoords) {
-      hasCoords[lngKey] = true;
-      if (hasCoords["180"] && hasCoords["-180"]) {
-        return true;
-      }
-    }
-  });
-};
-
-const CrossingMerdianTooltip = ({
+const CrossingMeridianTooltip = ({
   boundingPolyCoords,
   centerCoords,
 }: Pick<LocationSearchParams, "boundingPolyCoords"> & {
@@ -35,7 +21,7 @@ const CrossingMerdianTooltip = ({
     } else if (!meridanTooltip.current) {
       meridanTooltip.current = tooltip({ direction: "bottom", permanent: true })
         .setContent(
-          "Bounding boxes crossing the international<br />date line will not display correctly"
+          "Bounding boxes crossing the international<br />date line will not display correctly",
         )
         .setLatLng(centerCoords)
         .addTo(map);
@@ -45,4 +31,4 @@ const CrossingMerdianTooltip = ({
   return null;
 };
 
-export default CrossingMerdianTooltip;
+export default CrossingMeridianTooltip;

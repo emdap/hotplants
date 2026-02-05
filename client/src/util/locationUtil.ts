@@ -1,6 +1,6 @@
 import { bboxPolygon } from "@turf/turf";
 import type { paths } from "generated/schemas/nominatim";
-import { BBox } from "geojson";
+import { BBox, Position } from "geojson";
 import createClient from "openapi-fetch";
 import { LocationData, PlantSearchParams } from "./customSchemaTypes";
 
@@ -51,3 +51,19 @@ export const validateNominatimLocation = (
 export const customLocationDisplay = (
   location: Partial<LocationSearchParams>,
 ) => `Custom Location: (${location.locationName ?? "N/A"})`;
+
+export const crossesMeridian = (coordinates: Position[]) => {
+  const hasCoords: Record<string, boolean> = {
+    ["180"]: false,
+    ["-180"]: false,
+  };
+  return coordinates.some(([lng]) => {
+    const lngKey = String(lng);
+    if (lngKey in hasCoords) {
+      hasCoords[lngKey] = true;
+      if (hasCoords["180"] && hasCoords["-180"]) {
+        return true;
+      }
+    }
+  });
+};
