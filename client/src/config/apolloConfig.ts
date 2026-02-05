@@ -1,6 +1,8 @@
 import {
+  ApolloClient,
   FieldFunctionOptions,
   FieldMergeFunction,
+  HttpLink,
   InMemoryCache,
 } from "@apollo/client";
 import {
@@ -28,7 +30,7 @@ const mergeOccurrences: FieldMergeFunction<
   PlantOccurrence[]
 > = (_existing, incoming) => incoming;
 
-export const cache = new InMemoryCache({
+const cache = new InMemoryCache({
   possibleTypes: {
     PlantDataInterface: ["PlantData", "GardenPlantData"],
   },
@@ -49,4 +51,12 @@ export const cache = new InMemoryCache({
       },
     },
   },
+});
+
+export const apolloClient = new ApolloClient({
+  link: new HttpLink({
+    uri: `${import.meta.env.VITE_SERVER_URL}/graphql`,
+    credentials: "include",
+  }),
+  cache,
 });
