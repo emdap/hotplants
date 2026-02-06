@@ -21,7 +21,7 @@ const CrossingMeridianTooltip = ({
     } else if (!meridanTooltip.current) {
       meridanTooltip.current = tooltip({ direction: "bottom", permanent: true })
         .setContent(
-          "Bounding boxes crossing the international<br />date line will not display correctly",
+          "Bounding boxes crossing the international<br />date line will not be interpreted correctly",
         )
         .setLatLng(centerCoords)
         .addTo(map);

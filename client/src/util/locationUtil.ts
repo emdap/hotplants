@@ -1,6 +1,6 @@
-import { bboxPolygon } from "@turf/turf";
+import { bboxPolygon, coordAll, simplify } from "@turf/turf";
 import type { paths } from "generated/schemas/nominatim";
-import { BBox, Position } from "geojson";
+import { BBox, Polygon, Position } from "geojson";
 import createClient from "openapi-fetch";
 import { LocationData, PlantSearchParams } from "./customSchemaTypes";
 
@@ -18,20 +18,47 @@ export const lookupLocationInput = (input: string) =>
     params: {
       query: {
         format: "json",
+        polygon_geojson: 1,
+        polygon_threshold: 0.5,
         q: input,
       },
     },
   });
 
-export const validateNominatimLocation = (
-  location?: LocationData,
-): null | LocationSearchParams => {
-  if (!location?.display_name || !location?.boundingbox) {
+export const MAX_POLYGON_POINTS = 20;
+const MAX_SIMPLIFY_TRIES = 5;
+
+const simplifyPolygon = (polygon: Polygon, attempt = 0) => {
+  if (attempt >= MAX_SIMPLIFY_TRIES) {
     return null;
   }
 
-  // Converting into a bounding box/polygon for more consistent results
-  // Raw polygons from nominatim are sometimes too long
+  const coords = coordAll(polygon);
+
+  if (coords.length > MAX_POLYGON_POINTS) {
+    const simplified = simplify(polygon, {
+      tolerance: 0.01,
+      highQuality: true,
+    });
+
+    return simplifyPolygon(simplified, attempt + 1);
+  } else {
+    return polygon;
+  }
+};
+
+const convertNominatimGeojson = (location: LocationData) => {
+  if (!location?.display_name || !location?.boundingbox || !location?.geojson) {
+    return null;
+  }
+
+  if (location.geojson.type === "Polygon") {
+    const simplified = simplifyPolygon(location.geojson);
+    if (simplified) {
+      return simplified.coordinates;
+    }
+  }
+
   const bboxNumbers = location.boundingbox.map(Number);
   const boundingBox: BBox = [
     bboxNumbers[2],
@@ -39,13 +66,26 @@ export const validateNominatimLocation = (
     bboxNumbers[3],
     bboxNumbers[1],
   ];
-  const boundingPolyCoords = bboxPolygon(boundingBox).geometry.coordinates;
 
-  return {
-    locationName: location.display_name,
-    locationSource: "search",
-    boundingPolyCoords,
-  };
+  return bboxPolygon(boundingBox).geometry.coordinates;
+};
+
+export const validateNominatimLocation = (
+  location?: LocationData,
+): null | LocationSearchParams => {
+  if (!location?.display_name) {
+    return null;
+  }
+
+  const boundingPolyCoords = convertNominatimGeojson(location);
+
+  return (
+    boundingPolyCoords && {
+      locationName: location.display_name,
+      locationSource: "search",
+      boundingPolyCoords,
+    }
+  );
 };
 
 export const customLocationDisplay = (
