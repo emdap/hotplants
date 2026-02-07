@@ -169,7 +169,7 @@ input PlantSortInput {
 }
 
 type Query {
-  allSearchRecords(limit: Int, offset: Int, sort: [SearchRecordSortInput!]): SearchRecordQueryResults!
+  allSearchRecords(booleanFilter: [SearchRecordBooleanFilterInput!], limit: Int, offset: Int, sort: [SearchRecordSortInput!], stringFilter: [SearchRecordStringFilterInput!]): SearchRecordQueryResults!
   allUserGardens: [UserGarden!]!
   plant(boundingPolyCoords: [[[Float!]!]!], id: String!): PlantData
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
@@ -194,6 +194,16 @@ type SearchRecord {
   totalOccurrences: Int!
 }
 
+enum SearchRecordBooleanFilterField {
+  commonName
+  scientificName
+}
+
+input SearchRecordBooleanFilterInput {
+  field: SearchRecordBooleanFilterField!
+  value: Boolean!
+}
+
 type SearchRecordPlantCountResults {
   occurrenceCount: Float!
   plantCount: Float!
@@ -206,8 +216,9 @@ type SearchRecordQueryResults {
 
 enum SearchRecordSortField {
   createdTimestamp
-  status
+  locationName
   statusUpdatedTimestamp
+  totalOccurrences
 }
 
 input SearchRecordSortInput {
@@ -219,6 +230,16 @@ enum SearchRecordStatus {
   COMPLETE
   READY
   SCRAPING
+}
+
+enum SearchRecordStringFilterField {
+  locationSource
+  status
+}
+
+input SearchRecordStringFilterInput {
+  field: SearchRecordStringFilterField!
+  value: String!
 }
 
 type UserGarden {

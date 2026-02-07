@@ -2,8 +2,20 @@ import { graphql } from "generated/graphql";
 import { GetAllSearchRecordsQuery } from "generated/graphql/graphql";
 
 export const GET_ALL_SEARCH_RECORDS = graphql(`
-  query getAllSearchRecords {
-    allSearchRecords {
+  query getAllSearchRecords(
+    $sort: [SearchRecordSortInput!]
+    $limit: Int
+    $offset: Int
+    $booleanFilter: [SearchRecordBooleanFilterInput!]
+    $stringFilter: [SearchRecordStringFilterInput!]
+  ) {
+    allSearchRecords(
+      sort: $sort
+      limit: $limit
+      offset: $offset
+      booleanFilter: $booleanFilter
+      stringFilter: $stringFilter
+    ) {
       count
       results {
         _id

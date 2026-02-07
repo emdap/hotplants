@@ -2,25 +2,36 @@ import { polygon } from "@turf/turf";
 import { LocationSource } from "generated/graphql/graphql";
 import { PlantSearchFilters, PlantSearchParams } from "./customSchemaTypes";
 
+export const DEFAULT_PAGINATION_PARAMS = {
+  page: undefined,
+  pageSize: undefined,
+};
+
+export type PaginationParams = {
+  page?: number;
+  pageSize?: number;
+};
+
 const validateString = (input: unknown) => String(input || "") || undefined;
 
 export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
-  page: undefined,
-  pageSize: undefined,
+  ...DEFAULT_PAGINATION_PARAMS,
 
   search: null,
   filters: {},
 };
 
-type PlantSearchRouteParams =
-  | {
-      page?: number;
-      pageSize?: number;
+type PlantSearchRouteParams = PaginationParams &
+  (
+    | {
+        page?: number;
+        pageSize?: number;
 
-      search: PlantSearchParams;
-      filters: PlantSearchFilters;
-    }
-  | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>;
+        search: PlantSearchParams;
+        filters: PlantSearchFilters;
+      }
+    | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
+  );
 
 const STRING_SEARCH_PARAMS: (keyof PlantSearchParams)[] = [
   "commonName",
