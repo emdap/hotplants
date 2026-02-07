@@ -39,7 +39,7 @@ const ProgressBar = ({
         <div
           className={classNames(
             "h-full",
-            progress === 1 ? "bg-green-500" : "bg-primary",
+            progress === 1 ? "bg-green-500" : "bg-accent",
           )}
           style={{ width: `${progress * 100}%` }}
         />

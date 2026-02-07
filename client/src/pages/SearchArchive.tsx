@@ -28,7 +28,6 @@ const SearchArchive = () => {
     ...allSearchRecordsQuery
   } = useApolloQuery(GET_ALL_SEARCH_RECORDS, {
     variables: { offset: (page - 1) * pageSize, limit: pageSize },
-    // fetchPolicy: "no-cache",
   });
 
   const searchRecordCount =
