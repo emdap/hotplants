@@ -8,7 +8,8 @@ import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { AnimatePresence } from "motion/react";
 import pluralize from "pluralize";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
+import { useMount, usePrevious } from "react-use";
 
 const route = getRouteApi("/archive");
 
@@ -27,11 +28,13 @@ const SearchArchive = () => {
     ...allSearchRecordsQuery
   } = useApolloQuery(GET_ALL_SEARCH_RECORDS, {
     variables: { offset: (page - 1) * pageSize, limit: pageSize },
-    fetchPolicy: "no-cache",
+    // fetchPolicy: "no-cache",
   });
 
   const searchRecordCount =
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;
+
+  useMount(() => previousData && allSearchRecordsQuery.refetch());
 
   useLayoutEffect(() => {
     if (allSearchRecords && lastOpened) {
@@ -39,8 +42,23 @@ const SearchArchive = () => {
         .getElementById(lastOpened)
         ?.scrollIntoView({ behavior: "instant" });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allSearchRecords]);
+  }, [lastOpened, allSearchRecords]);
+
+  const scrollOnData = useRef(false);
+  const previousPage = usePrevious(page);
+  useEffect(() => {
+    if (page !== previousPage && !lastOpened) {
+      scrollOnData.current = true;
+    }
+    if (scrollOnData.current && allSearchRecords?.results) {
+      scrollOnData.current = false;
+      const firstResult = allSearchRecords.results[0]._id;
+
+      document
+        .getElementById(firstResult)
+        ?.scrollIntoView({ behavior: "instant" });
+    }
+  }, [page, previousPage, lastOpened, allSearchRecords?.results]);
 
   return (
     <main className="page-buffer pb-10 space-y-4">
@@ -57,17 +75,14 @@ const SearchArchive = () => {
           className="ml-auto"
           totalResults={searchRecordCount}
           pageSizeOptions={ARCHIVE_PAGE_SIZE_OPTIONS}
+          replaceUrl
           {...{ page, pageSize }}
         />
       </FloatingHeader>
 
       <AnimatePresence>
         {allSearchRecords?.results.map((searchRecord) => (
-          <SearchRecordCard
-            key={searchRecord._id}
-            isActiveRecord={lastOpened === searchRecord._id}
-            {...searchRecord}
-          />
+          <SearchRecordCard key={searchRecord._id} {...searchRecord} />
         ))}
       </AnimatePresence>
     </main>

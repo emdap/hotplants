@@ -21,8 +21,8 @@ const validateString = (input: unknown) => String(input || "") || undefined;
 export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
   ...DEFAULT_PAGINATION_PARAMS,
 
-  search: null,
-  filters: {},
+  search: undefined,
+  filters: undefined,
 };
 
 type PlantSearchRouteParams = PaginationParams &
@@ -31,7 +31,7 @@ type PlantSearchRouteParams = PaginationParams &
         page?: number;
         pageSize?: number;
 
-        search: PlantSearchParams;
+        search: PlantSearchParams | null;
         filters: PlantSearchFilters;
       }
     | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
@@ -133,7 +133,7 @@ export const validatePlantSearchParams = (
     };
   }
 
-  return { search, filters: {} };
+  return {};
 };
 
 type SearchArchiveParams = PaginationParams & {

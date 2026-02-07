@@ -13,6 +13,7 @@ type PaginationControlProps = {
   minPage?: number;
   pageSize?: number;
   pageSizeOptions?: number[];
+  replaceUrl?: boolean;
   className?: string;
 };
 
@@ -22,6 +23,7 @@ export const PaginationControl = ({
   minPage = 1,
   pageSize = 10,
   pageSizeOptions = [10, 20, 30, 40, 50],
+  replaceUrl,
   className,
 }: PaginationControlProps) => {
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ export const PaginationControl = ({
   const lastPage = Math.ceil(totalResults / pageSize);
 
   const navToPage = (params: PaginationParams) =>
-    navigate({ to: ".", search: params });
+    navigate({ to: ".", search: params, replace: replaceUrl });
 
   const recalcPage = (newPageSize: number) => {
     const currentPageStart = (page - 1) * pageSize;

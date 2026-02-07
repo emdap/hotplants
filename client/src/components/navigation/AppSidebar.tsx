@@ -14,6 +14,7 @@ const SIDEBAR_ITEMS: SidebarNavItem[] = [
     icon: MdOutlineSearch,
     text: "Plant Search",
     to: "/plant-search",
+    search: { search: null },
   },
   {
     icon: MdOutlineYoutubeSearchedFor,
@@ -34,7 +35,7 @@ const AppSidebar = (props: SidebarProps) => {
   const isActiveLink = (link: LinkProps) =>
     link.params
       ? [location.pathname, location.href].some((path) =>
-          link.to?.includes(path)
+          link.to?.includes(path),
         )
       : location.pathname === link.to;
 
@@ -48,7 +49,7 @@ const AppSidebar = (props: SidebarProps) => {
           "big-screen:h-dvh-header big-screen:border-r small-screen:border-none",
           {
             "big-screen:min-w-[300px] big-screen:w-[300px]": isExpanded,
-          }
+          },
         )
       }
     >
@@ -70,7 +71,7 @@ const AppSidebar = (props: SidebarProps) => {
                     "big-screen:p-2! big-screen:pl-2! big-screen:rounded-none big-screen:mx-0! big-screen:w-full":
                       !isExpanded,
                     "bg-white/10": isActiveLink(item),
-                  }
+                  },
                 )}
                 icon={icon({
                   size: 24,
@@ -82,7 +83,7 @@ const AppSidebar = (props: SidebarProps) => {
                     "whitespace-nowrap transition-opacity",
                     isExpanded
                       ? "big-screen:opacity-100"
-                      : "big-screen:opacity-0 big-screen:w-0"
+                      : "big-screen:opacity-0 big-screen:w-0",
                   )}
                 >
                   {item.text}

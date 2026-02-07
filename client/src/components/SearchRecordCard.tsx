@@ -11,27 +11,18 @@ import {
 import { useApolloQuery } from "hooks/useQuery";
 import { ReactNode, useMemo } from "react";
 import { MdDoubleArrow } from "react-icons/md";
-import { useMount } from "react-use";
 import { DEFAULT_DATE_FORMAT } from "util/generalUtil";
 import { customLocationDisplay } from "util/locationUtil";
 import MapProvider from "./interactiveMap/MapProvider";
 import { OPTIONAL_SEARCH_PARAM_FILTERS } from "./plantFilters/filterFixtures";
 
 const SearchRecordCard = ({
-  isActiveRecord,
   _id,
   occurrencesOffset,
   totalOccurrences,
   ...searchParams
-}: SearchRecordResult & { isActiveRecord: boolean }) => {
+}: SearchRecordResult) => {
   const navigate = useNavigate();
-
-  useMount(() => {
-    if (isActiveRecord) {
-      document.getElementById(_id)?.scrollIntoView({ behavior: "instant" });
-      navigate({ to: ".", replace: true });
-    }
-  });
 
   const { data: { searchRecordDataCounts } = {}, loading: plantCountLoading } =
     useApolloQuery(GET_SEARCH_RECORD_PLANT_COUNT, {
@@ -74,7 +65,7 @@ const SearchRecordCard = ({
   return (
     <Card
       id={_id}
-      className="flex flex-col gap-4 text-sm scroll-m-header-1"
+      className="flex flex-col gap-4 text-sm scroll-m-header-2"
       {...MOTION_FADE_IN}
     >
       <div
