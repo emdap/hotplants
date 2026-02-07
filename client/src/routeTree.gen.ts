@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchArchiveRouteImport } from './routes/search-archive'
 import { Route as PlantSearchRouteImport } from './routes/plant-search'
-import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
@@ -18,14 +18,14 @@ import { Route as AuthLogoutRouteImport } from './routes/_auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as PrivateGardensChar123GardenNameChar125RouteImport } from './routes/_private/gardens.{-$gardenName}'
 
+const SearchArchiveRoute = SearchArchiveRouteImport.update({
+  id: '/search-archive',
+  path: '/search-archive',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlantSearchRoute = PlantSearchRouteImport.update({
   id: '/plant-search',
   path: '/plant-search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArchiveRoute = ArchiveRouteImport.update({
-  id: '/archive',
-  path: '/archive',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivateRoute = PrivateRouteImport.update({
@@ -59,16 +59,16 @@ const PrivateGardensChar123GardenNameChar125Route =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/archive': typeof ArchiveRoute
   '/plant-search': typeof PlantSearchRoute
+  '/search-archive': typeof SearchArchiveRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
   '/gardens/{-$gardenName}': typeof PrivateGardensChar123GardenNameChar125Route
 }
 export interface FileRoutesByTo {
-  '/archive': typeof ArchiveRoute
   '/plant-search': typeof PlantSearchRoute
+  '/search-archive': typeof SearchArchiveRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
@@ -78,8 +78,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/_private': typeof PrivateRouteWithChildren
-  '/archive': typeof ArchiveRoute
   '/plant-search': typeof PlantSearchRoute
+  '/search-archive': typeof SearchArchiveRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/logout': typeof AuthLogoutRoute
   '/_auth/signup': typeof AuthSignupRoute
@@ -88,16 +88,16 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/archive'
     | '/plant-search'
+    | '/search-archive'
     | '/login'
     | '/logout'
     | '/signup'
     | '/gardens/{-$gardenName}'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/archive'
     | '/plant-search'
+    | '/search-archive'
     | '/login'
     | '/logout'
     | '/signup'
@@ -106,8 +106,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_auth'
     | '/_private'
-    | '/archive'
     | '/plant-search'
+    | '/search-archive'
     | '/_auth/login'
     | '/_auth/logout'
     | '/_auth/signup'
@@ -117,24 +117,24 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   PrivateRoute: typeof PrivateRouteWithChildren
-  ArchiveRoute: typeof ArchiveRoute
   PlantSearchRoute: typeof PlantSearchRoute
+  SearchArchiveRoute: typeof SearchArchiveRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search-archive': {
+      id: '/search-archive'
+      path: '/search-archive'
+      fullPath: '/search-archive'
+      preLoaderRoute: typeof SearchArchiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/plant-search': {
       id: '/plant-search'
       path: '/plant-search'
       fullPath: '/plant-search'
       preLoaderRoute: typeof PlantSearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/archive': {
-      id: '/archive'
-      path: '/archive'
-      fullPath: '/archive'
-      preLoaderRoute: typeof ArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_private': {
@@ -211,8 +211,8 @@ const PrivateRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PrivateRoute: PrivateRouteWithChildren,
-  ArchiveRoute: ArchiveRoute,
   PlantSearchRoute: PlantSearchRoute,
+  SearchArchiveRoute: SearchArchiveRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
