@@ -35,9 +35,21 @@ export const getPlantDisplayName = (plant: PlantResult) => {
   return commonName ? capitalize(commonName) : plant.scientificName;
 };
 
-export const BACKGROUND_ANIMATION_ID = "background-animation";
-
 export const DEFAULT_DATE_FORMAT = "LLL d, yyyy";
+
+export const BACKGROUND_ANIMATION_ID = "background-animation";
+export const findAnimation = (
+  element: Document | Element | null,
+  animationName: string,
+) =>
+  element
+    ?.getAnimations()
+    .find(
+      (animation) =>
+        animation instanceof CSSAnimation &&
+        animation.effect instanceof KeyframeEffect &&
+        animation.animationName === animationName,
+    );
 
 // Needs to be kept in sync with tailwind-base-theme.css
 export const isSmallScreen = () =>

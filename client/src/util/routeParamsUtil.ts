@@ -5,16 +5,20 @@ import { PlantSearchFilters, PlantSearchParams } from "./customSchemaTypes";
 const validateString = (input: unknown) => String(input || "") || undefined;
 
 export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
-  page: null,
+  page: undefined,
+  pageSize: undefined,
+
   search: null,
   filters: {},
 };
 
 type PlantSearchRouteParams =
   | {
+      page?: number;
+      pageSize?: number;
+
       search: PlantSearchParams;
       filters: PlantSearchFilters;
-      page?: number;
     }
   | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>;
 
@@ -24,7 +28,7 @@ const STRING_SEARCH_PARAMS: (keyof PlantSearchParams)[] = [
 ];
 
 const extractStringParams = (
-  searchParams: object
+  searchParams: object,
 ): Partial<PlantSearchParams> =>
   STRING_SEARCH_PARAMS.reduce<Partial<PlantSearchParams>>((prev, cur) => {
     if (cur in searchParams) {
@@ -48,7 +52,7 @@ const validateSearch = (searchParams: unknown): PlantSearchParams | null => {
 
     try {
       boundingPolyCoords = polygon(
-        typesafeParams.boundingPolyCoords as number[][][]
+        typesafeParams.boundingPolyCoords as number[][][],
       ).geometry.coordinates;
     } catch (e) {
       console.error("Invalid parameters:", e);
@@ -89,19 +93,22 @@ const validateFilters = (filterParams: unknown): PlantSearchFilters => {
   return {};
 };
 
+const getNumParamValue = (param?: unknown) => {
+  const numParam = Number(param);
+  return isNaN(numParam) ? undefined : numParam;
+};
+
 export const validatePlantSearchParams = (
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ): PlantSearchRouteParams => {
   const search = validateSearch(params.search);
 
   if (search) {
-    const filters = validateFilters(params.filters);
-    const numberPage = Number(params.page);
-
     return {
-      page: isNaN(numberPage) ? undefined : numberPage,
+      page: getNumParamValue(params.page),
+      pageSize: getNumParamValue(params.pageSize),
       search,
-      filters,
+      filters: validateFilters(params.filters),
     };
   }
 

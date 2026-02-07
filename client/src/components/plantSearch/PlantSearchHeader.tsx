@@ -1,38 +1,36 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
-import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import pluralize from "pluralize";
 import { useLayoutEffect, useRef } from "react";
 import { FaGlobe } from "react-icons/fa";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
-
-const findBackgroundAnimation = (element: Document | Element | null) =>
-  element
-    ?.getAnimations()
-    .find(
-      (animation) =>
-        animation instanceof CSSAnimation &&
-        animation.effect instanceof KeyframeEffect &&
-        animation.animationName === "background-shift",
-    );
+import { BACKGROUND_ANIMATION_ID, findAnimation } from "util/generalUtil";
+import { PaginationControl } from "../../designSystem/PaginationControl";
 
 const PlantSearchHeader = () => {
-  const { page, searchStatus, totalResultsCount, setSidebarExpanded } =
-    usePlantSearchContext();
+  const navigate = useNavigate();
+  const {
+    page,
+    pageSize,
+    searchStatus,
+    totalResultsCount,
+    setSidebarExpanded,
+  } = usePlantSearchContext();
 
   const headerRef = useRef<HTMLHeadingElement>(null);
   useLayoutEffect(() => {
     const syncAnimation = () => {
-      const headerAnimation = findBackgroundAnimation(headerRef.current);
+      const headerAnimation = findAnimation(
+        headerRef.current,
+        "background-shift",
+      );
 
       if (headerAnimation) {
-        const backgroundAnimation = findBackgroundAnimation(
+        const backgroundAnimation = findAnimation(
           document.getElementById(BACKGROUND_ANIMATION_ID),
+          "background-shift",
         );
 
         if (backgroundAnimation) {
@@ -47,7 +45,7 @@ const PlantSearchHeader = () => {
     return () => window.removeEventListener("resize", syncAnimation);
   }, []);
 
-  const LAST_PAGE = Math.ceil(totalResultsCount / DEFAULT_PAGE_SIZE);
+  const LAST_PAGE = Math.ceil(totalResultsCount / pageSize);
 
   return (
     <header
@@ -69,44 +67,20 @@ const PlantSearchHeader = () => {
         {searchStatus !== "READY" && <LoadingIcon />}
       </div>
 
-      {page !== undefined && <PagePaginator page={page} lastPage={LAST_PAGE} />}
-      <span className="ml-auto" />
+      <PaginationControl
+        className="ml-auto"
+        page={page}
+        pageSize={pageSize}
+        lastPage={LAST_PAGE}
+        onPageChange={(newPage) =>
+          navigate({ to: ".", search: { page: newPage } })
+        }
+        onPageSizeChange={(newPageSize) =>
+          navigate({ to: ".", search: { pageSize: newPageSize } })
+        }
+      />
     </header>
   );
 };
-
-const PagePaginator = ({
-  page,
-  lastPage,
-}: {
-  page: number;
-  lastPage: number;
-}) => (
-  <div className="flex items-center gap-2">
-    <Link to="." disabled={page === 0} search={{ page: page - 1 }}>
-      <MdChevronLeft />
-    </Link>
-
-    <div>
-      Page{" "}
-      <Menu>
-        <MenuButton>{page}</MenuButton>
-        <MenuItems anchor="bottom">
-          {new Array(lastPage).fill(0).map((_, index) => (
-            <MenuItem key={index}>
-              <Link to="." search={{ page: index + 1 }}>
-                {index + 1}
-              </Link>
-            </MenuItem>
-          ))}
-        </MenuItems>
-      </Menu>
-    </div>
-
-    <Link to="." disabled={page === lastPage} search={{ page: page + 1 }}>
-      <MdChevronRight />
-    </Link>
-  </div>
-);
 
 export default PlantSearchHeader;

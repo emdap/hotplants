@@ -22,7 +22,8 @@ const DEFAULT_CACHED_PLANT_DATA = {
 const PlantSearchProvider = () => {
   const navigate = useNavigate();
   const {
-    // page,
+    page = 1,
+    pageSize = 20,
     search: searchParams = null,
     filters: plantFilters = {},
   } = route.useSearch();
@@ -77,7 +78,7 @@ const PlantSearchProvider = () => {
           ?.scrollIntoView({ behavior: "instant" });
 
         navigate({
-          to: "/plant-search",
+          to: ".",
           search: { search: applyParams, filters: {} },
         });
         isSmallScreen() && setSidebarExpanded(false);
@@ -124,6 +125,8 @@ const PlantSearchProvider = () => {
         totalResultsCount,
 
         searchParams,
+        page,
+        pageSize,
 
         searchParamsDraft,
         validatedSearchParamsDraft,
