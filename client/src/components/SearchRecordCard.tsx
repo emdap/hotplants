@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
+import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import ProgressBar from "designSystem/ProgressBar";
 import {
   GET_SEARCH_RECORD_PLANT_COUNT,
@@ -71,7 +72,11 @@ const SearchRecordCard = ({
   };
 
   return (
-    <Card id={_id} className="flex flex-col gap-4 text-sm scroll-m-header-1">
+    <Card
+      id={_id}
+      className="flex flex-col gap-4 text-sm scroll-m-header-1"
+      {...MOTION_FADE_IN}
+    >
       <div
         className="border-b border-transparent hover:border-default-text/80 cursor-pointer pb-0.5 flex gap-4 justify-between items-center"
         onClick={openSearchRecord}

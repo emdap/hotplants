@@ -32,8 +32,8 @@ const PlantCard = ({
   return (
     <Card
       {...MOTION_FADE_SLIDE}
-      ref={plantCardRef}
       transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.03 }}
+      ref={plantCardRef}
       id={plant.scientificName}
       onClick={setActive}
       onFocus={() => !isRightClick.current && setActive()}

@@ -1,5 +1,9 @@
 import { polygon } from "@turf/turf";
-import { LocationSource } from "generated/graphql/graphql";
+import {
+  LocationSource,
+  SearchRecordBooleanFilterInput,
+  SearchRecordStringFilterInput,
+} from "generated/graphql/graphql";
 import { PlantSearchFilters, PlantSearchParams } from "./customSchemaTypes";
 
 export const DEFAULT_PAGINATION_PARAMS = {
@@ -109,6 +113,13 @@ const getNumParamValue = (param?: unknown) => {
   return isNaN(numParam) ? undefined : numParam;
 };
 
+const getPaginationParams = (
+  params: Record<string, unknown>,
+): PaginationParams => ({
+  page: getNumParamValue(params.page),
+  pageSize: getNumParamValue(params.pageSize),
+});
+
 export const validatePlantSearchParams = (
   params: Record<string, unknown>,
 ): PlantSearchRouteParams => {
@@ -116,12 +127,31 @@ export const validatePlantSearchParams = (
 
   if (search) {
     return {
-      page: getNumParamValue(params.page),
-      pageSize: getNumParamValue(params.pageSize),
-      search,
+      ...getPaginationParams(params),
       filters: validateFilters(params.filters),
+      search,
     };
   }
 
   return { search, filters: {} };
+};
+
+type SearchArchiveParams = PaginationParams & {
+  stringFilter?: SearchRecordStringFilterInput;
+  booleanFilter?: SearchRecordBooleanFilterInput;
+  sortField?: string;
+  sortDir?: -1 | 1;
+  lastOpened?: string;
+};
+
+export const validateSearchArchiveParams = (
+  params: Record<string, string>,
+): SearchArchiveParams => {
+  if (typeof params.lastOpened === "string") {
+    return { lastOpened: params.lastOpened };
+  }
+  return {
+    lastOpened: validateString(params.lastOpened),
+    ...getPaginationParams(params),
+  };
 };
