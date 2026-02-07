@@ -11,7 +11,7 @@ import pluralize from "pluralize";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { useMount, usePrevious } from "react-use";
 
-const route = getRouteApi("/archive");
+const route = getRouteApi("/search-archive");
 
 const ARCHIVE_PAGE_SIZE_OPTIONS = [5, 10, 25, 50];
 
