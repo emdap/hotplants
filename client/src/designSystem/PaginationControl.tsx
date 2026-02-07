@@ -1,7 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { PaginationParams } from "util/routeParamsUtil";
 import Button from "./Button";
@@ -120,19 +120,24 @@ const PaginatorDropdownItems = ({
   onChange,
 }: Omit<PaginatorDropdownProps, "label">) => {
   const pageSizeContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
 
   useLayoutEffect(() => {
-    pageSizeContainerRef.current
-      ?.getElementsByClassName("active-page-button")?.[0]
-      // @ts-expect-error TS missing property 'container'
-      ?.scrollIntoView({ container: "nearest" });
-  }, []);
+    if (pageSizeContainerRef.current) {
+      pageSizeContainerRef.current
+        .getElementsByClassName("active-page-button")?.[0]
+        // @ts-expect-error TS missing property 'container'
+        ?.scrollIntoView({ container: "nearest" });
 
-  const scrollbarWidth = Math.max(
-    0,
-    (pageSizeContainerRef.current?.offsetWidth ?? 0) -
-      (pageSizeContainerRef.current?.clientWidth ?? 0),
-  );
+      setScrollbarWidth(
+        Math.max(
+          0,
+          pageSizeContainerRef.current.offsetWidth -
+            pageSizeContainerRef.current.clientWidth,
+        ),
+      );
+    }
+  }, []);
 
   return (
     <div
