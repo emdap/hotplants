@@ -73,7 +73,7 @@ const Sidebar = ({
         )}
       >
         <Button
-          variant="text"
+          variant="text-primary"
           className={classNames(
             "sidebar-button place-self-end top-1 z-50",
             "text-white transition-all outline-none p-1! mb-2 rounded-full! hover:border-white/40 border border-transparent aspect-square",

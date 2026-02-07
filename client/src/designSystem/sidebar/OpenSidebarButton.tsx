@@ -12,7 +12,7 @@ const OpenSidebarButton = ({
   ...buttonProps
 }: OpenSidebarButtonProps) => (
   <Button
-    variant="text"
+    variant="text-primary"
     onClick={openSidebar}
     className={classNames("p-0!", className)}
     {...buttonProps}

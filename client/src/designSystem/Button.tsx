@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import LoadingIcon from "./LoadingIcon";
@@ -7,33 +8,36 @@ type ButtonVariant =
   | "accent"
   | "secondary"
   | "text"
+  | "text-primary"
   | "icon-primary"
   | "icon-white";
-
-export type ButtonProps = {
-  variant?: ButtonVariant;
-  icon?: ReactNode;
-  size?: "small" | "default";
-  isLoading?: boolean;
-  disableOnLoading?: boolean;
-  linkAddress?: string;
-} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const BUTTON_SIZES = {
   default: "py-2 px-3",
   small: "py-1 px-1.5 text-sm",
+  flush: "p-0",
   icon: {
     default: "p-2",
-    small: "p-1",
+    small: "p-1 text-sm",
+    flush: "p-0",
   },
 };
+
+export type ButtonProps = {
+  variant?: ButtonVariant;
+  icon?: ReactNode;
+  size?: Exclude<keyof typeof BUTTON_SIZES, "icon">;
+  isLoading?: boolean;
+  disableOnLoading?: boolean;
+  linkAddress?: string;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const getClasses = (props: ButtonProps) => {
   const hasChildren = Boolean(props.children);
   const loadingWithText = hasChildren && props.isLoading !== undefined;
   const iconWithText = Boolean(hasChildren && props.icon);
 
-  const isTextVariant = props.variant === "text";
+  const isTextVariant = props.variant?.includes("text");
   const isIconVariant = props.variant?.includes("icon");
 
   const buttonSizeKey = props.size ?? "default";
@@ -49,7 +53,7 @@ const getClasses = (props: ButtonProps) => {
         props.variant === "primary",
       "bg-accent/90 dark:bg-accent/80 enabled:hover:bg-accent outline-accent text-white":
         props.variant === "accent",
-      "bg-secondary/80 enabled:hover:bg-secondary outline-secondary ":
+      "bg-secondary/80 enabled:hover:bg-secondary outline-secondary":
         props.variant === "secondary",
 
       "bg-primary/80 enabled:hover:bg-primary text-white":
@@ -57,8 +61,10 @@ const getClasses = (props: ButtonProps) => {
       "enabled:hover:bg-white/20 outline-primary":
         props.variant === "icon-white",
 
-      "text-primary enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
-        isTextVariant,
+      "enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
+        isTextVariant && hasChildren,
+      "text-inherit": props.variant === "text",
+      "text-primary": props.variant === "text-primary",
 
       "opacity-50":
         props.disabled || (props.isLoading && props.disableOnLoading),
@@ -109,9 +115,9 @@ const Button = ({
   );
 
   return linkAddress && !isDisabled ? (
-    <a className="block w-fit" href={linkAddress}>
+    <Link className="block w-fit" to={linkAddress}>
       {renderButton({ className: classes, ...directButtonProps })}
-    </a>
+    </Link>
   ) : (
     renderButton({
       disabled: isDisabled,

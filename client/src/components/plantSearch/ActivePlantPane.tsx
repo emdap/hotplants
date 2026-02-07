@@ -107,7 +107,7 @@ const ActivePlantPane = () => {
                   <Button
                     key={direction}
                     disabled={disableIterate[direction]}
-                    variant="text"
+                    variant="text-primary"
                     onClick={() => iteratePlant(direction)}
                     icon={
                       direction === "prev" ? (
