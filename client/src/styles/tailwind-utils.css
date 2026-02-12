@@ -105,18 +105,18 @@
 
 @utility card {
   @apply rounded border shadow-md p-4 md:p-6;
-  @apply border-gray-200 dark:border-gray-800/20;
-  @apply bg-default-background/80 dark:bg-gray-800/80;
+  @apply border-gray-200 dark:border-default-background/20;
+  @apply bg-default-background/80;
 }
 
 @utility card-solid {
-  @apply bg-default-background dark:bg-gray-800;
+  @apply bg-default-background;
 }
 
 @utility pretty-background {
   background-size: 800%;
 
   @apply bg-gradient-to-tr animate-background-shift
-  bg-default-background from-teal-500/80 via-cyan-500/80 to-purple-400/90 
+  bg-default-background dark:bg-black from-teal-500/80 via-cyan-500/80 to-purple-400/90 
   dark:from-teal-800/60 dark:via-cyan-800/60 dark:to-purple-600/60;
 }
