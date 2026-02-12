@@ -80,7 +80,14 @@ const SearchRecordCard = ({
       </div>
 
       <div className="flex flex-wrap gap-x-8 gap-y-4">
-        <MapProvider className="h-60 w-xs grow" searchParams={searchParams} />
+        <MapProvider
+          className="h-60 w-xs grow"
+          searchParams={searchParams}
+          dragging={false}
+          boxZoom={false}
+          touchZoom={false}
+          scrollWheelZoom={false}
+        />
         <div className="flex flex-col gap-4 [&_div]:space-y-0.5 grow">
           <div>
             <InfoRow
