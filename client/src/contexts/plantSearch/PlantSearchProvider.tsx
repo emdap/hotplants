@@ -19,7 +19,10 @@ const DEFAULT_CACHED_PLANT_DATA = {
 };
 
 const PlantSearchProvider = () => {
+  const [isInfiniteScroll, setIsInfiniteScroll] = useState(!isSmallScreen());
+
   const navigate = useNavigate();
+
   const {
     page = 1,
     pageSize = 20,
@@ -118,6 +121,9 @@ const PlantSearchProvider = () => {
       value={{
         hasCurrentResults,
         totalResultsCount,
+
+        isInfiniteScroll,
+        setIsInfiniteScroll,
 
         searchParams,
         page,

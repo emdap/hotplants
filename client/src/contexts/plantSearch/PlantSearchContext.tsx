@@ -11,10 +11,13 @@ const VOID_PROMISE_FUNCTION = async () => {};
 export type PlantSearchContextType = {
   hasCurrentResults: boolean;
   totalResultsCount: number;
-  page: number;
-  pageSize: number;
+
+  isInfiniteScroll: boolean;
+  setIsInfiniteScroll: (enabled: boolean) => void;
 
   searchParams: PlantSearchParams | null;
+  page: number;
+  pageSize: number;
 
   searchParamsDraft: Partial<PlantSearchParams> | null;
   validatedSearchParamsDraft: PlantSearchParams | null;
@@ -35,10 +38,13 @@ export type PlantSearchContextType = {
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   hasCurrentResults: false,
   totalResultsCount: 0,
-  page: 0,
-  pageSize: 20,
+
+  isInfiniteScroll: !isSmallScreen(),
+  setIsInfiniteScroll: VOID_FUNCTION,
 
   searchParams: null,
+  page: 0,
+  pageSize: 20,
 
   searchParamsDraft: null,
   validatedSearchParamsDraft: null,

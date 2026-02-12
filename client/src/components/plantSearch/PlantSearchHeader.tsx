@@ -12,6 +12,8 @@ const PlantSearchHeader = () => {
     pageSize,
     searchStatus,
     totalResultsCount,
+    isInfiniteScroll,
+    setIsInfiniteScroll,
     setSidebarExpanded,
   } = usePlantSearchContext();
 
@@ -34,6 +36,10 @@ const PlantSearchHeader = () => {
         totalResults={totalResultsCount}
         pageSize={pageSize}
         replaceUrl
+        infiniteScroll={{
+          enabled: isInfiniteScroll,
+          setEnabled: setIsInfiniteScroll,
+        }}
       />
     </FloatingHeader>
   );

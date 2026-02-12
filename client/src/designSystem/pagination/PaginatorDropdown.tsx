@@ -17,7 +17,7 @@ const PaginatorDropdown = ({
   ...props
 }: PaginatorDropdownProps) => {
   return (
-    <div className="whitespace-nowrap flex gap-1.5 items-center">
+    <div className="whitespace-nowrap flex gap-1.5 items-center justify-between">
       {label}
       <Menu>
         <MenuButton as="div">
@@ -28,7 +28,7 @@ const PaginatorDropdown = ({
         <MenuItems
           anchor="bottom"
           modal={false}
-          className="z-20 -ml-1.5 mt-1 py-1 text-sm relative translate-x-1/4 outline-none overflow-visible!"
+          className="z-20 -ml-1.5 mt-3 py-1 shadow-sm text-sm relative translate-x-1/4 outline-none overflow-visible!"
         >
           <PaginatorDropdownItems selected={selected} {...props} />
         </MenuItems>
@@ -79,7 +79,7 @@ const PaginatorDropdownItems = ({
       className="text-sm max-h-20 px-1.5 py-0.5 min-w-max overflow-y-auto overflow-x-hidden flex flex-col items-center gap-1 stable-scrollbar"
     >
       <div
-        className="bg-default-background/95 shadow-sm absolute top-0 left-0 rounded-md h-full -z-10"
+        className="bg-default-background shadow-sm absolute top-0 left-0 rounded-md h-full -z-10"
         style={{ width: isSafari ? "100%" : `calc(100% - ${scrollbarWidth}px` }}
       />
 
