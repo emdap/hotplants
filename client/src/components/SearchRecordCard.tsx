@@ -58,7 +58,7 @@ const SearchRecordCard = ({
     });
     navigate({
       to: "/plant-search",
-      search: { search: searchParams, filters: {} },
+      search: { search: searchParams, filters: {}, page: 1 },
     });
   };
 

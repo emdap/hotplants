@@ -83,7 +83,7 @@
       @apply transition-colors;
     }
 
-    @apply small-screen:overflow-visible big-screen:overflow-hidden small-screen:scroll-smooth bg-accent small-screen:stable-scrollbar;
+    @apply small-screen:overflow-visible big-screen:overflow-hidden  bg-accent small-screen:stable-scrollbar;
   }
 
   body {

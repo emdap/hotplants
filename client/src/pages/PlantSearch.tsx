@@ -10,6 +10,7 @@ import {
 } from "contexts/plantSearch/PlantSearchContext";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
+import { useScrollAnchor } from "hooks/useScrollAnchor";
 import { useLayoutEffect, useRef } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
@@ -18,6 +19,7 @@ const PlantSearch = () => {
   const { hasCurrentResults, totalResultsCount, fetchNextPlantsPage } =
     usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
+  const ScrollAnchor = useScrollAnchor();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -62,6 +64,8 @@ const PlantSearch = () => {
             <SearchParamsInput />
           </div>
         )}
+
+        <ScrollAnchor className="scroll-m-header-2" />
 
         <div
           id={RESULTS_PANE_ID}

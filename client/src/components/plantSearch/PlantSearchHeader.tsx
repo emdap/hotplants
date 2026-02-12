@@ -33,6 +33,7 @@ const PlantSearchHeader = () => {
         page={page}
         totalResults={totalResultsCount}
         pageSize={pageSize}
+        replaceUrl
       />
     </FloatingHeader>
   );

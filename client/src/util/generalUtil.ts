@@ -51,6 +51,11 @@ export const findAnimation = (
         animation.animationName === animationName,
     );
 
+// Seeing issues with scroll functionalities in Safari
+export const isSafari = /^((?!chrome|android).)*safari/i.test(
+  navigator.userAgent,
+);
+
 // Needs to be kept in sync with tailwind-base-theme.css
 export const isSmallScreen = () =>
   window.innerWidth < 1024 || window.innerHeight < 600;

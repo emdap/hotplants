@@ -3,7 +3,6 @@ import { routeTree } from "./routeTree.gen";
 
 export const router = createRouter({
   routeTree,
-  scrollRestoration: true,
   defaultNotFoundComponent: () => <Navigate to="/plant-search" replace />,
 });
 

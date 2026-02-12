@@ -2,7 +2,6 @@ import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import {
   PlantSearchContext,
   PlantSearchContextType,
-  RESULTS_PANE_ID,
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import { PlantQueryData } from "graphqlHelpers/plantQueries";
@@ -73,10 +72,6 @@ const PlantSearchProvider = () => {
         ...params,
       });
       if (applyParams) {
-        document
-          .getElementById(RESULTS_PANE_ID)
-          ?.scrollIntoView({ behavior: "instant" });
-
         navigate({
           to: ".",
           search: { search: applyParams, filters: {} },

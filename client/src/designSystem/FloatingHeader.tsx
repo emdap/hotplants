@@ -1,14 +1,11 @@
 import classNames from "classnames";
-import { ReactNode, useLayoutEffect, useRef } from "react";
+import { HTMLProps, useLayoutEffect, useRef } from "react";
 import { BACKGROUND_ANIMATION_ID, findAnimation } from "util/generalUtil";
 
 const FloatingHeader = ({
-  children,
   className,
-}: {
-  children?: ReactNode;
-  className?: string;
-}) => {
+  ...props
+}: HTMLProps<HTMLHeadingElement>) => {
   const headerRef = useRef<HTMLHeadingElement>(null);
 
   useLayoutEffect(() => {
@@ -45,9 +42,8 @@ const FloatingHeader = ({
         "small-screen:card small-screen:card-solid small-screen:px-8 small-screen:py-1",
         className,
       )}
-    >
-      {children}
-    </header>
+      {...props}
+    />
   );
 };
 
