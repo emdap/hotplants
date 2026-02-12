@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import PlantResultsList from "components/plantResults/PlantResultsList";
-import PlantSearchFooter from "components/plantSearch/PlantSearchFooter";
+import PlantAnimation from "components/plantSearch/PlantAnimation";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
 import SearchParamsInput from "components/plantSearch/SearchParamsInput";
@@ -8,6 +8,7 @@ import {
   RESULTS_PANE_ID,
   usePlantSearchContext,
 } from "contexts/plantSearch/PlantSearchContext";
+import LoadingIcon from "designSystem/LoadingIcon";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
@@ -16,8 +17,15 @@ import { useLayoutEffect, useRef } from "react";
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
-  const { hasCurrentResults, totalResultsCount, fetchNextPlantsPage } =
-    usePlantSearchContext();
+  const {
+    hasNextPage,
+    hasCurrentResults,
+    totalResultsCount,
+    isInfiniteScroll,
+    searchStatus,
+    searchRecordQuery: { dataUpdatedAt },
+    fetchNextPlantsPage,
+  } = usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor();
 
@@ -38,13 +46,19 @@ const PlantSearch = () => {
       }
     };
 
-    scrollContainer?.addEventListener("scroll", handleScroll);
+    isInfiniteScroll &&
+      scrollContainer?.addEventListener("scroll", handleScroll);
 
     return () => scrollContainer?.removeEventListener("scroll", handleScroll);
-  }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
+  }, [
+    isInfiniteScroll,
+    fetchNextPlantsPage,
+    scrollContainer,
+    scrollContainerElement,
+  ]);
 
   return (
-    <main className="w-full">
+    <main className="w-full h-full pb-6">
       <PageTitle className="page-buffer">Plant Search</PageTitle>
       {hasCurrentResults && <PlantSearchHeader />}
 
@@ -76,11 +90,27 @@ const PlantSearch = () => {
               key="results-holder"
               className={classNames({
                 "max-w-page": totalResultsCount < 3,
+                "pb-20": isInfiniteScroll,
               })}
             />
           )}
 
-          <PlantSearchFooter key="results-footer" />
+          {isInfiniteScroll &&
+          hasNextPage &&
+          searchStatus !== "CHECKING_STATUS" ? (
+            <div key="loading-icon" className="pb-4 mx-auto -mt-10 mb-10">
+              <LoadingIcon size={25} className="text-white" />
+            </div>
+          ) : (
+            (isInfiniteScroll || !hasNextPage) && (
+              <PlantAnimation
+                key="plant-animation"
+                queryStatus={searchStatus}
+                isInitialSearch={!dataUpdatedAt}
+                hasCurrentResults={hasCurrentResults}
+              />
+            )
+          )}
         </div>
       </div>
     </main>

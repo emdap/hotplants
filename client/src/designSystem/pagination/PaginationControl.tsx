@@ -58,9 +58,8 @@ export const PaginationControl = ({
     navToPage({ page: newPage, pageSize: newPageSize });
   };
 
-  const showOptionsMenu = infiniteScroll
-    ? !infiniteScroll.enabled
-    : !bigScreenWidth;
+  const showOptionsMenu =
+    !bigScreenWidth || (infiniteScroll && !infiniteScroll.enabled);
 
   const PageSizeDropdown = (
     <PaginatorDropdown
@@ -72,51 +71,53 @@ export const PaginationControl = ({
   );
 
   return (
-    <motion.div
-      className={classNames("h-7.5 flex items-center gap-2 text-sm", className)}
-      key={infiniteScroll?.enabled ? "infinite" : "paginate"}
-      {...MOTION_FADE_IN}
-    >
-      {infiniteScroll?.enabled ? (
-        <InfiniteScrollToggle {...infiniteScroll} />
-      ) : (
-        <div className="flex gap-1 items-center">
-          <Button
-            size="small"
-            variant="icon-white"
-            disabled={page === minPage}
-            onClick={() => navToPage({ page: page - 1 })}
-            icon={<MdChevronLeft />}
-          />
+    <div className="h-7.5 text-sm flex">
+      <motion.div
+        className={classNames("flex items-center gap-2", className)}
+        key={infiniteScroll?.enabled ? "infinite" : "paginate"}
+        {...MOTION_FADE_IN}
+      >
+        {infiniteScroll?.enabled ? (
+          bigScreenWidth && <InfiniteScrollToggle {...infiniteScroll} />
+        ) : (
+          <div className="flex gap-1 items-center">
+            <Button
+              size="small"
+              variant="icon-white"
+              disabled={page === minPage}
+              onClick={() => navToPage({ page: page - 1 })}
+              icon={<MdChevronLeft />}
+            />
 
-          <PaginatorDropdown
-            label="Page"
-            selected={page}
-            options={pageList}
-            onChange={(newPage) => navToPage({ page: newPage })}
-          />
+            <PaginatorDropdown
+              label="Page"
+              selected={page}
+              options={pageList}
+              onChange={(newPage) => navToPage({ page: newPage })}
+            />
 
-          <Button
-            size="small"
-            variant="icon-white"
-            disabled={page === lastPage}
-            onClick={() => navToPage({ page: page + 1 })}
-            icon={<MdChevronRight />}
-          />
+            <Button
+              size="small"
+              variant="icon-white"
+              disabled={page === lastPage}
+              onClick={() => navToPage({ page: page + 1 })}
+              icon={<MdChevronRight />}
+            />
 
-          {bigScreenWidth && (
-            <>
-              <VerticalDivider className="mr-3" />
+            {bigScreenWidth && (
+              <>
+                <VerticalDivider className="mr-3" />
 
-              {PageSizeDropdown}
-            </>
-          )}
-        </div>
-      )}
+                {PageSizeDropdown}
+              </>
+            )}
+          </div>
+        )}
+      </motion.div>
 
       {showOptionsMenu && (
         <PaginationPopover>
-          {!bigScreenWidth && (
+          {!bigScreenWidth && !infiniteScroll?.enabled && (
             <PaginatorDropdown
               label="Page size"
               selected={pageSize}
@@ -127,6 +128,6 @@ export const PaginationControl = ({
           {infiniteScroll && <InfiniteScrollToggle {...infiniteScroll} />}
         </PaginationPopover>
       )}
-    </motion.div>
+    </div>
   );
 };
