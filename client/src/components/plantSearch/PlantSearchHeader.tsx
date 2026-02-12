@@ -1,10 +1,10 @@
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import FloatingHeader from "designSystem/FloatingHeader";
 import LoadingIcon from "designSystem/LoadingIcon";
+import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
 import pluralize from "pluralize";
 import { FaGlobe } from "react-icons/fa";
-import { PaginationControl } from "../../designSystem/PaginationControl";
 
 const PlantSearchHeader = () => {
   const {

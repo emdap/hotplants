@@ -57,5 +57,9 @@ export const isSafari = /^((?!chrome|android).)*safari/i.test(
 );
 
 // Needs to be kept in sync with tailwind-base-theme.css
+export const SMALL_SCREEN_WIDTH = 1024;
+export const SMALL_SCREEN_HEIGHT = 600;
+
 export const isSmallScreen = () =>
-  window.innerWidth < 1024 || window.innerHeight < 600;
+  window.innerWidth < SMALL_SCREEN_WIDTH ||
+  window.innerHeight < SMALL_SCREEN_HEIGHT;

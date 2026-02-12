@@ -3,7 +3,7 @@ import SearchRecordCard from "components/SearchRecordCard";
 import FloatingHeader from "designSystem/FloatingHeader";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
-import { PaginationControl } from "designSystem/PaginationControl";
+import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
