@@ -1,10 +1,18 @@
 .dark {
-  .leaflet-layer,
-  .leaflet-control-zoom-in,
-  .leaflet-control-zoom-out {
+  .leaflet-layer {
     filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
   }
+
+  .leaflet-draw-draw-polygon {
+    filter: brightness(0) invert(1);
+  }
 }
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  @apply text-default-text! rounded-none;
+}
+
 .leaflet-draw-section:last-of-type {
   @apply hidden;
 }
@@ -20,7 +28,11 @@
     @apply rounded-sm shadow-sm bg-default-background/80;
   }
   .leaflet-control-attribution {
-    @apply text-default-text/50;
+    @apply text-black/50;
+
+    a {
+      @apply text-primary;
+    }
   }
 
   /* CSS hacks to hide the toolbar, but allow cancelling drawing by re-clicking the active icon.
@@ -39,14 +51,14 @@ No method available in lib to cancel drawings */
     }
   }
   a {
-    @apply !bg-transparent hover:bg-default-background text-primary;
+    @apply !bg-transparent hover:bg-default-background;
   }
 }
 
 .leaflet-marker-icon {
-  @apply rounded-full bg-cyan-200 border-2 border-cyan-900;
+  @apply rounded-full bg-cyan-200 border-2 border-accent;
 }
 
 .leaflet-interactive {
-  @apply stroke-cyan-900 fill-cyan-400;
+  @apply stroke-accent fill-cyan-400;
 }

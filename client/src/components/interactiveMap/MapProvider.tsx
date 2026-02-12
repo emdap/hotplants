@@ -1,6 +1,5 @@
 import { centroid } from "@turf/turf";
 import classNames from "classnames";
-import { PlantSearchContextType } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import "leaflet-draw/dist/leaflet.draw.css";
@@ -8,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
+import { PlantSearchParams } from "util/customSchemaTypes";
 import LocationPolygon from "./LocationPolygon";
 import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
 import PolygonDrawing, { SetCustomPolygonFn } from "./PolygonDrawing";
@@ -22,14 +22,13 @@ type MapProviderProps = {
   isLoading?: boolean;
   showMarkers?: boolean;
   locationCustomizeable?: boolean;
-} & Partial<
-  Pick<PlantSearchContextType, "searchLocation" | "setSearchLocation">
-> &
-  MapContainerProps;
+  searchParams: PlantSearchParams | null;
+  setSearchParams?: (newParams: PlantSearchParams) => void;
+} & MapContainerProps;
 
 const MapProvider = ({
-  searchLocation,
-  setSearchLocation,
+  searchParams,
+  setSearchParams,
 
   isLoading,
   showMarkers,
@@ -38,16 +37,17 @@ const MapProvider = ({
   ...containerProps
 }: MapProviderProps) => {
   const setCustomPolygon: SetCustomPolygonFn = (boundingPolygon) => {
-    if (!setSearchLocation) {
+    if (!setSearchParams) {
       return;
     }
 
     const center = centroid(boundingPolygon).geometry.coordinates;
     const [lat, lng] = center.map((num) => Math.round(num * 100) / 100);
-    setSearchLocation({
-      displayName: `${lat}, ${lng}`,
-      locationSource: "map",
-      boundingPolygon,
+    setSearchParams({
+      ...searchParams,
+      locationName: `${lat}, ${lng}`,
+      locationSource: "custom",
+      boundingPolyCoords: boundingPolygon.geometry.coordinates,
     });
   };
 
@@ -55,7 +55,7 @@ const MapProvider = ({
     <Card
       className={classNames(
         "min-h-60 min-w-30 p-0 overflow-hidden relative",
-        className
+        className,
       )}
     >
       <LoadingOverlay
@@ -73,12 +73,12 @@ const MapProvider = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {searchLocation && (
+        {searchParams && (
           <LocationPolygon
             {...{
               locationCustomizeable,
               setCustomPolygon,
-              ...searchLocation,
+              ...searchParams,
             }}
           />
         )}

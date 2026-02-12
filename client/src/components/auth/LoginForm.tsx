@@ -18,7 +18,7 @@ const LoginForm = () => {
 
   const formComplete = useMemo(
     () => Object.values(loginInfo).every((val) => val.length),
-    [loginInfo]
+    [loginInfo],
   );
 
   const loginUser = async () => {
@@ -60,7 +60,7 @@ const LoginForm = () => {
         Submit
       </AuthLoadingSubmitButton>
       <Button
-        variant="text"
+        variant="text-primary"
         className="ml-auto max-md:mt-8"
         onClick={() => setShowForm("signup")}
       >

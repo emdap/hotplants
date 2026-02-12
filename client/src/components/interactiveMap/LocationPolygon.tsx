@@ -12,8 +12,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Marker, Polygon, useMap } from "react-leaflet";
 import { useMount } from "react-use";
 import { LocationCoord } from "util/customSchemaTypes";
-import { LocationWithPolygon } from "util/schemaTypesUtil";
-import CrossingMerdianTooltip from "./CrossingMerdianTooltip";
+import { LocationSearchParams } from "util/locationUtil";
+import CrossingMeridianTooltip from "./CrossingMeridianTooltip";
 import { PolygonCenterIcon, PolygonCornerIcon } from "./MarkerIcons";
 import { SetCustomPolygonFn } from "./PolygonDrawing";
 
@@ -26,17 +26,21 @@ const getOuterCoordinates = (feature: Feature<PolygonType>) =>
   feature.geometry.coordinates[0];
 
 const LocationPolygon = ({
-  boundingPolygon,
+  boundingPolyCoords,
   locationSource,
   locationCustomizeable,
   setCustomPolygon,
-}: LocationWithPolygon & {
+}: LocationSearchParams & {
   locationCustomizeable?: boolean;
   setCustomPolygon: SetCustomPolygonFn;
 }) => {
   const map = useMap();
   useMount(() => map.fitBounds(polyCoords));
 
+  const boundingPolygon = useMemo(
+    () => polygon(boundingPolyCoords),
+    [boundingPolyCoords],
+  );
   const [localPolygon, setLocalPolygon] = useState(boundingPolygon);
 
   useEffect(() => {
@@ -82,7 +86,7 @@ const LocationPolygon = ({
       coordIndex === index ||
       (index === 0 && coordIndex === polyCoords.length - 1)
         ? [latLng.lat, latLng.lng]
-        : coord
+        : coord,
     );
 
     const swappedCoords = swapLatLng(newCoords);
@@ -97,9 +101,9 @@ const LocationPolygon = ({
         className="stroke-cyan-900 fill-cyan-400"
         positions={polyCoords}
       />
-      <CrossingMerdianTooltip
+      <CrossingMeridianTooltip
         centerCoords={centerCoords}
-        boundingPolygon={localPolygon}
+        boundingPolyCoords={localPolygon.geometry.coordinates}
       />
 
       {locationCustomizeable && (

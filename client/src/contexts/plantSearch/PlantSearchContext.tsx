@@ -1,23 +1,32 @@
-import { PlantDataInput } from "generated/graphql/graphql";
 import { PlantSearchQueriesReturnType } from "hooks/usePlantSearchQueries";
-import { createContext, useContext } from "react";
-import { LocationWithPolygon } from "util/schemaTypesUtil";
+import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+import { isSmallScreen } from "util/generalUtil";
 
-export const FILTER_HOLDER_ID = "filter-holder";
+export const RESULTS_PANE_ID = "results-pane";
+
 export const VOID_FUNCTION = () => {};
 const VOID_PROMISE_FUNCTION = async () => {};
-
-export type ActiveIndexes = Record<"plantIndex" | "mediaIndex", number | null>;
 
 export type PlantSearchContextType = {
   hasCurrentResults: boolean;
   totalResultsCount: number;
+  page: number;
+  pageSize: number;
 
-  plantSearchCriteria: PlantDataInput | null;
-  setPlantSearchCriteria: (newCriteria: PlantDataInput) => void;
+  searchParams: PlantSearchParams | null;
 
-  searchLocation: LocationWithPolygon | null;
-  setSearchLocation: (location: LocationWithPolygon | null) => void;
+  searchParamsDraft: Partial<PlantSearchParams> | null;
+  validatedSearchParamsDraft: PlantSearchParams | null;
+
+  updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
+  applySearchParams: (params?: Partial<PlantSearchParams>) => void;
+
+  plantFilters: PlantSearchFilters;
+  applyPlantFilters: (filters?: PlantSearchFilters) => void;
+
+  sidebarExpanded: boolean;
+  setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
 } & Pick<
   PlantSearchQueriesReturnType,
   "fetchNextPlantsPage" | "hasNextPage" | "searchStatus" | "searchRecordQuery"
@@ -26,21 +35,31 @@ export type PlantSearchContextType = {
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   hasCurrentResults: false,
   totalResultsCount: 0,
+  page: 0,
+  pageSize: 20,
 
-  plantSearchCriteria: null,
-  setPlantSearchCriteria: VOID_FUNCTION,
+  searchParams: null,
 
-  searchLocation: null,
-  setSearchLocation: VOID_FUNCTION,
+  searchParamsDraft: null,
+  validatedSearchParamsDraft: null,
+
+  updateSearchParamsDraft: VOID_FUNCTION,
+  applySearchParams: VOID_FUNCTION,
+
+  plantFilters: {},
+  applyPlantFilters: VOID_FUNCTION,
 
   searchStatus: "READY",
   searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
   hasNextPage: false,
   fetchNextPlantsPage: VOID_PROMISE_FUNCTION,
+
+  sidebarExpanded: !isSmallScreen(),
+  setSidebarExpanded: VOID_FUNCTION,
 };
 
 export const PlantSearchContext = createContext<PlantSearchContextType>(
-  DEFAULT_PLANT_SEARCH_CONTEXT
+  DEFAULT_PLANT_SEARCH_CONTEXT,
 );
 
 export const usePlantSearchContext = () => useContext(PlantSearchContext);

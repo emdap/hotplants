@@ -29,7 +29,7 @@ const ListboxWrapper = ({
 
   const options = useMemo(
     () => defaultOptions.concat(customOptions),
-    [defaultOptions, customOptions]
+    [defaultOptions, customOptions],
   );
 
   const saveCustomOption = () => {
@@ -57,7 +57,7 @@ const ListboxWrapper = ({
       setCustomOptions(
         value.length
           ? customOptions.filter((option) => value.includes(option))
-          : []
+          : [],
       );
     }
     onChange && onChange(value);
@@ -84,7 +84,7 @@ const ListboxWrapper = ({
               <MdArrowDropDown
                 className={classNames(
                   "group pointer-events-none size-4 fill-primary transition-transform",
-                  open && "rotate-180"
+                  open && "rotate-180",
                 )}
                 aria-hidden="true"
               />
@@ -95,16 +95,17 @@ const ListboxWrapper = ({
 
       <ListboxOptions
         anchor="bottom"
+        modal={false}
         transition
         className={classNames(
           "w-(--button-width) rounded-xl border border-none shadow-xs shadow-default-background/50 backdrop-blur-3xl dark:bg-transparent bg-default-background/60  p-1 [--anchor-gap:--spacing(1)] focus:outline-none",
-          "transition duration-100 ease-in data-leave:data-closed:opacity-0 z-20"
+          "transition duration-100 ease-in data-leave:data-closed:opacity-0 z-20",
         )}
       >
         <div
           className={classNames(
             "flex gap-4 items-center pl-6 pr-0.5",
-            options.length && "mb-1 pb-1 border-b border-default-text/20"
+            options.length && "mb-1 pb-1 border-b border-default-text/20",
           )}
         >
           <input

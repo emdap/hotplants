@@ -1,13 +1,12 @@
 import { NetworkStatus } from "@apollo/client";
-import {
-  PlantDataInput,
-  QueryPlantSearchArgs,
-} from "generated/graphql/graphql";
+import { QueryPlantSearchArgs } from "generated/graphql/graphql";
 import { paths } from "generated/schemas/hotplants";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
 
 export type PlantSearchQueryStatus =
   | "READY"
@@ -33,8 +32,8 @@ const hotplantsClient = createClient<paths>({
 });
 
 const usePlantSearchQueries = (
-  plantSearchCriteria: PlantDataInput | null,
-  locationName?: string
+  searchParams: PlantSearchParams | null = null,
+  plantFilters: PlantSearchFilters,
 ) => {
   const [searchStatus, setSearchStatus] =
     useState<PlantSearchQueryStatus>("READY");
@@ -44,23 +43,24 @@ const usePlantSearchQueries = (
   const [pollInterval, setPollInterval] = useState(0);
 
   // #region Queries
-  const hasSearchCriteria = Boolean(
-    plantSearchCriteria && Object.keys(plantSearchCriteria).length
-  );
-
   const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
     pollInterval,
-    skip: !hasSearchCriteria,
+    skip: !searchParams,
     variables: {
       ...DEFAULT_PLANT_SEARCH_GQL_VARS,
-      where: plantSearchCriteria,
+      where: {
+        boundingPolyCoords: searchParams?.boundingPolyCoords,
+        commonName: searchParams?.commonName,
+        scientificName: searchParams?.scientificName,
+        ...plantFilters,
+      },
     },
   });
   const plantSearchData = plantSearchQuery.data?.plantSearch;
 
   const setStatusFromRunningQuery = () =>
     setSearchStatus((prev) =>
-      prev === "SCRAPING_AND_POLLING" ? prev : "CHECKING_STATUS"
+      prev === "SCRAPING_AND_POLLING" ? prev : "CHECKING_STATUS",
     );
 
   useEffect(() => {
@@ -70,27 +70,20 @@ const usePlantSearchQueries = (
   }, [plantSearchQuery.loading, plantSearchQuery.networkStatus]);
 
   const searchRecordQuery = useReactQuery({
-    queryKey: ["search-record", plantSearchCriteria],
+    queryKey: ["search-record", searchParams],
     refetchInterval: pollInterval,
-    enabled: Boolean(
-      hasSearchCriteria &&
-        plantSearchCriteria?.boundingPolyCoords &&
-        locationName
-    ),
+    enabled: Boolean(searchParams),
 
     queryFn: async () => {
       setStatusFromRunningQuery();
 
       const { data } = await hotplantsClient.POST("/plants/getSearchRecord", {
-        body: {
-          locationName: locationName!.trim(),
-          ...plantSearchCriteria!,
-          boundingPolyCoords: plantSearchCriteria!.boundingPolyCoords!,
-        },
+        body: searchParams!,
       });
 
       if (data?.status !== "SCRAPING" && pollInterval) {
         stopPolling();
+        plantSearchQuery.refetch();
       }
 
       return data;
@@ -122,8 +115,8 @@ const usePlantSearchQueries = (
     ],
     enabled: Boolean(
       searchRecordData?.id &&
-        searchRecordData.status === "READY" &&
-        autoScrapesRemaining > 0
+      searchRecordData.status === "READY" &&
+      autoScrapesRemaining > 0,
     ),
 
     queryFn: async () => {
@@ -131,7 +124,7 @@ const usePlantSearchQueries = (
 
       const { data } = await hotplantsClient.GET(
         "/plants/runSearch/{searchRecordId}",
-        { params: { path: { searchRecordId: searchRecordData!.id } } }
+        { params: { path: { searchRecordId: searchRecordData!.id } } },
       );
 
       if (data?.status === "SCRAPING" && !pollInterval) {
@@ -177,7 +170,7 @@ const usePlantSearchQueries = (
     stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
     stopPollingTimeout.current = setTimeout(
       stopPolling,
-      DEFAULT_POLL_INTERVAL * MAX_POLLS
+      DEFAULT_POLL_INTERVAL * MAX_POLLS,
     );
   };
 
@@ -188,7 +181,21 @@ const usePlantSearchQueries = (
       scrapeOccurrencesQuery.error
     ) {
       stopPolling();
-      console.error("TODO: Tell user there was an error :)");
+      const errors = [
+        searchRecordQuery.error,
+        plantSearchQuery.error,
+        scrapeOccurrencesQuery.error,
+      ];
+      console.error(errors);
+
+      toast.error(
+        <>
+          Error(s) occurred while scraping: <br />
+          {errors.flatMap((error, index) =>
+            error?.message ? <div key={index}>{error.message}</div> : [],
+          )}
+        </>,
+      );
     }
   }, [
     searchRecordQuery.error,

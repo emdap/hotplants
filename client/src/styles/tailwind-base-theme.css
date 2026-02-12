@@ -1,7 +1,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant theme-added (&:where(.theme-added, .theme-added *));
 
-@custom-variant small-screen (@media (height < 600px) or (width < 768px));
-@custom-variant big-screen (@media (height >= 600px) and (width >= 768px));
+/* Needs to be kept in sync with generalUtil.ts */
+@custom-variant small-screen (@media (height < 600px) or (width < 1024px));
+@custom-variant big-screen (@media (height >= 600px) and (width >= 1024px));
 
 @theme {
   --font-sans: InterVariable, sans-serif;
@@ -10,14 +12,23 @@
   --color-default-text: #000;
   --color-scrollbar: #ffffff85;
   --color-default-background: #fff;
+
+  --color-primary-faded: #b8a1e0;
   --color-primary: #ad8ce5;
   --color-primary-dark: #a577e3;
+
+  --color-secondary-faded: #d7d7d7;
   --color-secondary: #c7c7c7;
+
+  --color-accent: #8fb7dc;
   --color-accent: #6f97bc;
+
+  --color-light-accent: #92c8f0;
 
   --animate-background-shift: background-shift 40s ease infinite;
 
-  --text-shadow-glow: 0px 0px 4px var(--tw-text-shadow-color, rgb(0 0 0 / 0.1)),
+  --text-shadow-glow:
+    0px 0px 4px var(--tw-text-shadow-color, rgb(0 0 0 / 0.1)),
     0px 0px 6px var(--tw-text-shadow-color, rgb(0 0 0 / 0.1)),
     0px 0px 10px var(--tw-text-shadow-color, rgb(0 0 0 / 0.1));
 
@@ -46,10 +57,18 @@
     @variant dark {
       --color-default-text: #eee;
       --color-default-background: #000;
+
+      --color-primary-faded: #776491;
       --color-primary: #a577e3;
       --color-primary-dark: #5d4995;
+
+      --color-secondary-faded: #5c5c5c;
       --color-secondary: #868686;
-      --color-accent: #3a595f;
+
+      --color-accent-faded: #496d74;
+      --color-accent: #3b7f8c;
+
+      --color-light-accent: #41749b;
     }
   }
 
@@ -60,7 +79,11 @@
       scrollbar-color: var(--color-scrollbar) var(--color-primary-dark);
     }
 
-    @apply small-screen:overflow-visible big-screen:overflow-hidden small-screen:scroll-smooth bg-accent small-screen:stable-scrollbar;
+    &.theme-loaded * {
+      @apply transition-colors;
+    }
+
+    @apply small-screen:overflow-visible big-screen:overflow-hidden  bg-accent small-screen:stable-scrollbar;
   }
 
   body {
@@ -68,9 +91,5 @@
 
     @apply big-screen:h-dvh big-screen:w-dvw big-screen:overflow-auto big-screen:stable-scrollbar;
     @apply scroll-smooth text-default-text;
-
-    * {
-      @apply transition-colors;
-    }
   }
 }

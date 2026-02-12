@@ -14,14 +14,18 @@ type PlantAnimationProps = {
   hasCurrentResults: boolean;
 };
 
-const getDescription = (args: Partial<PlantAnimationProps>) => {
-  if (args.queryStatus === "CHECKING_STATUS") {
+const getDescription = ({
+  queryStatus,
+  hasCurrentResults,
+  isInitialSearch,
+}: Partial<PlantAnimationProps>) => {
+  if (queryStatus === "CHECKING_STATUS") {
     return [0, ""];
-  } else if (args.queryStatus === "SCRAPING_AND_POLLING") {
-    return [1, `Searching for ${args.hasCurrentResults ? "more " : ""}plants`];
-  } else if (args.isInitialSearch) {
-    return [2, "Search for some plants to get started!"];
-  } else if (!args.hasCurrentResults) {
+  } else if (queryStatus === "SCRAPING_AND_POLLING") {
+    return [1, `Searching for ${hasCurrentResults ? "more " : ""}plants`];
+  } else if (!hasCurrentResults && isInitialSearch) {
+    return [2, "Search for a location to get started!"];
+  } else if (!hasCurrentResults) {
     return [3, "No plants found, try adjusting your filters."];
   } else {
     return [4, "End of results"];
@@ -40,7 +44,9 @@ const PlantAnimation = ({
   const Lottie = useLottie({
     name: lottieAnimation,
     animationData: lottieAnimation === "STILL" ? stillPlant : movingPlant,
-    className: "w-[200px] xl:w-[300px] max-h-3/4 transition-opacity",
+    className: classNames("w-[200px] max-h-3/4 transition-opacity", {
+      "xl:w-[300px]": hasCurrentResults,
+    }),
   });
 
   useEffect(() => {
@@ -61,7 +67,7 @@ const PlantAnimation = ({
   }, [queryStatus, Lottie]);
 
   const [descriptionKey, description] = getDescription({
-    queryStatus: queryStatus,
+    queryStatus,
     hasCurrentResults,
     isInitialSearch,
   });
@@ -70,8 +76,8 @@ const PlantAnimation = ({
     <motion.div
       {...MOTION_FADE_IN}
       className={classNames(
-        "grow flex flex-col gap-4 big-screen:gap-10 my-auto items-center justify-center transition-opacity max-h-full big-screen:max-h-[unset] max-lg:pb-20",
-        hasCurrentResults ? "pb-20" : "lg:sticky lg:bottom-0"
+        "grow flex flex-col gap-4 my-auto items-center justify-center transition-opacity",
+        hasCurrentResults ? "big-screen:pb-20" : "lg:sticky lg:bottom-0"
       )}
     >
       {Lottie.View}

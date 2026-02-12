@@ -1,9 +1,19 @@
+import classNames from "classnames";
 import { motion } from "motion/react";
 import { ReactNode } from "react";
 import { MOTION_FADE_IN } from "./motionTransitions";
 
-const PageTitle = ({ children }: { children: ReactNode }) => (
-  <motion.h1 className="px-4 py-6 dark:text-white/80" {...MOTION_FADE_IN}>
+const PageTitle = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => (
+  <motion.h1
+    className={classNames("py-6 dark:text-white/80", className)}
+    {...MOTION_FADE_IN}
+  >
     {children}
   </motion.h1>
 );

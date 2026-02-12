@@ -1,20 +1,25 @@
 import classNames from "classnames";
 import PlantResultsList from "components/plantResults/PlantResultsList";
-import PlantSearchFiltersHolder from "components/plantSearch/PlantSearchFiltersHolder";
 import PlantSearchFooter from "components/plantSearch/PlantSearchFooter";
-import ScrapeStatusBar from "components/plantSearch/ScrapeStatusBar";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
+import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
+import SearchParamsInput from "components/plantSearch/SearchParamsInput";
+import {
+  RESULTS_PANE_ID,
+  usePlantSearchContext,
+} from "contexts/plantSearch/PlantSearchContext";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
+import { useScrollAnchor } from "hooks/useScrollAnchor";
 import { useLayoutEffect, useRef } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
-const RESULTS_PANE_ID = "results-pane";
 
 const PlantSearch = () => {
   const { hasCurrentResults, totalResultsCount, fetchNextPlantsPage } =
     usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
+  const ScrollAnchor = useScrollAnchor();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -39,29 +44,42 @@ const PlantSearch = () => {
   }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
 
   return (
-    <main className="page-wrapper">
-      <PageTitle>Plant Search</PageTitle>
+    <main className="w-full">
+      <PageTitle className="page-buffer">Plant Search</PageTitle>
+      {hasCurrentResults && <PlantSearchHeader />}
 
       <div
         ref={containerRef}
-        className="flex max-lg:flex-col gap-y-6 gap-x-4 2xl:gap-x-12 grow"
+        className={classNames("flex grow", {
+          "small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full":
+            hasCurrentResults,
+          "max-md:flex-col max-md:justify-between page-buffer pb-8 gap-8":
+            !hasCurrentResults,
+        })}
       >
-        <PlantSearchFiltersHolder />
+        {hasCurrentResults ? (
+          <PlantSearchSidebar />
+        ) : (
+          <div className="basis-1/2 max-w-2xl">
+            <SearchParamsInput />
+          </div>
+        )}
+
+        <ScrollAnchor className="scroll-m-header-2" />
 
         <div
           id={RESULTS_PANE_ID}
-          className={classNames(
-            "grow flex flex-col relative scroll-m-header",
-            hasCurrentResults ? "max-lg:basis-2/3 gap-6" : "pb-20s"
-          )}
+          className="grow flex flex-col relative scroll-m-header-2 py-4 big-screen:px-4 max-lg:basis-2/3 gap-6"
         >
-          <ScrapeStatusBar />
-          <PlantResultsList
-            key="results-holder"
-            className={classNames({
-              "max-w-[1000px]": totalResultsCount < 3,
-            })}
-          />
+          {hasCurrentResults && (
+            <PlantResultsList
+              key="results-holder"
+              className={classNames({
+                "max-w-page": totalResultsCount < 3,
+              })}
+            />
+          )}
+
           <PlantSearchFooter key="results-footer" />
         </div>
       </div>

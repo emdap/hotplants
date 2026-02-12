@@ -6,7 +6,7 @@ export const Route = createRootRoute({
   beforeLoad: ({ location }) => {
     if (location.pathname === "/") {
       throw redirect({
-        to: "/search",
+        to: "/plant-search",
         replace: true,
       });
     }

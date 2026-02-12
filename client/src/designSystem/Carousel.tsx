@@ -35,7 +35,7 @@ const Carousel = ({
       next: activeIndex === children.length - 1,
       prev: activeIndex === 0,
     }),
-    [children.length, activeIndex]
+    [children.length, activeIndex],
   );
 
   const iterateCarousel = useCallback(
@@ -53,7 +53,7 @@ const Carousel = ({
         setCarouselIndex && setCarouselIndex(setFn);
       }
     },
-    [disableButtons.next, disableButtons.prev, setCarouselIndex]
+    [disableButtons.next, disableButtons.prev, setCarouselIndex],
   );
 
   useDocumentListener(
@@ -61,12 +61,12 @@ const Carousel = ({
     (e: KeyboardEvent) =>
       ["ArrowLeft", "ArrowRight"].includes(e.key) &&
       iterateCarousel(e.key === "ArrowLeft" ? "prev" : "next"),
-    enableKeyboardEvents
+    enableKeyboardEvents,
   );
 
   const swipeHandlers = useSwipeable({
     onSwipedRight: ({ event }) => {
-      event.stopPropagation();
+      !disableButtons.prev && event.stopPropagation();
       iterateCarousel("prev");
     },
     onSwipedLeft: () => iterateCarousel("next"),
@@ -80,8 +80,8 @@ const Carousel = ({
         childIndex === activeIndex
           ? "0"
           : childIndex < activeIndex
-          ? "-200%"
-          : "200%",
+            ? "-200%"
+            : "200%",
     };
   };
 
@@ -98,7 +98,7 @@ const Carousel = ({
               key={index}
               className={classNames(
                 "transition-all duration-300 absolute top-0 w-full h-full [&_*]:max-h-full flex justify-center items-center rounded-sm",
-                renderChild ? "opacity-100" : "opacity-0"
+                renderChild ? "opacity-100" : "opacity-0",
               )}
               style={{
                 translate,
@@ -115,7 +115,7 @@ const Carousel = ({
           {ITERATE_DIRECTION.map((direction) => (
             <Button
               key={direction}
-              variant="text"
+              variant="text-primary"
               className={classNames({ "text-xl p-4": bigButtons })}
               disabled={disableButtons[direction]}
               onClick={() => iterateCarousel(direction)}

@@ -13,31 +13,33 @@ const PlantResultsList = ({ className }: { className?: string }) => {
   } = usePlantSelectionContext();
 
   return (
-    <div
-      className={classNames(
-        "gap-4 items-stretch grid justify-around grid-cols-[repeat(auto-fit,_minmax(300px,1fr))] pb-20",
-        className
-      )}
-    >
-      <AnimatePresence>
-        {plantList.map(
-          (plant, index) =>
-            plant && (
-              <PlantCard
-                key={`${plant.scientificName}-${index}`}
-                setActive={() => {
-                  setActivePlantIndex(index);
-                  setActiveMediaIndex(0);
-                }}
-                isActive={activePlantIndex === index}
-                {...{ plant, index }}
-              />
-            )
+    <>
+      <div
+        className={classNames(
+          "gap-4 items-stretch grid justify-around grid-cols-[repeat(auto-fit,_minmax(300px,1fr))] pb-20 big-screen:pr-4",
+          className,
         )}
-      </AnimatePresence>
+      >
+        <AnimatePresence>
+          {plantList.map(
+            (plant, index) =>
+              plant && (
+                <PlantCard
+                  key={`${plant.scientificName}-${index}`}
+                  setActive={() => {
+                    setActivePlantIndex(index);
+                    setActiveMediaIndex(0);
+                  }}
+                  isActive={activePlantIndex === index}
+                  {...{ plant, index }}
+                />
+              ),
+          )}
+        </AnimatePresence>
+      </div>
 
       <ActivePlantPane />
-    </div>
+    </>
   );
 };
 

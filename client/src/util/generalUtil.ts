@@ -11,7 +11,7 @@ export type IterateDirection = (typeof ITERATE_DIRECTION)[number];
 
 export const elementInViewport = (
   element: HTMLElement,
-  { xBuffer = 1, yBuffer = 1 }: { xBuffer?: number; yBuffer?: number } = {}
+  { xBuffer = 1, yBuffer = 1 }: { xBuffer?: number; yBuffer?: number } = {},
 ) => {
   const rect = element.getBoundingClientRect();
 
@@ -35,8 +35,27 @@ export const getPlantDisplayName = (plant: PlantResult) => {
   return commonName ? capitalize(commonName) : plant.scientificName;
 };
 
-export const MEDIUM_SCREEN_SIZE = 768;
-const TALL_SCREEN_SIZE = 600;
+export const DEFAULT_DATE_FORMAT = "LLL d, yyyy";
+
+export const BACKGROUND_ANIMATION_ID = "background-animation";
+export const findAnimation = (
+  element: Document | Element | null,
+  animationName: string,
+) =>
+  element
+    ?.getAnimations()
+    .find(
+      (animation) =>
+        animation instanceof CSSAnimation &&
+        animation.effect instanceof KeyframeEffect &&
+        animation.animationName === animationName,
+    );
+
+// Seeing issues with scroll functionalities in Safari
+export const isSafari = /^((?!chrome|android).)*safari/i.test(
+  navigator.userAgent,
+);
+
+// Needs to be kept in sync with tailwind-base-theme.css
 export const isSmallScreen = () =>
-  window.innerWidth < MEDIUM_SCREEN_SIZE ||
-  window.innerHeight < TALL_SCREEN_SIZE;
+  window.innerWidth < 1024 || window.innerHeight < 600;

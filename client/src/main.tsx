@@ -1,8 +1,8 @@
-import { ApolloClient, HttpLink } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
-import { cache } from "config/apolloCacheConfig";
+import { apolloClient } from "config/apolloConfig";
+import DarkModeProvider from "designSystem/darkMode/DarkModeProvider";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { router } from "router";
@@ -12,14 +12,6 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
 });
 
-const apolloClient = new ApolloClient({
-  link: new HttpLink({
-    uri: `${import.meta.env.VITE_SERVER_URL}/graphql`,
-    credentials: "include",
-  }),
-  cache,
-});
-
 const rootElement = document.getElementById("root");
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
@@ -27,9 +19,11 @@ if (rootElement && !rootElement.innerHTML) {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <ApolloProvider client={apolloClient}>
-          <RouterProvider router={router} />
+          <DarkModeProvider>
+            <RouterProvider router={router} />
+          </DarkModeProvider>
         </ApolloProvider>
       </QueryClientProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 }

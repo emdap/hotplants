@@ -22,7 +22,7 @@ const SignupForm = ({
 
   const formComplete = useMemo(
     () => Object.values(userInfo).every((val) => val.length),
-    [userInfo]
+    [userInfo],
   );
 
   const createUser = async () => {
@@ -30,7 +30,10 @@ const SignupForm = ({
     if (error) {
       window.alert(error.message);
     } else {
-      navigate({ to: "/search", replace: true });
+      navigate({
+        to: "/plant-search",
+        replace: true,
+      });
     }
   };
 
@@ -67,7 +70,7 @@ const SignupForm = ({
         Create Account
       </AuthLoadingSubmitButton>
       <Button
-        variant="text"
+        variant="text-primary"
         className="ml-auto max-md:mt-8"
         onClick={handleClickExistingAccount}
       >

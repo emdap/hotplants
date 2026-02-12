@@ -2,15 +2,29 @@ import { graphql } from "generated/graphql";
 import { GetAllSearchRecordsQuery } from "generated/graphql/graphql";
 
 export const GET_ALL_SEARCH_RECORDS = graphql(`
-  query getAllSearchRecords {
-    allSearchRecords {
+  query getAllSearchRecords(
+    $sort: [SearchRecordSortInput!]
+    $limit: Int
+    $offset: Int
+    $booleanFilter: [SearchRecordBooleanFilterInput!]
+    $stringFilter: [SearchRecordStringFilterInput!]
+  ) {
+    allSearchRecords(
+      sort: $sort
+      limit: $limit
+      offset: $offset
+      booleanFilter: $booleanFilter
+      stringFilter: $stringFilter
+    ) {
       count
       results {
+        _id
         createdTimestamp
         status
         statusUpdatedTimestamp
 
         locationName
+        locationSource
         boundingPolyCoords
         scientificName
         commonName
@@ -18,6 +32,15 @@ export const GET_ALL_SEARCH_RECORDS = graphql(`
         totalOccurrences
         occurrencesOffset
       }
+    }
+  }
+`);
+
+export const GET_SEARCH_RECORD_PLANT_COUNT = graphql(`
+  query getSearchRecordDataCounts($id: String!) {
+    searchRecordDataCounts(id: $id) {
+      plantCount
+      occurrenceCount
     }
   }
 `);

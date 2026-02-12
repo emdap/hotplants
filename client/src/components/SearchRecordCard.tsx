@@ -1,46 +1,152 @@
-import { polygon } from "@turf/turf";
+import { useNavigate } from "@tanstack/react-router";
+import { format } from "date-fns";
 import Card from "designSystem/Card";
-import { SearchRecordResult } from "graphqlHelpers/searchRecordQueries";
-import { useMemo } from "react";
+import LoadingIcon from "designSystem/LoadingIcon";
+import { MOTION_FADE_IN } from "designSystem/motionTransitions";
+import ProgressBar from "designSystem/ProgressBar";
+import {
+  GET_SEARCH_RECORD_PLANT_COUNT,
+  SearchRecordResult,
+} from "graphqlHelpers/searchRecordQueries";
+import { useApolloQuery } from "hooks/useQuery";
+import { ReactNode, useMemo } from "react";
+import { MdDoubleArrow } from "react-icons/md";
+import { DEFAULT_DATE_FORMAT } from "util/generalUtil";
+import { customLocationDisplay } from "util/locationUtil";
 import MapProvider from "./interactiveMap/MapProvider";
+import { OPTIONAL_SEARCH_PARAM_FILTERS } from "./plantFilters/filterFixtures";
 
 const SearchRecordCard = ({
-  searchRecord: {
-    locationName,
-    totalOccurrences,
-    occurrencesOffset,
-    boundingPolyCoords,
-  },
-}: {
-  searchRecord: SearchRecordResult;
-}) => {
+  _id,
+  occurrencesOffset,
+  totalOccurrences,
+  ...searchParams
+}: SearchRecordResult) => {
+  const navigate = useNavigate();
+
+  const { data: { searchRecordDataCounts } = {}, loading: plantCountLoading } =
+    useApolloQuery(GET_SEARCH_RECORD_PLANT_COUNT, {
+      variables: { id: _id },
+    });
+
+  const maxPlantCounts = useMemo(() => {
+    const actualOccurrences = searchRecordDataCounts?.occurrenceCount ?? 0;
+
+    return {
+      total: Math.max(actualOccurrences, totalOccurrences),
+      offset: Math.max(actualOccurrences, occurrencesOffset),
+    };
+  }, [searchRecordDataCounts, totalOccurrences, occurrencesOffset]);
+
   const { title, subTitle } = useMemo(() => {
-    const splitName = locationName.split(", ");
+    if (searchParams.locationSource === "custom") {
+      return { title: customLocationDisplay(searchParams) };
+    }
+
+    const splitName = searchParams.locationName.split(", ");
     return {
       title: splitName[0],
       subTitle: splitName.slice(1).join(", "),
     };
-  }, [locationName]);
+  }, [searchParams]);
+
+  const openSearchRecord = async () => {
+    await navigate({
+      to: ".",
+      search: { lastOpened: _id },
+      replace: true,
+    });
+    navigate({
+      to: "/plant-search",
+      search: { search: searchParams, filters: {}, page: 1 },
+    });
+  };
 
   return (
-    <Card>
-      <h2>{title}</h2>
-      <h4>{subTitle}</h4>
-      <div className="flex gap-4">
-        <MapProvider
-          className="h-60 w-xs"
-          searchLocation={{
-            locationSource: "search",
-            displayName: locationName,
-            boundingPolygon: polygon(boundingPolyCoords),
-          }}
-        />
-        <p>
-          {occurrencesOffset} / {totalOccurrences}
-        </p>
+    <Card
+      id={_id}
+      className="flex flex-col gap-4 text-sm scroll-m-header-2"
+      {...MOTION_FADE_IN}
+    >
+      <div
+        className="border-b border-transparent hover:border-default-text/80 cursor-pointer pb-0.5 flex gap-4 justify-between items-center"
+        onClick={openSearchRecord}
+      >
+        <span>
+          <h2>{title}</h2>
+          <h4>{subTitle}</h4>
+        </span>
+        <MdDoubleArrow size={24} className="ml-auto shrink-0" />
+      </div>
+
+      <div className="flex flex-wrap gap-x-8 gap-y-4">
+        <MapProvider className="h-60 w-xs grow" searchParams={searchParams} />
+        <div className="flex flex-col gap-4 [&_div]:space-y-0.5 grow">
+          <div>
+            <InfoRow
+              title="Unique plants found in area"
+              value={
+                plantCountLoading ? (
+                  <LoadingIcon />
+                ) : (
+                  searchRecordDataCounts?.plantCount
+                )
+              }
+            />
+
+            {OPTIONAL_SEARCH_PARAM_FILTERS.map(({ plantDataKey, label }) => (
+              <InfoRow
+                key={plantDataKey}
+                title={label}
+                value={
+                  searchParams[plantDataKey] ?? (
+                    <span className="italic font-normal">N/A</span>
+                  )
+                }
+              />
+            ))}
+          </div>
+
+          <div className="mt-auto">
+            <InfoRow
+              title="Search created"
+              value={format(searchParams.createdTimestamp, DEFAULT_DATE_FORMAT)}
+            />
+            <InfoRow
+              title="Search last ran"
+              value={
+                searchParams.statusUpdatedTimestamp
+                  ? format(
+                      searchParams.statusUpdatedTimestamp,
+                      DEFAULT_DATE_FORMAT,
+                    )
+                  : "N/A"
+              }
+            />
+            <InfoRow title="Status" value={searchParams.status} />
+          </div>
+          <ProgressBar
+            className="mt-auto w-full"
+            title="Scraping progress"
+            unitTitle="Plant Occurrences"
+            isLoading={plantCountLoading}
+            amount={maxPlantCounts.offset}
+            total={maxPlantCounts.total}
+            isError={
+              searchParams.status === "COMPLETE" && maxPlantCounts?.total === 0
+            }
+          />
+        </div>
       </div>
     </Card>
   );
 };
+
+const InfoRow = ({ title, value }: { title: string; value: ReactNode }) => (
+  <div className="grid grid-cols-2 items-center">
+    <span>{title}</span>
+    <strong className="inline-block">{value}</strong>
+  </div>
+);
 
 export default SearchRecordCard;

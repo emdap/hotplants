@@ -62,7 +62,10 @@ const ImageWrapper = ({
         className={classNames(
           imageClass,
 
-          ["transition-opacity", isLoaded ? "opacity-100" : "opacity-0"]
+          [
+            "transition-opacity duration-300",
+            isLoaded ? "opacity-100" : "opacity-0",
+          ]
         )}
         onLoad={() => setIsLoaded(true)}
         onError={handleLoadError}

@@ -1,6 +1,7 @@
 import { useAuthSession } from "config/authClient";
 import Button, { ButtonProps } from "designSystem/Button";
 import { MouseEvent, useState } from "react";
+import { defaultErrorToast } from "util/toastUtil";
 
 const AuthLoadingSubmitButton = <T extends object | void>({
   onClick,
@@ -17,9 +18,9 @@ const AuthLoadingSubmitButton = <T extends object | void>({
     setLoading(true);
     try {
       await onClick(e);
-    } catch (e) {
-      console.error(e);
-      // TODO: Add error toast :)
+    } catch (error) {
+      console.error(error);
+      defaultErrorToast();
     }
     setLoading(false);
   };

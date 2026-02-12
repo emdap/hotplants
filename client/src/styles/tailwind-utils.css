@@ -36,29 +36,38 @@
 }
 
 @theme {
-  --height-header: --spacing(10);
+  --spacing-header: --spacing(10);
+  --spacing-safe-right: env(safe-area-inset-right);
+  --spacing-safe-left: env(safe-area-inset-left);
+  --max-width-page: 1500px;
 }
 
-@utility h-header {
-  height: var(--height-header);
-  min-height: var(--height-header);
+@utility border-header {
+  @apply border-white/10;
 }
 
-@utility w-header {
-  width: var(--height-header);
-  min-width: var(--height-header);
+@utility bg-header {
+  @apply bg-fixed bg-top pretty-background border-b;
 }
 
-@utility top-header {
-  top: var(--height-header);
+@utility top-header-* {
+  top: calc(var(--spacing-header) * --value(integer));
 }
 
-@utility scroll-m-header {
-  scroll-margin: var(--height-header);
+@utility grid-centered {
+  @apply grid grid-cols-[1fr_auto_1fr];
+}
+
+@utility scroll-m-header-* {
+  scroll-margin: calc(var(--spacing-header) * --value(integer));
 }
 
 @utility h-dvh-header {
-  height: calc(100dvh - var(--height-header));
+  height: calc(100dvh - var(--spacing-header));
+}
+
+@utility h-dvh-header-* {
+  height: calc(100dvh - (var(--spacing-header)) * --value(integer));
 }
 
 @utility stable-scrollbar {
@@ -72,13 +81,26 @@
   @apply focus-visible:outline-offset-2 focus-visible:outline-2 focus:outline-offset-2 focus:outline-2 [button]:m-1;
 }
 
-@utility px-safe-* {
-  padding-right: max(--spacing(--value(integer)), env(safe-area-inset-right));
-  padding-left: max(--spacing(--value(integer)), env(safe-area-inset-left));
+@utility pl-safe-* {
+  padding-left: max(--spacing(--value(integer)), var(--spacing-safe-left));
 }
 
-@utility page-wrapper {
-  @apply w-full px-safe-2 big-screen:px-8;
+@utility pr-safe-* {
+  padding-right: max(--spacing(--value(integer)), var(--spacing-safe-right));
+}
+
+@utility px-safe-* {
+  padding-right: max(--spacing(--value(integer)), var(--spacing-safe-right));
+  padding-left: max(--spacing(--value(integer)), var(--spacing-safe-left));
+}
+
+@utility mx-safe-* {
+  margin-right: max(--spacing(--value(integer)), var(--spacing-safe-right));
+  margin-left: max(--spacing(--value(integer)), var(--spacing-safe-left));
+}
+
+@utility page-buffer {
+  @apply w-full px-safe-4 lg:px-safe-6;
 }
 
 @utility card {

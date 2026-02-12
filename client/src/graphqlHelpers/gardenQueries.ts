@@ -1,14 +1,12 @@
 import { graphql } from "generated/graphql";
 
-const _GARDEN_PLANT_FIELDS = graphql(
-  `
-    fragment GardenPlantFields on GardenPlantData {
-      addedTimestamp
-      customThumbnailUrl
-      ...PlantFields
-    }
-  `
-);
+const _GARDEN_PLANT_FIELDS = graphql(`
+  fragment GardenPlantFields on GardenPlantData {
+    addedTimestamp
+    customThumbnailUrl
+    ...PlantFields
+  }
+`);
 
 export const GET_ALL_GARDEN_NAMES = graphql(`
   query getAllGardens {
@@ -40,6 +38,8 @@ export const CREATE_GARDEN = graphql(`
 
 export const ADD_PLANT_TO_GARDEN = graphql(`
   mutation addPlant($plantId: String!, $gardenName: String) {
-    addToGarden(plantId: $plantId, gardenName: $gardenName)
+    addToGarden(plantId: $plantId, gardenName: $gardenName) {
+      gardenName
+    }
   }
 `);
