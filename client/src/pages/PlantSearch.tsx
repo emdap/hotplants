@@ -24,7 +24,7 @@ const PlantSearch = () => {
     totalResultsCount,
     isInfiniteScroll,
     searchStatus,
-    plantSearchQuery,
+    plantSearchQuery: { loading },
     searchRecordQuery: { dataUpdatedAt },
     fetchMorePlants,
   } = usePlantSearchContext();
@@ -76,14 +76,17 @@ const PlantSearch = () => {
         })}
       >
         {hasCurrentResults ? (
-          <PlantSearchSidebar />
+          <>
+            <PlantSearchSidebar />
+            <ScrollAnchor className="scroll-m-header-2" />
+          </>
         ) : (
-          <div className="basis-1/2 max-w-2xl">
-            <SearchParamsInput />
-          </div>
+          !loading && (
+            <div className="basis-1/2 max-w-2xl min-w-md max-md:min-w-full">
+              <SearchParamsInput />
+            </div>
+          )
         )}
-
-        {hasCurrentResults && <ScrollAnchor className="scroll-m-header-2" />}
 
         <div
           id={RESULTS_PANE_ID}
@@ -101,7 +104,7 @@ const PlantSearch = () => {
 
           <LoadingOverlay
             transparent
-            show={!isInfiniteScroll && plantSearchQuery.loading}
+            show={(!isInfiniteScroll || !hasCurrentResults) && loading}
             className="h-screen animate-pulse opacity-50"
           />
 

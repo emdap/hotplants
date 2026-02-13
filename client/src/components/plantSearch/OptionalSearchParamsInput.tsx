@@ -71,7 +71,7 @@ const OptionalSearchParamsInput = () => {
       </h2>
 
       {isExpanded && (
-        <div className="mt-2">
+        <div className="my-3">
           {OPTIONAL_SEARCH_PARAM_FILTERS.map((filter, index) => (
             <Fragment key={index}>
               <FilterInputField
