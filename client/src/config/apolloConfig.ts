@@ -14,14 +14,18 @@ import {
 const mergePlantSearch: FieldMergeFunction<
   PlantSearchQueryResults,
   PlantSearchQueryResults,
-  FieldFunctionOptions<SearchPlantsQueryVariables, SearchPlantsQueryVariables>
+  FieldFunctionOptions<
+    SearchPlantsQueryVariables,
+    SearchPlantsQueryVariables & { paginated?: boolean }
+  >
 > = (existing, incoming, { variables }) => {
-  const count = incoming.count;
-  const baseResults =
-    variables?.offset && existing?.results ? existing.results : [];
+  if (!existing?.results || !variables?.offset) {
+    return incoming;
+  }
+
   return {
-    count,
-    results: baseResults.concat(incoming.results),
+    count: incoming.count,
+    results: existing.results.concat(incoming.results),
   };
 };
 
@@ -38,7 +42,10 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         plantSearch: {
-          keyArgs: ["where", "sort"],
+          keyArgs: (_args, { variables }) =>
+            variables?.paginated
+              ? ["offset", "limit", "where", "sort"]
+              : ["where", "sort"],
           merge: mergePlantSearch,
         },
       },
