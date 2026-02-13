@@ -79,8 +79,12 @@
       scrollbar-color: var(--color-scrollbar) var(--color-primary-dark);
     }
 
-    &.theme-loaded * {
-      @apply transition-colors;
+    &.theme-loaded {
+      .card,
+      .pretty-background,
+      header {
+        @apply transition-colors;
+      }
     }
 
     @apply small-screen:overflow-visible big-screen:overflow-hidden  bg-accent small-screen:stable-scrollbar;

@@ -31,20 +31,20 @@ const SearchParamsInput = () => {
   return (
     <form
       onSubmit={submitLocation}
-      className="h-full flex flex-col gap-4 overflow-auto pb-4 [&_.card]:pt-4"
+      className="h-full flex flex-col gap-4 overflow-auto pb-4"
     >
       <LocationParamsInput setLocationPending={setLocationPending} />
       <OptionalSearchParamsInput />
 
       {(hasCurrentResults || searchParamsDraft) && (
         <Button
-          className="small-screen:mt-auto!"
+          className="small-screen:mt-auto! "
           disabled={disableSubmit}
           isLoading={searchStatus !== "READY"}
           type="submit"
           variant="primary"
         >
-          <span className="z-1">Search</span>
+          Search
         </Button>
       )}
     </form>

@@ -1,16 +1,14 @@
 import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
+import Button from "designSystem/Button";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
+import StyledSwitch, { StyledSwitchProps } from "designSystem/StyledSwitch";
+import VerticalDivider from "designSystem/VerticalDivider";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { SMALL_SCREEN_WIDTH } from "util/generalUtil";
 import { PaginationParams } from "util/routeParamsUtil";
-import Button from "../Button";
-import VerticalDivider from "../VerticalDivider";
-import InfiniteScrollToggle, {
-  InfiniteScrollToggleProps,
-} from "./InfiniteScrollToggle";
 import PaginationPopover from "./PaginationPopover";
 import PaginatorDropdown from "./PaginatorDropdown";
 
@@ -21,7 +19,7 @@ type PaginationControlProps = {
   pageSize?: number;
   pageSizeOptions?: number[];
   replaceUrl?: boolean;
-  infiniteScroll?: InfiniteScrollToggleProps;
+  infiniteScroll?: Pick<StyledSwitchProps, "enabled" | "setEnabled">;
   className?: string;
 };
 
@@ -38,8 +36,10 @@ export const PaginationControl = ({
   const navigate = useNavigate();
 
   const bigScreenWidth = window.innerWidth >= SMALL_SCREEN_WIDTH;
-
   const lastPage = Math.ceil(totalResults / pageSize);
+  const infiniteScrollSwitch = infiniteScroll
+    ? { ...infiniteScroll, label: "Infinite Scroll" }
+    : null;
 
   const pageList = useMemo(
     () => new Array(lastPage).fill(0).map((_, index) => index + 1),
@@ -77,8 +77,8 @@ export const PaginationControl = ({
         key={infiniteScroll?.enabled ? "infinite" : "paginate"}
         {...MOTION_FADE_IN}
       >
-        {infiniteScroll?.enabled ? (
-          bigScreenWidth && <InfiniteScrollToggle {...infiniteScroll} />
+        {infiniteScrollSwitch?.enabled ? (
+          bigScreenWidth && <StyledSwitch {...infiniteScrollSwitch} />
         ) : (
           <div className="flex gap-1 items-center">
             <Button
@@ -125,7 +125,7 @@ export const PaginationControl = ({
               onChange={recalcPage}
             />
           )}
-          {infiniteScroll && <InfiniteScrollToggle {...infiniteScroll} />}
+          {infiniteScrollSwitch && <StyledSwitch {...infiniteScrollSwitch} />}
         </PaginationPopover>
       )}
     </div>

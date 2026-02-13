@@ -57,7 +57,7 @@ const OptionalSearchParamsInput = () => {
     <Card className="space-y-2">
       <h2
         onClick={() => setIsExpanded(!isExpanded)}
-        className="cursor-pointer flex justify-between items-center -mr-4 -mb-2"
+        className="cursor-pointer flex justify-between items-center -mr-3"
       >
         Plant name (optional)
         <Button type="button" size="small" variant="icon-white">
