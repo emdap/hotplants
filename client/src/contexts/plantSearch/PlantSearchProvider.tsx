@@ -16,7 +16,7 @@ import { isSmallScreen } from "util/generalUtil";
 const route = getRouteApi("/plant-search");
 
 const PlantSearchProvider = () => {
-  const [isInfiniteScroll, setIsInfiniteScroll] = useState(!isSmallScreen());
+  const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
 
   const navigate = useNavigate();
 

@@ -87,7 +87,7 @@ const PaginatorDropdownItems = ({
         <MenuItem key={option}>
           <div
             className={classNames(
-              "w-6 min-w-max px-1 rounded-md text-center cursor-pointer",
+              "w-6 min-w-max px-1 rounded-md text-center cursor-pointer scroll-m-8",
               option === selected
                 ? "active-page-button bg-primary text-white"
                 : "data-focus:bg-primary/50",
