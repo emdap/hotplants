@@ -1,5 +1,5 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
-import PlantResultsList from "components/plantResults/PlantResultsList";
+import PlantList from "components/plantResults/PlantList";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
@@ -73,7 +73,7 @@ const UserGardens = () => {
         <PlantSelectionProvider
           plantList={getGardenQuery.data?.userGarden?.plants ?? []}
         >
-          <PlantResultsList />
+          <PlantList />
         </PlantSelectionProvider>
       ) : allUserGardens?.length ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
