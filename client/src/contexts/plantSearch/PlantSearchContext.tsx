@@ -37,7 +37,10 @@ export type PlantSearchContextType = {
 
   sidebarExpanded: boolean;
   setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
-} & Pick<PlantSearchQueriesReturnType, "searchRecordQuery">;
+} & Pick<
+  PlantSearchQueriesReturnType,
+  "searchRecordQuery" | "plantSearchQuery"
+>;
 
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   hasCurrentResults: false,
@@ -60,8 +63,9 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   applyPlantFilters: VOID_FUNCTION,
 
   searchStatus: "READY",
-  searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
   hasMoreData: false,
+  searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
+  plantSearchQuery: {} as PlantSearchQueriesReturnType["plantSearchQuery"],
   fetchMorePlants: VOID_PROMISE_FUNCTION,
 
   sidebarExpanded: !isSmallScreen(),

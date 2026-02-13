@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import Card from "designSystem/Card";
-import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useEffect, useRef } from "react";
@@ -28,7 +27,7 @@ const PlantCard = ({
 
   return (
     <Card
-      {...MOTION_FADE_IN}
+      // {...MOTION_FADE_IN}
       ref={plantCardRef}
       id={plant.scientificName}
       onClick={setActive}

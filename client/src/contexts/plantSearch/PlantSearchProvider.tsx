@@ -152,15 +152,20 @@ const PlantSearchProvider = () => {
 
         searchStatus,
         hasMoreData: Boolean(unfetchedPlants),
-        fetchMorePlants,
         searchRecordQuery,
+        plantSearchQuery,
+        fetchMorePlants,
 
         sidebarExpanded,
         setSidebarExpanded,
       }}
     >
       <PlantSelectionProvider
-        plantList={plantSearchData?.results ?? []}
+        plantList={
+          (isInfiniteScroll
+            ? plantSearchData?.results
+            : plantSearchQuery.data?.plantSearch.results) ?? []
+        }
         boundingPolygon={searchParams?.boundingPolyCoords}
       >
         <PlantSearch />

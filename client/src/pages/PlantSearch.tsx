@@ -9,6 +9,7 @@ import {
   usePlantSearchContext,
 } from "contexts/plantSearch/PlantSearchContext";
 import LoadingIcon from "designSystem/LoadingIcon";
+import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
@@ -23,6 +24,7 @@ const PlantSearch = () => {
     totalResultsCount,
     isInfiniteScroll,
     searchStatus,
+    plantSearchQuery,
     searchRecordQuery: { dataUpdatedAt },
     fetchMorePlants,
   } = usePlantSearchContext();
@@ -58,7 +60,7 @@ const PlantSearch = () => {
   ]);
 
   return (
-    <main className="w-full h-full pb-6">
+    <main className="w-full h-full">
       {!hasCurrentResults && <ScrollAnchor className="scroll-m-header-2" />}
 
       <PageTitle className="page-buffer">Plant Search</PageTitle>
@@ -85,7 +87,7 @@ const PlantSearch = () => {
 
         <div
           id={RESULTS_PANE_ID}
-          className="grow flex flex-col relative scroll-m-header-2 py-4 big-screen:px-4 max-lg:basis-2/3 gap-6"
+          className="grow flex flex-col relative scroll-m-header-2 pt-4 pb-10 big-screen:px-4 max-lg:basis-2/3 gap-6"
         >
           {hasCurrentResults && (
             <PlantList
@@ -96,6 +98,13 @@ const PlantSearch = () => {
               })}
             />
           )}
+
+          <LoadingOverlay
+            debounceShow
+            transparent
+            show={!isInfiniteScroll && plantSearchQuery.loading}
+            className="h-screen animate-pulse opacity-50"
+          />
 
           {isInfiniteScroll &&
           hasMoreData &&
