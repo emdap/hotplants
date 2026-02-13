@@ -24,7 +24,7 @@ const getDescription = ({
   } else if (queryStatus === "SCRAPING_AND_POLLING") {
     return [1, `Searching for ${hasCurrentResults ? "more " : ""}plants`];
   } else if (!hasCurrentResults && isInitialSearch) {
-    return [2, "Add a location to get started!"];
+    return [2, "Set a location to get started!"];
   } else if (!hasCurrentResults) {
     return [3, "No plants found, try adjusting your filters."];
   } else {
