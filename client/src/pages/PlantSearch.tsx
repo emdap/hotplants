@@ -100,7 +100,6 @@ const PlantSearch = () => {
           )}
 
           <LoadingOverlay
-            debounceShow
             transparent
             show={!isInfiniteScroll && plantSearchQuery.loading}
             className="h-screen animate-pulse opacity-50"

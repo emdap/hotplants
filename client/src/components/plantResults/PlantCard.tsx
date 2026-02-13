@@ -27,7 +27,6 @@ const PlantCard = ({
 
   return (
     <Card
-      // {...MOTION_FADE_IN}
       ref={plantCardRef}
       id={plant.scientificName}
       onClick={setActive}

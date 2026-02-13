@@ -104,6 +104,7 @@ const PlantSearchProvider = () => {
 
   const fetchMorePlants = async () => {
     if (
+      !isInfiniteScroll ||
       !plantSearchData?.results ||
       plantSearchQuery.networkStatus === NetworkStatus.fetchMore
     ) {
@@ -151,7 +152,11 @@ const PlantSearchProvider = () => {
         applyPlantFilters,
 
         searchStatus,
-        hasMoreData: Boolean(unfetchedPlants),
+        hasMoreData: Boolean(
+          isInfiniteScroll
+            ? unfetchedPlants
+            : plantSearchData && plantSearchData?.count / pageSize > page,
+        ),
         searchRecordQuery,
         plantSearchQuery,
         fetchMorePlants,
