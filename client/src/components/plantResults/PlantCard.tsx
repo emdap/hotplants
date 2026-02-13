@@ -1,8 +1,7 @@
 import classNames from "classnames";
 import Card from "designSystem/Card";
-import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
+import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlHelpers/plantQueries";
-import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useEffect, useRef } from "react";
 import PlantOccurrenceImage from "../plantImages/PlantOccurrenceImage";
@@ -10,12 +9,10 @@ import PlantCardHeader from "./PlantCardHeader";
 
 const PlantCard = ({
   plant,
-  index,
   isActive,
   setActive,
 }: {
   plant: PlantResult;
-  index: number;
   isActive: boolean;
   setActive: () => void;
 }) => {
@@ -31,8 +28,7 @@ const PlantCard = ({
 
   return (
     <Card
-      {...MOTION_FADE_SLIDE}
-      transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.03 }}
+      {...MOTION_FADE_IN}
       ref={plantCardRef}
       id={plant.scientificName}
       onClick={setActive}
