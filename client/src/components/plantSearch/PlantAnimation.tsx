@@ -24,7 +24,7 @@ const getDescription = ({
   } else if (queryStatus === "SCRAPING_AND_POLLING") {
     return [1, `Searching for ${hasCurrentResults ? "more " : ""}plants`];
   } else if (!hasCurrentResults && isInitialSearch) {
-    return [2, "Search for a location to get started!"];
+    return [2, "Add a location to get started!"];
   } else if (!hasCurrentResults) {
     return [3, "No plants found, try adjusting your filters."];
   } else {
@@ -38,7 +38,7 @@ const PlantAnimation = ({
   hasCurrentResults,
 }: PlantAnimationProps) => {
   const [lottieAnimation, setLottieAnimation] = useState<"STILL" | "MOVING">(
-    "STILL"
+    "STILL",
   );
 
   const Lottie = useLottie({
@@ -77,7 +77,7 @@ const PlantAnimation = ({
       {...MOTION_FADE_IN}
       className={classNames(
         "grow flex flex-col gap-4 my-auto items-center justify-center transition-opacity",
-        hasCurrentResults ? "big-screen:pb-20" : "lg:sticky lg:bottom-0"
+        hasCurrentResults ? "big-screen:pb-20" : "lg:sticky lg:bottom-0",
       )}
     >
       {Lottie.View}
@@ -86,7 +86,7 @@ const PlantAnimation = ({
         {...MOTION_FADE_IN}
         className={classNames(
           "text-white text-center px-4 text-base big-screen:text-lg min-h-fit",
-          lottieAnimation === "MOVING" && "animate-pulse"
+          lottieAnimation === "MOVING" && "animate-pulse",
         )}
       >
         {description || <LoadingIcon />}
