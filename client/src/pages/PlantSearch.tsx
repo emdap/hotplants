@@ -26,6 +26,7 @@ const PlantSearch = () => {
     searchStatus,
     plantSearchQuery: { loading },
     searchRecordQuery: { dataUpdatedAt },
+    sidebarExpanded,
     fetchMorePlants,
   } = usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
@@ -95,6 +96,7 @@ const PlantSearch = () => {
           {hasCurrentResults && (
             <PlantList
               key="results-holder"
+              parentSidebarExpanded={sidebarExpanded}
               className={classNames({
                 "max-w-page": totalResultsCount < 3,
                 "pb-20": isInfiniteScroll,
