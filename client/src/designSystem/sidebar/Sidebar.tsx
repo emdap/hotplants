@@ -7,7 +7,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 
-export type SidebarProps = {
+type SidebarProps = {
   isExpanded?: boolean;
   setIsExpanded?: (expanded: boolean) => void;
   externalCollapseButton?: boolean;

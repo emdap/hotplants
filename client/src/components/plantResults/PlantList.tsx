@@ -15,7 +15,7 @@ const PlantList = ({ className }: { className?: string }) => {
     <>
       <div
         className={classNames(
-          "gap-4 items-stretch grid justify-around grid-cols-[repeat(auto-fit,_minmax(300px,1fr))] big-screen:pr-4",
+          "gap-4 items-stretch grid justify-around grid-cols-[repeat(auto-fit,_minmax(300px,1fr))]",
           className,
         )}
       >

@@ -1,7 +1,8 @@
 import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import classNames from "classnames";
+import { useSidebarContext } from "contexts/sidebar/SidebarContext";
 import Button from "designSystem/Button";
-import Sidebar, { SidebarProps } from "designSystem/sidebar/Sidebar";
+import Sidebar from "designSystem/sidebar/Sidebar";
 import { IconType } from "react-icons/lib";
 import { MdOutlineSearch, MdOutlineYoutubeSearchedFor } from "react-icons/md";
 import { TbPlant2 } from "react-icons/tb";
@@ -29,8 +30,9 @@ const SIDEBAR_ITEMS: SidebarNavItem[] = [
   },
 ];
 
-const AppSidebar = (props: SidebarProps) => {
+const AppSidebar = () => {
   const location = useLocation();
+  const { sidebarExpanded, setSidebarExpanded } = useSidebarContext();
 
   const isActiveLink = (link: LinkProps) =>
     link.params
@@ -41,14 +43,15 @@ const AppSidebar = (props: SidebarProps) => {
 
   return (
     <Sidebar
-      {...props}
-      className={(isExpanded) =>
+      isExpanded={sidebarExpanded}
+      setIsExpanded={setSidebarExpanded}
+      className={(sidebarExpanded) =>
         classNames(
           "[&_*]:text-white! border-r sticky top-header pb-3",
           "small-screen:bg-primary-dark small-screen:w-xs",
           "big-screen:h-dvh-header big-screen:border-r small-screen:border-none",
           {
-            "big-screen:min-w-[300px] big-screen:w-[300px]": isExpanded,
+            "big-screen:min-w-[300px] big-screen:w-[300px]": sidebarExpanded,
           },
         )
       }

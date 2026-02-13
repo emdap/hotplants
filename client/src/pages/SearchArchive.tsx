@@ -51,7 +51,7 @@ const SearchArchive = () => {
       <ScrollAnchor className="scroll-m-header" />
       <FloatingHeader
         id="test-header"
-        className="-mx-2 flex gap-2 items-center justify-between"
+        className="-mx-6 px-6 flex gap-2 items-center justify-between"
       >
         {pluralize("Search", searchRecordCount, true)}
         <PaginationControl
