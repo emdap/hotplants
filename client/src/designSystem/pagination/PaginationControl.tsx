@@ -71,7 +71,7 @@ export const PaginationControl = ({
   );
 
   return (
-    <div className="h-7.5 text-sm flex">
+    <div className="h-7.5 text-sm flex gap-2">
       <motion.div
         className={classNames("flex items-center gap-2", className)}
         key={infiniteScroll?.enabled ? "infinite" : "paginate"}
