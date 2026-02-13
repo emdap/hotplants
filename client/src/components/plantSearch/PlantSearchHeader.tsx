@@ -27,7 +27,7 @@ const PlantSearchHeader = () => {
 
       <div className="small-screen:text-default-text flex items-center gap-1 col-start-2">
         {pluralize("Plant", totalResultsCount, true)}
-        {searchStatus !== "READY" && <LoadingIcon />}
+        {searchStatus === "SCRAPING_AND_POLLING" && <LoadingIcon />}
       </div>
 
       <PaginationControl
