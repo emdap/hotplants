@@ -35,7 +35,11 @@ const hotplantsClient = createClient<paths>({
 const usePlantSearchQueries = (
   searchParams: PlantSearchParams | null = null,
   plantFilters: PlantSearchFilters,
-  paginationParams?: Required<PaginationParams>,
+  {
+    paginationEnabled,
+    page,
+    pageSize,
+  }: Required<PaginationParams> & { paginationEnabled: boolean },
 ) => {
   const [searchStatus, setSearchStatus] =
     useState<PlantSearchQueryStatus>("READY");
@@ -47,19 +51,20 @@ const usePlantSearchQueries = (
   // #region Queries
   const paginationVars = useMemo(
     () =>
-      paginationParams
+      paginationEnabled
         ? {
-            limit: paginationParams.pageSize,
-            offset: (paginationParams.page - 1) * paginationParams.pageSize,
+            paginated: true,
+            limit: pageSize,
+            offset: (page - 1) * pageSize,
           }
         : null,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [paginationParams?.pageSize, paginationParams?.page],
+    [paginationEnabled, pageSize, page],
   );
 
   const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
     pollInterval,
     skip: !searchParams,
+
     variables: {
       ...DEFAULT_PLANT_SEARCH_GQL_VARS,
       ...paginationVars,
@@ -74,10 +79,10 @@ const usePlantSearchQueries = (
   });
   const plantSearchData = plantSearchQuery.data?.plantSearch;
 
-  useEffect(() => {
-    paginationVars && plantSearchQuery.refetch(paginationVars);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paginationVars]);
+  // useEffect(() => {
+  //   paginationVars && plantSearchQuery.fetchMore({ variables: paginationVars });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [paginationVars]);
 
   const setStatusFromRunningQuery = () =>
     setSearchStatus((prev) =>
@@ -224,35 +229,10 @@ const usePlantSearchQueries = (
     scrapeOccurrencesQuery.error,
   ]);
 
-  const unfetchedPlants = plantSearchData
-    ? plantSearchData.count - plantSearchData.results.length
-    : 0;
-
-  const fetchNextPlantsPage = async () => {
-    if (
-      !plantSearchData?.results ||
-      plantSearchQuery.networkStatus === NetworkStatus.fetchMore
-    ) {
-      return;
-    }
-
-    if (
-      (searchStatus === "READY" && unfetchedPlants) ||
-      unfetchedPlants >= (paginationParams?.pageSize ?? DEFAULT_PAGE_SIZE)
-    ) {
-      plantSearchQuery.fetchMore({
-        variables: { offset: plantSearchData.results.length },
-      });
-    }
-  };
-
   return {
     searchStatus,
-    plantSearchData,
     plantSearchQuery,
     searchRecordQuery,
-    fetchNextPlantsPage,
-    hasNextPage: Boolean(unfetchedPlants),
     scrapeMoreData: scrapeOccurrencesQuery.refetch,
   };
 };

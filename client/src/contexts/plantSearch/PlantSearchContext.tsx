@@ -1,4 +1,7 @@
-import { PlantSearchQueriesReturnType } from "hooks/usePlantSearchQueries";
+import {
+  PlantSearchQueriesReturnType,
+  PlantSearchQueryStatus,
+} from "hooks/usePlantSearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
@@ -28,12 +31,13 @@ export type PlantSearchContextType = {
   plantFilters: PlantSearchFilters;
   applyPlantFilters: (filters?: PlantSearchFilters) => void;
 
+  hasMoreData: boolean;
+  searchStatus: PlantSearchQueryStatus;
+  fetchMorePlants: () => Promise<void>;
+
   sidebarExpanded: boolean;
   setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
-} & Pick<
-  PlantSearchQueriesReturnType,
-  "fetchNextPlantsPage" | "hasNextPage" | "searchStatus" | "searchRecordQuery"
->;
+} & Pick<PlantSearchQueriesReturnType, "searchRecordQuery">;
 
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   hasCurrentResults: false,
@@ -57,8 +61,8 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
 
   searchStatus: "READY",
   searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
-  hasNextPage: false,
-  fetchNextPlantsPage: VOID_PROMISE_FUNCTION,
+  hasMoreData: false,
+  fetchMorePlants: VOID_PROMISE_FUNCTION,
 
   sidebarExpanded: !isSmallScreen(),
   setSidebarExpanded: VOID_FUNCTION,

@@ -18,13 +18,13 @@ const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
   const {
-    hasNextPage,
+    hasMoreData,
     hasCurrentResults,
     totalResultsCount,
     isInfiniteScroll,
     searchStatus,
     searchRecordQuery: { dataUpdatedAt },
-    fetchNextPlantsPage,
+    fetchMorePlants,
   } = usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor();
@@ -42,7 +42,7 @@ const PlantSearch = () => {
             scrollContainerElement.clientHeight) <=
         FETCH_MORE_SCROLL_THRESHOLD
       ) {
-        fetchNextPlantsPage();
+        fetchMorePlants();
       }
     };
 
@@ -52,13 +52,15 @@ const PlantSearch = () => {
     return () => scrollContainer?.removeEventListener("scroll", handleScroll);
   }, [
     isInfiniteScroll,
-    fetchNextPlantsPage,
+    fetchMorePlants,
     scrollContainer,
     scrollContainerElement,
   ]);
 
   return (
     <main className="w-full h-full pb-6">
+      {!hasCurrentResults && <ScrollAnchor className="scroll-m-header-2" />}
+
       <PageTitle className="page-buffer">Plant Search</PageTitle>
       {hasCurrentResults && <PlantSearchHeader />}
 
@@ -79,7 +81,7 @@ const PlantSearch = () => {
           </div>
         )}
 
-        <ScrollAnchor className="scroll-m-header-2" />
+        {hasCurrentResults && <ScrollAnchor className="scroll-m-header-2" />}
 
         <div
           id={RESULTS_PANE_ID}
@@ -96,13 +98,13 @@ const PlantSearch = () => {
           )}
 
           {isInfiniteScroll &&
-          hasNextPage &&
+          hasMoreData &&
           searchStatus !== "CHECKING_STATUS" ? (
             <div key="loading-icon" className="pb-4 mx-auto -mt-10 mb-10">
               <LoadingIcon size={25} className="text-white" />
             </div>
           ) : (
-            (isInfiniteScroll || !hasNextPage) && (
+            (isInfiniteScroll || !hasMoreData) && (
               <PlantAnimation
                 key="plant-animation"
                 queryStatus={searchStatus}
