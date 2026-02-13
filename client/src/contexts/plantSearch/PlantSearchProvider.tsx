@@ -100,7 +100,7 @@ const PlantSearchProvider = () => {
       setSearchParamsDraft((prev) => ({ ...prev, ...searchParams }));
 
   const { searchStatus, plantSearchData, ...searchQueries } =
-    usePlantSearchQueries(searchParams, plantFilters);
+    usePlantSearchQueries(searchParams, plantFilters, { page, pageSize });
 
   useEffect(() => {
     searchStatus !== "CHECKING_STATUS" &&

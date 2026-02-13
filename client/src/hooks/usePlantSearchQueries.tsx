@@ -4,9 +4,10 @@ import { paths } from "generated/schemas/hotplants";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+import { PaginationParams } from "util/routeParamsUtil";
 
 export type PlantSearchQueryStatus =
   | "READY"
@@ -34,6 +35,7 @@ const hotplantsClient = createClient<paths>({
 const usePlantSearchQueries = (
   searchParams: PlantSearchParams | null = null,
   plantFilters: PlantSearchFilters,
+  paginationParams?: Required<PaginationParams>,
 ) => {
   const [searchStatus, setSearchStatus] =
     useState<PlantSearchQueryStatus>("READY");
@@ -43,20 +45,39 @@ const usePlantSearchQueries = (
   const [pollInterval, setPollInterval] = useState(0);
 
   // #region Queries
+  const paginationVars = useMemo(
+    () =>
+      paginationParams
+        ? {
+            limit: paginationParams.pageSize,
+            offset: (paginationParams.page - 1) * paginationParams.pageSize,
+          }
+        : null,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [paginationParams?.pageSize, paginationParams?.page],
+  );
+
   const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
     pollInterval,
     skip: !searchParams,
     variables: {
       ...DEFAULT_PLANT_SEARCH_GQL_VARS,
+      ...paginationVars,
       where: {
         boundingPolyCoords: searchParams?.boundingPolyCoords,
         commonName: searchParams?.commonName,
         scientificName: searchParams?.scientificName,
+
         ...plantFilters,
       },
     },
   });
   const plantSearchData = plantSearchQuery.data?.plantSearch;
+
+  useEffect(() => {
+    paginationVars && plantSearchQuery.refetch(paginationVars);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paginationVars]);
 
   const setStatusFromRunningQuery = () =>
     setSearchStatus((prev) =>
@@ -217,7 +238,7 @@ const usePlantSearchQueries = (
 
     if (
       (searchStatus === "READY" && unfetchedPlants) ||
-      unfetchedPlants >= DEFAULT_PAGE_SIZE
+      unfetchedPlants >= (paginationParams?.pageSize ?? DEFAULT_PAGE_SIZE)
     ) {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },

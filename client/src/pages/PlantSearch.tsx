@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import PlantResultsList from "components/plantResults/PlantResultsList";
+import PlantList from "components/plantResults/PlantList";
 import PlantAnimation from "components/plantSearch/PlantAnimation";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
@@ -86,7 +86,7 @@ const PlantSearch = () => {
           className="grow flex flex-col relative scroll-m-header-2 py-4 big-screen:px-4 max-lg:basis-2/3 gap-6"
         >
           {hasCurrentResults && (
-            <PlantResultsList
+            <PlantList
               key="results-holder"
               className={classNames({
                 "max-w-page": totalResultsCount < 3,
