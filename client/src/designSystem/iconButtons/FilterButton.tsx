@@ -1,14 +1,10 @@
-import Button, { ButtonProps } from "designSystem/Button";
 import { MdFilterAlt, MdOutlineFilterAlt } from "react-icons/md";
+import IconButton, { IconButtonVariantProps } from "./IconButton";
 
-const FilterButton = ({
-  filtersApplied,
-  ...buttonProps
-}: { filtersApplied: boolean } & Omit<ButtonProps, "icon">) => (
-  <Button
-    variant="icon-white"
-    {...buttonProps}
-    icon={filtersApplied ? <MdFilterAlt /> : <MdOutlineFilterAlt />}
+const FilterButton = (props: IconButtonVariantProps) => (
+  <IconButton
+    {...props}
+    icon={props.active ? <MdFilterAlt /> : <MdOutlineFilterAlt />}
   />
 );
 

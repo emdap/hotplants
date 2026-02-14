@@ -53,8 +53,8 @@ const SearchArchive = () => {
       <ScrollAnchor className="scroll-m-header" />
       <FloatingHeader className="grid-centered small-screen:-mx-2 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
         <div className="flex items-center gap-1">
-          <FilterButton filtersApplied size="small" />
-          <SortButton sortApplied size="small" />
+          <FilterButton active size="small" />
+          <SortButton active size="small" />
         </div>
 
         {pluralize("Search", searchRecordCount, true)}

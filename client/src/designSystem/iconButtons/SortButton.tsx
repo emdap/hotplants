@@ -1,18 +1,8 @@
-import classNames from "classnames";
-import Button, { ButtonProps } from "designSystem/Button";
 import { MdSort } from "react-icons/md";
+import IconButton, { IconButtonVariantProps } from "./IconButton";
 
-const SortButton = ({
-  sortApplied,
-  className,
-  ...buttonProps
-}: { sortApplied: boolean } & Omit<ButtonProps, "icon">) => (
-  <Button
-    variant="icon-white"
-    className={classNames(sortApplied && "", className)}
-    {...buttonProps}
-    icon={<MdSort />}
-  />
+const SortButton = (props: IconButtonVariantProps) => (
+  <IconButton {...props} icon={<MdSort />} />
 );
 
 export default SortButton;
