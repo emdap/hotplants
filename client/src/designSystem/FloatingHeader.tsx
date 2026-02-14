@@ -39,7 +39,7 @@ const FloatingHeader = ({
       className={classNames(
         "sticky top-header z-20",
         "big-screen:text-white big-screen:h-header big-screen:border-header big-screen:bg-header big-screen:py-1",
-        "small-screen:card small-screen:card-solid small-screen:py-1",
+        "small-screen:card small-screen:card-solid small-screen:py-1 small-screen:px-2",
         className,
       )}
       {...props}

@@ -79,7 +79,8 @@ const Sidebar = ({
             "text-white transition-all outline-none p-1! mb-2 rounded-full! hover:border-white/40 border border-transparent aspect-square",
             {
               "bg-inherit": isExpanded,
-              "sticky right-1.5": !externalCollapseButton,
+              "sticky big-screen:right-1.5 small-screen:-mr-2":
+                !externalCollapseButton,
             },
             externalCollapseButton && [
               "big-screen:absolute small-screen:sticky",

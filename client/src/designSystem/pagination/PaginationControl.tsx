@@ -71,7 +71,7 @@ export const PaginationControl = ({
   );
 
   return (
-    <div className="h-7.5 text-sm flex gap-2">
+    <div className="h-7.5 text-sm flex gap-1">
       <motion.div
         className={classNames("flex items-center gap-2", className)}
         key={infiniteScroll?.enabled ? "infinite" : "paginate"}
@@ -120,6 +120,7 @@ export const PaginationControl = ({
           {!bigScreenWidth && !infiniteScroll?.enabled && (
             <PaginatorDropdown
               label="Page size"
+              inPopover
               selected={pageSize}
               options={pageSizeOptions}
               onChange={recalcPage}

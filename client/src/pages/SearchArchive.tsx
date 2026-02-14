@@ -1,6 +1,8 @@
 import { getRouteApi } from "@tanstack/react-router";
 import SearchRecordCard from "components/SearchRecordCard";
 import FloatingHeader from "designSystem/FloatingHeader";
+import FilterButton from "designSystem/iconButtons/FilterButton";
+import SortButton from "designSystem/iconButtons/SortButton";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
@@ -49,7 +51,12 @@ const SearchArchive = () => {
       <PageTitle>Search Archive</PageTitle>
 
       <ScrollAnchor className="scroll-m-header" />
-      <FloatingHeader className="small-screen:-mx-2 big-screen:-mx-6 big-screen:px-6 flex gap-2 items-center justify-between">
+      <FloatingHeader className="grid-centered small-screen:-mx-2 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
+        <div className="flex items-center gap-1">
+          <FilterButton filtersApplied size="small" />
+          <SortButton sortApplied size="small" />
+        </div>
+
         {pluralize("Search", searchRecordCount, true)}
         <PaginationControl
           className="ml-auto"

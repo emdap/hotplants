@@ -99,7 +99,7 @@ const PlantSearch = () => {
               parentSidebarExpanded={sidebarExpanded}
               className={classNames({
                 "max-w-page": totalResultsCount < 3,
-                "pb-20": isInfiniteScroll,
+                "pb-20": isInfiniteScroll && hasMoreData,
               })}
             />
           )}

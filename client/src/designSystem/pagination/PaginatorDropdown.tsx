@@ -7,6 +7,7 @@ import Button from "../Button";
 type PaginatorDropdownProps = {
   label: string;
   selected: number;
+  inPopover?: boolean;
   options: number[];
   onChange: (option: number) => void;
 };
@@ -14,11 +15,12 @@ type PaginatorDropdownProps = {
 const PaginatorDropdown = ({
   label,
   selected,
+  inPopover,
   ...props
 }: PaginatorDropdownProps) => {
   return (
     <div className="whitespace-nowrap flex gap-1.5 items-center justify-between">
-      {label}
+      {inPopover ? label : <span className="small-screen:hidden">{label}</span>}
       <Menu>
         <MenuButton as="div">
           <Button variant="text" size="flush">
