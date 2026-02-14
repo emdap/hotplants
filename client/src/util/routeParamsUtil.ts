@@ -2,6 +2,7 @@ import { polygon } from "@turf/turf";
 import {
   LocationSource,
   SearchRecordBooleanFilterInput,
+  SearchRecordSortInput,
   SearchRecordStringFilterInput,
 } from "generated/graphql/graphql";
 import { PlantSearchFilters, PlantSearchParams } from "./customSchemaTypes";
@@ -132,10 +133,9 @@ export const validatePlantSearchParams = (
 };
 
 type SearchArchiveParams = PaginationParams & {
-  stringFilter?: SearchRecordStringFilterInput;
-  booleanFilter?: SearchRecordBooleanFilterInput;
-  sortField?: string;
-  sortDir?: -1 | 1;
+  stringFilter?: SearchRecordStringFilterInput[];
+  booleanFilter?: SearchRecordBooleanFilterInput[];
+  sort?: SearchRecordSortInput[];
   lastOpened?: string;
 };
 

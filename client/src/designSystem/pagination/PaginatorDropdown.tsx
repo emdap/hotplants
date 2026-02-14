@@ -30,7 +30,7 @@ const PaginatorDropdown = ({
         <MenuItems
           anchor="bottom"
           modal={false}
-          className="z-20 -ml-1.5 mt-3 py-1 shadow-sm text-sm relative translate-x-1/4 outline-none overflow-visible!"
+          className="z-20 -ml-1.5 mt-3 py-1 text-sm relative translate-x-1/4 outline-none overflow-visible!"
         >
           <PaginatorDropdownItems selected={selected} {...props} />
         </MenuItems>

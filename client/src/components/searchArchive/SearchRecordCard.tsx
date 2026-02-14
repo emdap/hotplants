@@ -13,8 +13,8 @@ import { ReactNode, useMemo } from "react";
 import { MdDoubleArrow } from "react-icons/md";
 import { DEFAULT_DATE_FORMAT } from "util/generalUtil";
 import { customLocationDisplay } from "util/locationUtil";
-import MapProvider from "./interactiveMap/MapProvider";
-import { OPTIONAL_SEARCH_PARAM_FILTERS } from "./plantFilters/filterFixtures";
+import MapProvider from "../interactiveMap/MapProvider";
+import { OPTIONAL_SEARCH_PARAM_FILTERS } from "../plantFilters/filterFixtures";
 
 const SearchRecordCard = ({
   _id,

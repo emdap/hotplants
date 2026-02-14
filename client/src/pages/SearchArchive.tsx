@@ -1,8 +1,8 @@
-import { getRouteApi } from "@tanstack/react-router";
-import SearchRecordCard from "components/SearchRecordCard";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import SearchArchiveSortPopover from "components/searchArchive/SearchArchiveSortPopover";
+import SearchRecordCard from "components/searchArchive/SearchRecordCard";
 import FloatingHeader from "designSystem/FloatingHeader";
 import FilterButton from "designSystem/iconButtons/FilterButton";
-import SortButton from "designSystem/iconButtons/SortButton";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
@@ -18,10 +18,12 @@ const route = getRouteApi("/search-archive");
 const ARCHIVE_PAGE_SIZE_OPTIONS = [5, 10, 25, 50];
 
 const SearchArchive = () => {
+  const navigate = useNavigate();
   const {
     page = 1,
     pageSize = ARCHIVE_PAGE_SIZE_OPTIONS[1],
     lastOpened,
+    sort,
   } = route.useSearch();
   const ScrollAnchor = useScrollAnchor();
 
@@ -30,7 +32,7 @@ const SearchArchive = () => {
     previousData,
     ...allSearchRecordsQuery
   } = useApolloQuery(GET_ALL_SEARCH_RECORDS, {
-    variables: { offset: (page - 1) * pageSize, limit: pageSize },
+    variables: { offset: (page - 1) * pageSize, limit: pageSize, sort },
   });
 
   useLayoutEffect(() => {
@@ -54,7 +56,19 @@ const SearchArchive = () => {
       <FloatingHeader className="grid-centered small-screen:-mx-2 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
         <div className="flex items-center gap-1">
           <FilterButton active size="small" />
-          <SortButton active size="small" />
+          <SearchArchiveSortPopover
+            sort={sort}
+            applySort={(sort) =>
+              navigate({ to: ".", search: { page: 1, sort }, replace: true })
+            }
+            clearSort={() =>
+              navigate({
+                to: ".",
+                search: { page: 1, sort: undefined },
+                replace: true,
+              })
+            }
+          />
         </div>
 
         {pluralize("Search", searchRecordCount, true)}
@@ -74,8 +88,8 @@ const SearchArchive = () => {
         className="h-screen animate-pulse opacity-50"
       />
 
-      {allSearchRecords?.results.map((searchRecord) => (
-        <SearchRecordCard key={searchRecord._id} {...searchRecord} />
+      {allSearchRecords?.results.map((searchRecord, index) => (
+        <SearchRecordCard key={searchRecord._id + index} {...searchRecord} />
       ))}
     </main>
   );
