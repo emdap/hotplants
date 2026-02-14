@@ -2,14 +2,18 @@ import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import Button from "designSystem/Button";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
+import StyledPopover from "designSystem/StyledPopover";
 import StyledSwitch, { StyledSwitchProps } from "designSystem/StyledSwitch";
 import VerticalDivider from "designSystem/VerticalDivider";
 import { motion } from "motion/react";
 import { useMemo } from "react";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import {
+  MdChevronLeft,
+  MdChevronRight,
+  MdOutlineMoreVert,
+} from "react-icons/md";
 import { SMALL_SCREEN_WIDTH } from "util/generalUtil";
 import { PaginationParams } from "util/routeParamsUtil";
-import PaginationPopover from "./PaginationPopover";
 import PaginatorDropdown from "./PaginatorDropdown";
 
 type PaginationControlProps = {
@@ -116,7 +120,15 @@ export const PaginationControl = ({
       </motion.div>
 
       {showOptionsMenu && (
-        <PaginationPopover>
+        <StyledPopover
+          button={
+            <Button
+              size="small"
+              variant="icon-white"
+              icon={<MdOutlineMoreVert />}
+            />
+          }
+        >
           {!bigScreenWidth && !infiniteScroll?.enabled && (
             <PaginatorDropdown
               label="Page size"
@@ -127,7 +139,7 @@ export const PaginationControl = ({
             />
           )}
           {infiniteScrollSwitch && <StyledSwitch {...infiniteScrollSwitch} />}
-        </PaginationPopover>
+        </StyledPopover>
       )}
     </div>
   );

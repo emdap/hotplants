@@ -15,7 +15,7 @@ export type CustomSelectedOption = FunctionComponent<
   HTMLProps<HTMLDivElement> & { value: string }
 >;
 
-const ListboxWrapper = ({
+const StyledListbox = ({
   defaultOptions = [],
   value: listboxValue = [],
   onChange,
@@ -150,4 +150,4 @@ const ListboxWrapper = ({
   );
 };
 
-export default ListboxWrapper;
+export default StyledListbox;

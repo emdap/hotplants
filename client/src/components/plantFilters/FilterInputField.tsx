@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import ListboxWrapper from "designSystem/listbox/ListboxWrapper";
+import StyledListbox from "designSystem/listbox/StyledListbox";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { ChangeEvent } from "react";
 import { FilterInput, FilterInputType } from "./filterFixtures";
@@ -57,7 +57,7 @@ const FilterInputField = <
           }
         />
       ) : inputType === "select" ? (
-        <ListboxWrapper
+        <StyledListbox
           name={plantDataKey}
           value={value ?? []}
           onChange={onChange}
