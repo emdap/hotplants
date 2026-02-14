@@ -6,11 +6,6 @@ import {
 } from "generated/graphql/graphql";
 import { PlantSearchFilters, PlantSearchParams } from "./customSchemaTypes";
 
-export const DEFAULT_PAGINATION_PARAMS = {
-  page: undefined,
-  pageSize: undefined,
-};
-
 export type PaginationParams = {
   page?: number;
   pageSize?: number;
@@ -19,8 +14,8 @@ export type PaginationParams = {
 const validateString = (input: unknown) => String(input || "") || undefined;
 
 export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
-  ...DEFAULT_PAGINATION_PARAMS,
-
+  page: undefined,
+  pageSize: undefined,
   search: undefined,
   filters: undefined,
 };
