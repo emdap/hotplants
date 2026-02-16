@@ -23,8 +23,8 @@ const MIN_RESULTS = 50;
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
   limit: DEFAULT_PAGE_SIZE,
   sort: [
-    { field: "addedTimestamp", direction: 1 },
-    { field: "scientificName", direction: 1 },
+    { field: "addedTimestamp", value: 1 },
+    { field: "scientificName", value: 1 },
   ],
 };
 

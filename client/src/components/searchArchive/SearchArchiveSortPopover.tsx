@@ -27,13 +27,13 @@ const SearchArchiveSortPopover = ({
 
   const localSortDict = useMemo(
     (): {
-      [key in SearchRecordSortField]?: { direction: number; index: number };
+      [key in SearchRecordSortField]?: { value: number; index: number };
     } =>
       localSort
         ? Object.fromEntries(
-            localSort.map(({ field, direction }, index) => [
+            localSort.map(({ field, value }, index) => [
               field,
-              { direction, index },
+              { value, index },
             ]),
           )
         : {},
@@ -46,19 +46,19 @@ const SearchArchiveSortPopover = ({
 
   const sortApplied = Boolean(sort?.length);
 
-  const getNextDirection = (direction?: number) =>
-    direction === 1 ? -1 : direction === -1 ? undefined : 1;
+  const getNextSortValue = (value?: number) =>
+    value === 1 ? -1 : value === -1 ? undefined : 1;
 
   const iterateSortFilter = (key: SearchRecordSortField) => {
     const index = localSortDict[key]?.index;
-    const nextDirection = getNextDirection(localSortDict[key]?.direction);
+    const nextDirection = getNextSortValue(localSortDict[key]?.value);
     let nextSort = localSort ? [...localSort] : [];
 
     if (index !== undefined && localSort) {
       nextSort = localSort.slice(0, index).concat(localSort.slice(index + 1));
     }
 
-    nextDirection && nextSort.push({ field: key, direction: nextDirection });
+    nextDirection && nextSort.push({ field: key, value: nextDirection });
     setLocalSort(nextSort.length ? nextSort : undefined);
   };
 
@@ -71,17 +71,17 @@ const SearchArchiveSortPopover = ({
         <>
           <div className="grid grid-cols-[1fr_auto] gap-x-2 gap-y-1 items-center">
             {SEARCH_RECORD_ORDERED_SORT_KEYS.map((key) => {
-              const sortDir = localSortDict[key]?.direction;
+              const sortValue = localSortDict[key]?.value;
               return (
                 <Fragment key={key}>
                   <span>{SEARCH_RECORD_SORT_LABELS[key]}</span>
                   <Button
-                    variant={sortDir ? "icon-primary" : "icon-white"}
+                    variant={sortValue ? "icon-primary" : "icon-white"}
                     size="small"
                     icon={
-                      sortDir === 1 ? (
+                      sortValue === 1 ? (
                         <MdArrowUpward />
-                      ) : sortDir === -1 ? (
+                      ) : sortValue === -1 ? (
                         <MdArrowDownward />
                       ) : (
                         <MdDragHandle />

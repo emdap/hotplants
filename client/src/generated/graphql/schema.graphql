@@ -164,8 +164,8 @@ enum PlantSortField {
 }
 
 input PlantSortInput {
-  direction: Int!
   field: PlantSortField!
+  value: Int!
 }
 
 type Query {
@@ -222,8 +222,8 @@ enum SearchRecordSortField {
 }
 
 input SearchRecordSortInput {
-  direction: Int!
   field: SearchRecordSortField!
+  value: Int!
 }
 
 enum SearchRecordStatus {
