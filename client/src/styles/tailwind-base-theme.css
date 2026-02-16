@@ -73,7 +73,7 @@
   }
 
   * {
-    @apply scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-accent;
+    @apply scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-accent scrollbar-track-transparent;
   }
 
   html,
