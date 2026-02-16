@@ -42,7 +42,7 @@ export const PaginationControl = ({
   const bigScreenWidth = window.innerWidth >= SMALL_SCREEN_WIDTH;
   const lastPage = Math.ceil(totalResults / pageSize);
   const infiniteScrollSwitch = infiniteScroll
-    ? { ...infiniteScroll, label: "Infinite Scroll" }
+    ? { ...infiniteScroll, label: "Infinite scroll" }
     : null;
 
   const pageList = useMemo(

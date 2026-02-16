@@ -11,7 +11,7 @@ import {
 import { useApolloQuery } from "hooks/useQuery";
 import { ReactNode, useMemo } from "react";
 import { MdDoubleArrow } from "react-icons/md";
-import { DEFAULT_DATE_FORMAT } from "util/generalUtil";
+import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
 import { customLocationDisplay } from "util/locationUtil";
 import MapProvider from "../interactiveMap/MapProvider";
 import { OPTIONAL_SEARCH_PARAM_FILTERS } from "../plantFilters/filterFixtures";
@@ -61,6 +61,9 @@ const SearchRecordCard = ({
       search: { search: searchParams, filters: {}, page: 1 },
     });
   };
+
+  const formatDate = (timestamp?: number | null) =>
+    timestamp ? format(new Date(timestamp), DEFAULT_DATE_TIME_FORMAT) : "N/A";
 
   return (
     <Card
@@ -117,18 +120,11 @@ const SearchRecordCard = ({
           <div className="mt-auto">
             <InfoRow
               title="Search created"
-              value={format(searchParams.createdTimestamp, DEFAULT_DATE_FORMAT)}
+              value={formatDate(searchParams.createdTimestamp)}
             />
             <InfoRow
               title="Search last ran"
-              value={
-                searchParams.statusUpdatedTimestamp
-                  ? format(
-                      searchParams.statusUpdatedTimestamp,
-                      DEFAULT_DATE_FORMAT,
-                    )
-                  : "N/A"
-              }
+              value={formatDate(searchParams.statusUpdatedTimestamp)}
             />
             <InfoRow title="Status" value={searchParams.status} />
           </div>

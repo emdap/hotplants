@@ -14,7 +14,6 @@ const StyledPopover = ({
   ...panelProps
 }: {
   button: ReactNode;
-  children: ReactNode;
 } & PopoverPanelProps) => (
   <Popover>
     <PopoverButton as="div" className="data-active:[&_button]:outline-2">
@@ -30,7 +29,7 @@ const StyledPopover = ({
       )}
       {...panelProps}
     >
-      {children}
+      {typeof children === "function" ? (props) => children(props) : children}
     </PopoverPanel>
   </Popover>
 );

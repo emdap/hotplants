@@ -35,7 +35,7 @@ export const getPlantDisplayName = (plant: PlantResult) => {
   return commonName ? capitalize(commonName) : plant.scientificName;
 };
 
-export const DEFAULT_DATE_FORMAT = "LLL d, yyyy";
+export const DEFAULT_DATE_TIME_FORMAT = "LLL d, yyyy 'at' HH:mm";
 
 export const BACKGROUND_ANIMATION_ID = "background-animation";
 export const findAnimation = (

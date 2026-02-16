@@ -8,7 +8,7 @@ const IconButton = ({ active, className, ...buttonProps }: IconButtonProps) => (
   <Button
     variant="icon-white"
     className={classNames(
-      active && "bg-accent/50 shadow-sm outline-accent!",
+      active && "bg-accent/50 hover:bg-accent/60! shadow-sm outline-accent!",
       className,
     )}
     {...buttonProps}
