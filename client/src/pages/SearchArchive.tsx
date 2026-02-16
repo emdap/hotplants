@@ -1,5 +1,5 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
-import SearchArchiveSortPopover from "components/searchArchive/SearchArchiveSortPopover";
+import SearchArchiveQueryPopover from "components/searchArchive/SearchArchiveQueryPopover";
 import SearchRecordCard from "components/searchArchive/SearchRecordCard";
 import FloatingHeader from "designSystem/FloatingHeader";
 import FilterButton from "designSystem/iconButtons/FilterButton";
@@ -56,12 +56,13 @@ const SearchArchive = () => {
       <FloatingHeader className="grid-centered small-screen:-mx-2 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
         <div className="flex items-center gap-1">
           <FilterButton active size="small" />
-          <SearchArchiveSortPopover
-            sort={sort}
-            applySort={(sort) =>
+          <SearchArchiveQueryPopover
+            paramType="sort"
+            currentParams={sort}
+            applyParams={(sort) =>
               navigate({ to: ".", search: { page: 1, sort }, replace: true })
             }
-            clearSort={() =>
+            clearParams={() =>
               navigate({
                 to: ".",
                 search: { page: 1, sort: undefined },
