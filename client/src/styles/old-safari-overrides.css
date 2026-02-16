@@ -7,7 +7,7 @@ but preserve Safari functionality. */
   label,
   input,
   span {
-    @apply text-default-text;
+    @apply text-inherit;
   }
 
   .dark input::placeholder {
