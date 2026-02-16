@@ -81,7 +81,7 @@ const PaginatorDropdownItems = ({
       className="text-sm max-h-20 px-1.5 py-0.5 min-w-max overflow-y-auto overflow-x-hidden flex flex-col items-center gap-1 stable-scrollbar"
     >
       <div
-        className="bg-default-background shadow-sm absolute top-0 left-0 rounded-md h-full -z-10"
+        className="card card-solid p-0 absolute top-0 left-0 h-full -z-10"
         style={{ width: isSafari ? "100%" : `calc(100% - ${scrollbarWidth}px` }}
       />
 

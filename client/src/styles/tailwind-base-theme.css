@@ -72,13 +72,16 @@
     }
   }
 
+  * {
+    @apply scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-accent;
+  }
+
+  html,
+  body {
+    @apply scrollbar-thumb-scrollbar scrollbar-thin scrollbar-thumb-rounded-full;
+  }
+
   html {
-    scrollbar-color: var(--color-scrollbar) var(--color-accent);
-
-    &.dark {
-      scrollbar-color: var(--color-scrollbar) var(--color-primary-dark);
-    }
-
     &.theme-loaded {
       .card,
       .pretty-background,
@@ -87,13 +90,11 @@
       }
     }
 
-    @apply small-screen:overflow-visible big-screen:overflow-hidden  bg-accent small-screen:stable-scrollbar;
+    @apply small-screen:overflow-visible big-screen:overflow-hidden bg-accent small-screen:stable-scrollbar scrollbar-track-accent dark:scrollbar-track-accent;
   }
 
   body {
-    scrollbar-color: var(--color-scrollbar) transparent;
-
     @apply big-screen:h-dvh big-screen:w-dvw big-screen:overflow-auto big-screen:stable-scrollbar;
-    @apply scroll-smooth text-default-text;
+    @apply big-screen:scrollbar-track-transparent text-default-text;
   }
 }

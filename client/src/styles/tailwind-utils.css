@@ -71,7 +71,6 @@
 }
 
 @utility stable-scrollbar {
-  scrollbar-width: thin;
   scrollbar-gutter: stable;
 }
 

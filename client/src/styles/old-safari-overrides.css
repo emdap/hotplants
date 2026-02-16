@@ -13,21 +13,4 @@ but preserve Safari functionality. */
   .dark input::placeholder {
     @apply text-white/70 transition-colors;
   }
-
-  body,
-  html {
-    ::-webkit-scrollbar {
-      @apply w-2 h-2 bg-transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      @apply bg-scrollbar rounded-full p-2;
-    }
-  }
-
-  & > * {
-    ::-webkit-scrollbar-thumb {
-      @apply border border-accent bg-white;
-    }
-  }
 }
