@@ -1,9 +1,9 @@
-import { Listbox, ListboxButton, ListboxProps } from "@headlessui/react";
-import classNames from "classnames";
+import { Listbox, ListboxProps } from "@headlessui/react";
 import { FunctionComponent, HTMLProps, useMemo, useRef, useState } from "react";
-import { MdAdd, MdArrowDropDown } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
 import Button from "../Button";
 import SelectedOptions from "./SelectedOptions";
+import StyledListboxButton from "./StyledListboxButton";
 import StyledListboxOptions from "./StyledListboxOptions";
 
 export type CustomSelectedOption = FunctionComponent<
@@ -65,28 +65,15 @@ const StyledMultipleListbox = ({
       value={listboxValue}
       onChange={handleChange}
     >
-      <ListboxButton
+      <StyledListboxButton
         id={listboxProps.name}
         onMouseEnter={(e) => e.stopPropagation()}
-        className="listbox-button"
       >
         {({ open }) => {
           open && customInputRef.current?.focus({ preventScroll: true });
-          return (
-            <>
-              <SelectedOptions {...{ listboxValue, removeValue }} />
-
-              <MdArrowDropDown
-                className={classNames(
-                  "group pointer-events-none size-4 fill-primary transition-transform",
-                  open && "rotate-180",
-                )}
-                aria-hidden="true"
-              />
-            </>
-          );
+          return <SelectedOptions {...{ listboxValue, removeValue }} />;
         }}
-      </ListboxButton>
+      </StyledListboxButton>
 
       <StyledListboxOptions
         options={options}
