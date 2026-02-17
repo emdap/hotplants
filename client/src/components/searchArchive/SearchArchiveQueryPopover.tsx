@@ -3,12 +3,12 @@ import FilterButton from "designSystem/iconButtons/FilterButton";
 import { IconButtonVariantProps } from "designSystem/iconButtons/IconButton";
 import SortButton from "designSystem/iconButtons/SortButton";
 import StyledPopover from "designSystem/StyledPopover";
-import { SearchRecordSortField } from "generated/graphql/graphql";
 import { isEqual } from "lodash";
 import { useEffect, useMemo, useState } from "react";
-import SearchArchiveSortControl from "./SearchArchiveSortControl";
+import SearchArchiveParamControl from "./SearchArchiveParamControl";
 import {
-  SEARCH_RECORD_ORDERED_SORT_KEYS,
+  ParamType,
+  SEARCH_RECORD_ORDERED_QUERY_KEYS,
   SearchRecordQueryInput,
 } from "./searchRecordQueryUtil";
 
@@ -18,7 +18,7 @@ const SearchArchiveQueryPopover = <T extends SearchRecordQueryInput>({
   applyParams,
   clearParams,
 }: {
-  paramType: "sort" | "filter";
+  paramType: ParamType;
   currentParams?: T[];
   applyParams: (params?: T[]) => void;
   clearParams: () => void;
@@ -29,7 +29,10 @@ const SearchArchiveQueryPopover = <T extends SearchRecordQueryInput>({
 
   const localParamDict = useMemo(
     (): {
-      [key in SearchRecordSortField]?: { value: number; index: number };
+      [key in SearchRecordQueryInput["field"]]?: {
+        value: SearchRecordQueryInput["value"];
+        index: number;
+      };
     } =>
       localParams
         ? Object.fromEntries(
@@ -59,7 +62,8 @@ const SearchArchiveQueryPopover = <T extends SearchRecordQueryInput>({
         .concat(localParams.slice(index + 1));
     }
 
-    nextValue && nextParams.push({ field, value: nextValue } as T);
+    nextValue !== undefined &&
+      nextParams.push({ field, value: nextValue } as T);
     setLocalParams(nextParams.length ? nextParams : undefined);
   };
 
@@ -82,16 +86,15 @@ const SearchArchiveQueryPopover = <T extends SearchRecordQueryInput>({
       {({ close }) => (
         <>
           <div className="gap-x-2 gap-y-1 items-center">
-            {paramType === "sort"
-              ? SEARCH_RECORD_ORDERED_SORT_KEYS.map((key) => (
-                  <SearchArchiveSortControl
-                    field={key}
-                    value={localParamDict[key]?.value}
-                    key={key}
-                    onChange={(nextValue) => updateParam(key, nextValue)}
-                  />
-                ))
-              : null}
+            {SEARCH_RECORD_ORDERED_QUERY_KEYS[paramType].map((key) => (
+              <SearchArchiveParamControl
+                key={key}
+                field={key}
+                paramType={paramType}
+                value={localParamDict[key]?.value}
+                onChange={(nextValue) => updateParam(key, nextValue)}
+              />
+            ))}
           </div>
 
           <div className="flex gap-2">

@@ -6,7 +6,6 @@ import {
   SearchRecordQueryInput,
 } from "components/searchArchive/searchRecordQueryUtil";
 import FloatingHeader from "designSystem/FloatingHeader";
-import FilterButton from "designSystem/iconButtons/FilterButton";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
@@ -67,11 +66,11 @@ const SearchArchive = () => {
       <PageTitle>Search Archive</PageTitle>
 
       <ScrollAnchor className="scroll-m-header" />
-      <FloatingHeader className="grid-centered small-screen:-mx-2 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
+      <FloatingHeader className="grid-centered small-screen:-mx-2.5 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
         <div className="flex items-center gap-1">
-          <FilterButton active size="small" />
           {(["filter", "sort"] as const).map((param) => (
             <SearchArchiveQueryPopover
+              key={param}
               paramType={param}
               currentParams={queryParams[param] as SearchRecordQueryInput[]}
               applyParams={(data) =>
