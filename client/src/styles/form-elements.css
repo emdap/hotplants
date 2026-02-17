@@ -20,3 +20,7 @@
 @utility styled-checkbox {
   @apply bg-primary rounded outline-primary ring-primary border-transparent;
 }
+
+@utility listbox-button {
+  @apply styled-input focus:ring-1 focus:border-1 flex justify-end items-center data-focus:ring-1 relative;
+}

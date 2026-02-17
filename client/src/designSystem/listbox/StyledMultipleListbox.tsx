@@ -1,21 +1,16 @@
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOption,
-  ListboxOptions,
-  ListboxProps,
-} from "@headlessui/react";
+import { Listbox, ListboxButton, ListboxProps } from "@headlessui/react";
 import classNames from "classnames";
 import { FunctionComponent, HTMLProps, useMemo, useRef, useState } from "react";
-import { MdAdd, MdArrowDropDown, MdCheck } from "react-icons/md";
+import { MdAdd, MdArrowDropDown } from "react-icons/md";
 import Button from "../Button";
 import SelectedOptions from "./SelectedOptions";
+import StyledListboxOptions from "./StyledListboxOptions";
 
 export type CustomSelectedOption = FunctionComponent<
   HTMLProps<HTMLDivElement> & { value: string }
 >;
 
-const StyledListbox = ({
+const StyledMultipleListbox = ({
   defaultOptions = [],
   value: listboxValue = [],
   onChange,
@@ -73,7 +68,7 @@ const StyledListbox = ({
       <ListboxButton
         id={listboxProps.name}
         onMouseEnter={(e) => e.stopPropagation()}
-        className="styled-input focus:ring-1 focus:border-1 flex justify-end items-center data-focus:ring-1 relative"
+        className="listbox-button"
       >
         {({ open }) => {
           open && customInputRef.current?.focus({ preventScroll: true });
@@ -93,61 +88,40 @@ const StyledListbox = ({
         }}
       </ListboxButton>
 
-      <ListboxOptions
-        anchor="bottom"
-        modal={false}
-        transition
-        className={classNames(
-          "w-(--button-width) rounded-xl border border-none shadow-xs shadow-default-background/50 backdrop-blur-3xl dark:bg-transparent bg-default-background/60  p-1 [--anchor-gap:--spacing(1)] focus:outline-none",
-          "transition duration-100 ease-in data-leave:data-closed:opacity-0 z-20",
-        )}
-      >
-        <div
-          className={classNames(
-            "flex gap-4 items-center pl-6 pr-0.5",
-            options.length && "mb-1 pb-1 border-b border-default-text/20",
-          )}
-        >
-          <input
-            name="custom-option"
-            ref={customInputRef}
-            className="!min-w-0 w-full !bg-transparent !border-0 !ring-offset-0 !ring-0 flex-grow rounded-xl"
-            placeholder="Enter custom option"
-            value={customOptionInput}
-            onChange={({ target }) => setCustomOptionInput(target.value)}
-            onBlur={saveCustomOption}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.stopPropagation();
-                saveCustomOption();
-              } else if (e.key === " ") {
-                e.stopPropagation();
-              }
-            }}
-          />
-          {customOptionInput && (
-            <Button
-              variant="icon-primary"
-              size="small"
-              onClick={saveCustomOption}
-              icon={<MdAdd className="size-3" />}
+      <StyledListboxOptions
+        options={options}
+        customOptionInput={
+          <>
+            <input
+              name="custom-option"
+              ref={customInputRef}
+              className="!min-w-0 w-full !bg-transparent !border-0 !ring-offset-0 !ring-0 flex-grow rounded-xl"
+              placeholder="Enter custom option"
+              value={customOptionInput}
+              onChange={({ target }) => setCustomOptionInput(target.value)}
+              onBlur={saveCustomOption}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.stopPropagation();
+                  saveCustomOption();
+                } else if (e.key === " ") {
+                  e.stopPropagation();
+                }
+              }}
             />
-          )}
-        </div>
-
-        {options.map((value, index) => (
-          <ListboxOption
-            key={index}
-            value={value}
-            className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-primary/20"
-          >
-            <MdCheck className="invisible size-4 fill-default-text group-data-selected:visible" />
-            <div className="text-sm/6">{value}</div>
-          </ListboxOption>
-        ))}
-      </ListboxOptions>
+            {customOptionInput && (
+              <Button
+                variant="icon-primary"
+                size="small"
+                onClick={saveCustomOption}
+                icon={<MdAdd className="size-3" />}
+              />
+            )}
+          </>
+        }
+      />
     </Listbox>
   );
 };
 
-export default StyledListbox;
+export default StyledMultipleListbox;
