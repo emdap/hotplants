@@ -13,10 +13,13 @@ export type CustomSelectedOption = FunctionComponent<
 const StyledMultipleListbox = ({
   defaultOptions = [],
   value: listboxValue = [],
+  allowCustomOption,
+  className,
   onChange,
   ...listboxProps
 }: {
   defaultOptions?: string[];
+  allowCustomOption?: boolean;
 } & ListboxProps<"select", string[]>) => {
   const [customOptions, setCustomOptions] = useState<string[]>([]);
   const [customOptionInput, setCustomOptionInput] = useState("");
@@ -68,6 +71,7 @@ const StyledMultipleListbox = ({
       <StyledListboxButton
         id={listboxProps.name}
         onMouseEnter={(e) => e.stopPropagation()}
+        className={className}
       >
         {({ open }) => {
           open && customInputRef.current?.focus({ preventScroll: true });
@@ -78,33 +82,35 @@ const StyledMultipleListbox = ({
       <StyledListboxOptions
         options={options}
         customOptionInput={
-          <>
-            <input
-              name="custom-option"
-              ref={customInputRef}
-              className="!min-w-0 w-full !bg-transparent !border-0 !ring-offset-0 !ring-0 flex-grow rounded-xl"
-              placeholder="Enter custom option"
-              value={customOptionInput}
-              onChange={({ target }) => setCustomOptionInput(target.value)}
-              onBlur={saveCustomOption}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.stopPropagation();
-                  saveCustomOption();
-                } else if (e.key === " ") {
-                  e.stopPropagation();
-                }
-              }}
-            />
-            {customOptionInput && (
-              <Button
-                variant="icon-primary"
-                size="small"
-                onClick={saveCustomOption}
-                icon={<MdAdd className="size-3" />}
+          allowCustomOption && (
+            <>
+              <input
+                name="custom-option"
+                ref={customInputRef}
+                className="!min-w-0 w-full !bg-transparent !border-0 !ring-offset-0 !ring-0 flex-grow rounded-xl"
+                placeholder="Enter custom option"
+                value={customOptionInput}
+                onChange={({ target }) => setCustomOptionInput(target.value)}
+                onBlur={saveCustomOption}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.stopPropagation();
+                    saveCustomOption();
+                  } else if (e.key === " ") {
+                    e.stopPropagation();
+                  }
+                }}
               />
-            )}
-          </>
+              {customOptionInput && (
+                <Button
+                  variant="icon-primary"
+                  size="small"
+                  onClick={saveCustomOption}
+                  icon={<MdAdd className="size-3" />}
+                />
+              )}
+            </>
+          )
         }
       />
     </Listbox>

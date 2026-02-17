@@ -28,7 +28,7 @@ const SelectedOptions = ({
   const hiddenValues = maxVisible ? listboxValue.length - maxVisible : 0;
 
   useEffect(() => {
-    if (maxVisible && listboxValue.length <= maxVisible) {
+    if (maxVisible !== undefined && listboxValue.length <= maxVisible + 1) {
       setMaxVisible(undefined);
     }
   }, [listboxValue.length, maxVisible]);
@@ -38,7 +38,7 @@ const SelectedOptions = ({
       const { offsetWidth, scrollWidth } = containerRef.current;
 
       if (scrollWidth > offsetWidth) {
-        setMaxVisible((prev) => (prev || listboxValue.length) - 1);
+        setMaxVisible((prev) => Math.max(1, (prev || listboxValue.length) - 2));
       }
     }
   }, [listboxValue.length]);
@@ -60,7 +60,7 @@ const SelectedOptions = ({
   return (
     <div
       ref={containerRef}
-      className="h-full flex items-center gap-2 pr-4 grow overflow-hidden"
+      className="h-full flex items-center gap-2 pr-3 grow overflow-hidden"
     >
       {listboxValue.slice(0, maxVisible).map((value) => (
         <SelectedOptionDisplay key={value}>
@@ -74,7 +74,11 @@ const SelectedOptions = ({
           />
         </SelectedOptionDisplay>
       ))}
-      <div className={classNames(hiddenValues < 1 && "opacity-0")}>
+      <div
+        className={classNames(
+          hiddenValues < 1 && "opacity-0 w-0 overflow-hidden",
+        )}
+      >
         <SelectedOptionDisplay>+{hiddenValues} more</SelectedOptionDisplay>
       </div>
     </div>
