@@ -81,14 +81,14 @@ export const parseFilterParams = (filter?: SearchRecordFilterInput[]) =>
     return prev;
   }, {}) as FilterQueryVars;
 
-export const ORDERED_BOOLEAN_FILTER_OPTIONS = [
+export const SEARCH_RECORD_ORDERED_BOOLEAN_OPTIONS = [
   "Show all",
   "Yes",
   "No",
 ] as const;
 
 export type BooleanFilterOption =
-  (typeof ORDERED_BOOLEAN_FILTER_OPTIONS)[number];
+  (typeof SEARCH_RECORD_ORDERED_BOOLEAN_OPTIONS)[number];
 
 export const BOOLEAN_FILTER_DICT: Record<
   BooleanFilterOption,
@@ -97,4 +97,19 @@ export const BOOLEAN_FILTER_DICT: Record<
   Yes: true,
   No: false,
   "Show all": undefined,
+};
+
+export const SEARCH_RECORD_ORDERED_LOCATION_SOURCE_OPTIONS = ["Map", "Custom"];
+export const SEARCH_RECORD_ORDERED_STATUS_OPTIONS = [
+  "Ready",
+  "Scraping",
+  "Complete",
+];
+
+export const STRING_FILTER_OPTIONS_DICT: Record<
+  SearchRecordStringFilterField,
+  string[]
+> = {
+  locationSource: SEARCH_RECORD_ORDERED_LOCATION_SOURCE_OPTIONS,
+  status: SEARCH_RECORD_ORDERED_STATUS_OPTIONS,
 };
