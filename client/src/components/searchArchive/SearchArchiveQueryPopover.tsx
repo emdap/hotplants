@@ -3,21 +3,14 @@ import FilterButton from "designSystem/iconButtons/FilterButton";
 import { IconButtonVariantProps } from "designSystem/iconButtons/IconButton";
 import SortButton from "designSystem/iconButtons/SortButton";
 import StyledPopover from "designSystem/StyledPopover";
-import {
-  SearchRecordBooleanFilterInput,
-  SearchRecordSortField,
-  SearchRecordSortInput,
-  SearchRecordStringFilterInput,
-} from "generated/graphql/graphql";
+import { SearchRecordSortField } from "generated/graphql/graphql";
 import { isEqual } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import SearchArchiveSortControl from "./SearchArchiveSortControl";
-import { SEARCH_RECORD_ORDERED_SORT_KEYS } from "./searchRecordSortFixtures";
-
-type SearchRecordQueryInput =
-  | SearchRecordSortInput
-  | SearchRecordStringFilterInput
-  | SearchRecordBooleanFilterInput;
+import {
+  SEARCH_RECORD_ORDERED_SORT_KEYS,
+  SearchRecordQueryInput,
+} from "./searchRecordQueryUtil";
 
 const SearchArchiveQueryPopover = <T extends SearchRecordQueryInput>({
   paramType,

@@ -1,6 +1,10 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import SearchArchiveQueryPopover from "components/searchArchive/SearchArchiveQueryPopover";
 import SearchRecordCard from "components/searchArchive/SearchRecordCard";
+import {
+  parseFilterParams,
+  SearchRecordQueryInput,
+} from "components/searchArchive/searchRecordQueryUtil";
 import FloatingHeader from "designSystem/FloatingHeader";
 import FilterButton from "designSystem/iconButtons/FilterButton";
 import LoadingOverlay from "designSystem/LoadingOverlay";
@@ -10,7 +14,7 @@ import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
 import pluralize from "pluralize";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { useMount } from "react-use";
 
 const route = getRouteApi("/search-archive");
@@ -23,16 +27,26 @@ const SearchArchive = () => {
     page = 1,
     pageSize = ARCHIVE_PAGE_SIZE_OPTIONS[1],
     lastOpened,
-    sort,
+    ...queryParams
   } = route.useSearch();
   const ScrollAnchor = useScrollAnchor();
+
+  const filterParams = useMemo(
+    () => parseFilterParams(queryParams.filter),
+    [queryParams.filter],
+  );
 
   const {
     data: { allSearchRecords } = {},
     previousData,
     ...allSearchRecordsQuery
   } = useApolloQuery(GET_ALL_SEARCH_RECORDS, {
-    variables: { offset: (page - 1) * pageSize, limit: pageSize, sort },
+    variables: {
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+      sort: queryParams.sort,
+      ...filterParams,
+    },
   });
 
   useLayoutEffect(() => {
@@ -56,20 +70,26 @@ const SearchArchive = () => {
       <FloatingHeader className="grid-centered small-screen:-mx-2 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
         <div className="flex items-center gap-1">
           <FilterButton active size="small" />
-          <SearchArchiveQueryPopover
-            paramType="sort"
-            currentParams={sort}
-            applyParams={(sort) =>
-              navigate({ to: ".", search: { page: 1, sort }, replace: true })
-            }
-            clearParams={() =>
-              navigate({
-                to: ".",
-                search: { page: 1, sort: undefined },
-                replace: true,
-              })
-            }
-          />
+          {(["filter", "sort"] as const).map((param) => (
+            <SearchArchiveQueryPopover
+              paramType={param}
+              currentParams={queryParams[param] as SearchRecordQueryInput[]}
+              applyParams={(data) =>
+                navigate({
+                  to: ".",
+                  search: { page: 1, [param]: data },
+                  replace: true,
+                })
+              }
+              clearParams={() =>
+                navigate({
+                  to: ".",
+                  search: { page: 1, [param]: undefined },
+                  replace: true,
+                })
+              }
+            />
+          ))}
         </div>
 
         {pluralize("Search", searchRecordCount, true)}

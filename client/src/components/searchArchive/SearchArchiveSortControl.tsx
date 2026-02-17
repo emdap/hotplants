@@ -1,7 +1,7 @@
 import Button from "designSystem/Button";
 import { SearchRecordSortField } from "generated/graphql/graphql";
 import { MdArrowDownward, MdArrowUpward, MdDragHandle } from "react-icons/md";
-import { SEARCH_RECORD_SORT_LABELS } from "./searchRecordSortFixtures";
+import { SEARCH_RECORD_SORT_LABELS } from "./searchRecordQueryUtil";
 
 const SearchArchiveSortControl = ({
   field,

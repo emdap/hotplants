@@ -3,7 +3,7 @@ import {
   PlantSearchQueryStatus,
 } from "hooks/usePlantSearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
 export const RESULTS_PANE_ID = "results-pane";
@@ -28,8 +28,8 @@ export type PlantSearchContextType = {
   updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
   applySearchParams: (params?: Partial<PlantSearchParams>) => void;
 
-  plantFilters: PlantSearchFilters;
-  applyPlantFilters: (filters?: PlantSearchFilters) => void;
+  plantFilter: PlantSearchFilter;
+  applyPlantFilter: (filter?: PlantSearchFilter) => void;
 
   hasMoreData: boolean;
   searchStatus: PlantSearchQueryStatus;
@@ -59,8 +59,8 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   updateSearchParamsDraft: VOID_FUNCTION,
   applySearchParams: VOID_FUNCTION,
 
-  plantFilters: {},
-  applyPlantFilters: VOID_FUNCTION,
+  plantFilter: {},
+  applyPlantFilter: VOID_FUNCTION,
 
   searchStatus: "READY",
   hasMoreData: false,

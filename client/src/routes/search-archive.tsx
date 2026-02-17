@@ -7,12 +7,11 @@ export const Route = createFileRoute("/search-archive")({
   search: {
     middlewares: [
       ({ search: incomingSearch, next }) => {
-        // Strip dangling params from plant-search
-        const {
-          search: _search,
-          filters: _filters,
-          ...rest
-        } = incomingSearch as Record<string, unknown>;
+        // Strip dangling param from plant-search
+        const { search: _search, ...rest } = incomingSearch as Record<
+          string,
+          unknown
+        >;
         return next(rest);
       },
       retainSearchParams(true),

@@ -10,7 +10,7 @@ import usePlantSearchQueries, {
 } from "hooks/usePlantSearchQueries";
 import PlantSearch from "pages/PlantSearch";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("/plant-search");
@@ -24,7 +24,7 @@ const PlantSearchProvider = () => {
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
     search: searchParams = null,
-    filters: plantFilters = {},
+    filter: plantFilters = {},
   } = route.useSearch();
 
   const [searchParamsDraft, setSearchParamsDraft] =
@@ -55,7 +55,7 @@ const PlantSearchProvider = () => {
       if (applyParams) {
         navigate({
           to: ".",
-          search: { search: applyParams, filters: {} },
+          search: { search: applyParams, filter: {} },
         });
         isSmallScreen() && setSidebarExpanded(false);
       }
@@ -64,11 +64,11 @@ const PlantSearchProvider = () => {
   );
 
   const applyPlantFilters = useCallback(
-    (filters?: PlantSearchFilters) =>
+    (filter?: PlantSearchFilter) =>
       searchParams &&
       navigate({
         to: ".",
-        search: { search: searchParams, filters },
+        search: { search: searchParams, filter },
       }),
     [navigate, searchParams],
   );
@@ -148,8 +148,8 @@ const PlantSearchProvider = () => {
         updateSearchParamsDraft,
         applySearchParams,
 
-        plantFilters,
-        applyPlantFilters,
+        plantFilter: plantFilters,
+        applyPlantFilter: applyPlantFilters,
 
         searchStatus,
         hasMoreData: Boolean(
