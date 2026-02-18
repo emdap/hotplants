@@ -63,7 +63,7 @@ const PlantSearchProvider = () => {
     [navigate, searchParamsDraft],
   );
 
-  const applyPlantFilters = useCallback(
+  const applyPlantFilter = useCallback(
     (filter?: PlantSearchFilter) =>
       searchParams &&
       navigate({
@@ -149,7 +149,7 @@ const PlantSearchProvider = () => {
         applySearchParams,
 
         plantFilter: plantFilters,
-        applyPlantFilter: applyPlantFilters,
+        applyPlantFilter,
 
         searchStatus,
         hasMoreData: Boolean(

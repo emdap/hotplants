@@ -27,7 +27,7 @@ export const SEARCH_RECORD_ORDERED_QUERY_KEYS: {
     "createdTimestamp",
     "statusUpdatedTimestamp",
   ],
-  filter: ["locationSource", "status", "scientificName", "commonName"],
+  filter: ["locationSource", "status", "commonName", "scientificName"],
 };
 
 const SEARCH_RECORD_STRING_FILTER_LABELS: Record<
