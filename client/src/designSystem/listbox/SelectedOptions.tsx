@@ -45,7 +45,7 @@ const SelectedOptions = ({
   );
 
   useEffect(() => {
-    if (maxVisible !== undefined && listboxValue.length <= maxVisible + 1) {
+    if (maxVisible !== undefined && listboxValue.length <= maxVisible) {
       setMaxVisible(undefined);
     }
   }, [listboxValue.length, maxVisible]);
