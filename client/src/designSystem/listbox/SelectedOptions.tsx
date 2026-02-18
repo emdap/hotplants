@@ -4,10 +4,12 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { MdClose } from "react-icons/md";
+import { ComplexListboxOption } from "./StyledListboxOptions";
 
 const SelectedOptionDisplay = ({ children }: { children: ReactNode }) => (
   <div className="rounded-md text-white bg-primary/80 shadow-sm shadow-black/20 text-xs pl-1.5 pr-1 py-0.5 min-w-max flex gap-1 items-center max-w-3/4 overflow-hidden overflow-ellipsis z-10">
@@ -16,16 +18,31 @@ const SelectedOptionDisplay = ({ children }: { children: ReactNode }) => (
 );
 
 const SelectedOptions = ({
+  options,
   listboxValue,
   removeValue,
 }: {
+  options: (string | ComplexListboxOption)[];
   listboxValue: string[];
-  removeValue: (value: string) => void;
+  removeValue: (value: string | boolean | number) => void;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [maxVisible, setMaxVisible] = useState<number | undefined>();
 
   const hiddenValues = maxVisible ? listboxValue.length - maxVisible : 0;
+
+  const optionLabelDict = useMemo(
+    () =>
+      options.reduce<Record<string, string>>((prev, cur) => {
+        if (typeof cur === "string") {
+          prev[cur] = cur;
+        } else {
+          prev[cur.value] = cur.label;
+        }
+        return prev;
+      }, {}),
+    [options],
+  );
 
   useEffect(() => {
     if (maxVisible !== undefined && listboxValue.length <= maxVisible + 1) {
@@ -64,7 +81,7 @@ const SelectedOptions = ({
     >
       {listboxValue.slice(0, maxVisible).map((value) => (
         <SelectedOptionDisplay key={value}>
-          {value}
+          {optionLabelDict[value]}
           <MdClose
             className="cursor-pointer"
             onPointerDown={(e) => {

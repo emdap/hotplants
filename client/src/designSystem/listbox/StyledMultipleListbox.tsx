@@ -4,12 +4,15 @@ import { MdAdd } from "react-icons/md";
 import Button from "../Button";
 import SelectedOptions from "./SelectedOptions";
 import StyledListboxButton from "./StyledListboxButton";
-import StyledListboxOptions from "./StyledListboxOptions";
+import StyledListboxOptions, {
+  ComplexListboxOption,
+} from "./StyledListboxOptions";
 
 export type CustomSelectedOption = FunctionComponent<
   HTMLProps<HTMLDivElement> & { value: string }
 >;
 
+// TODO: Half updated to support ComplexListboxOption
 const StyledMultipleListbox = ({
   defaultOptions = [],
   value: listboxValue = [],
@@ -18,12 +21,20 @@ const StyledMultipleListbox = ({
   onChange,
   ...listboxProps
 }: {
-  defaultOptions?: string[];
+  defaultOptions?: (string | ComplexListboxOption)[];
   allowCustomOption?: boolean;
 } & ListboxProps<"select", string[]>) => {
   const [customOptions, setCustomOptions] = useState<string[]>([]);
   const [customOptionInput, setCustomOptionInput] = useState("");
   const customInputRef = useRef<HTMLInputElement>(null);
+
+  const mappedOptionValues = useMemo(
+    () =>
+      defaultOptions.map((value) =>
+        typeof value === "string" ? value : value.value,
+      ),
+    [defaultOptions],
+  );
 
   const options = useMemo(
     () => defaultOptions.concat(customOptions),
@@ -33,7 +44,7 @@ const StyledMultipleListbox = ({
   const saveCustomOption = () => {
     if (customOptionInput) {
       if (
-        !defaultOptions.includes(customOptionInput) &&
+        !mappedOptionValues.includes(customOptionInput) &&
         !customOptions.includes(customOptionInput)
       ) {
         setCustomOptions(customOptions.concat(customOptionInput));
@@ -47,7 +58,7 @@ const StyledMultipleListbox = ({
     }
   };
 
-  const removeValue = (value: string) =>
+  const removeValue = (value: string | boolean | number) =>
     handleChange(listboxValue.filter((val) => val !== value) ?? []);
 
   const handleChange = (value: string[], skipCustomOptionCheck?: boolean) => {
@@ -75,7 +86,9 @@ const StyledMultipleListbox = ({
       >
         {({ open }) => {
           open && customInputRef.current?.focus({ preventScroll: true });
-          return <SelectedOptions {...{ listboxValue, removeValue }} />;
+          return (
+            <SelectedOptions {...{ listboxValue, removeValue, options }} />
+          );
         }}
       </StyledListboxButton>
 
