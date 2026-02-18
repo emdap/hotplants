@@ -29,15 +29,6 @@ const SearchRecordCard = ({
       variables: { id: _id },
     });
 
-  const maxPlantCounts = useMemo(() => {
-    const actualOccurrences = searchRecordDataCounts?.occurrenceCount ?? 0;
-
-    return {
-      total: Math.max(actualOccurrences, totalOccurrences),
-      offset: Math.max(actualOccurrences, occurrencesOffset),
-    };
-  }, [searchRecordDataCounts, totalOccurrences, occurrencesOffset]);
-
   const { title, subTitle } = useMemo(() => {
     if (searchParams.locationSource === "custom") {
       return { title: customLocationDisplay(searchParams) };
@@ -133,10 +124,10 @@ const SearchRecordCard = ({
             title="Scraping progress"
             unitTitle="Plant Occurrences"
             isLoading={plantCountLoading}
-            amount={maxPlantCounts.offset}
-            total={maxPlantCounts.total}
+            amount={occurrencesOffset}
+            total={totalOccurrences}
             isError={
-              searchParams.status === "COMPLETE" && maxPlantCounts?.total === 0
+              searchParams.status === "COMPLETE" && totalOccurrences === 0
             }
           />
         </div>
