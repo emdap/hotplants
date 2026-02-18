@@ -97,7 +97,7 @@ const SearchArchiveParamControl = <T extends SearchRecordQueryInput>({
           defaultOptions={
             STRING_FILTER_OPTIONS_DICT[field as SearchRecordStringFilterField]
           }
-          value={(value ?? []) as string[]}
+          value={(value || []) as string[]}
           onChange={onChange}
         />
       )}

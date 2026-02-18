@@ -91,8 +91,10 @@ const PopoverContent = <T extends SearchRecordQueryInput>({
         .concat(localParams.slice(index + 1));
     }
 
-    nextValue !== undefined &&
+    if (Array.isArray(nextValue) ? nextValue.length : nextValue !== undefined) {
       nextParams.push({ field, value: nextValue } as T);
+    }
+
     setLocalParams(nextParams.length ? nextParams : undefined);
   };
 

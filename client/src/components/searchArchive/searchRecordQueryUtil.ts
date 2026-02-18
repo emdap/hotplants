@@ -1,8 +1,11 @@
+import { ComplexListboxOption } from "designSystem/listbox/StyledListboxOptions";
 import {
+  LocationSource,
   SearchRecordBooleanFilterField,
   SearchRecordBooleanFilterInput,
   SearchRecordSortField,
   SearchRecordSortInput,
+  SearchRecordStatus,
   SearchRecordStringFilterField,
   SearchRecordStringFilterInput,
 } from "generated/graphql/graphql";
@@ -99,17 +102,19 @@ export const BOOLEAN_FILTER_DICT: Record<
   "Show all": undefined,
 };
 
-export const SEARCH_RECORD_ORDERED_LOCATION_SOURCE_OPTIONS = ["Map", "Custom"];
-export const SEARCH_RECORD_ORDERED_STATUS_OPTIONS = [
-  "Ready",
-  "Scraping",
-  "Complete",
-];
+export const SEARCH_RECORD_ORDERED_LOCATION_SOURCE_OPTIONS: ComplexListboxOption<LocationSource>[] =
+  [
+    { label: "Map search", value: "search" },
+    { label: "Custom input", value: "custom" },
+  ];
+export const SEARCH_RECORD_ORDERED_STATUS_OPTIONS: ComplexListboxOption<SearchRecordStatus>[] =
+  [
+    { label: "Ready", value: "READY" },
+    { label: "Scraping", value: "SCRAPING" },
+    { label: "Complete", value: "COMPLETE" },
+  ];
 
-export const STRING_FILTER_OPTIONS_DICT: Record<
-  SearchRecordStringFilterField,
-  string[]
-> = {
+export const STRING_FILTER_OPTIONS_DICT = {
   locationSource: SEARCH_RECORD_ORDERED_LOCATION_SOURCE_OPTIONS,
   status: SEARCH_RECORD_ORDERED_STATUS_OPTIONS,
 };
