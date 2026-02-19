@@ -19,7 +19,7 @@ type SearchArchiveQueryPopoverProps<T extends SearchRecordQueryInput> = {
   clearParams: () => void;
 };
 
-const SearchArchiveQueryPopover = <T extends SearchRecordQueryInput>(
+const SearchArchiveParamPopover = <T extends SearchRecordQueryInput>(
   props: SearchArchiveQueryPopoverProps<T>,
 ) => {
   const buttonProps: IconButtonVariantProps = {
@@ -144,4 +144,4 @@ const PopoverContent = <T extends SearchRecordQueryInput>({
   );
 };
 
-export default SearchArchiveQueryPopover;
+export default SearchArchiveParamPopover;

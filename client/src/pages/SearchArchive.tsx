@@ -1,5 +1,5 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
-import SearchArchiveQueryPopover from "components/searchArchive/SearchArchiveQueryPopover";
+import SearchArchiveParamPopover from "components/searchArchive/SearchArchiveParamPopover";
 import SearchRecordCard from "components/searchArchive/SearchRecordCard";
 import {
   parseFilterParams,
@@ -69,7 +69,7 @@ const SearchArchive = () => {
       <FloatingHeader className="grid-centered small-screen:-mx-2.5 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
         <div className="flex items-center gap-1">
           {(["filter", "sort"] as const).map((param) => (
-            <SearchArchiveQueryPopover
+            <SearchArchiveParamPopover
               key={param}
               paramType={param}
               currentParams={queryParams[param] as SearchRecordQueryInput[]}
