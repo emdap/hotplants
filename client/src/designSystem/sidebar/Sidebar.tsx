@@ -86,7 +86,7 @@ const Sidebar = ({
               "big-screen:absolute small-screen:sticky",
               {
                 "big-screen:right-1.5": !isExpanded,
-                "big-screen:absolute big-screen:translate-x-1/2 small-screen:right-1.5":
+                "big-screen:absolute big-screen:translate-x-1/2 small-screen:-mr-2":
                   isExpanded,
               },
             ],

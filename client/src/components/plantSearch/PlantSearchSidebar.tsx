@@ -26,7 +26,8 @@ const PlantSearchSidebar = () => {
               hasCurrentResults,
             "h-max": !hasCurrentResults,
 
-            "big-screen:w-md [&_.sidebar-button]:bg-primary-dark": isExpanded,
+            "big-screen:w-md big-screen:[&_.sidebar-button]:bg-primary-dark [&_.sidebar-button:bg-accent-light":
+              isExpanded,
             "big-screen:overflow-hidden": !isExpanded,
           },
         )
