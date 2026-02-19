@@ -1,10 +1,10 @@
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import FloatingHeader from "designSystem/FloatingHeader";
 import LoadingIcon from "designSystem/LoadingIcon";
+import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
 import pluralize from "pluralize";
 import { FaGlobe } from "react-icons/fa";
-import { PaginationControl } from "../../designSystem/PaginationControl";
 
 const PlantSearchHeader = () => {
   const {
@@ -12,6 +12,8 @@ const PlantSearchHeader = () => {
     pageSize,
     searchStatus,
     totalResultsCount,
+    isInfiniteScroll,
+    setIsInfiniteScroll,
     setSidebarExpanded,
   } = usePlantSearchContext();
 
@@ -25,7 +27,7 @@ const PlantSearchHeader = () => {
 
       <div className="small-screen:text-default-text flex items-center gap-1 col-start-2">
         {pluralize("Plant", totalResultsCount, true)}
-        {searchStatus !== "READY" && <LoadingIcon />}
+        {searchStatus === "SCRAPING_AND_POLLING" && <LoadingIcon />}
       </div>
 
       <PaginationControl
@@ -34,6 +36,10 @@ const PlantSearchHeader = () => {
         totalResults={totalResultsCount}
         pageSize={pageSize}
         replaceUrl
+        infiniteScroll={{
+          enabled: isInfiniteScroll,
+          setEnabled: setIsInfiniteScroll,
+        }}
       />
     </FloatingHeader>
   );

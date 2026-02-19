@@ -13,7 +13,7 @@ type FlatOccurrenceMedia = Omit<PlantOccurrence, "media"> & {
 };
 
 const occurrenceMediaFlat = (plant: PlantResult, plantIndex: number) => {
-  let overallIndex = 0;
+  let overallIndex = plant.thumbnailUrl ? 1 : 0;
   return plant.occurrences.reduce<FlatOccurrenceMedia[]>((prev, occurrence) => {
     const mappedMedia = occurrence.media.map((media, index) => ({
       ...occurrence,
@@ -63,7 +63,7 @@ const PlantOccurrenceMarkers = ({
   const isActiveOccurrenceMedia = (
     isViewingAllPlants: boolean,
     plantIndex: number,
-    mediaIndex: number
+    mediaIndex: number,
   ) =>
     isViewingAllPlants
       ? false
@@ -87,8 +87,8 @@ const PlantOccurrenceMarkers = ({
               isActiveOccurrenceMedia(
                 isViewingAllPlants,
                 plantIndex,
-                mediaIndex
-              )
+                mediaIndex,
+              ),
             )}
             eventHandlers={{
               click: () => {
@@ -97,7 +97,7 @@ const PlantOccurrenceMarkers = ({
               },
             }}
           />
-        )
+        ),
       )}
     </MarkerClusterGroup>
   ));

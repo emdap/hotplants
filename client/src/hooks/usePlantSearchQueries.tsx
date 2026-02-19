@@ -4,9 +4,10 @@ import { paths } from "generated/schemas/hotplants";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
+import { PaginationParams } from "util/routeParamsUtil";
 
 export type PlantSearchQueryStatus =
   | "READY"
@@ -22,8 +23,8 @@ const MIN_RESULTS = 50;
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
   limit: DEFAULT_PAGE_SIZE,
   sort: [
-    { field: "addedTimestamp", direction: 1 },
-    { field: "scientificName", direction: 1 },
+    { field: "addedTimestamp", value: 1 },
+    { field: "scientificName", value: 1 },
   ],
 };
 
@@ -33,7 +34,12 @@ const hotplantsClient = createClient<paths>({
 
 const usePlantSearchQueries = (
   searchParams: PlantSearchParams | null = null,
-  plantFilters: PlantSearchFilters,
+  plantFilters: PlantSearchFilter,
+  {
+    paginationEnabled,
+    page,
+    pageSize,
+  }: Required<PaginationParams> & { paginationEnabled: boolean },
 ) => {
   const [searchStatus, setSearchStatus] =
     useState<PlantSearchQueryStatus>("READY");
@@ -43,15 +49,30 @@ const usePlantSearchQueries = (
   const [pollInterval, setPollInterval] = useState(0);
 
   // #region Queries
+  const paginationVars = useMemo(
+    () =>
+      paginationEnabled
+        ? {
+            paginated: true,
+            limit: pageSize,
+            offset: (page - 1) * pageSize,
+          }
+        : null,
+    [paginationEnabled, pageSize, page],
+  );
+
   const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
     pollInterval,
     skip: !searchParams,
+
     variables: {
       ...DEFAULT_PLANT_SEARCH_GQL_VARS,
+      ...paginationVars,
       where: {
         boundingPolyCoords: searchParams?.boundingPolyCoords,
         commonName: searchParams?.commonName,
         scientificName: searchParams?.scientificName,
+
         ...plantFilters,
       },
     },
@@ -203,35 +224,10 @@ const usePlantSearchQueries = (
     scrapeOccurrencesQuery.error,
   ]);
 
-  const unfetchedPlants = plantSearchData
-    ? plantSearchData.count - plantSearchData.results.length
-    : 0;
-
-  const fetchNextPlantsPage = async () => {
-    if (
-      !plantSearchData?.results ||
-      plantSearchQuery.networkStatus === NetworkStatus.fetchMore
-    ) {
-      return;
-    }
-
-    if (
-      (searchStatus === "READY" && unfetchedPlants) ||
-      unfetchedPlants >= DEFAULT_PAGE_SIZE
-    ) {
-      plantSearchQuery.fetchMore({
-        variables: { offset: plantSearchData.results.length },
-      });
-    }
-  };
-
   return {
     searchStatus,
-    plantSearchData,
     plantSearchQuery,
     searchRecordQuery,
-    fetchNextPlantsPage,
-    hasNextPage: Boolean(unfetchedPlants),
     scrapeMoreData: scrapeOccurrencesQuery.refetch,
   };
 };

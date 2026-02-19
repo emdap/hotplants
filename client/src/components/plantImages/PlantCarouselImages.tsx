@@ -45,7 +45,7 @@ const PlantCarouselImages = ({
             ...DEFAULT_IMAGE_PROPS,
           }}
         />
-      ))
+      )),
   );
 
   return baseArray.concat(occurrenceImages);

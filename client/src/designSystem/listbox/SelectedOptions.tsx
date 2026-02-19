@@ -4,10 +4,12 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { MdClose } from "react-icons/md";
+import { ComplexListboxOption } from "./StyledListboxOptions";
 
 const SelectedOptionDisplay = ({ children }: { children: ReactNode }) => (
   <div className="rounded-md text-white bg-primary/80 shadow-sm shadow-black/20 text-xs pl-1.5 pr-1 py-0.5 min-w-max flex gap-1 items-center max-w-3/4 overflow-hidden overflow-ellipsis z-10">
@@ -16,19 +18,34 @@ const SelectedOptionDisplay = ({ children }: { children: ReactNode }) => (
 );
 
 const SelectedOptions = ({
+  options,
   listboxValue,
   removeValue,
 }: {
+  options: (string | ComplexListboxOption)[];
   listboxValue: string[];
-  removeValue: (value: string) => void;
+  removeValue: (value: string | boolean | number) => void;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [maxVisible, setMaxVisible] = useState<number | undefined>();
 
   const hiddenValues = maxVisible ? listboxValue.length - maxVisible : 0;
 
+  const optionLabelDict = useMemo(
+    () =>
+      options.reduce<Record<string, string>>((prev, cur) => {
+        if (typeof cur === "string") {
+          prev[cur] = cur;
+        } else {
+          prev[cur.value] = cur.label;
+        }
+        return prev;
+      }, {}),
+    [options],
+  );
+
   useEffect(() => {
-    if (maxVisible && listboxValue.length <= maxVisible) {
+    if (maxVisible !== undefined && listboxValue.length <= maxVisible) {
       setMaxVisible(undefined);
     }
   }, [listboxValue.length, maxVisible]);
@@ -38,7 +55,7 @@ const SelectedOptions = ({
       const { offsetWidth, scrollWidth } = containerRef.current;
 
       if (scrollWidth > offsetWidth) {
-        setMaxVisible((prev) => (prev || listboxValue.length) - 1);
+        setMaxVisible((prev) => Math.max(1, (prev || listboxValue.length) - 2));
       }
     }
   }, [listboxValue.length]);
@@ -60,11 +77,11 @@ const SelectedOptions = ({
   return (
     <div
       ref={containerRef}
-      className="h-full flex items-center gap-2 pr-4 grow overflow-hidden"
+      className="h-full flex items-center gap-2 pr-3 grow overflow-hidden"
     >
       {listboxValue.slice(0, maxVisible).map((value) => (
         <SelectedOptionDisplay key={value}>
-          {value}
+          {optionLabelDict[value]}
           <MdClose
             className="cursor-pointer"
             onPointerDown={(e) => {
@@ -74,7 +91,11 @@ const SelectedOptions = ({
           />
         </SelectedOptionDisplay>
       ))}
-      <div className={classNames(hiddenValues < 1 && "opacity-0")}>
+      <div
+        className={classNames(
+          hiddenValues < 1 && "opacity-0 w-0 overflow-hidden",
+        )}
+      >
         <SelectedOptionDisplay>+{hiddenValues} more</SelectedOptionDisplay>
       </div>
     </div>

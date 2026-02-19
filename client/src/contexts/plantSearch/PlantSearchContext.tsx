@@ -1,6 +1,9 @@
-import { PlantSearchQueriesReturnType } from "hooks/usePlantSearchQueries";
+import {
+  PlantSearchQueriesReturnType,
+  PlantSearchQueryStatus,
+} from "hooks/usePlantSearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
 export const RESULTS_PANE_ID = "results-pane";
@@ -11,10 +14,13 @@ const VOID_PROMISE_FUNCTION = async () => {};
 export type PlantSearchContextType = {
   hasCurrentResults: boolean;
   totalResultsCount: number;
-  page: number;
-  pageSize: number;
+
+  isInfiniteScroll: boolean;
+  setIsInfiniteScroll: (enabled: boolean) => void;
 
   searchParams: PlantSearchParams | null;
+  page: number;
+  pageSize: number;
 
   searchParamsDraft: Partial<PlantSearchParams> | null;
   validatedSearchParamsDraft: PlantSearchParams | null;
@@ -22,23 +28,30 @@ export type PlantSearchContextType = {
   updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
   applySearchParams: (params?: Partial<PlantSearchParams>) => void;
 
-  plantFilters: PlantSearchFilters;
-  applyPlantFilters: (filters?: PlantSearchFilters) => void;
+  plantFilter: PlantSearchFilter;
+  applyPlantFilter: (filter?: PlantSearchFilter) => void;
+
+  hasMoreData: boolean;
+  searchStatus: PlantSearchQueryStatus;
+  fetchMorePlants: () => Promise<void>;
 
   sidebarExpanded: boolean;
   setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
 } & Pick<
   PlantSearchQueriesReturnType,
-  "fetchNextPlantsPage" | "hasNextPage" | "searchStatus" | "searchRecordQuery"
+  "searchRecordQuery" | "plantSearchQuery"
 >;
 
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   hasCurrentResults: false,
   totalResultsCount: 0,
-  page: 0,
-  pageSize: 20,
+
+  isInfiniteScroll: !isSmallScreen(),
+  setIsInfiniteScroll: VOID_FUNCTION,
 
   searchParams: null,
+  page: 0,
+  pageSize: 20,
 
   searchParamsDraft: null,
   validatedSearchParamsDraft: null,
@@ -46,13 +59,14 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   updateSearchParamsDraft: VOID_FUNCTION,
   applySearchParams: VOID_FUNCTION,
 
-  plantFilters: {},
-  applyPlantFilters: VOID_FUNCTION,
+  plantFilter: {},
+  applyPlantFilter: VOID_FUNCTION,
 
   searchStatus: "READY",
+  hasMoreData: false,
   searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
-  hasNextPage: false,
-  fetchNextPlantsPage: VOID_PROMISE_FUNCTION,
+  plantSearchQuery: {} as PlantSearchQueriesReturnType["plantSearchQuery"],
+  fetchMorePlants: VOID_PROMISE_FUNCTION,
 
   sidebarExpanded: !isSmallScreen(),
   setSidebarExpanded: VOID_FUNCTION,

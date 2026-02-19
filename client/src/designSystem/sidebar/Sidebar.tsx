@@ -7,7 +7,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 
-export type SidebarProps = {
+type SidebarProps = {
   isExpanded?: boolean;
   setIsExpanded?: (expanded: boolean) => void;
   externalCollapseButton?: boolean;
@@ -79,13 +79,14 @@ const Sidebar = ({
             "text-white transition-all outline-none p-1! mb-2 rounded-full! hover:border-white/40 border border-transparent aspect-square",
             {
               "bg-inherit": isExpanded,
-              "sticky right-1.5": !externalCollapseButton,
+              "sticky big-screen:right-1.5 small-screen:-mr-2":
+                !externalCollapseButton,
             },
             externalCollapseButton && [
               "big-screen:absolute small-screen:sticky",
               {
                 "big-screen:right-1.5": !isExpanded,
-                "big-screen:absolute big-screen:translate-x-1/2 small-screen:right-1.5":
+                "big-screen:absolute big-screen:translate-x-1/2 small-screen:-mr-2":
                   isExpanded,
               },
             ],

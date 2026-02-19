@@ -191,8 +191,8 @@ export type PlantSortField =
   | 'updatedTimestamp';
 
 export type PlantSortInput = {
-  direction: Scalars['Int']['input'];
   field: PlantSortField;
+  value: Scalars['Int']['input'];
 };
 
 export type Query = {
@@ -292,8 +292,8 @@ export type SearchRecordSortField =
   | 'totalOccurrences';
 
 export type SearchRecordSortInput = {
-  direction: Scalars['Int']['input'];
   field: SearchRecordSortField;
+  value: Scalars['Int']['input'];
 };
 
 export type SearchRecordStatus =
@@ -307,7 +307,7 @@ export type SearchRecordStringFilterField =
 
 export type SearchRecordStringFilterInput = {
   field: SearchRecordStringFilterField;
-  value: Scalars['String']['input'];
+  value: Array<Scalars['String']['input']>;
 };
 
 export type UserGarden = {

@@ -2,21 +2,21 @@ import { Outlet } from "@tanstack/react-router";
 import AppSidebar from "components/navigation/AppSidebar";
 import AppHeader from "components/navigation/header/AppHeader";
 import { authClient } from "config/authClient";
+import SidebarContextProvider from "contexts/sidebar/SidebarContextProvider";
 import { useDarkMode } from "designSystem/darkMode/DarkModeContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Toaster } from "sonner";
 import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
 
 const App = () => {
   const { isDarkMode } = useDarkMode();
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   useEffect(() => {
     authClient.getSession();
   }, []);
 
   return (
-    <>
+    <SidebarContextProvider>
       <div
         id={BACKGROUND_ANIMATION_ID}
         className="fixed -z-10 h-dvh w-dvw pretty-background"
@@ -30,15 +30,12 @@ const App = () => {
           },
         }}
       />
-      <AppHeader openSidebar={() => setSidebarExpanded(true)} />
+      <AppHeader />
       <div className="flex [&_main]:grow">
-        <AppSidebar
-          isExpanded={sidebarExpanded}
-          setIsExpanded={setSidebarExpanded}
-        />
+        <AppSidebar />
         <Outlet />
       </div>
-    </>
+    </SidebarContextProvider>
   );
 };
 

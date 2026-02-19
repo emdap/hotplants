@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import ListboxWrapper from "designSystem/listbox/ListboxWrapper";
+import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { ChangeEvent } from "react";
 import { FilterInput, FilterInputType } from "./filterFixtures";
@@ -57,7 +57,7 @@ const FilterInputField = <
           }
         />
       ) : inputType === "select" ? (
-        <ListboxWrapper
+        <StyledMultipleListbox
           name={plantDataKey}
           value={value ?? []}
           onChange={onChange}

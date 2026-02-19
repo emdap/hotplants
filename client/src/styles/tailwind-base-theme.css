@@ -56,7 +56,7 @@
   * {
     @variant dark {
       --color-default-text: #eee;
-      --color-default-background: #000;
+      --color-default-background: var(--color-gray-800);
 
       --color-primary-faded: #776491;
       --color-primary: #a577e3;
@@ -72,24 +72,29 @@
     }
   }
 
+  * {
+    @apply scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-accent scrollbar-track-transparent;
+  }
+
+  html,
+  body {
+    @apply scrollbar-thumb-scrollbar scrollbar-thin scrollbar-thumb-rounded-full;
+  }
+
   html {
-    scrollbar-color: var(--color-scrollbar) var(--color-accent);
-
-    &.dark {
-      scrollbar-color: var(--color-scrollbar) var(--color-primary-dark);
+    &.theme-loaded {
+      .card,
+      .pretty-background,
+      header {
+        @apply transition-colors;
+      }
     }
 
-    &.theme-loaded * {
-      @apply transition-colors;
-    }
-
-    @apply small-screen:overflow-visible big-screen:overflow-hidden  bg-accent small-screen:stable-scrollbar;
+    @apply small-screen:overflow-visible big-screen:overflow-hidden bg-accent small-screen:stable-scrollbar scrollbar-track-accent dark:scrollbar-track-accent;
   }
 
   body {
-    scrollbar-color: var(--color-scrollbar) transparent;
-
     @apply big-screen:h-dvh big-screen:w-dvw big-screen:overflow-auto big-screen:stable-scrollbar;
-    @apply scroll-smooth text-default-text;
+    @apply big-screen:scrollbar-track-transparent text-default-text;
   }
 }

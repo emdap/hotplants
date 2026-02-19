@@ -11,10 +11,10 @@ import {
 import { useApolloQuery } from "hooks/useQuery";
 import { ReactNode, useMemo } from "react";
 import { MdDoubleArrow } from "react-icons/md";
-import { DEFAULT_DATE_FORMAT } from "util/generalUtil";
+import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
 import { customLocationDisplay } from "util/locationUtil";
-import MapProvider from "./interactiveMap/MapProvider";
-import { OPTIONAL_SEARCH_PARAM_FILTERS } from "./plantFilters/filterFixtures";
+import MapProvider from "../interactiveMap/MapProvider";
+import { OPTIONAL_SEARCH_PARAM_FILTERS } from "../plantFilters/filterFixtures";
 
 const SearchRecordCard = ({
   _id,
@@ -28,15 +28,6 @@ const SearchRecordCard = ({
     useApolloQuery(GET_SEARCH_RECORD_PLANT_COUNT, {
       variables: { id: _id },
     });
-
-  const maxPlantCounts = useMemo(() => {
-    const actualOccurrences = searchRecordDataCounts?.occurrenceCount ?? 0;
-
-    return {
-      total: Math.max(actualOccurrences, totalOccurrences),
-      offset: Math.max(actualOccurrences, occurrencesOffset),
-    };
-  }, [searchRecordDataCounts, totalOccurrences, occurrencesOffset]);
 
   const { title, subTitle } = useMemo(() => {
     if (searchParams.locationSource === "custom") {
@@ -58,9 +49,12 @@ const SearchRecordCard = ({
     });
     navigate({
       to: "/plant-search",
-      search: { search: searchParams, filters: {}, page: 1 },
+      search: { search: searchParams, filter: {}, page: 1 },
     });
   };
+
+  const formatDate = (timestamp?: number | null) =>
+    timestamp ? format(new Date(timestamp), DEFAULT_DATE_TIME_FORMAT) : "N/A";
 
   return (
     <Card
@@ -117,18 +111,11 @@ const SearchRecordCard = ({
           <div className="mt-auto">
             <InfoRow
               title="Search created"
-              value={format(searchParams.createdTimestamp, DEFAULT_DATE_FORMAT)}
+              value={formatDate(searchParams.createdTimestamp)}
             />
             <InfoRow
               title="Search last ran"
-              value={
-                searchParams.statusUpdatedTimestamp
-                  ? format(
-                      searchParams.statusUpdatedTimestamp,
-                      DEFAULT_DATE_FORMAT,
-                    )
-                  : "N/A"
-              }
+              value={formatDate(searchParams.statusUpdatedTimestamp)}
             />
             <InfoRow title="Status" value={searchParams.status} />
           </div>
@@ -137,10 +124,10 @@ const SearchRecordCard = ({
             title="Scraping progress"
             unitTitle="Plant Occurrences"
             isLoading={plantCountLoading}
-            amount={maxPlantCounts.offset}
-            total={maxPlantCounts.total}
+            amount={occurrencesOffset}
+            total={totalOccurrences}
             isError={
-              searchParams.status === "COMPLETE" && maxPlantCounts?.total === 0
+              searchParams.status === "COMPLETE" && totalOccurrences === 0
             }
           />
         </div>

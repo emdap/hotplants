@@ -1,30 +1,30 @@
+import { NetworkStatus } from "@apollo/client";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import {
   PlantSearchContext,
   PlantSearchContextType,
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
-import { PlantQueryData } from "graphqlHelpers/plantQueries";
-import usePlantSearchQueries from "hooks/usePlantSearchQueries";
+import usePlantSearchQueries, {
+  DEFAULT_PAGE_SIZE,
+} from "hooks/usePlantSearchQueries";
 import PlantSearch from "pages/PlantSearch";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PlantSearchFilters, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("/plant-search");
 
-const DEFAULT_CACHED_PLANT_DATA = {
-  count: 0,
-  results: [],
-};
-
 const PlantSearchProvider = () => {
+  const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
+
   const navigate = useNavigate();
+
   const {
     page = 1,
-    pageSize = 20,
+    pageSize = DEFAULT_PAGE_SIZE,
     search: searchParams = null,
-    filters: plantFilters = {},
+    filter: plantFilters = {},
   } = route.useSearch();
 
   const [searchParamsDraft, setSearchParamsDraft] =
@@ -33,25 +33,6 @@ const PlantSearchProvider = () => {
   useEffect(() => {
     setSearchParamsDraft(searchParams);
   }, [searchParams]);
-
-  const [cachedPlantData, setCachedPlantData] = useState<PlantQueryData>(
-    DEFAULT_CACHED_PLANT_DATA,
-  );
-
-  const { hasCurrentResults, totalResultsCount } = useMemo(
-    () => ({
-      hasCurrentResults: Boolean(cachedPlantData.count),
-      totalResultsCount: cachedPlantData.count,
-    }),
-    [cachedPlantData.count],
-  );
-
-  useEffect(() => {
-    if (!searchParams && hasCurrentResults) {
-      setSearchParamsDraft(null);
-      setCachedPlantData(DEFAULT_CACHED_PLANT_DATA);
-    }
-  }, [searchParams, hasCurrentResults]);
 
   const validateSearchParams = (
     params?: Partial<PlantSearchParams> | null,
@@ -74,7 +55,7 @@ const PlantSearchProvider = () => {
       if (applyParams) {
         navigate({
           to: ".",
-          search: { search: applyParams, filters: {} },
+          search: { search: applyParams, filter: {}, page: 1 },
         });
         isSmallScreen() && setSidebarExpanded(false);
       }
@@ -82,12 +63,12 @@ const PlantSearchProvider = () => {
     [navigate, searchParamsDraft],
   );
 
-  const applyPlantFilters = useCallback(
-    (filters?: PlantSearchFilters) =>
+  const applyPlantFilter = useCallback(
+    (filter?: PlantSearchFilter) =>
       searchParams &&
       navigate({
         to: ".",
-        search: { search: searchParams, filters },
+        search: { search: searchParams, filter },
       }),
     [navigate, searchParams],
   );
@@ -96,14 +77,49 @@ const PlantSearchProvider = () => {
     (searchParams) =>
       setSearchParamsDraft((prev) => ({ ...prev, ...searchParams }));
 
-  const { searchStatus, plantSearchData, ...searchQueries } =
-    usePlantSearchQueries(searchParams, plantFilters);
+  const { searchStatus, plantSearchQuery, searchRecordQuery } =
+    usePlantSearchQueries(searchParams, plantFilters, {
+      page,
+      pageSize,
+      paginationEnabled: !isInfiniteScroll,
+    });
 
-  useEffect(() => {
-    searchStatus !== "CHECKING_STATUS" &&
-      plantSearchData &&
-      setCachedPlantData(plantSearchData);
-  }, [searchStatus, plantSearchData]);
+  const plantSearchData = plantSearchQuery.data
+    ? plantSearchQuery.data.plantSearch
+    : plantSearchQuery.loading
+      ? plantSearchQuery.previousData?.plantSearch
+      : null;
+
+  const { hasCurrentResults, totalResultsCount } = useMemo(
+    () => ({
+      hasCurrentResults: Boolean(plantSearchData?.count),
+      totalResultsCount: plantSearchData?.count ?? 0,
+    }),
+    [plantSearchData?.count],
+  );
+
+  const unfetchedPlants = plantSearchData
+    ? plantSearchData.count - plantSearchData.results.length
+    : 0;
+
+  const fetchMorePlants = async () => {
+    if (
+      !isInfiniteScroll ||
+      !plantSearchData?.results ||
+      plantSearchQuery.networkStatus === NetworkStatus.fetchMore
+    ) {
+      return;
+    }
+
+    if (
+      (searchStatus === "READY" && unfetchedPlants) ||
+      unfetchedPlants >= (pageSize ?? DEFAULT_PAGE_SIZE)
+    ) {
+      plantSearchQuery.fetchMore({
+        variables: { offset: plantSearchData.results.length },
+      });
+    }
+  };
 
   const [sidebarExpanded, setSidebarExpanded] = useState(!isSmallScreen());
   useEffect(() => {
@@ -119,6 +135,9 @@ const PlantSearchProvider = () => {
         hasCurrentResults,
         totalResultsCount,
 
+        isInfiniteScroll,
+        setIsInfiniteScroll,
+
         searchParams,
         page,
         pageSize,
@@ -129,18 +148,29 @@ const PlantSearchProvider = () => {
         updateSearchParamsDraft,
         applySearchParams,
 
-        plantFilters,
-        applyPlantFilters,
+        plantFilter: plantFilters,
+        applyPlantFilter,
 
         searchStatus,
-        ...searchQueries,
+        hasMoreData: Boolean(
+          isInfiniteScroll
+            ? unfetchedPlants
+            : plantSearchData && plantSearchData?.count / pageSize > page,
+        ),
+        searchRecordQuery,
+        plantSearchQuery,
+        fetchMorePlants,
 
         sidebarExpanded,
         setSidebarExpanded,
       }}
     >
       <PlantSelectionProvider
-        plantList={cachedPlantData.results}
+        plantList={
+          (isInfiniteScroll
+            ? plantSearchData?.results
+            : plantSearchQuery.data?.plantSearch.results) ?? []
+        }
         boundingPolygon={searchParams?.boundingPolyCoords}
       >
         <PlantSearch />

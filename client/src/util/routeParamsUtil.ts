@@ -2,14 +2,10 @@ import { polygon } from "@turf/turf";
 import {
   LocationSource,
   SearchRecordBooleanFilterInput,
+  SearchRecordSortInput,
   SearchRecordStringFilterInput,
 } from "generated/graphql/graphql";
-import { PlantSearchFilters, PlantSearchParams } from "./customSchemaTypes";
-
-export const DEFAULT_PAGINATION_PARAMS = {
-  page: undefined,
-  pageSize: undefined,
-};
+import { PlantSearchFilter, PlantSearchParams } from "./customSchemaTypes";
 
 export type PaginationParams = {
   page?: number;
@@ -19,10 +15,10 @@ export type PaginationParams = {
 const validateString = (input: unknown) => String(input || "") || undefined;
 
 export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
-  ...DEFAULT_PAGINATION_PARAMS,
-
+  page: undefined,
+  pageSize: undefined,
   search: undefined,
-  filters: undefined,
+  filter: undefined,
 };
 
 type PlantSearchRouteParams = PaginationParams &
@@ -32,7 +28,7 @@ type PlantSearchRouteParams = PaginationParams &
         pageSize?: number;
 
         search: PlantSearchParams | null;
-        filters: PlantSearchFilters;
+        filter: PlantSearchFilter;
       }
     | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
   );
@@ -101,9 +97,9 @@ const validateSearch = (searchParams: unknown): PlantSearchParams | null => {
 };
 
 // TODO: actually validate the filter types
-const validateFilters = (filterParams: unknown): PlantSearchFilters => {
+const validateFilters = (filterParams: unknown): PlantSearchFilter => {
   if (typeof filterParams === "object" && filterParams !== null) {
-    return filterParams as PlantSearchFilters;
+    return filterParams as PlantSearchFilter;
   }
   return {};
 };
@@ -128,7 +124,7 @@ export const validatePlantSearchParams = (
   if (search) {
     return {
       ...getPaginationParams(params),
-      filters: validateFilters(params.filters),
+      filter: validateFilters(params.filter),
       search,
     };
   }
@@ -136,11 +132,13 @@ export const validatePlantSearchParams = (
   return {};
 };
 
+export type SearchRecordFilterInput =
+  | SearchRecordStringFilterInput
+  | SearchRecordBooleanFilterInput;
+
 type SearchArchiveParams = PaginationParams & {
-  stringFilter?: SearchRecordStringFilterInput;
-  booleanFilter?: SearchRecordBooleanFilterInput;
-  sortField?: string;
-  sortDir?: -1 | 1;
+  filter?: SearchRecordFilterInput[];
+  sort?: SearchRecordSortInput[];
   lastOpened?: string;
 };
 

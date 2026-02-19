@@ -35,7 +35,7 @@ export const getPlantDisplayName = (plant: PlantResult) => {
   return commonName ? capitalize(commonName) : plant.scientificName;
 };
 
-export const DEFAULT_DATE_FORMAT = "LLL d, yyyy";
+export const DEFAULT_DATE_TIME_FORMAT = "LLL d, yyyy 'at' HH:mm";
 
 export const BACKGROUND_ANIMATION_ID = "background-animation";
 export const findAnimation = (
@@ -57,5 +57,9 @@ export const isSafari = /^((?!chrome|android).)*safari/i.test(
 );
 
 // Needs to be kept in sync with tailwind-base-theme.css
+export const SMALL_SCREEN_WIDTH = 1024;
+export const SMALL_SCREEN_HEIGHT = 600;
+
 export const isSmallScreen = () =>
-  window.innerWidth < 1024 || window.innerHeight < 600;
+  window.innerWidth < SMALL_SCREEN_WIDTH ||
+  window.innerHeight < SMALL_SCREEN_HEIGHT;

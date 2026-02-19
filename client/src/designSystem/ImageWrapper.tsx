@@ -29,7 +29,7 @@ const ImageWrapper = ({
   ...containerProps
 }: ImageWrapperProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
   const [imageNotAvailable, setImageNotAvailable] = useState(false);
 
   const handleLoadError = () => {
@@ -45,7 +45,7 @@ const ImageWrapper = ({
   }, [imageUrl]);
 
   useLayoutEffect(() => {
-    imgRef.current?.complete && setIsLoaded(true);
+    setIsLoaded(Boolean(imgRef.current?.complete));
   }, [imageUrl]);
 
   return imageNotAvailable ? (
@@ -59,14 +59,10 @@ const ImageWrapper = ({
         ref={imgRef}
         loading="lazy"
         src={imageUrl}
-        className={classNames(
-          imageClass,
-
-          [
-            "transition-opacity duration-300",
-            isLoaded ? "opacity-100" : "opacity-0",
-          ]
-        )}
+        className={classNames(imageClass, [
+          "transition-opacity duration-300",
+          isLoaded ? "opacity-100" : "opacity-0",
+        ])}
         onLoad={() => setIsLoaded(true)}
         onError={handleLoadError}
       />
@@ -74,7 +70,7 @@ const ImageWrapper = ({
         <div
           className={classNames(
             "absolute top-0 left-0 h-full w-full  flex items-center justify-center text-primary",
-            { "bg-secondary/20": showSpinnerBg }
+            { "bg-secondary/20": showSpinnerBg },
           )}
         >
           <LoadingIcon />

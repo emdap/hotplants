@@ -17,8 +17,8 @@ export const OccurrenceMarkerIcon = (iconUrl: string, isActive: boolean) =>
     // Re-using this property to pass information to MarkerClusterGroup
     pane: isActive ? "active" : undefined,
     className: classNames(
-      "!h-10 !w-10 overflow-hidden !bg-gray-800/50 !border-none",
-      isActive && "!outline-2 outline-white"
+      "!h-10 !w-10 overflow-hidden !bg-default-background/50 !border-none",
+      isActive && "!outline-2 outline-white",
     ),
   });
 
@@ -26,7 +26,7 @@ export const MarkerClusterIcon = (cluster: MarkerCluster) => {
   const children = cluster.getAllChildMarkers();
 
   const activeChild = children.find(
-    ({ options: { icon } }) => icon?.options.pane === "active"
+    ({ options: { icon } }) => icon?.options.pane === "active",
   );
 
   const activeIconUrl = activeChild

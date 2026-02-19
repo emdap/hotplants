@@ -1,8 +1,6 @@
 import classNames from "classnames";
 import Card from "designSystem/Card";
-import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
 import { PlantResult } from "graphqlHelpers/plantQueries";
-import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useEffect, useRef } from "react";
 import PlantOccurrenceImage from "../plantImages/PlantOccurrenceImage";
@@ -10,12 +8,10 @@ import PlantCardHeader from "./PlantCardHeader";
 
 const PlantCard = ({
   plant,
-  index,
   isActive,
   setActive,
 }: {
   plant: PlantResult;
-  index: number;
   isActive: boolean;
   setActive: () => void;
 }) => {
@@ -31,8 +27,6 @@ const PlantCard = ({
 
   return (
     <Card
-      {...MOTION_FADE_SLIDE}
-      transition={{ duration: 0.1, delay: (index % DEFAULT_PAGE_SIZE) * 0.03 }}
       ref={plantCardRef}
       id={plant.scientificName}
       onClick={setActive}
@@ -45,7 +39,7 @@ const PlantCard = ({
       onMouseUp={() => (isRightClick.current = false)}
       tabIndex={1}
       className={classNames(
-        "cursor-pointer h-[30vh] small-screen:h-50vh md:h-60 outline-white/60 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
+        "cursor-pointer h-[30vh] big-screen:h-60 outline-white/60 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
 
         isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0",
       )}
@@ -56,13 +50,12 @@ const PlantCard = ({
           thumbnailUrl={plant.thumbnailUrl}
           occurrenceId={firstOccurrence.occurrenceId}
           mediaObject={firstMedia}
-          hideOnScroll
           containerClass="absolute w-full h-full flex items-center overflow-hidden z-0"
           imageClass="w-full min-h-full"
         >
           {({ isLoaded, isError }) =>
             isLoaded ? (
-              <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opacity-0 group-hover:opacity-0 max-md:opacity-80 bg-primary-dark/30" />
+              <div className="absolute h-full w-full transition-opacity opacity-80 group-[.active-card]:opacity-0 group-hover:opacity-0 bg-primary-dark/30" />
             ) : (
               <>
                 <img

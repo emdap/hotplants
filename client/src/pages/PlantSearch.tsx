@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import PlantResultsList from "components/plantResults/PlantResultsList";
-import PlantSearchFooter from "components/plantSearch/PlantSearchFooter";
+import PlantList from "components/plantResults/PlantList";
+import PlantAnimation from "components/plantSearch/PlantAnimation";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
 import SearchParamsInput from "components/plantSearch/SearchParamsInput";
@@ -8,20 +8,36 @@ import {
   RESULTS_PANE_ID,
   usePlantSearchContext,
 } from "contexts/plantSearch/PlantSearchContext";
+import LoadingIcon from "designSystem/LoadingIcon";
+import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
-  const { hasCurrentResults, totalResultsCount, fetchNextPlantsPage } =
-    usePlantSearchContext();
+  const {
+    page,
+    isInfiniteScroll,
+
+    sidebarExpanded,
+
+    hasMoreData,
+    hasCurrentResults,
+    totalResultsCount,
+
+    searchStatus,
+    plantSearchQuery: { loading },
+    searchRecordQuery: { dataUpdatedAt },
+
+    fetchMorePlants,
+  } = usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor();
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -34,22 +50,34 @@ const PlantSearch = () => {
             scrollContainerElement.clientHeight) <=
         FETCH_MORE_SCROLL_THRESHOLD
       ) {
-        fetchNextPlantsPage();
+        fetchMorePlants();
       }
     };
 
-    scrollContainer?.addEventListener("scroll", handleScroll);
+    isInfiniteScroll &&
+      scrollContainer?.addEventListener("scroll", handleScroll);
 
     return () => scrollContainer?.removeEventListener("scroll", handleScroll);
-  }, [fetchNextPlantsPage, scrollContainer, scrollContainerElement]);
+  }, [
+    isInfiniteScroll,
+    fetchMorePlants,
+    scrollContainer,
+    scrollContainerElement,
+  ]);
+
+  useEffect(() => {
+    if (!hasCurrentResults && searchStatus === "SCRAPING_AND_POLLING") {
+      resultsContainerRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [searchStatus, hasCurrentResults]);
 
   return (
-    <main className="w-full">
+    <main className="w-full h-full">
+      {!hasCurrentResults && <ScrollAnchor className="scroll-m-header-2" />}
       <PageTitle className="page-buffer">Plant Search</PageTitle>
       {hasCurrentResults && <PlantSearchHeader />}
 
       <div
-        ref={containerRef}
         className={classNames("flex grow", {
           "small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full":
             hasCurrentResults,
@@ -58,29 +86,54 @@ const PlantSearch = () => {
         })}
       >
         {hasCurrentResults ? (
-          <PlantSearchSidebar />
+          <>
+            <PlantSearchSidebar />
+            <ScrollAnchor className="scroll-m-header-2" />
+          </>
         ) : (
-          <div className="basis-1/2 max-w-2xl">
+          <div className="basis-1/2 max-w-2xl min-w-md max-md:min-w-full">
             <SearchParamsInput />
           </div>
         )}
 
-        <ScrollAnchor className="scroll-m-header-2" />
-
         <div
           id={RESULTS_PANE_ID}
-          className="grow flex flex-col relative scroll-m-header-2 py-4 big-screen:px-4 max-lg:basis-2/3 gap-6"
+          ref={resultsContainerRef}
+          className="grow flex flex-col relative scroll-m-header-2 pt-4 pb-10 big-screen:px-4 max-lg:basis-2/3 gap-6"
         >
           {hasCurrentResults && (
-            <PlantResultsList
+            <PlantList
               key="results-holder"
+              parentSidebarExpanded={sidebarExpanded}
               className={classNames({
                 "max-w-page": totalResultsCount < 3,
+                "pb-20": isInfiniteScroll && hasMoreData,
               })}
             />
           )}
 
-          <PlantSearchFooter key="results-footer" />
+          <LoadingOverlay
+            transparent
+            show={!isInfiniteScroll && page > 1 && loading}
+            className="h-[80vh] animate-pulse opacity-50"
+          />
+
+          {isInfiniteScroll &&
+          hasMoreData &&
+          searchStatus !== "CHECKING_STATUS" ? (
+            <div key="loading-icon" className="pb-4 mx-auto -mt-10 mb-10">
+              <LoadingIcon size={25} className="text-white" />
+            </div>
+          ) : (
+            (isInfiniteScroll || !hasMoreData) && (
+              <PlantAnimation
+                key="plant-animation"
+                queryStatus={searchStatus}
+                isInitialSearch={!dataUpdatedAt}
+                hasCurrentResults={hasCurrentResults}
+              />
+            )
+          )}
         </div>
       </div>
     </main>

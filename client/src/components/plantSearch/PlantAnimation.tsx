@@ -9,36 +9,37 @@ import stillPlant from "placeholderImages/stillPlant.json";
 import { useEffect, useState } from "react";
 
 type PlantAnimationProps = {
-  queryStatus: PlantSearchQueryStatus;
-  isInitialSearch: boolean;
-  hasCurrentResults: boolean;
+  queryStatus?: PlantSearchQueryStatus;
+  dataType?: string;
+  isInitialSearch?: boolean;
+  hasCurrentResults?: boolean;
+  className?: string;
 };
 
 const getDescription = ({
   queryStatus,
+  dataType = "plants",
   hasCurrentResults,
   isInitialSearch,
 }: Partial<PlantAnimationProps>) => {
   if (queryStatus === "CHECKING_STATUS") {
     return [0, ""];
   } else if (queryStatus === "SCRAPING_AND_POLLING") {
-    return [1, `Searching for ${hasCurrentResults ? "more " : ""}plants`];
+    return [1, `Searching for ${hasCurrentResults ? "more " : ""}${dataType}`];
   } else if (!hasCurrentResults && isInitialSearch) {
-    return [2, "Search for a location to get started!"];
+    return [2, "Set a location to get started!"];
   } else if (!hasCurrentResults) {
-    return [3, "No plants found, try adjusting your filters."];
+    return [3, `No ${dataType} found, try adjusting your filters.`];
   } else {
     return [4, "End of results"];
   }
 };
 
-const PlantAnimation = ({
-  queryStatus,
-  isInitialSearch,
-  hasCurrentResults,
-}: PlantAnimationProps) => {
+const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
+  const { queryStatus, hasCurrentResults } = props;
+
   const [lottieAnimation, setLottieAnimation] = useState<"STILL" | "MOVING">(
-    "STILL"
+    "STILL",
   );
 
   const Lottie = useLottie({
@@ -66,18 +67,15 @@ const PlantAnimation = ({
     }
   }, [queryStatus, Lottie]);
 
-  const [descriptionKey, description] = getDescription({
-    queryStatus,
-    hasCurrentResults,
-    isInitialSearch,
-  });
+  const [descriptionKey, description] = getDescription(props);
 
   return (
     <motion.div
       {...MOTION_FADE_IN}
       className={classNames(
         "grow flex flex-col gap-4 my-auto items-center justify-center transition-opacity",
-        hasCurrentResults ? "big-screen:pb-20" : "lg:sticky lg:bottom-0"
+        hasCurrentResults ? "big-screen:pb-20" : "lg:sticky lg:bottom-0",
+        className,
       )}
     >
       {Lottie.View}
@@ -86,7 +84,7 @@ const PlantAnimation = ({
         {...MOTION_FADE_IN}
         className={classNames(
           "text-white text-center px-4 text-base big-screen:text-lg min-h-fit",
-          lottieAnimation === "MOVING" && "animate-pulse"
+          lottieAnimation === "MOVING" && "animate-pulse",
         )}
       >
         {description || <LoadingIcon />}
