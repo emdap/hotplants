@@ -30,7 +30,7 @@ const PlantSearch = () => {
 
     searchStatus,
     plantSearchQuery: { loading },
-    searchRecordQuery: { data: searchRecordData, dataUpdatedAt },
+    searchRecordQuery: { dataUpdatedAt },
 
     fetchMorePlants,
   } = usePlantSearchContext();
@@ -65,23 +65,11 @@ const PlantSearch = () => {
     scrollContainerElement,
   ]);
 
-  const previousSearchIdRef = useRef<string | undefined>(undefined);
   useEffect(() => {
-    return () => {
-      previousSearchIdRef.current = searchRecordData?.id;
-    };
-  }, [searchRecordData?.id]);
-
-  useEffect(() => {
-    if (
-      !hasCurrentResults &&
-      (searchStatus === "SCRAPING_AND_POLLING" ||
-        (searchStatus === "READY" && !loading)) &&
-      previousSearchIdRef.current !== searchRecordData?.id
-    ) {
+    if (!hasCurrentResults && searchStatus === "SCRAPING_AND_POLLING") {
       resultsContainerRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [loading, searchStatus, hasCurrentResults, searchRecordData?.id]);
+  }, [searchStatus, hasCurrentResults]);
 
   return (
     <main className="w-full h-full">

@@ -79,11 +79,6 @@ const usePlantSearchQueries = (
   });
   const plantSearchData = plantSearchQuery.data?.plantSearch;
 
-  // useEffect(() => {
-  //   paginationVars && plantSearchQuery.fetchMore({ variables: paginationVars });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [paginationVars]);
-
   const setStatusFromRunningQuery = () =>
     setSearchStatus((prev) =>
       prev === "SCRAPING_AND_POLLING" ? prev : "CHECKING_STATUS",

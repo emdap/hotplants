@@ -38,6 +38,8 @@ const LocationParamsInput = ({
   useEffect(() => {
     if (searchParamsDraft?.locationSource === "custom") {
       setLocationInvalid(false);
+      setSearchInput("");
+      setDebouncedInput("");
     }
   }, [searchParamsDraft?.locationSource]);
 
