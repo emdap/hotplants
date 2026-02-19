@@ -123,7 +123,7 @@ const SearchRecordCard = ({
             className="mt-auto w-full"
             title="Scraping progress"
             unitTitle="Plant Occurrences"
-            isLoading={plantCountLoading}
+            isLoading={searchParams.status === "SCRAPING"}
             amount={occurrencesOffset}
             total={totalOccurrences}
             isError={

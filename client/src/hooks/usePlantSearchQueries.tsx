@@ -18,12 +18,11 @@ export const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
 const MAX_AUTO_SCRAPES = 3;
-const MIN_RESULTS = 50;
 
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
   limit: DEFAULT_PAGE_SIZE,
   sort: [
-    { field: "addedTimestamp", value: 1 },
+    { field: "updatedTimestamp", value: 1 },
     { field: "scientificName", value: 1 },
   ],
 };
@@ -77,7 +76,6 @@ const usePlantSearchQueries = (
       },
     },
   });
-  const plantSearchData = plantSearchQuery.data?.plantSearch;
 
   const setStatusFromRunningQuery = () =>
     setSearchStatus((prev) =>
@@ -113,20 +111,12 @@ const usePlantSearchQueries = (
   const searchRecordData = searchRecordQuery.data;
 
   useEffect(() => {
-    if (
-      searchRecordData?.id &&
-      searchRecordData.status === "READY" &&
-      !searchRecordData.occurrencesOffset &&
-      plantSearchData?.count !== undefined &&
-      plantSearchData?.count < MIN_RESULTS
-    ) {
+    if (searchRecordData?.id && !searchRecordData.statusUpdatedTimestamp) {
       setAutoScrapesRemaining(MAX_AUTO_SCRAPES);
     } else {
       setAutoScrapesRemaining(0);
     }
-    // Only want to run this effect when the searchRecord id, or plantSearchData count updates
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchRecordData?.id, plantSearchData?.count]);
+  }, [searchRecordData?.id, searchRecordData?.statusUpdatedTimestamp]);
 
   const scrapeOccurrencesQuery = useReactQuery({
     queryKey: [
