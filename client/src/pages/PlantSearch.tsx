@@ -22,7 +22,6 @@ const PlantSearch = () => {
     page,
     isInfiniteScroll,
 
-    validatedSearchParamsDraft,
     sidebarExpanded,
 
     hasMoreData,
@@ -75,8 +74,9 @@ const PlantSearch = () => {
 
   useEffect(() => {
     if (
+      !hasCurrentResults &&
       (searchStatus === "SCRAPING_AND_POLLING" ||
-        (searchStatus === "READY" && !loading && !hasCurrentResults)) &&
+        (searchStatus === "READY" && !loading)) &&
       previousSearchIdRef.current !== searchRecordData?.id
     ) {
       resultsContainerRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -103,11 +103,9 @@ const PlantSearch = () => {
             <ScrollAnchor className="scroll-m-header-2" />
           </>
         ) : (
-          !validatedSearchParamsDraft && (
-            <div className="basis-1/2 max-w-2xl min-w-md max-md:min-w-full">
-              <SearchParamsInput />
-            </div>
-          )
+          <div className="basis-1/2 max-w-2xl min-w-md max-md:min-w-full">
+            <SearchParamsInput />
+          </div>
         )}
 
         <div
