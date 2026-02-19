@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import _ from "lodash";
@@ -31,7 +32,9 @@ const SearchParamsInput = () => {
   return (
     <form
       onSubmit={submitLocation}
-      className="h-full flex flex-col gap-4 overflow-auto pb-4"
+      className={classNames("h-full flex flex-col gap-4 overflow-auto pb-4", {
+        "big-screen:w-sm": hasCurrentResults,
+      })}
     >
       <LocationParamsInput setLocationPending={setLocationPending} />
       <OptionalSearchParamsInput />

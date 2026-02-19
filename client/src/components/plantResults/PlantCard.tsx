@@ -39,7 +39,7 @@ const PlantCard = ({
       onMouseUp={() => (isRightClick.current = false)}
       tabIndex={1}
       className={classNames(
-        "cursor-pointer h-[30vh] small-screen:h-50vh md:h-60 outline-white/60 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
+        "cursor-pointer h-[30vh] big-screen:h-60 outline-white/60 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
 
         isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0",
       )}
@@ -50,13 +50,12 @@ const PlantCard = ({
           thumbnailUrl={plant.thumbnailUrl}
           occurrenceId={firstOccurrence.occurrenceId}
           mediaObject={firstMedia}
-          hideOnScroll
           containerClass="absolute w-full h-full flex items-center overflow-hidden z-0"
           imageClass="w-full min-h-full"
         >
           {({ isLoaded, isError }) =>
             isLoaded ? (
-              <div className="absolute h-full w-full transition-opacity opacity-100 group-[.active-card]:opacity-0 group-hover:opacity-0 max-md:opacity-80 bg-primary-dark/30" />
+              <div className="absolute h-full w-full transition-opacity opacity-80 group-[.active-card]:opacity-0 group-hover:opacity-0 bg-primary-dark/30" />
             ) : (
               <>
                 <img
