@@ -55,7 +55,7 @@ const PlantSearchProvider = () => {
       if (applyParams) {
         navigate({
           to: ".",
-          search: { search: applyParams, filter: {} },
+          search: { search: applyParams, filter: {}, page: 1 },
         });
         isSmallScreen() && setSidebarExpanded(false);
       }

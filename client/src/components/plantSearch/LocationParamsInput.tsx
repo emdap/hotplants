@@ -42,9 +42,11 @@ const LocationParamsInput = ({
   }, [searchParamsDraft?.locationSource]);
 
   useEffect(() => {
-    setSearchInput(searchParams?.locationName ?? "");
-    setDebouncedInput(searchParams?.locationName ?? "");
-  }, [searchParams?.locationName]);
+    if (searchParams?.locationSource !== "custom") {
+      setSearchInput(searchParams?.locationName ?? "");
+      setDebouncedInput(searchParams?.locationName ?? "");
+    }
+  }, [searchParams?.locationSource, searchParams?.locationName]);
 
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
@@ -73,7 +75,8 @@ const LocationParamsInput = ({
 
   useEffect(() => {
     setLocationPending(
-      searchInput !== debouncedInput || locationQuery.isLoading,
+      (searchInput && searchInput !== debouncedInput) ||
+        locationQuery.isLoading,
     );
   }, [
     searchInput,

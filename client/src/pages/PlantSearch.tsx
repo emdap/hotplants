@@ -13,26 +13,32 @@ import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
   const {
+    page,
+    isInfiniteScroll,
+
+    validatedSearchParamsDraft,
+    sidebarExpanded,
+
     hasMoreData,
     hasCurrentResults,
     totalResultsCount,
-    isInfiniteScroll,
+
     searchStatus,
     plantSearchQuery: { loading },
-    searchRecordQuery: { dataUpdatedAt },
-    sidebarExpanded,
+    searchRecordQuery: { data: searchRecordData, dataUpdatedAt },
+
     fetchMorePlants,
   } = usePlantSearchContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor();
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -60,15 +66,30 @@ const PlantSearch = () => {
     scrollContainerElement,
   ]);
 
+  const previousSearchIdRef = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    return () => {
+      previousSearchIdRef.current = searchRecordData?.id;
+    };
+  }, [searchRecordData?.id]);
+
+  useEffect(() => {
+    if (
+      (searchStatus === "SCRAPING_AND_POLLING" ||
+        (searchStatus === "READY" && !loading && !hasCurrentResults)) &&
+      previousSearchIdRef.current !== searchRecordData?.id
+    ) {
+      resultsContainerRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [loading, searchStatus, hasCurrentResults, searchRecordData?.id]);
+
   return (
     <main className="w-full h-full">
       {!hasCurrentResults && <ScrollAnchor className="scroll-m-header-2" />}
-
       <PageTitle className="page-buffer">Plant Search</PageTitle>
       {hasCurrentResults && <PlantSearchHeader />}
 
       <div
-        ref={containerRef}
         className={classNames("flex grow", {
           "small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full":
             hasCurrentResults,
@@ -82,7 +103,7 @@ const PlantSearch = () => {
             <ScrollAnchor className="scroll-m-header-2" />
           </>
         ) : (
-          !loading && (
+          !validatedSearchParamsDraft && (
             <div className="basis-1/2 max-w-2xl min-w-md max-md:min-w-full">
               <SearchParamsInput />
             </div>
@@ -91,6 +112,7 @@ const PlantSearch = () => {
 
         <div
           id={RESULTS_PANE_ID}
+          ref={resultsContainerRef}
           className="grow flex flex-col relative scroll-m-header-2 pt-4 pb-10 big-screen:px-4 max-lg:basis-2/3 gap-6"
         >
           {hasCurrentResults && (
@@ -106,8 +128,8 @@ const PlantSearch = () => {
 
           <LoadingOverlay
             transparent
-            show={(!isInfiniteScroll || !hasCurrentResults) && loading}
-            className="h-screen animate-pulse opacity-50"
+            show={!isInfiniteScroll && page > 1 && loading}
+            className="h-[80vh] animate-pulse opacity-50"
           />
 
           {isInfiniteScroll &&
