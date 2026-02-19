@@ -1,6 +1,13 @@
 import classNames from "classnames";
 import { useDocumentListener } from "hooks/useDocumentListener";
-import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  HTMLProps,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useSwipeable } from "react-swipeable";
 import { ITERATE_DIRECTION, IterateDirection } from "util/generalUtil";
@@ -13,6 +20,7 @@ export type CarouselProps = {
   enableKeyboardEvents?: boolean;
   bigButtons?: boolean;
   children: ReactNode[];
+  childrenWrapperProps?: HTMLProps<HTMLDivElement>;
 };
 
 const Carousel = ({
@@ -22,6 +30,7 @@ const Carousel = ({
   enableKeyboardEvents,
   bigButtons,
   children,
+  childrenWrapperProps,
 }: CarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(carouselIndex);
   const childrenInDom = Math.ceil(maxRenderedChildren / 2);
@@ -90,7 +99,7 @@ const Carousel = ({
       {...swipeHandlers}
       className="flex flex-col gap-2 justify-center h-full w-full overflow-hidden relative"
     >
-      <div className="grow overflow-hidden relative">
+      <div className="grow overflow-hidden relative" {...childrenWrapperProps}>
         {children.map((child, index) => {
           const { renderChild, translate } = getChildStyle(index);
           return (
@@ -115,7 +124,7 @@ const Carousel = ({
           {ITERATE_DIRECTION.map((direction) => (
             <Button
               key={direction}
-              variant="text-primary"
+              variant="icon-white"
               className={classNames({ "text-xl p-4": bigButtons })}
               disabled={disableButtons[direction]}
               onClick={() => iterateCarousel(direction)}

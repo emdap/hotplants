@@ -20,7 +20,7 @@ const PlantImageViewer = ({
   const { activeMediaIndex, setActiveMediaIndex } = usePlantSelectionContext();
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(0);
   const [includeThumbnail, setIncludeThumbnail] = useState(
-    Boolean(plant.thumbnailUrl)
+    Boolean(plant.thumbnailUrl),
   );
 
   const carouselIndex = activeMediaIndex ?? 0;
@@ -39,19 +39,17 @@ const PlantImageViewer = ({
         includeThumbnail,
         setIncludeThumbnail,
       }),
-    [plant.occurrences, plant.thumbnailUrl, plant._id, includeThumbnail]
+    [plant.occurrences, plant.thumbnailUrl, plant._id, includeThumbnail],
   );
 
   return (
     <>
-      <div
-        className="aspect-square h-70 flex-col relative"
-        onDoubleClick={() => setIsModalOpen(true)}
-      >
+      <div className="aspect-square h-70 flex-col relative">
         <Carousel
           enableKeyboardEvents={!isModalOpen}
           carouselIndex={carouselIndex}
           setCarouselIndex={setActiveMediaIndex}
+          childrenWrapperProps={{ onDoubleClick: () => setIsModalOpen(true) }}
         >
           {PlantImages}
         </Carousel>
