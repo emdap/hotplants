@@ -41,20 +41,37 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @enum {string} */
-        SearchRecordStatus: "COMPLETE" | "READY" | "SCRAPING";
-        /** @description From T, pick a set of properties whose keys are in the union K */
-        "Pick_SearchRecordDocument.status-or-occurrencesOffset_": {
-            /** Format: double */
-            occurrencesOffset: number;
-            status: components["schemas"]["SearchRecordStatus"];
-        };
-        SearchRecordSummary: {
-            id: string;
-        } & components["schemas"]["Pick_SearchRecordDocument.status-or-occurrencesOffset_"];
         Maybe_string_: string | null;
         /** @enum {string} */
         LocationSource: "custom" | "search";
+        /** @enum {string} */
+        SearchRecordStatus: "COMPLETE" | "READY" | "SCRAPING";
+        /** Format: double */
+        Maybe_number_: number | null;
+        /** @description From T, pick a set of properties whose keys are in the union K */
+        "Pick_SearchRecordDocument.Exclude_keyofSearchRecordDocument._id__": {
+            taxonKeys?: number[];
+            /** @enum {string} */
+            __typename?: "SearchRecord";
+            boundingPolyCoords: number[][][];
+            commonName?: components["schemas"]["Maybe_string_"];
+            /** Format: double */
+            createdTimestamp: number;
+            locationName: string;
+            locationSource: components["schemas"]["LocationSource"];
+            /** Format: double */
+            occurrencesOffset: number;
+            scientificName?: components["schemas"]["Maybe_string_"];
+            status: components["schemas"]["SearchRecordStatus"];
+            statusUpdatedTimestamp?: components["schemas"]["Maybe_number_"];
+            /** Format: double */
+            totalOccurrences: number;
+        };
+        /** @description Construct a type with the properties of T except for those in type K. */
+        "Omit_SearchRecordDocument._id_": components["schemas"]["Pick_SearchRecordDocument.Exclude_keyofSearchRecordDocument._id__"];
+        SearchRecordSummary: {
+            id: string;
+        } & components["schemas"]["Omit_SearchRecordDocument._id_"];
         /** @description From T, pick a set of properties whose keys are in the union K */
         "Pick_SearchRecordDocument.locationName-or-locationSource-or-boundingPolyCoords-or-commonName-or-scientificName_": {
             boundingPolyCoords: number[][][];
