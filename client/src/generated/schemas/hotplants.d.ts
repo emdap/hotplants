@@ -42,12 +42,12 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         Maybe_string_: string | null;
+        /** Format: double */
+        Maybe_number_: number | null;
         /** @enum {string} */
         LocationSource: "custom" | "search";
         /** @enum {string} */
         SearchRecordStatus: "COMPLETE" | "READY" | "SCRAPING";
-        /** Format: double */
-        Maybe_number_: number | null;
         /** @description From T, pick a set of properties whose keys are in the union K */
         "Pick_SearchRecordDocument.Exclude_keyofSearchRecordDocument._id__": {
             taxonKeys?: number[];
@@ -57,13 +57,13 @@ export interface components {
             commonName?: components["schemas"]["Maybe_string_"];
             /** Format: double */
             createdTimestamp: number;
+            lastRanTimestamp?: components["schemas"]["Maybe_number_"];
             locationName: string;
             locationSource: components["schemas"]["LocationSource"];
             /** Format: double */
             occurrencesOffset: number;
             scientificName?: components["schemas"]["Maybe_string_"];
             status: components["schemas"]["SearchRecordStatus"];
-            statusUpdatedTimestamp?: components["schemas"]["Maybe_number_"];
             /** Format: double */
             totalOccurrences: number;
         };

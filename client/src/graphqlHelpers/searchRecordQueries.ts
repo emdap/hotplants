@@ -21,7 +21,7 @@ export const GET_ALL_SEARCH_RECORDS = graphql(`
         _id
         createdTimestamp
         status
-        statusUpdatedTimestamp
+        lastRanTimestamp
 
         locationName
         locationSource

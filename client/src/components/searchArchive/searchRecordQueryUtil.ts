@@ -25,7 +25,7 @@ export const SEARCH_RECORD_ORDERED_QUERY_KEYS: {
     "locationName",
     "totalOccurrences",
     "createdTimestamp",
-    "statusUpdatedTimestamp",
+    "lastRanTimestamp",
   ],
   filter: ["locationSource", "status", "commonName", "scientificName"],
 };
@@ -53,7 +53,7 @@ export const SEARCH_RECORD_QUERY_LABELS: Record<
   locationName: "Location name",
   totalOccurrences: "Total occurrences",
   createdTimestamp: "Search created",
-  statusUpdatedTimestamp: "Search last ran",
+  lastRanTimestamp: "Search last ran",
   ...SEARCH_RECORD_STRING_FILTER_LABELS,
   ...SEARCH_RECORD_BOOLEAN_FILTER_LABELS,
 };

@@ -115,7 +115,7 @@ const SearchRecordCard = ({
             />
             <InfoRow
               title="Search last ran"
-              value={formatDate(searchParams.statusUpdatedTimestamp)}
+              value={formatDate(searchParams.lastRanTimestamp)}
             />
             <InfoRow title="Status" value={searchParams.status} />
           </div>

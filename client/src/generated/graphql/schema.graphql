@@ -184,12 +184,12 @@ type SearchRecord {
   boundingPolyCoords: [[[Float!]!]!]!
   commonName: String
   createdTimestamp: Float!
+  lastRanTimestamp: Float
   locationName: String!
   locationSource: LocationSource!
   occurrencesOffset: Int!
   scientificName: String
   status: SearchRecordStatus!
-  statusUpdatedTimestamp: Float
   taxonKeys: [Int!]
   totalOccurrences: Int!
 }
@@ -216,8 +216,8 @@ type SearchRecordQueryResults {
 
 enum SearchRecordSortField {
   createdTimestamp
+  lastRanTimestamp
   locationName
-  statusUpdatedTimestamp
   totalOccurrences
 }
 

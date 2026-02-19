@@ -111,12 +111,12 @@ const usePlantSearchQueries = (
   const searchRecordData = searchRecordQuery.data;
 
   useEffect(() => {
-    if (searchRecordData?.id && !searchRecordData.statusUpdatedTimestamp) {
+    if (searchRecordData?.id && !searchRecordData.lastRanTimestamp) {
       setAutoScrapesRemaining(MAX_AUTO_SCRAPES);
     } else {
       setAutoScrapesRemaining(0);
     }
-  }, [searchRecordData?.id, searchRecordData?.statusUpdatedTimestamp]);
+  }, [searchRecordData?.id, searchRecordData?.lastRanTimestamp]);
 
   const scrapeOccurrencesQuery = useReactQuery({
     queryKey: [
