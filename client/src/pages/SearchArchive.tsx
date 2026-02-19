@@ -1,5 +1,6 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
-import SearchArchiveParamPopover from "components/searchArchive/SearchArchiveParamPopover";
+import PlantAnimation from "components/plantSearch/PlantAnimation";
+import SearchArchiveQueryPopover from "components/searchArchive/SearchArchiveParamPopover";
 import SearchRecordCard from "components/searchArchive/SearchRecordCard";
 import {
   parseFilterParams,
@@ -62,14 +63,14 @@ const SearchArchive = () => {
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;
 
   return (
-    <main className="page-buffer pb-10 space-y-4">
+    <main className="page-buffer pb-10 flex flex-col gap-4">
       <PageTitle>Search Archive</PageTitle>
 
-      <ScrollAnchor className="scroll-m-header" />
+      <ScrollAnchor className="scroll-m-header -mb-4" />
       <FloatingHeader className="grid-centered small-screen:-mx-2.5 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
         <div className="flex items-center gap-1">
           {(["filter", "sort"] as const).map((param) => (
-            <SearchArchiveParamPopover
+            <SearchArchiveQueryPopover
               key={param}
               paramType={param}
               currentParams={queryParams[param] as SearchRecordQueryInput[]}
@@ -111,6 +112,9 @@ const SearchArchive = () => {
       {allSearchRecords?.results.map((searchRecord, index) => (
         <SearchRecordCard key={searchRecord._id + index} {...searchRecord} />
       ))}
+      {allSearchRecords?.count === 0 && (
+        <PlantAnimation dataType="records" className="small-screen:mt-20" />
+      )}
     </main>
   );
 };
