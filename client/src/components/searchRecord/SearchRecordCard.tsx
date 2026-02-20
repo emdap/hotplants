@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
-import ProgressBar from "designSystem/ProgressBar";
 import {
   GET_SEARCH_RECORD_PLANT_COUNT,
   SearchRecordResult,
@@ -15,11 +14,13 @@ import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
 import { customLocationDisplay } from "util/locationUtil";
 import MapProvider from "../interactiveMap/MapProvider";
 import { OPTIONAL_SEARCH_PARAM_FILTERS } from "../plantFilters/filterFixtures";
+import SearchRecordProgressBar from "./SearchRecordProgressBar";
 
 const SearchRecordCard = ({
   _id,
   occurrencesOffset,
   totalOccurrences,
+  status,
   ...searchParams
 }: SearchRecordResult) => {
   const navigate = useNavigate();
@@ -117,18 +118,10 @@ const SearchRecordCard = ({
               title="Search last ran"
               value={formatDate(searchParams.lastRanTimestamp)}
             />
-            <InfoRow title="Status" value={searchParams.status} />
+            <InfoRow title="Status" value={status} />
           </div>
-          <ProgressBar
-            className="mt-auto w-full"
-            title="Scraping progress"
-            unitTitle="Plant Occurrences"
-            isLoading={searchParams.status === "SCRAPING"}
-            amount={occurrencesOffset}
-            total={totalOccurrences}
-            isError={
-              searchParams.status === "COMPLETE" && totalOccurrences === 0
-            }
+          <SearchRecordProgressBar
+            {...{ occurrencesOffset, totalOccurrences, status }}
           />
         </div>
       </div>
