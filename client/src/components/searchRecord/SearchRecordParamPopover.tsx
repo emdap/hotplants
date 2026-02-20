@@ -5,7 +5,7 @@ import SortButton from "designSystem/iconButtons/SortButton";
 import StyledPopover from "designSystem/StyledPopover";
 import { isEqual } from "lodash";
 import { useEffect, useMemo, useState } from "react";
-import SearchArchiveParamControl from "./SearchArchiveParamControl";
+import SearchArchiveParamControl from "./SearchRecordParamControl";
 import {
   ParamType,
   SEARCH_RECORD_ORDERED_QUERY_KEYS,
