@@ -14,7 +14,8 @@ import { Fragment, useMemo, useRef, useState } from "react";
 import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 import { useClickAway } from "react-use";
-import { getPlantDisplayName, ITERATE_DIRECTION } from "util/generalUtil";
+import { ITERATE_DIRECTION } from "util/generalUtil";
+import { getPlantDisplayName } from "util/plantUtil";
 import PlantImageViewer from "../plantImages/PlantImageViewer";
 import PlantInfoCard from "../plantResults/PlantInfoCard";
 
@@ -26,28 +27,18 @@ const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
 
 const ActivePlantPane = () => {
   const { searchParams } = usePlantSearchContext();
-  const {
-    plantList,
-    activePlantIndex,
-    setActivePlantIndex,
-    setActiveMediaIndex,
-  } = usePlantSelectionContext();
+  const { plantList, activePlant, setActivePlantId, setActiveMediaUrl } =
+    usePlantSelectionContext();
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const isTouchingMap = useRef(false);
-
-  const { activePlant, typesafeActiveIndex } = useMemo(
-    () => ({
-      activePlant:
-        (activePlantIndex !== null && plantList[activePlantIndex]) ?? null,
-      typesafeActiveIndex: activePlantIndex ?? 0,
-    }),
-    [plantList, activePlantIndex],
+  const [activePlantIndex, setActivePlantIndex] = useState(
+    plantList.findIndex(({ _id }) => _id === activePlant?._id),
   );
 
   const resetActivePlant = () => {
-    setActivePlantIndex(null);
-    setActiveMediaIndex(0);
+    setActivePlantId(null);
+    setActiveMediaUrl(null);
   };
 
   useCloseOnEscape(resetActivePlant, !!activePlant && !imageModalOpen);
@@ -63,23 +54,22 @@ const ActivePlantPane = () => {
     paneRef.current = el;
   };
 
-  useClickAway(paneRef, () => !imageModalOpen && resetActivePlant(), [
-    "mouseup",
-  ]);
+  useClickAway(paneRef, () => !imageModalOpen && resetActivePlant());
 
   const disableIterate = useMemo(
     () => ({
-      next: typesafeActiveIndex === plantList.length - 1,
-      prev: !typesafeActiveIndex,
+      next: activePlantIndex === plantList.length - 1,
+      prev: !activePlantIndex,
     }),
-    [typesafeActiveIndex, plantList.length],
+    [activePlantIndex, plantList.length],
   );
 
   const iteratePlant = (direction: "prev" | "next") => {
-    setActiveMediaIndex(0);
-    setActivePlantIndex(
-      typesafeActiveIndex + (direction === "prev" ? -1 : 1) * 1,
-    );
+    const nextPlantIndex =
+      activePlantIndex + (direction === "prev" ? -1 : 1) * 1;
+    setActiveMediaUrl(null);
+    setActivePlantId(plantList[nextPlantIndex]._id);
+    setActivePlantIndex(nextPlantIndex);
   };
 
   return (
@@ -93,7 +83,7 @@ const ActivePlantPane = () => {
           ref={refPassthrough}
         >
           <header className="flex flex-wrap pt-2 px-safe-2 items-center">
-            <h2 className="flex gap-4 items-center">
+            <h2 className="flesx gap-4 items-center">
               <Button
                 variant="icon-white"
                 onClick={resetActivePlant}
@@ -119,7 +109,7 @@ const ActivePlantPane = () => {
                   />
                   {direction === "prev" && (
                     <span className="font-mono text-xs text-primary-dark dark:text-white/60">
-                      {typesafeActiveIndex + 1} / {plantList.length}
+                      {activePlantIndex + 1} / {plantList.length}
                     </span>
                   )}
                 </Fragment>
@@ -140,7 +130,6 @@ const ActivePlantPane = () => {
               className="flex max-lg:flex-col-reverse gap-4 justify-between"
             >
               <PlantImageViewer
-                plant={activePlant}
                 isModalOpen={imageModalOpen}
                 setIsModalOpen={setImageModalOpen}
               />

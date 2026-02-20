@@ -18,9 +18,9 @@ const PlantList = ({
 
   const {
     plantList,
-    activePlantIndex,
-    setActivePlantIndex,
-    setActiveMediaIndex,
+    activePlantId,
+    setActivePlantId: setActivePlantId,
+    setActiveMediaUrl: setActiveMediaUrl,
   } = usePlantSelectionContext();
 
   const [shrinkCols, setShrinkCols] = useState(false);
@@ -49,14 +49,16 @@ const PlantList = ({
           gridTemplateColumns: `repeat(auto-fit, ${shrinkCols ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
         }}
       >
-        {plantList.map((plant, index) => (
+        {plantList.map((plant) => (
           <PlantCard
-            key={`${plant.scientificName}-${index}`}
+            key={`${plant._id}`}
             setActive={() => {
-              setActivePlantIndex(index);
-              setActiveMediaIndex(0);
+              setActivePlantId(plant._id);
+              setActiveMediaUrl(
+                plant.thumbnailUrl ?? plant.occurrences[0].media[0].url,
+              );
             }}
-            isActive={activePlantIndex === index}
+            isActive={activePlantId === plant._id}
             plant={plant}
           />
         ))}

@@ -2,85 +2,104 @@ import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelection
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal from "designSystem/Modal";
-import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
-import { getPlantDisplayName } from "util/generalUtil";
+import { getPlantDisplayName } from "util/plantUtil";
 import PlantCarouselImages from "./PlantCarouselImages";
 
 const PlantImageViewer = ({
-  plant,
   isModalOpen,
   setIsModalOpen,
 }: {
-  plant: PlantResult;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
 }) => {
-  const { activeMediaIndex, setActiveMediaIndex } = usePlantSelectionContext();
-  const [largeCarouselIndex, setLargeCarouselIndex] = useState(0);
+  const { activePlant, activePlantMedia, activeMediaUrl, setActiveMediaUrl } =
+    usePlantSelectionContext();
+
   const [includeThumbnail, setIncludeThumbnail] = useState(
-    Boolean(plant.thumbnailUrl),
+    Boolean(activePlant?.thumbnailUrl),
   );
 
-  const carouselIndex = activeMediaIndex ?? 0;
+  const { imageUrls, PlantImages } = useMemo(
+    () =>
+      activePlant?._id
+        ? PlantCarouselImages({
+            plantId: activePlant._id,
+            thumbnailUrl: activePlant.thumbnailUrl,
+            plantMedia: activePlantMedia,
+            includeThumbnail,
+            setIncludeThumbnail,
+          })
+        : { imageUrls: [] as string[], PlantImages: null },
+    [
+      activePlant?._id,
+      activePlant?.thumbnailUrl,
+      activePlantMedia,
+      includeThumbnail,
+    ],
+  );
+
+  const activeMediaIndex = useMemo(
+    () => imageUrls.findIndex((url) => url === activeMediaUrl),
+
+    [activeMediaUrl, imageUrls],
+  );
+
+  const [carouselIndex, setCarouselIndex] = useState(activeMediaIndex ?? 0);
+  const [largeCarouselIndex, setLargeCarouselIndex] = useState(carouselIndex);
+
+  useEffect(() => {
+    setCarouselIndex(activeMediaIndex);
+  }, [activeMediaIndex]);
+
   useEffect(() => {
     setLargeCarouselIndex(carouselIndex);
-  }, [carouselIndex]);
-
-  const PlantImages = useMemo(
-    () =>
-      PlantCarouselImages({
-        plant: {
-          occurrences: plant.occurrences,
-          thumbnailUrl: plant.thumbnailUrl,
-          _id: plant._id,
-        },
-        includeThumbnail,
-        setIncludeThumbnail,
-      }),
-    [plant.occurrences, plant.thumbnailUrl, plant._id, includeThumbnail],
-  );
+    setActiveMediaUrl(imageUrls[carouselIndex]);
+  }, [carouselIndex, imageUrls, setActiveMediaUrl]);
 
   return (
-    <>
-      <div className="aspect-square h-70 flex-col relative">
-        <Carousel
-          enableKeyboardEvents={!isModalOpen}
-          carouselIndex={carouselIndex}
-          setCarouselIndex={setActiveMediaIndex}
-          childrenWrapperProps={{ onDoubleClick: () => setIsModalOpen(true) }}
-        >
-          {PlantImages}
-        </Carousel>
+    activePlant &&
+    PlantImages && (
+      <>
+        <div className="aspect-square h-70 flex-col relative">
+          <Carousel
+            enableKeyboardEvents={!isModalOpen}
+            carouselIndex={carouselIndex}
+            setCarouselIndex={setCarouselIndex}
+            childrenWrapperProps={{ onDoubleClick: () => setIsModalOpen(true) }}
+          >
+            {PlantImages}
+          </Carousel>
 
-        <Button
-          variant="secondary"
-          className="absolute top-0 right-0"
-          onClick={() => setIsModalOpen(true)}
-          size="small"
-          icon={<MdFullscreen size={24} />}
-        />
-      </div>
+          <Button
+            variant="secondary"
+            className="absolute top-0 right-0"
+            onClick={() => setIsModalOpen(true)}
+            size="small"
+            icon={<MdFullscreen size={24} />}
+          />
+        </div>
 
-      <Modal
-        title={getPlantDisplayName(plant)}
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setActiveMediaIndex(largeCarouselIndex);
-        }}
-      >
-        <Carousel
-          carouselIndex={carouselIndex}
-          setCarouselIndex={setLargeCarouselIndex}
-          bigButtons
-          enableKeyboardEvents
+        <Modal
+          title={getPlantDisplayName(activePlant)}
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setCarouselIndex(largeCarouselIndex);
+          }}
         >
-          {PlantImages}
-        </Carousel>
-      </Modal>
-    </>
+          <Carousel
+            carouselIndex={carouselIndex}
+            setCarouselIndex={setLargeCarouselIndex}
+            bigButtons
+            enableKeyboardEvents
+          >
+            {PlantImages}
+          </Carousel>
+        </Modal>
+      </>
+    )
   );
 };
 

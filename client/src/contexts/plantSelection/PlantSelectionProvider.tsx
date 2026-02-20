@@ -1,7 +1,7 @@
 import { useLazyQuery } from "@apollo/client/react";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { GET_PLANT, PlantQueryResults } from "graphqlHelpers/plantQueries";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { PlantSelectionContext } from "./PlantSelectionContext";
 
 const PlantSelectionProvider = ({
@@ -14,12 +14,24 @@ const PlantSelectionProvider = ({
   children: ReactNode;
 }) => {
   const [plantList, setPlantList] = useState(originalPlantList);
-  const [activePlantIndex, setActivePlantIndex] = useState<number | null>(null);
-  const [activeMediaIndex, setActiveMediaIndex] = useState<number>(0);
+  const [activePlantId, setActivePlantId] = useState<string | null>(null);
+  const [activeMediaUrl, setActiveMediaUrl] = useState<string | null>(null);
 
   useEffect(() => {
     setPlantList(originalPlantList);
   }, [originalPlantList]);
+
+  const { activePlant, activePlantMedia } = useMemo(() => {
+    const activePlant = plantList.find(({ _id }) => _id === activePlantId);
+    return {
+      activePlant,
+      activePlantMedia: activePlant
+        ? activePlant.occurrences.flatMap(({ media, ...rest }) =>
+            media.map((mediaObject) => ({ ...rest, ...mediaObject })),
+          )
+        : [],
+    };
+  }, [plantList, activePlantId]);
 
   const [getPlantQuery] = useLazyQuery(GET_PLANT, { fetchPolicy: "no-cache" });
 
@@ -36,8 +48,8 @@ const PlantSelectionProvider = ({
         prev.map((plantResult) =>
           data.plant && data.plant._id === plantResult._id
             ? data.plant
-            : plantResult
-        )
+            : plantResult,
+        ),
       );
     }
   };
@@ -47,10 +59,13 @@ const PlantSelectionProvider = ({
       value={{
         plantList,
 
-        activePlantIndex,
-        activeMediaIndex,
-        setActivePlantIndex,
-        setActiveMediaIndex,
+        activePlantId,
+        activePlant,
+        activePlantMedia,
+        activeMediaUrl,
+
+        setActivePlantId,
+        setActiveMediaUrl,
 
         syncPlant,
       }}

@@ -40,7 +40,7 @@ const ImageWrapper = ({
   };
 
   useEffect(() => {
-    setIsLoaded(false);
+    setIsLoaded(Boolean(imgRef.current?.complete));
     imageUrl && setImageNotAvailable(false);
   }, [imageUrl]);
 

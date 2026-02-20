@@ -22,7 +22,10 @@ export const OccurrenceMarkerIcon = (iconUrl: string, isActive: boolean) =>
     ),
   });
 
-export const MarkerClusterIcon = (cluster: MarkerCluster) => {
+export const MarkerClusterIcon = (
+  cluster: MarkerCluster,
+  defaultIconUrl?: string,
+) => {
   const children = cluster.getAllChildMarkers();
 
   const activeChild = children.find(
@@ -31,7 +34,7 @@ export const MarkerClusterIcon = (cluster: MarkerCluster) => {
 
   const activeIconUrl = activeChild
     ? activeChild.getIcon().options.iconUrl
-    : children[0]?.options.icon?.options.iconUrl;
+    : defaultIconUrl;
 
   return activeIconUrl
     ? OccurrenceMarkerIcon(activeIconUrl, Boolean(activeChild))

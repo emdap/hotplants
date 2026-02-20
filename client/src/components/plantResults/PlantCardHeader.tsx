@@ -7,7 +7,7 @@ import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { FaHeart } from "react-icons/fa";
 import { toast } from "sonner";
-import { getPlantDisplayName } from "util/generalUtil";
+import { getPlantDisplayName } from "util/plantUtil";
 import { defaultErrorToast, defaultWarningToast } from "util/toastUtil";
 
 const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {

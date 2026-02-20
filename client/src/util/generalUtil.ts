@@ -1,5 +1,3 @@
-import { PlantResult } from "graphqlHelpers/plantQueries";
-import { capitalize } from "lodash";
 import { HTMLMotionProps } from "motion/react";
 import { HTMLProps } from "react";
 
@@ -28,11 +26,6 @@ export const elementInViewport = (
     rect.top + buffedHeight + 1000 >= 0 &&
     rect.bottom - buffedHeight - 1000 <= windowHeight
   );
-};
-
-export const getPlantDisplayName = (plant: PlantResult) => {
-  const commonName = plant.commonNames?.[0];
-  return commonName ? capitalize(commonName) : plant.scientificName;
 };
 
 export const DEFAULT_DATE_TIME_FORMAT = "LLL d, yyyy 'at' HH:mm";

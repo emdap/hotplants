@@ -1,6 +1,7 @@
 import PlantOccurrenceImage from "components/plantImages/PlantOccurrenceImage";
+import { FlattenedPlantMedia } from "contexts/plantSelection/PlantSelectionContext";
 import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
-import { PlantResult } from "graphqlHelpers/plantQueries";
+import { ReactNode } from "react";
 
 const CONTAINER_CLASS = "w-full h-full flex justify-center";
 
@@ -11,44 +12,64 @@ const DEFAULT_IMAGE_PROPS: Partial<ImageWrapperProps> = {
 };
 
 const PlantCarouselImages = ({
-  plant,
+  plantId,
+  thumbnailUrl,
+  plantMedia,
   includeThumbnail,
   setIncludeThumbnail,
 }: {
-  plant: Pick<PlantResult, "occurrences" | "thumbnailUrl" | "_id">;
+  plantId: string;
+  thumbnailUrl?: string | null;
+  plantMedia: FlattenedPlantMedia;
   includeThumbnail: boolean;
   setIncludeThumbnail: (includeThumbnail: boolean) => void;
 }) => {
   const baseArray =
-    includeThumbnail && plant.thumbnailUrl
+    includeThumbnail && thumbnailUrl
       ? [
-          <ImageWrapper
-            key="thumbnail"
-            imageUrl={plant.thumbnailUrl!}
-            className={CONTAINER_CLASS}
-            onError={() => setIncludeThumbnail(false)}
-            {...DEFAULT_IMAGE_PROPS}
-          />,
+          {
+            url: thumbnailUrl,
+            element: (
+              <ImageWrapper
+                key="thumbnail"
+                imageUrl={thumbnailUrl!}
+                className={CONTAINER_CLASS}
+                onError={() => setIncludeThumbnail(false)}
+                {...DEFAULT_IMAGE_PROPS}
+              />
+            ),
+          },
         ]
       : [];
 
-  const occurrenceImages = plant.occurrences.flatMap(
-    ({ occurrenceId, media }) =>
-      media.map((mediaObject, index) => (
+  const occurrenceImages = plantMedia.map(
+    ({ isProxyUrl, url, occurrenceId }) => ({
+      url,
+      element: (
         <PlantOccurrenceImage
-          key={index}
-          plantId={plant._id}
+          key={url}
           containerClass={CONTAINER_CLASS}
           {...{
+            plantId,
             occurrenceId,
-            mediaObject,
+            mediaObject: { isProxyUrl, url },
             ...DEFAULT_IMAGE_PROPS,
           }}
         />
-      )),
+      ),
+    }),
   );
 
-  return baseArray.concat(occurrenceImages);
+  return baseArray
+    .concat(occurrenceImages)
+    .reduce<{ imageUrls: string[]; PlantImages: ReactNode[] }>(
+      (prev, { url, element }) => {
+        prev.imageUrls.push(url);
+        prev.PlantImages.push(element);
+        return prev;
+      },
+      { imageUrls: [], PlantImages: [] },
+    );
 };
 
 export default PlantCarouselImages;
