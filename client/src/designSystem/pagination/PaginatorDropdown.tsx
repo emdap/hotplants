@@ -9,6 +9,7 @@ type PaginatorDropdownProps = {
   selected: number;
   inPopover?: boolean;
   options: number[];
+  disabled?: boolean;
   onChange: (option: number) => void;
 };
 
@@ -16,14 +17,15 @@ const PaginatorDropdown = ({
   label,
   selected,
   inPopover,
+  disabled,
   ...props
 }: PaginatorDropdownProps) => {
   return (
     <div className="whitespace-nowrap flex gap-1.5 items-center justify-between">
       {inPopover ? label : <span className="small-screen:hidden">{label}</span>}
       <Menu>
-        <MenuButton as="div">
-          <Button variant="text" size="flush">
+        <MenuButton as="div" disabled={disabled}>
+          <Button variant="text" size="flush" disabled={disabled}>
             {selected}
           </Button>
         </MenuButton>

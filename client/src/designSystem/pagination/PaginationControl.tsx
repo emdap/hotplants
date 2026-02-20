@@ -97,6 +97,7 @@ export const PaginationControl = ({
               label="Page"
               selected={page}
               options={pageList}
+              disabled={pageList.length === 1}
               onChange={(newPage) => navToPage({ page: newPage })}
             />
 
