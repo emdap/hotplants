@@ -6,8 +6,6 @@ import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
-export const RESULTS_PANE_ID = "results-pane";
-
 export const VOID_FUNCTION = () => {};
 const VOID_PROMISE_FUNCTION = async () => {};
 

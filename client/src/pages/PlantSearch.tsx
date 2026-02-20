@@ -4,10 +4,10 @@ import PlantAnimation from "components/plantSearch/PlantAnimation";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
 import SearchParamsInput from "components/plantSearch/SearchParamsInput";
-import {
-  RESULTS_PANE_ID,
-  usePlantSearchContext,
-} from "contexts/plantSearch/PlantSearchContext";
+import SearchRecordProgressBar from "components/searchRecord/SearchRecordProgressBar";
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import Button from "designSystem/Button";
+import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
@@ -30,7 +30,7 @@ const PlantSearch = () => {
 
     searchStatus,
     plantSearchQuery: { loading },
-    searchRecordQuery: { dataUpdatedAt },
+    searchRecordQuery,
 
     fetchMorePlants,
   } = usePlantSearchContext();
@@ -45,10 +45,11 @@ const PlantSearch = () => {
         return;
       }
       if (
+        hasMoreData &&
         scrollContainerElement.scrollHeight -
           (scrollContainerElement.scrollTop +
             scrollContainerElement.clientHeight) <=
-        FETCH_MORE_SCROLL_THRESHOLD
+          FETCH_MORE_SCROLL_THRESHOLD
       ) {
         fetchMorePlants();
       }
@@ -60,6 +61,7 @@ const PlantSearch = () => {
     return () => scrollContainer?.removeEventListener("scroll", handleScroll);
   }, [
     isInfiniteScroll,
+    hasMoreData,
     fetchMorePlants,
     scrollContainer,
     scrollContainerElement,
@@ -97,9 +99,8 @@ const PlantSearch = () => {
         )}
 
         <div
-          id={RESULTS_PANE_ID}
           ref={resultsContainerRef}
-          className="grow flex flex-col relative scroll-m-header-2 pt-4 pb-10 big-screen:px-4 max-lg:basis-2/3 gap-6"
+          className="grow flex flex-col relative scroll-m-header-2 pt-4 pb-10 big-screen:px-4 max-lg:basis-2/3 gap-20"
         >
           {hasCurrentResults && (
             <PlantList
@@ -114,26 +115,55 @@ const PlantSearch = () => {
 
           <LoadingOverlay
             transparent
-            show={!isInfiniteScroll && page > 1 && loading}
+            show={
+              !isInfiniteScroll &&
+              searchStatus !== "SCRAPING_AND_POLLING" &&
+              page > 1 &&
+              loading
+            }
             className="h-[80vh] animate-pulse opacity-50"
           />
 
-          {isInfiniteScroll &&
-          hasMoreData &&
-          searchStatus !== "CHECKING_STATUS" ? (
-            <div key="loading-icon" className="pb-4 mx-auto -mt-10 mb-10">
-              <LoadingIcon size={25} className="text-white" />
-            </div>
+          {hasMoreData && searchStatus !== "CHECKING_STATUS" ? (
+            isInfiniteScroll && (
+              // Show loading icon when next results are loading in infinite scroll
+              <div className="pb-4 mx-auto -mt-10 mb-10">
+                <LoadingIcon size={25} className="text-white" />
+              </div>
+            )
           ) : (
-            (isInfiniteScroll || !hasMoreData) && (
+            <div className="flex flex-col gap-8 my-auto h-[600px] overflow-hidden">
               <PlantAnimation
-                key="plant-animation"
                 queryStatus={searchStatus}
-                isInitialSearch={!dataUpdatedAt}
+                isInitialSearch={!searchRecordQuery.dataUpdatedAt}
                 hasCurrentResults={hasCurrentResults}
               />
-            )
+
+              {searchRecordQuery.data && (
+                <Card
+                  className={classNames(
+                    "mx-auto flex flex-col items-center gap-6 transition-opacity",
+                    searchStatus === "READY"
+                      ? "opacity-100"
+                      : "opacity-0 pointer-events-none",
+                  )}
+                >
+                  {
+                    <SearchRecordProgressBar
+                      hideTitle
+                      {...searchRecordQuery.data}
+                      status="READY"
+                    />
+                  }
+
+                  <Button className="w-full" onClick={fetchMorePlants}>
+                    Gather more data
+                  </Button>
+                </Card>
+              )}
+            </div>
           )}
+          {/* )} */}
         </div>
       </div>
     </main>

@@ -45,7 +45,7 @@ const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
   const Lottie = useLottie({
     name: lottieAnimation,
     animationData: lottieAnimation === "STILL" ? stillPlant : movingPlant,
-    className: classNames("w-[200px] max-h-3/4 transition-opacity", {
+    className: classNames("w-[200px] transition-opacity", {
       "xl:w-[300px]": hasCurrentResults,
     }),
   });
@@ -73,8 +73,8 @@ const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
     <motion.div
       {...MOTION_FADE_IN}
       className={classNames(
-        "grow flex flex-col gap-4 my-auto items-center justify-center transition-opacity",
-        hasCurrentResults ? "big-screen:pb-20" : "lg:sticky lg:bottom-0",
+        "grow flex flex-col gap-4 items-center justify-center transition-opacity",
+        !hasCurrentResults && "lg:sticky lg:bottom-0",
         className,
       )}
     >

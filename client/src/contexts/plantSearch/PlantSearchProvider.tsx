@@ -5,6 +5,7 @@ import {
   PlantSearchContextType,
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
+import LoadingOverlay from "designSystem/LoadingOverlay";
 import usePlantSearchQueries, {
   DEFAULT_PAGE_SIZE,
 } from "hooks/usePlantSearchQueries";
@@ -31,6 +32,10 @@ const PlantSearchProvider = () => {
     useState<Partial<PlantSearchParams> | null>(searchParams);
 
   useEffect(() => {
+    setIsPrefilledSearch;
+  }, [searchParams, plantFilters, page, pageSize]);
+
+  useEffect(() => {
     setSearchParamsDraft(searchParams);
   }, [searchParams]);
 
@@ -53,6 +58,8 @@ const PlantSearchProvider = () => {
         ...params,
       });
       if (applyParams) {
+        setIsPrefilledSearch(false);
+
         navigate({
           to: ".",
           search: { search: applyParams, filter: {}, page: 1 },
@@ -77,7 +84,7 @@ const PlantSearchProvider = () => {
     (searchParams) =>
       setSearchParamsDraft((prev) => ({ ...prev, ...searchParams }));
 
-  const { searchStatus, plantSearchQuery, searchRecordQuery } =
+  const { searchStatus, plantSearchQuery, searchRecordQuery, scrapeMoreData } =
     usePlantSearchQueries(searchParams, plantFilters, {
       page,
       pageSize,
@@ -89,6 +96,13 @@ const PlantSearchProvider = () => {
     : plantSearchQuery.loading
       ? plantSearchQuery.previousData?.plantSearch
       : null;
+
+  const [isPrefilledSearch, setIsPrefilledSearch] = useState(
+    Boolean(searchParams && plantSearchQuery.loading),
+  );
+  useEffect(() => {
+    !plantSearchQuery.loading && setIsPrefilledSearch(false);
+  }, [plantSearchQuery.loading]);
 
   const { hasCurrentResults, totalResultsCount } = useMemo(
     () => ({
@@ -104,15 +118,17 @@ const PlantSearchProvider = () => {
 
   const fetchMorePlants = async () => {
     if (
-      !isInfiniteScroll ||
+      searchStatus !== "READY" ||
       !plantSearchData?.results ||
       plantSearchQuery.networkStatus === NetworkStatus.fetchMore
     ) {
       return;
     }
 
-    if (
-      (searchStatus === "READY" && unfetchedPlants) ||
+    if (!isInfiniteScroll) {
+      scrapeMoreData();
+    } else if (
+      isInfiniteScroll &&
       unfetchedPlants >= (pageSize ?? DEFAULT_PAGE_SIZE)
     ) {
       plantSearchQuery.fetchMore({
@@ -173,7 +189,11 @@ const PlantSearchProvider = () => {
         }
         boundingPolygon={searchParams?.boundingPolyCoords}
       >
-        <PlantSearch />
+        {isPrefilledSearch ? (
+          <LoadingOverlay show transparent className="h-[80vh] w-full" />
+        ) : (
+          <PlantSearch />
+        )}
       </PlantSelectionProvider>
     </PlantSearchContext.Provider>
   );
