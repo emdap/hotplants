@@ -21,7 +21,7 @@ const PlantImageViewer = ({
     Boolean(activePlant?.thumbnailUrl),
   );
 
-  const { imageUrls, PlantImages } = useMemo(
+  const { imageList, PlantImages } = useMemo(
     () =>
       activePlant?._id
         ? PlantCarouselImages({
@@ -31,7 +31,7 @@ const PlantImageViewer = ({
             includeThumbnail,
             setIncludeThumbnail,
           })
-        : { imageUrls: [] as string[], PlantImages: null },
+        : { imageList: null, PlantImages: null },
     [
       activePlant?._id,
       activePlant?.thumbnailUrl,
@@ -40,23 +40,29 @@ const PlantImageViewer = ({
     ],
   );
 
-  const activeMediaIndex = useMemo(
-    () => imageUrls.findIndex((url) => url === activeMediaUrl),
-
-    [activeMediaUrl, imageUrls],
-  );
-
-  const [carouselIndex, setCarouselIndex] = useState(activeMediaIndex ?? 0);
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const [largeCarouselIndex, setLargeCarouselIndex] = useState(carouselIndex);
+
+  const activeMediaIndex = useMemo(
+    () =>
+      // This is sloppy -- imageList shrinks if the thumbnail is kicked out, but then the activeMediaUrl is still set to the thumbnail
+      Math.max(
+        0,
+        imageList?.findIndex(({ url }) => url === activeMediaUrl) ?? 0,
+      ),
+    [activeMediaUrl, imageList],
+  );
 
   useEffect(() => {
     setCarouselIndex(activeMediaIndex);
   }, [activeMediaIndex]);
 
   useEffect(() => {
-    setLargeCarouselIndex(carouselIndex);
-    setActiveMediaUrl(imageUrls[carouselIndex]);
-  }, [carouselIndex, imageUrls, setActiveMediaUrl]);
+    if (imageList) {
+      setLargeCarouselIndex(carouselIndex);
+      setActiveMediaUrl(imageList[carouselIndex].url);
+    }
+  }, [carouselIndex, imageList, setActiveMediaUrl]);
 
   return (
     activePlant &&

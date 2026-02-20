@@ -1,12 +1,5 @@
 import classNames from "classnames";
-import {
-  HTMLProps,
-  ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { HTMLProps, ReactNode, useEffect, useRef, useState } from "react";
 import LoadingIcon from "./LoadingIcon";
 
 export type ImageWrapperProps = {
@@ -42,10 +35,6 @@ const ImageWrapper = ({
   useEffect(() => {
     setIsLoaded(Boolean(imgRef.current?.complete));
     imageUrl && setImageNotAvailable(false);
-  }, [imageUrl]);
-
-  useLayoutEffect(() => {
-    setIsLoaded(Boolean(imgRef.current?.complete));
   }, [imageUrl]);
 
   return imageNotAvailable ? (
