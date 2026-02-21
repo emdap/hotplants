@@ -37,7 +37,8 @@ const FloatingHeader = ({
     <header
       ref={headerRef}
       className={classNames(
-        "sticky top-header z-20",
+        "floating-header sticky top-header z-20",
+        "grid-centered items-center justify-between gap-4",
         "big-screen:text-white big-screen:h-header big-screen:border-header big-screen:bg-header big-screen:py-1",
         "small-screen:card small-screen:card-solid small-screen:py-1 small-screen:px-2",
         className,

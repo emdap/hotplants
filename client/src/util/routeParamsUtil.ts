@@ -109,7 +109,7 @@ const getNumParamValue = (param?: unknown) => {
   return isNaN(numParam) ? undefined : numParam;
 };
 
-const getPaginationParams = (
+export const validatePaginationParams = (
   params: Record<string, unknown>,
 ): PaginationParams => ({
   page: getNumParamValue(params.page),
@@ -123,7 +123,7 @@ export const validatePlantSearchParams = (
 
   if (search) {
     return {
-      ...getPaginationParams(params),
+      ...validatePaginationParams(params),
       filter: validateFilters(params.filter),
       search,
     };
@@ -150,6 +150,6 @@ export const validateSearchArchiveParams = (
   }
   return {
     lastOpened: validateString(params.lastOpened),
-    ...getPaginationParams(params),
+    ...validatePaginationParams(params),
   };
 };

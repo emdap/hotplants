@@ -19,7 +19,7 @@ const PlantSearchHeader = () => {
   const { page, pageSize, lastPage } = usePaginationContext();
 
   return (
-    <FloatingHeader className="grid-centered gap-4 items-center justify-center small-screen:mx-safe-2">
+    <FloatingHeader className="small-screen:mx-safe-2">
       <OpenSidebarButton
         openSidebar={() => setSidebarExpanded(true)}
         className="text-accent/80! hover:text-accent! big-screen:hidden dark:text-white/80! dark:hover:text-white! mr-auto"

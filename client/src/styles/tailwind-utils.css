@@ -100,6 +100,14 @@
 
 @utility page-buffer {
   @apply w-full px-safe-4 lg:px-safe-6;
+
+  .floating-header {
+    @apply small-screen:-mx-2.5 big-screen:-mx-6 big-screen:px-6;
+  }
+}
+
+@utility page-container {
+  @apply flex flex-col gap-4 pb-10;
 }
 
 @utility card {

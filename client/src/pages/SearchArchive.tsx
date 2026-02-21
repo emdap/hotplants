@@ -15,7 +15,6 @@ import { useApolloQuery } from "hooks/useQuery";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
 import pluralize from "pluralize";
 import { useLayoutEffect, useMemo } from "react";
-import { useMount } from "react-use";
 import { getLastPage } from "util/generalUtil";
 
 const route = getRouteApi("/search-archive");
@@ -48,6 +47,7 @@ const SearchArchive = () => {
       sort: queryParams.sort,
       ...filterParams,
     },
+    fetchPolicy: "cache-and-network",
   });
 
   useLayoutEffect(() => {
@@ -58,18 +58,16 @@ const SearchArchive = () => {
     }
   }, [lastOpened, allSearchRecords]);
 
-  useMount(() => previousData && allSearchRecordsQuery.refetch());
-
   const searchRecordCount =
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;
   const lastPage = getLastPage(pageSize, searchRecordCount);
 
   return (
-    <main className="page-buffer pb-10 flex flex-col gap-4">
+    <main className="page-buffer page-container">
       <PageTitle>Search Archive</PageTitle>
 
       <ScrollAnchor className="scroll-m-header -mb-4" />
-      <FloatingHeader className="grid-centered small-screen:-mx-2.5 big-screen:-mx-6 big-screen:px-6 gap-2 items-center justify-between">
+      <FloatingHeader>
         <div className="flex items-center gap-1">
           {(["filter", "sort"] as const).map((param) => (
             <SearchArchiveQueryPopover
