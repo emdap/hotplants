@@ -1,3 +1,4 @@
+import { usePaginationContext } from "contexts/pagination/PaginationContext";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import FloatingHeader from "designSystem/FloatingHeader";
 import LoadingIcon from "designSystem/LoadingIcon";
@@ -8,14 +9,14 @@ import { FaGlobe } from "react-icons/fa";
 
 const PlantSearchHeader = () => {
   const {
-    page,
-    pageSize,
     searchStatus,
     totalResultsCount,
     isInfiniteScroll,
     setIsInfiniteScroll,
     setSidebarExpanded,
   } = usePlantSearchContext();
+
+  const { page, pageSize, lastPage } = usePaginationContext();
 
   return (
     <FloatingHeader className="grid-centered gap-4 items-center justify-center small-screen:mx-safe-2">
@@ -32,14 +33,12 @@ const PlantSearchHeader = () => {
 
       <PaginationControl
         className="ml-auto"
-        page={page}
-        totalResults={totalResultsCount}
-        pageSize={pageSize}
         replaceUrl
         infiniteScroll={{
           enabled: isInfiniteScroll,
           setEnabled: setIsInfiniteScroll,
         }}
+        {...{ page, pageSize, lastPage }}
       />
     </FloatingHeader>
   );

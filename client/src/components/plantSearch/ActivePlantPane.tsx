@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import MapProvider from "components/interactiveMap/MapProvider";
+import { usePaginationContext } from "contexts/pagination/PaginationContext";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
@@ -28,8 +29,8 @@ const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
 
 const ActivePlantPane = () => {
   const navigate = useNavigate();
-  const { searchParams, page, isInfiniteScroll, hasMoreData } =
-    usePlantSearchContext();
+  const { searchParams } = usePlantSearchContext();
+  const { page, lastPage } = usePaginationContext();
   const { plantList, activePlant, setActivePlantId, setActiveMediaUrl } =
     usePlantSelectionContext();
 
@@ -68,13 +69,10 @@ const ActivePlantPane = () => {
 
   const disableIterate = useMemo(
     () => ({
-      next:
-        isInfiniteScroll || !hasMoreData
-          ? activePlantIndex === plantList.length - 1
-          : false,
-      prev: isInfiniteScroll || page === 1 ? !activePlantIndex : false,
+      next: page === lastPage && activePlantIndex === plantList.length - 1,
+      prev: page === 1 && activePlantIndex === 0,
     }),
-    [isInfiniteScroll, page, hasMoreData, activePlantIndex, plantList.length],
+    [page, lastPage, activePlantIndex, plantList.length],
   );
 
   const iteratePlant = (direction: "prev" | "next") => {

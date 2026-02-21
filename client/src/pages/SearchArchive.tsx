@@ -16,6 +16,7 @@ import { useScrollAnchor } from "hooks/useScrollAnchor";
 import pluralize from "pluralize";
 import { useLayoutEffect, useMemo } from "react";
 import { useMount } from "react-use";
+import { getLastPage } from "util/generalUtil";
 
 const route = getRouteApi("/search-archive");
 
@@ -61,6 +62,7 @@ const SearchArchive = () => {
 
   const searchRecordCount =
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;
+  const lastPage = getLastPage(pageSize, searchRecordCount);
 
   return (
     <main className="page-buffer pb-10 flex flex-col gap-4">
@@ -95,10 +97,9 @@ const SearchArchive = () => {
         {pluralize("Search", searchRecordCount, true)}
         <PaginationControl
           className="ml-auto"
-          totalResults={searchRecordCount}
           pageSizeOptions={ARCHIVE_PAGE_SIZE_OPTIONS}
           replaceUrl
-          {...{ page, pageSize }}
+          {...{ page, pageSize, lastPage }}
         />
       </FloatingHeader>
 

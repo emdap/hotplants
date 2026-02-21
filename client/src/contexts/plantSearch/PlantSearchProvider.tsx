@@ -1,5 +1,6 @@
 import { NetworkStatus } from "@apollo/client";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import { PaginationContext } from "contexts/pagination/PaginationContext";
 import {
   PlantSearchContext,
   PlantSearchContextType,
@@ -12,7 +13,7 @@ import usePlantSearchQueries, {
 import PlantSearch from "pages/PlantSearch";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
-import { isSmallScreen } from "util/generalUtil";
+import { getLastPage, isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("/plant-search");
 
@@ -25,7 +26,7 @@ const PlantSearchProvider = () => {
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
     search: searchParams = null,
-    filter: plantFilters = {},
+    filter: plantFilter = {},
   } = route.useSearch();
 
   const [searchParamsDraft, setSearchParamsDraft] =
@@ -33,7 +34,7 @@ const PlantSearchProvider = () => {
 
   useEffect(() => {
     setIsPrefilledSearch;
-  }, [searchParams, plantFilters, page, pageSize]);
+  }, [searchParams, plantFilter, page, pageSize]);
 
   useEffect(() => {
     setSearchParamsDraft(searchParams);
@@ -85,7 +86,7 @@ const PlantSearchProvider = () => {
       setSearchParamsDraft((prev) => ({ ...prev, ...searchParams }));
 
   const { searchStatus, plantSearchQuery, searchRecordQuery, scrapeMoreData } =
-    usePlantSearchQueries(searchParams, plantFilters, {
+    usePlantSearchQueries(searchParams, plantFilter, {
       page,
       pageSize,
       paginationEnabled: !isInfiniteScroll,
@@ -104,17 +105,14 @@ const PlantSearchProvider = () => {
     !plantSearchQuery.loading && setIsPrefilledSearch(false);
   }, [plantSearchQuery.loading]);
 
-  const { hasCurrentResults, totalResultsCount } = useMemo(
+  const { lastPage, hasCurrentResults, totalResultsCount } = useMemo(
     () => ({
+      lastPage: getLastPage(pageSize, plantSearchData?.count),
       hasCurrentResults: Boolean(plantSearchData?.count),
       totalResultsCount: plantSearchData?.count ?? 0,
     }),
-    [plantSearchData?.count],
+    [plantSearchData?.count, pageSize],
   );
-
-  const unfetchedPlants = plantSearchData
-    ? plantSearchData.count - plantSearchData.results.length
-    : 0;
 
   const fetchMorePlants = async () => {
     if (
@@ -127,13 +125,11 @@ const PlantSearchProvider = () => {
 
     if (!isInfiniteScroll) {
       return scrapeMoreData();
-    } else if (
-      isInfiniteScroll &&
-      unfetchedPlants >= (pageSize ?? DEFAULT_PAGE_SIZE)
-    ) {
-      return plantSearchQuery.fetchMore({
+    } else if (page < lastPage) {
+      plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
+      navigate({ to: ".", search: { page: page + 1 } });
     }
   };
 
@@ -155,24 +151,16 @@ const PlantSearchProvider = () => {
         setIsInfiniteScroll,
 
         searchParams,
-        page,
-        pageSize,
-
         searchParamsDraft,
         validatedSearchParamsDraft,
 
         updateSearchParamsDraft,
         applySearchParams,
 
-        plantFilter: plantFilters,
+        plantFilter,
         applyPlantFilter,
 
         searchStatus,
-        hasMoreData: Boolean(
-          isInfiniteScroll
-            ? unfetchedPlants
-            : plantSearchData && plantSearchData?.count / pageSize > page,
-        ),
         searchRecordQuery,
         plantSearchQuery,
         fetchMorePlants,
@@ -181,20 +169,28 @@ const PlantSearchProvider = () => {
         setSidebarExpanded,
       }}
     >
-      <PlantSelectionProvider
-        plantList={
-          (isInfiniteScroll
-            ? plantSearchData?.results
-            : plantSearchQuery.data?.plantSearch.results) ?? []
-        }
-        boundingPolygon={searchParams?.boundingPolyCoords}
+      <PaginationContext.Provider
+        value={{
+          page,
+          pageSize,
+          lastPage,
+        }}
       >
-        {isPrefilledSearch ? (
-          <LoadingOverlay show transparent className="h-[80vh] w-full" />
-        ) : (
-          <PlantSearch />
-        )}
-      </PlantSelectionProvider>
+        <PlantSelectionProvider
+          plantList={
+            (isInfiniteScroll
+              ? plantSearchData?.results
+              : plantSearchQuery.data?.plantSearch.results) ?? []
+          }
+          boundingPolygon={searchParams?.boundingPolyCoords}
+        >
+          {isPrefilledSearch ? (
+            <LoadingOverlay show transparent className="h-[80vh] w-full" />
+          ) : (
+            <PlantSearch />
+          )}
+        </PlantSelectionProvider>
+      </PaginationContext.Provider>
     </PlantSearchContext.Provider>
   );
 };

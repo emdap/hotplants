@@ -17,9 +17,6 @@ export type PlantSearchContextType = {
   setIsInfiniteScroll: (enabled: boolean) => void;
 
   searchParams: PlantSearchParams | null;
-  page: number;
-  pageSize: number;
-
   searchParamsDraft: Partial<PlantSearchParams> | null;
   validatedSearchParamsDraft: PlantSearchParams | null;
 
@@ -29,7 +26,6 @@ export type PlantSearchContextType = {
   plantFilter: PlantSearchFilter;
   applyPlantFilter: (filter?: PlantSearchFilter) => void;
 
-  hasMoreData: boolean;
   searchStatus: PlantSearchQueryStatus;
   fetchMorePlants: () => Promise<unknown>;
 
@@ -48,9 +44,6 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   setIsInfiniteScroll: VOID_FUNCTION,
 
   searchParams: null,
-  page: 0,
-  pageSize: 20,
-
   searchParamsDraft: null,
   validatedSearchParamsDraft: null,
 
@@ -61,7 +54,6 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   applyPlantFilter: VOID_FUNCTION,
 
   searchStatus: "READY",
-  hasMoreData: false,
   searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
   plantSearchQuery: {} as PlantSearchQueriesReturnType["plantSearchQuery"],
   fetchMorePlants: VOID_PROMISE_FUNCTION,

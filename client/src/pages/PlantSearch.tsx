@@ -5,6 +5,7 @@ import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
 import SearchParamsInput from "components/plantSearch/SearchParamsInput";
 import SearchRecordProgressBar from "components/searchRecord/SearchRecordProgressBar";
+import { usePaginationContext } from "contexts/pagination/PaginationContext";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
@@ -19,13 +20,9 @@ const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
   const {
-    page,
     isInfiniteScroll,
-
-    sidebarExpanded,
-
-    hasMoreData,
     hasCurrentResults,
+    sidebarExpanded,
 
     searchStatus,
     plantSearchQuery: { loading },
@@ -33,10 +30,13 @@ const PlantSearch = () => {
 
     fetchMorePlants,
   } = usePlantSearchContext();
+  const { page, lastPage } = usePaginationContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor();
 
   const resultsContainerRef = useRef<HTMLDivElement>(null);
+
+  const hasNextPage = page < lastPage;
 
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -44,7 +44,7 @@ const PlantSearch = () => {
         return;
       }
       if (
-        hasMoreData &&
+        hasNextPage &&
         scrollContainerElement.scrollHeight -
           (scrollContainerElement.scrollTop +
             scrollContainerElement.clientHeight) <=
@@ -59,8 +59,8 @@ const PlantSearch = () => {
 
     return () => scrollContainer?.removeEventListener("scroll", handleScroll);
   }, [
+    hasNextPage,
     isInfiniteScroll,
-    hasMoreData,
     fetchMorePlants,
     scrollContainer,
     scrollContainerElement,
@@ -89,7 +89,9 @@ const PlantSearch = () => {
         {hasCurrentResults ? (
           <>
             <PlantSearchSidebar />
-            <ScrollAnchor className="scroll-m-header-2" />
+            {!isInfiniteScroll && (
+              <ScrollAnchor className="scroll-m-header-2" />
+            )}
           </>
         ) : (
           <div className="basis-1/2 max-w-2xl min-w-md max-md:min-w-full">
@@ -106,7 +108,7 @@ const PlantSearch = () => {
               key="results-holder"
               parentSidebarExpanded={sidebarExpanded}
               className={classNames({
-                "pb-20": isInfiniteScroll && hasMoreData,
+                "pb-20": isInfiniteScroll && hasNextPage,
               })}
             />
           )}
@@ -122,7 +124,7 @@ const PlantSearch = () => {
             className="h-[80vh] animate-pulse opacity-50"
           />
 
-          {hasMoreData && searchStatus !== "CHECKING_STATUS" ? (
+          {hasNextPage && searchStatus !== "CHECKING_STATUS" ? (
             isInfiniteScroll && (
               // Show loading icon when next results are loading in infinite scroll
               <div className="pb-4 mx-auto -mt-10 mb-10">
@@ -161,7 +163,6 @@ const PlantSearch = () => {
               )}
             </div>
           )}
-          {/* )} */}
         </div>
       </div>
     </main>

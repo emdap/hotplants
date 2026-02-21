@@ -44,6 +44,9 @@ export const findAnimation = (
         animation.animationName === animationName,
     );
 
+export const getLastPage = (pageSize: number, resultsCount?: number) =>
+  resultsCount && pageSize ? Math.ceil(resultsCount / pageSize) : 0;
+
 // Seeing issues with scroll functionalities in Safari
 export const isSafari = /^((?!chrome|android).)*safari/i.test(
   navigator.userAgent,

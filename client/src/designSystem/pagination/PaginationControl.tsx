@@ -18,7 +18,7 @@ import PaginatorDropdown from "./PaginatorDropdown";
 
 type PaginationControlProps = {
   page: number;
-  totalResults: number;
+  lastPage: number;
   minPage?: number;
   pageSize?: number;
   pageSizeOptions?: number[];
@@ -29,7 +29,7 @@ type PaginationControlProps = {
 
 export const PaginationControl = ({
   page,
-  totalResults,
+  lastPage,
   minPage = 1,
   pageSize = 10,
   pageSizeOptions = [10, 20, 30, 40, 50],
@@ -40,7 +40,6 @@ export const PaginationControl = ({
   const navigate = useNavigate();
 
   const bigScreenWidth = window.innerWidth >= SMALL_SCREEN_WIDTH;
-  const lastPage = Math.ceil(totalResults / pageSize);
   const infiniteScrollSwitch = infiniteScroll
     ? { ...infiniteScroll, label: "Infinite scroll" }
     : null;
