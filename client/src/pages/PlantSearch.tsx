@@ -26,7 +26,6 @@ const PlantSearch = () => {
 
     hasMoreData,
     hasCurrentResults,
-    totalResultsCount,
 
     searchStatus,
     plantSearchQuery: { loading },
@@ -107,7 +106,6 @@ const PlantSearch = () => {
               key="results-holder"
               parentSidebarExpanded={sidebarExpanded}
               className={classNames({
-                "max-w-page": totalResultsCount < 3,
                 "pb-20": isInfiniteScroll && hasMoreData,
               })}
             />

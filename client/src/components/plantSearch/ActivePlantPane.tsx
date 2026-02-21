@@ -83,7 +83,7 @@ const ActivePlantPane = () => {
           ref={refPassthrough}
         >
           <header className="flex flex-wrap pt-2 px-safe-2 items-center">
-            <h2 className="flesx gap-4 items-center">
+            <h2 className="flex gap-4 items-center">
               <Button
                 variant="icon-white"
                 onClick={resetActivePlant}

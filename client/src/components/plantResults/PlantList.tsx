@@ -42,11 +42,12 @@ const PlantList = ({
     <>
       <div
         className={classNames(
-          "gap-4 items-stretch grid justify-around",
+          "gap-4 items-stretch grid",
+          { "justify-around": plantList.length > 3 },
           className,
         )}
         style={{
-          gridTemplateColumns: `repeat(auto-fit, ${shrinkCols ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
+          gridTemplateColumns: `repeat(auto-fit, ${plantList.length < 3 ? "minmax(300px, 50%)" : shrinkCols ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
         }}
       >
         {plantList.map((plant) => (

@@ -31,7 +31,7 @@ export type PlantSearchContextType = {
 
   hasMoreData: boolean;
   searchStatus: PlantSearchQueryStatus;
-  fetchMorePlants: () => Promise<void>;
+  fetchMorePlants: () => Promise<unknown>;
 
   sidebarExpanded: boolean;
   setSidebarExpanded: Dispatch<SetStateAction<boolean>>;

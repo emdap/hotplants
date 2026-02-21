@@ -4,28 +4,37 @@ import {
   FieldMergeFunction,
   HttpLink,
   InMemoryCache,
+  Reference,
 } from "@apollo/client";
 import {
   PlantOccurrence,
-  PlantSearchQueryResults,
   SearchPlantsQueryVariables,
 } from "generated/graphql/graphql";
 
+type PlantSearchCachedData = { count: number; results: Reference[] };
+
 const mergePlantSearch: FieldMergeFunction<
-  PlantSearchQueryResults,
-  PlantSearchQueryResults,
+  PlantSearchCachedData,
+  PlantSearchCachedData,
   FieldFunctionOptions<
     SearchPlantsQueryVariables,
     SearchPlantsQueryVariables & { paginated?: boolean }
   >
-> = (existing, incoming, { variables }) => {
+> = (existing, incoming, { readField, variables }) => {
   if (!existing?.results || !variables?.offset) {
     return incoming;
   }
 
+  const existingIds = new Set(
+    existing?.results.map((ref) => readField("_id", ref)),
+  );
+  const newResults = incoming.results.filter(
+    (ref) => !existingIds.has(readField("_id", ref)),
+  );
+
   return {
     count: incoming.count,
-    results: existing.results.concat(incoming.results),
+    results: existing.results.concat(newResults),
   };
 };
 

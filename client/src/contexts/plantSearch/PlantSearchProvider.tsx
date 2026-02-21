@@ -126,12 +126,12 @@ const PlantSearchProvider = () => {
     }
 
     if (!isInfiniteScroll) {
-      scrapeMoreData();
+      return scrapeMoreData();
     } else if (
       isInfiniteScroll &&
       unfetchedPlants >= (pageSize ?? DEFAULT_PAGE_SIZE)
     ) {
-      plantSearchQuery.fetchMore({
+      return plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
     }
