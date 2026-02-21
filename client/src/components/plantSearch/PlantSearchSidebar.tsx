@@ -36,7 +36,7 @@ const PlantSearchSidebar = () => {
       {({ isExpanded }) => (
         <div
           className={classNames(
-            "grow big-screen:h-full big-screen:overflow-auto space-y-4 big-screen:pl-6 big-screen:pr-2 big-screen:mr-4 big-screen:pt-4 transition-opacity",
+            "grow big-screen:w-md big-screen:h-full big-screen:overflow-auto space-y-4 big-screen:pl-4 big-screen:pr-5 big-screen:mr-4 big-screen:pt-4 transition-opacity",
             "small-screen:pr-safe-right",
             hasCurrentResults && {
               "opacity-100 big-screen:delay-150": isExpanded,

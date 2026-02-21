@@ -7,13 +7,13 @@ import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { FaHeart } from "react-icons/fa";
 import { toast } from "sonner";
-import { getPlantDisplayName } from "util/plantUtil";
+import { getPlantDisplayNames } from "util/plantUtil";
 import { defaultErrorToast, defaultWarningToast } from "util/toastUtil";
 
 const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
   const isSignedIn = useIsSignedIn();
   const hasCommonName = plant.commonNames?.length;
-  const plantDisplayName = getPlantDisplayName(plant);
+  const plantDisplayNames = getPlantDisplayNames(plant);
 
   const retryAddAction = {
     action: { label: "Retry", onClick: () => gardenAddMutation() },
@@ -31,7 +31,7 @@ const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
       const { data } = await gardenAddMutation();
       if (data?.addToGarden) {
         toast.success(
-          `Added "${plantDisplayName}" to "${data.addToGarden.gardenName}".`,
+          `Added "${plantDisplayNames.title}" to "${data.addToGarden.gardenName}".`,
         );
       } else if (data) {
         defaultWarningToast(retryAddAction);
@@ -62,11 +62,11 @@ const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
           hasCommonName ? "border-b border-white/80 w-full" : "italic pb-3",
         )}
       >
-        {plantDisplayName}
+        {plantDisplayNames.title}
       </h2>
-      {hasCommonName && (
+      {plantDisplayNames.subTitle && (
         <h6 className="max-sm:text-sm text-white/80 self-end italic -mt-1.5 pb-1 text-right">
-          {plant.scientificName}
+          {plantDisplayNames.subTitle}
         </h6>
       )}
       {isSignedIn && (

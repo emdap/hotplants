@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import MapProvider from "components/interactiveMap/MapProvider";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
@@ -10,12 +11,12 @@ import {
 import { useCloseOnEscape } from "hooks/useCloseOnEscape";
 import { useDisableHtmlScroll } from "hooks/useDisableHtmlScroll";
 import { AnimatePresence } from "motion/react";
-import { Fragment, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 import { useClickAway } from "react-use";
 import { ITERATE_DIRECTION } from "util/generalUtil";
-import { getPlantDisplayName } from "util/plantUtil";
+import { getPlantDisplayNames } from "util/plantUtil";
 import PlantImageViewer from "../plantImages/PlantImageViewer";
 import PlantInfoCard from "../plantResults/PlantInfoCard";
 
@@ -26,15 +27,24 @@ const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
 });
 
 const ActivePlantPane = () => {
-  const { searchParams } = usePlantSearchContext();
+  const navigate = useNavigate();
+  const { searchParams, page, isInfiniteScroll, hasMoreData } =
+    usePlantSearchContext();
   const { plantList, activePlant, setActivePlantId, setActiveMediaUrl } =
     usePlantSelectionContext();
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const isTouchingMap = useRef(false);
-  const [activePlantIndex, setActivePlantIndex] = useState(
-    plantList.findIndex(({ _id }) => _id === activePlant?._id),
-  );
+  const [activePlantIndex, setActivePlantIndex] = useState(0);
+
+  useEffect(() => {
+    setActivePlantIndex(
+      Math.max(
+        0,
+        plantList.findIndex(({ _id }) => _id === activePlant?._id),
+      ),
+    );
+  }, [plantList, activePlant?._id]);
 
   const resetActivePlant = () => {
     setActivePlantId(null);
@@ -58,19 +68,34 @@ const ActivePlantPane = () => {
 
   const disableIterate = useMemo(
     () => ({
-      next: activePlantIndex === plantList.length - 1,
-      prev: !activePlantIndex,
+      next:
+        isInfiniteScroll || !hasMoreData
+          ? activePlantIndex === plantList.length - 1
+          : false,
+      prev: isInfiniteScroll || page === 1 ? !activePlantIndex : false,
     }),
-    [activePlantIndex, plantList.length],
+    [isInfiniteScroll, page, hasMoreData, activePlantIndex, plantList.length],
   );
 
   const iteratePlant = (direction: "prev" | "next") => {
-    const nextPlantIndex =
-      activePlantIndex + (direction === "prev" ? -1 : 1) * 1;
+    const iterateDirection = (direction === "prev" ? -1 : 1) * 1;
+    const nextPlantIndex = activePlantIndex + iterateDirection;
+
+    const nextPlant = plantList[nextPlantIndex];
     setActiveMediaUrl(null);
-    setActivePlantId(plantList[nextPlantIndex]._id);
-    setActivePlantIndex(nextPlantIndex);
+    if (!nextPlant) {
+      setActivePlantId(null);
+      navigate({ to: ".", search: { page: page + iterateDirection } });
+    } else {
+      setActivePlantId(nextPlant._id);
+    }
   };
+
+  const plantDisplayNames = activePlant
+    ? getPlantDisplayNames(activePlant)
+    : null;
+
+  console.log(plantDisplayNames);
 
   return (
     <AnimatePresence>
@@ -82,15 +107,18 @@ const ActivePlantPane = () => {
           {...swipeHandlers}
           ref={refPassthrough}
         >
-          <header className="flex flex-wrap pt-2 px-safe-2 items-center">
-            <h2 className="flex gap-4 items-center">
-              <Button
-                variant="icon-white"
-                onClick={resetActivePlant}
-                icon={<MdClose size={24} />}
-              />
-              {getPlantDisplayName(activePlant)}
-            </h2>
+          <header className="flex flex-wrap pt-2 px-safe-2 items-center gap-x-2 gap-y-4">
+            <Button
+              variant="icon-white"
+              onClick={resetActivePlant}
+              icon={<MdClose size={24} />}
+            />
+            <div className="flex flex-col h-min">
+              <h2>{plantDisplayNames?.title}</h2>
+              {plantDisplayNames?.subTitle && (
+                <h6 className="italic h-0"> {plantDisplayNames.subTitle}</h6>
+              )}
+            </div>
             <div className="ml-auto flex items-center gap-1">
               {ITERATE_DIRECTION.map((direction) => (
                 <Fragment key={direction}>

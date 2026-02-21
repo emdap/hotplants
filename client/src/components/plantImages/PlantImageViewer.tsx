@@ -4,7 +4,7 @@ import Carousel from "designSystem/Carousel";
 import Modal from "designSystem/Modal";
 import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
-import { getPlantDisplayName } from "util/plantUtil";
+import { getPlantDisplayNames } from "util/plantUtil";
 import PlantCarouselImages from "./PlantCarouselImages";
 
 const PlantImageViewer = ({
@@ -88,7 +88,7 @@ const PlantImageViewer = ({
         </div>
 
         <Modal
-          title={getPlantDisplayName(activePlant)}
+          {...getPlantDisplayNames(activePlant)}
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);

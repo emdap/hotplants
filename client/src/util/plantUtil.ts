@@ -1,7 +1,10 @@
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { capitalize } from "lodash";
 
-export const getPlantDisplayName = (plant: PlantResult) => {
+export const getPlantDisplayNames = (plant: PlantResult) => {
   const commonName = plant.commonNames?.[0];
-  return commonName ? capitalize(commonName) : plant.scientificName;
+  return {
+    title: commonName ? capitalize(commonName) : plant.scientificName,
+    subTitle: commonName ? plant.scientificName : undefined,
+  };
 };
