@@ -95,8 +95,6 @@ const ActivePlantPane = () => {
     ? getPlantDisplayNames(activePlant)
     : null;
 
-  console.log(plantDisplayNames);
-
   return (
     <AnimatePresence>
       {activePlant && (
