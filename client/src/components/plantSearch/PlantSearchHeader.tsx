@@ -10,13 +10,12 @@ import { FaGlobe } from "react-icons/fa";
 const PlantSearchHeader = () => {
   const {
     searchStatus,
-    totalResultsCount,
     isInfiniteScroll,
     setIsInfiniteScroll,
     setSidebarExpanded,
   } = usePlantSearchContext();
 
-  const { page, pageSize, lastPage } = usePaginationContext();
+  const { page, pageSize, lastPage, totalItems } = usePaginationContext();
 
   return (
     <FloatingHeader className="small-screen:mx-safe-2">
@@ -27,7 +26,7 @@ const PlantSearchHeader = () => {
       />
 
       <div className="small-screen:text-default-text flex items-center gap-1 col-start-2">
-        {pluralize("Plant", totalResultsCount, true)}
+        {pluralize("Plant", totalItems, true)}
         {searchStatus === "SCRAPING_AND_POLLING" && <LoadingIcon />}
       </div>
 

@@ -30,22 +30,24 @@ const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
 const ActivePlantPane = () => {
   const navigate = useNavigate();
   const { searchParams } = usePlantSearchContext();
-  const { page, lastPage } = usePaginationContext();
+  const { page, pageSize, totalItems } = usePaginationContext();
   const { plantList, activePlant, setActivePlantId, setActiveMediaUrl } =
     usePlantSelectionContext();
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const isTouchingMap = useRef(false);
-  const [activePlantIndex, setActivePlantIndex] = useState(0);
+
+  const [overallIndex, setOverallIndex] = useState(0);
+  const pageIndexOffset = (page - 1) * pageSize;
 
   useEffect(() => {
-    setActivePlantIndex(
+    setOverallIndex(
       Math.max(
         0,
         plantList.findIndex(({ _id }) => _id === activePlant?._id),
-      ),
+      ) + pageIndexOffset,
     );
-  }, [plantList, activePlant?._id]);
+  }, [pageIndexOffset, plantList, activePlant?._id]);
 
   const resetActivePlant = () => {
     setActivePlantId(null);
@@ -69,21 +71,24 @@ const ActivePlantPane = () => {
 
   const disableIterate = useMemo(
     () => ({
-      next: page === lastPage && activePlantIndex === plantList.length - 1,
-      prev: page === 1 && activePlantIndex === 0,
+      next: overallIndex === totalItems - 1,
+      prev: overallIndex === 0,
     }),
-    [page, lastPage, activePlantIndex, plantList.length],
+    [overallIndex, totalItems],
   );
 
   const iteratePlant = (direction: "prev" | "next") => {
     const iterateDirection = (direction === "prev" ? -1 : 1) * 1;
-    const nextPlantIndex = activePlantIndex + iterateDirection;
+    const nextPlantIndex = overallIndex - pageIndexOffset + iterateDirection;
 
     const nextPlant = plantList[nextPlantIndex];
     setActiveMediaUrl(null);
     if (!nextPlant) {
       setActivePlantId(null);
-      navigate({ to: ".", search: { page: page + iterateDirection } });
+      navigate({
+        to: ".",
+        search: (prev) => ({ ...prev, page: page + iterateDirection }),
+      });
     } else {
       setActivePlantId(nextPlant._id);
     }
@@ -133,7 +138,7 @@ const ActivePlantPane = () => {
                   />
                   {direction === "prev" && (
                     <span className="font-mono text-xs text-primary-dark dark:text-white/60">
-                      {activePlantIndex + 1} / {plantList.length}
+                      {overallIndex + 1} / {totalItems}
                     </span>
                   )}
                 </Fragment>

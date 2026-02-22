@@ -11,7 +11,6 @@ const VOID_PROMISE_FUNCTION = async () => {};
 
 export type PlantSearchContextType = {
   hasCurrentResults: boolean;
-  totalResultsCount: number;
 
   isInfiniteScroll: boolean;
   setIsInfiniteScroll: (enabled: boolean) => void;
@@ -38,7 +37,6 @@ export type PlantSearchContextType = {
 
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   hasCurrentResults: false,
-  totalResultsCount: 0,
 
   isInfiniteScroll: !isSmallScreen(),
   setIsInfiniteScroll: VOID_FUNCTION,

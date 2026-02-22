@@ -63,7 +63,7 @@ const PlantSearchProvider = () => {
 
         navigate({
           to: ".",
-          search: { search: applyParams, filter: {}, page: 1 },
+          search: ({ pageSize }) => ({ pageSize, search: applyParams }),
         });
         isSmallScreen() && setSidebarExpanded(false);
       }
@@ -73,12 +73,11 @@ const PlantSearchProvider = () => {
 
   const applyPlantFilter = useCallback(
     (filter?: PlantSearchFilter) =>
-      searchParams &&
       navigate({
         to: ".",
-        search: { search: searchParams, filter },
+        search: (prev) => ({ ...prev, filter }),
       }),
-    [navigate, searchParams],
+    [navigate],
   );
 
   const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =
@@ -105,11 +104,11 @@ const PlantSearchProvider = () => {
     !plantSearchQuery.loading && setIsPrefilledSearch(false);
   }, [plantSearchQuery.loading]);
 
-  const { lastPage, hasCurrentResults, totalResultsCount } = useMemo(
+  const { lastPage, totalItems, hasCurrentResults } = useMemo(
     () => ({
       lastPage: getLastPage(pageSize, plantSearchData?.count),
+      totalItems: plantSearchData?.count ?? 0,
       hasCurrentResults: Boolean(plantSearchData?.count),
-      totalResultsCount: plantSearchData?.count ?? 0,
     }),
     [plantSearchData?.count, pageSize],
   );
@@ -145,7 +144,6 @@ const PlantSearchProvider = () => {
     <PlantSearchContext.Provider
       value={{
         hasCurrentResults,
-        totalResultsCount,
 
         isInfiniteScroll,
         setIsInfiniteScroll,
@@ -174,6 +172,7 @@ const PlantSearchProvider = () => {
           page,
           pageSize,
           lastPage,
+          totalItems,
         }}
       >
         <PlantSelectionProvider

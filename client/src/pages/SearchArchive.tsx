@@ -77,14 +77,14 @@ const SearchArchive = () => {
               applyParams={(data) =>
                 navigate({
                   to: ".",
-                  search: { page: 1, [param]: data },
+                  search: (prev) => ({ ...prev, page: 1, [param]: data }),
                   replace: true,
                 })
               }
               clearParams={() =>
                 navigate({
                   to: ".",
-                  search: { page: 1, [param]: undefined },
+                  search: (prev) => ({ ...prev, page: 1, [param]: undefined }),
                   replace: true,
                 })
               }

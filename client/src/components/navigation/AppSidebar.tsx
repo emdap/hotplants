@@ -15,7 +15,6 @@ const SIDEBAR_ITEMS: SidebarNavItem[] = [
     icon: MdOutlineSearch,
     text: "Plant Search",
     to: "/plant-search",
-    search: { search: null },
   },
   {
     icon: MdOutlineYoutubeSearchedFor,

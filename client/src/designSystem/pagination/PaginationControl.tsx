@@ -50,7 +50,11 @@ export const PaginationControl = ({
   );
 
   const navToPage = (params: PaginationParams) =>
-    navigate({ to: ".", search: params, replace: replaceUrl });
+    navigate({
+      to: ".",
+      search: (prev) => ({ ...prev, ...params }),
+      replace: replaceUrl,
+    });
 
   const recalcPage = (newPageSize: number) => {
     const currentPageStart = (page - 1) * pageSize;
