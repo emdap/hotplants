@@ -13,14 +13,7 @@ export const Route = createFileRoute("/plant-search")({
   component: PlantSearchProvider,
   search: {
     middlewares: [
-      ({ search, next }) => {
-        const nextSearch = next(search);
-
-        return nextSearch.search
-          ? nextSearch
-          : DEFAULT_PLANT_SEARCH_ROUTE_PARAMS;
-      },
-      retainSearchParams(true),
+      retainSearchParams(["lastOpened"]),
       stripSearchParams(DEFAULT_PLANT_SEARCH_ROUTE_PARAMS),
     ],
   },

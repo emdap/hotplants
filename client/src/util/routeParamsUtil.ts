@@ -19,6 +19,7 @@ export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
   pageSize: undefined,
   search: undefined,
   filter: undefined,
+  lastOpened: undefined,
 };
 
 type PlantSearchRouteParams = PaginationParams &
@@ -29,6 +30,7 @@ type PlantSearchRouteParams = PaginationParams &
 
         search: PlantSearchParams | null;
         filter: PlantSearchFilter;
+        lastOpened?: string;
       }
     | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
   );
