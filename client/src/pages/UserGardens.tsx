@@ -10,8 +10,8 @@ import PageTitle from "designSystem/PageTitle";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import {
   CREATE_GARDEN,
-  GET_ALL_GARDEN_NAMES,
-  GET_GARDEN,
+  GET_ALL_GARDENS,
+  GET_GARDEN_PLANTS,
 } from "graphqlHelpers/gardenQueries";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import { useApolloMutation, useApolloQuery } from "hooks/useQuery";
@@ -26,14 +26,18 @@ const UserGardens = () => {
   const { gardenName } = route.useParams();
   const { page = 1, pageSize = DEFAULT_PAGE_SIZE } = route.useSearch();
 
-  const userGardensQuery = useApolloQuery(GET_ALL_GARDEN_NAMES, {
+  const userGardensQuery = useApolloQuery(GET_ALL_GARDENS, {
     skip: Boolean(gardenName),
     fetchPolicy: "cache-and-network",
   });
   const allUserGardens = userGardensQuery.data?.allUserGardens;
 
-  const getGardenQuery = useApolloQuery(GET_GARDEN, {
-    variables: { gardenName: gardenName! },
+  const getGardenPlantsQuery = useApolloQuery(GET_GARDEN_PLANTS, {
+    variables: {
+      gardenName: gardenName!,
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+    },
     skip: !gardenName,
     fetchPolicy: "cache-and-network",
   });
@@ -46,7 +50,10 @@ const UserGardens = () => {
     userGardensQuery.refetch();
   };
 
-  const gardenPlantsCount = getGardenQuery.data?.userGarden?.totalPlants;
+  const gardenPlants =
+    getGardenPlantsQuery.data?.userGardenPlants ??
+    getGardenPlantsQuery.previousData?.userGardenPlants;
+  const gardenPlantsCount = gardenPlants?.count ?? 0;
   const lastPage = getLastPage(pageSize, gardenPlantsCount);
 
   return (
@@ -72,17 +79,17 @@ const UserGardens = () => {
 
       <LoadingOverlay
         debounceShow
-        show={getGardenQuery.loading || createGardenLoading}
+        show={getGardenPlantsQuery.loading || createGardenLoading}
         size={30}
         className="absolute w-full h-80 animate-pulse"
       />
 
       {/* TODO: This should be a separate component */}
       {gardenName ? (
-        <PaginationContext.Provider value={{ page, pageSize, lastPage }}>
-          <PlantSelectionProvider
-            plantList={getGardenQuery.data?.userGarden?.plants ?? []}
-          >
+        <PaginationContext.Provider
+          value={{ page, pageSize, lastPage, totalItems: gardenPlantsCount }}
+        >
+          <PlantSelectionProvider plantList={gardenPlants?.results ?? []}>
             <FloatingHeader>
               <span className="col-start-2">
                 {pluralize("Plant", gardenPlantsCount, true)}
@@ -98,7 +105,7 @@ const UserGardens = () => {
         </PaginationContext.Provider>
       ) : allUserGardens?.length ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
-          {allUserGardens.map(({ gardenName, totalPlants }, index) => (
+          {allUserGardens.map(({ gardenName, plantCount }, index) => (
             <Card
               key={index}
               className="space-y-2 cursor-pointer min-w-xs"
@@ -106,7 +113,7 @@ const UserGardens = () => {
               onClick={() => navigate({ to: gardenName })}
             >
               <h2 className="border-b border-secondary pb-2">{gardenName}</h2>
-              <h4>{totalPlants} plants</h4>
+              <h4>{pluralize("plant", plantCount, true)}</h4>
             </Card>
           ))}
         </div>

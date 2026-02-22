@@ -6,7 +6,8 @@ schema {
 type AddToGardenResult {
   _id: ObjectId!
   gardenName: String!
-  totalPlants: Int!
+  plantCount: Float!
+  plantRefs: [GardenPlantRef!]!
   userId: String!
 }
 
@@ -34,6 +35,12 @@ type GardenPlantData implements PlantDataInterface {
   thumbnailUrl: String
   updatedTimestamp: Float!
   uses: [String!]
+}
+
+type GardenPlantRef {
+  _id: ObjectId!
+  addedToGardenTimestamp: Float!
+  customThumbnailUrl: String
 }
 
 enum LocationSource {
@@ -177,6 +184,7 @@ type Query {
   searchRecord(id: String!): SearchRecord
   searchRecordDataCounts(id: String!): SearchRecordPlantCountResults!
   userGarden(gardenName: String!): UserGarden
+  userGardenPlants(gardenName: String!, limit: Int, offset: Int, sort: [PlantSortInput!]): UserGardenPlants
 }
 
 type SearchRecord {
@@ -245,7 +253,12 @@ input SearchRecordStringFilterInput {
 type UserGarden {
   gardenName: String!
   gardenThumbnailUrl: String
-  plants: [GardenPlantData!]!
-  totalPlants: Int!
+  plantCount: Float!
+  plantRefs: [GardenPlantRef!]!
   userId: String!
+}
+
+type UserGardenPlants {
+  count: Float!
+  results: [GardenPlantData!]!
 }

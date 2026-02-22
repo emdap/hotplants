@@ -1,10 +1,10 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 
-const schema = process.argv.slice(-1);
+const args = process.argv.slice(2);
 
 const config: CodegenConfig = {
-  schema,
-  documents: ["src/**/*.tsx", "src/**/*.ts"],
+  schema: args[0],
+  documents: args[1] === "OMIT" ? [] : ["src/**/*.tsx", "src/**/*.ts"],
   ignoreNoDocuments: true,
   config: {
     skipTypename: true,

@@ -8,11 +8,11 @@ const _GARDEN_PLANT_FIELDS = graphql(`
   }
 `);
 
-export const GET_ALL_GARDEN_NAMES = graphql(`
+export const GET_ALL_GARDENS = graphql(`
   query getAllGardens {
     allUserGardens {
       gardenName
-      totalPlants
+      plantCount
       gardenThumbnailUrl
     }
   }
@@ -22,8 +22,29 @@ export const GET_GARDEN = graphql(`
   query getGarden($gardenName: String!) {
     userGarden(gardenName: $gardenName) {
       gardenName
-      totalPlants
-      plants {
+      plantCount
+      plantRefs {
+        _id
+      }
+    }
+  }
+`);
+
+export const GET_GARDEN_PLANTS = graphql(`
+  query getGardenPlants(
+    $gardenName: String!
+    $limit: Int
+    $offset: Int
+    $sort: [PlantSortInput!]
+  ) {
+    userGardenPlants(
+      gardenName: $gardenName
+      limit: $limit
+      offset: $offset
+      sort: $sort
+    ) {
+      count
+      results {
         ...GardenPlantFields
       }
     }

@@ -15,11 +15,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 type Documents = {
     "\n  fragment GardenPlantFields on GardenPlantData {\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n  }\n": typeof types.GardenPlantFieldsFragmentDoc,
-    "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      totalPlants\n      gardenThumbnailUrl\n    }\n  }\n": typeof types.GetAllGardensDocument,
-    "\n  query getGarden($gardenName: String!) {\n    userGarden(gardenName: $gardenName) {\n      gardenName\n      totalPlants\n      plants {\n        ...GardenPlantFields\n      }\n    }\n  }\n": typeof types.GetGardenDocument,
+    "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n": typeof types.GetAllGardensDocument,
+    "\n  query getGarden($gardenName: String!) {\n    userGarden(gardenName: $gardenName) {\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n": typeof types.GetGardenDocument,
+    "\n  query getGardenPlants(\n    $gardenName: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenName: $gardenName\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        ...GardenPlantFields\n      }\n    }\n  }\n": typeof types.GetGardenPlantsDocument,
     "\n  mutation createGarden($gardenName: String) {\n    newGarden(gardenName: $gardenName)\n  }\n": typeof types.CreateGardenDocument,
     "\n  mutation addPlant($plantId: String!, $gardenName: String) {\n    addToGarden(plantId: $plantId, gardenName: $gardenName) {\n      gardenName\n    }\n  }\n": typeof types.AddPlantDocument,
-    "\n    fragment PlantFields on PlantDataInterface {\n      _id\n      scientificName\n      commonNames\n      bloomColors\n      bloomTimes\n      isPerennial\n      thumbnailUrl\n      physicalCharactersticsDump\n      scrapeSources\n\n      fullOccurrencesCount\n      occurrences {\n        occurrenceId\n        occurrenceCoords\n        media {\n          url\n          isProxyUrl\n        }\n      }\n    }\n  ": typeof types.PlantFieldsFragmentDoc,
+    "\n  fragment PlantFields on PlantDataInterface {\n    _id\n    scientificName\n    commonNames\n    bloomColors\n    bloomTimes\n    isPerennial\n    thumbnailUrl\n    physicalCharactersticsDump\n    scrapeSources\n\n    fullOccurrencesCount\n    occurrences {\n      occurrenceId\n      occurrenceCoords\n      media {\n        url\n        isProxyUrl\n      }\n    }\n  }\n": typeof types.PlantFieldsFragmentDoc,
     "\n  query getPlant($id: String!, $boundingPolyCoords: [[[Float!]!]!]) {\n    plant(id: $id, boundingPolyCoords: $boundingPolyCoords) {\n      ...PlantFields\n    }\n  }\n": typeof types.GetPlantDocument,
     "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        ...PlantFields\n      }\n    }\n  }\n": typeof types.SearchPlantsDocument,
     "\n  mutation replaceWithProxyUrl(\n    $plantId: String!\n    $occurrenceId: Float!\n    $replaceUrl: String!\n  ) {\n    replaceWithProxyUrl(\n      plantId: $plantId\n      occurrenceId: $occurrenceId\n      replaceUrl: $replaceUrl\n    )\n  }\n": typeof types.ReplaceWithProxyUrlDocument,
@@ -28,11 +29,12 @@ type Documents = {
 };
 const documents: Documents = {
     "\n  fragment GardenPlantFields on GardenPlantData {\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n  }\n": types.GardenPlantFieldsFragmentDoc,
-    "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      totalPlants\n      gardenThumbnailUrl\n    }\n  }\n": types.GetAllGardensDocument,
-    "\n  query getGarden($gardenName: String!) {\n    userGarden(gardenName: $gardenName) {\n      gardenName\n      totalPlants\n      plants {\n        ...GardenPlantFields\n      }\n    }\n  }\n": types.GetGardenDocument,
+    "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n": types.GetAllGardensDocument,
+    "\n  query getGarden($gardenName: String!) {\n    userGarden(gardenName: $gardenName) {\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n": types.GetGardenDocument,
+    "\n  query getGardenPlants(\n    $gardenName: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenName: $gardenName\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        ...GardenPlantFields\n      }\n    }\n  }\n": types.GetGardenPlantsDocument,
     "\n  mutation createGarden($gardenName: String) {\n    newGarden(gardenName: $gardenName)\n  }\n": types.CreateGardenDocument,
     "\n  mutation addPlant($plantId: String!, $gardenName: String) {\n    addToGarden(plantId: $plantId, gardenName: $gardenName) {\n      gardenName\n    }\n  }\n": types.AddPlantDocument,
-    "\n    fragment PlantFields on PlantDataInterface {\n      _id\n      scientificName\n      commonNames\n      bloomColors\n      bloomTimes\n      isPerennial\n      thumbnailUrl\n      physicalCharactersticsDump\n      scrapeSources\n\n      fullOccurrencesCount\n      occurrences {\n        occurrenceId\n        occurrenceCoords\n        media {\n          url\n          isProxyUrl\n        }\n      }\n    }\n  ": types.PlantFieldsFragmentDoc,
+    "\n  fragment PlantFields on PlantDataInterface {\n    _id\n    scientificName\n    commonNames\n    bloomColors\n    bloomTimes\n    isPerennial\n    thumbnailUrl\n    physicalCharactersticsDump\n    scrapeSources\n\n    fullOccurrencesCount\n    occurrences {\n      occurrenceId\n      occurrenceCoords\n      media {\n        url\n        isProxyUrl\n      }\n    }\n  }\n": types.PlantFieldsFragmentDoc,
     "\n  query getPlant($id: String!, $boundingPolyCoords: [[[Float!]!]!]) {\n    plant(id: $id, boundingPolyCoords: $boundingPolyCoords) {\n      ...PlantFields\n    }\n  }\n": types.GetPlantDocument,
     "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        ...PlantFields\n      }\n    }\n  }\n": types.SearchPlantsDocument,
     "\n  mutation replaceWithProxyUrl(\n    $plantId: String!\n    $occurrenceId: Float!\n    $replaceUrl: String!\n  ) {\n    replaceWithProxyUrl(\n      plantId: $plantId\n      occurrenceId: $occurrenceId\n      replaceUrl: $replaceUrl\n    )\n  }\n": types.ReplaceWithProxyUrlDocument,
@@ -61,11 +63,15 @@ export function graphql(source: "\n  fragment GardenPlantFields on GardenPlantDa
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      totalPlants\n      gardenThumbnailUrl\n    }\n  }\n"): (typeof documents)["\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      totalPlants\n      gardenThumbnailUrl\n    }\n  }\n"];
+export function graphql(source: "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n"): (typeof documents)["\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getGarden($gardenName: String!) {\n    userGarden(gardenName: $gardenName) {\n      gardenName\n      totalPlants\n      plants {\n        ...GardenPlantFields\n      }\n    }\n  }\n"): (typeof documents)["\n  query getGarden($gardenName: String!) {\n    userGarden(gardenName: $gardenName) {\n      gardenName\n      totalPlants\n      plants {\n        ...GardenPlantFields\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query getGarden($gardenName: String!) {\n    userGarden(gardenName: $gardenName) {\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n"): (typeof documents)["\n  query getGarden($gardenName: String!) {\n    userGarden(gardenName: $gardenName) {\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query getGardenPlants(\n    $gardenName: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenName: $gardenName\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        ...GardenPlantFields\n      }\n    }\n  }\n"): (typeof documents)["\n  query getGardenPlants(\n    $gardenName: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenName: $gardenName\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        ...GardenPlantFields\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -77,7 +83,7 @@ export function graphql(source: "\n  mutation addPlant($plantId: String!, $garde
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    fragment PlantFields on PlantDataInterface {\n      _id\n      scientificName\n      commonNames\n      bloomColors\n      bloomTimes\n      isPerennial\n      thumbnailUrl\n      physicalCharactersticsDump\n      scrapeSources\n\n      fullOccurrencesCount\n      occurrences {\n        occurrenceId\n        occurrenceCoords\n        media {\n          url\n          isProxyUrl\n        }\n      }\n    }\n  "): (typeof documents)["\n    fragment PlantFields on PlantDataInterface {\n      _id\n      scientificName\n      commonNames\n      bloomColors\n      bloomTimes\n      isPerennial\n      thumbnailUrl\n      physicalCharactersticsDump\n      scrapeSources\n\n      fullOccurrencesCount\n      occurrences {\n        occurrenceId\n        occurrenceCoords\n        media {\n          url\n          isProxyUrl\n        }\n      }\n    }\n  "];
+export function graphql(source: "\n  fragment PlantFields on PlantDataInterface {\n    _id\n    scientificName\n    commonNames\n    bloomColors\n    bloomTimes\n    isPerennial\n    thumbnailUrl\n    physicalCharactersticsDump\n    scrapeSources\n\n    fullOccurrencesCount\n    occurrences {\n      occurrenceId\n      occurrenceCoords\n      media {\n        url\n        isProxyUrl\n      }\n    }\n  }\n"): (typeof documents)["\n  fragment PlantFields on PlantDataInterface {\n    _id\n    scientificName\n    commonNames\n    bloomColors\n    bloomTimes\n    isPerennial\n    thumbnailUrl\n    physicalCharactersticsDump\n    scrapeSources\n\n    fullOccurrencesCount\n    occurrences {\n      occurrenceId\n      occurrenceCoords\n      media {\n        url\n        isProxyUrl\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
