@@ -5,6 +5,7 @@ import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvid
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import FloatingHeader from "designSystem/FloatingHeader";
+import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
@@ -91,9 +92,12 @@ const UserGardens = () => {
         >
           <PlantSelectionProvider plantList={gardenPlants?.results ?? []}>
             <FloatingHeader>
-              <span className="col-start-2">
-                {pluralize("Plant", gardenPlantsCount, true)}
-              </span>
+              <ItemCountWithLoader
+                className="col-start-2"
+                label="Plant"
+                count={gardenPlantsCount}
+              />
+
               <PaginationControl
                 className="ml-auto"
                 replaceUrl

@@ -7,13 +7,13 @@ import {
   SearchRecordQueryInput,
 } from "components/searchRecord/searchRecordQueryUtil";
 import FloatingHeader from "designSystem/FloatingHeader";
+import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
-import pluralize from "pluralize";
 import { useLayoutEffect, useMemo } from "react";
 import { getLastPage } from "util/generalUtil";
 
@@ -92,7 +92,8 @@ const SearchArchive = () => {
           ))}
         </div>
 
-        {pluralize("Search", searchRecordCount, true)}
+        <ItemCountWithLoader label="Search" count={searchRecordCount} />
+
         <PaginationControl
           className="ml-auto"
           pageSizeOptions={ARCHIVE_PAGE_SIZE_OPTIONS}
@@ -104,7 +105,7 @@ const SearchArchive = () => {
       <LoadingOverlay
         debounceShow={!previousData}
         transparent
-        show={allSearchRecordsQuery.loading}
+        show={allSearchRecordsQuery.loading && !previousData}
         className="h-screen animate-pulse opacity-50"
       />
 

@@ -1,10 +1,9 @@
 import { usePaginationContext } from "contexts/pagination/PaginationContext";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import FloatingHeader from "designSystem/FloatingHeader";
-import LoadingIcon from "designSystem/LoadingIcon";
+import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
-import pluralize from "pluralize";
 import { FaGlobe } from "react-icons/fa";
 
 const PlantSearchHeader = () => {
@@ -25,10 +24,11 @@ const PlantSearchHeader = () => {
         icon={<FaGlobe size={16} />}
       />
 
-      <div className="small-screen:text-default-text flex items-center gap-1 col-start-2">
-        {pluralize("Plant", totalItems, true)}
-        {searchStatus === "SCRAPING_AND_POLLING" && <LoadingIcon />}
-      </div>
+      <ItemCountWithLoader
+        label="Plant"
+        count={totalItems}
+        isLoading={searchStatus === "SCRAPING_AND_POLLING"}
+      />
 
       <PaginationControl
         className="ml-auto"
