@@ -88,10 +88,10 @@ const Button = ({
   linkAddress,
   className,
   disabled,
-  disableOnLoading,
+  disableOnLoading = true,
   ...directButtonProps
 }: ButtonProps) => {
-  const isDisabled = isLoading || disabled;
+  const isDisabled = (disableOnLoading && isLoading) || disabled;
   const classes = getClasses({
     variant,
     size,

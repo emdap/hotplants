@@ -38,7 +38,8 @@ const SearchParamsInput = () => {
 
       {(hasCurrentResults || searchParamsDraft) && (
         <Button
-          className="small-screen:mt-auto! "
+          className="small-screen:mt-auto!"
+          disableOnLoading={false}
           disabled={disableSubmit}
           isLoading={searchStatus !== "READY"}
           type="submit"
