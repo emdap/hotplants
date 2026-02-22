@@ -23,7 +23,7 @@ const LoadingOverlay = ({
   const [debouncedShow, setDebouncedShow] = useState(false);
   useDebounce(() => setDebouncedShow(Boolean(show)), 1000, [show]);
 
-  const showLoader = debounceShow ? debouncedShow : show;
+  const showLoader = debounceShow !== undefined ? debouncedShow : show;
 
   return (
     <AnimatePresence>
