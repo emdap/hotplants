@@ -1,20 +1,36 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import AuthFormCard from "components/auth/AuthFormCard";
-import AuthLoadingSubmitButton from "components/auth/AuthLoadingSubmitButton";
 import { authClient, useAuthSession } from "config/authClient";
 import Button from "designSystem/Button";
+import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { defaultErrorToast } from "util/toastUtil";
 
 const Logout = () => {
   const session = useAuthSession();
+  const [loading, setLoading] = useState(false);
+
+  const onLogout = async () => {
+    setLoading(true);
+    try {
+      const { error } = await authClient.signOut();
+      if (error) {
+        toast.error(error.message ?? "Unexpected error occurred.");
+      }
+    } catch (error) {
+      console.error(error);
+      defaultErrorToast();
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    authClient.signOut();
+    onLogout();
   }, []);
 
   return (
-    <AuthFormCard>
+    <Card className="mt-10 space-y-10">
       {session.isPending ? (
         <div className="flex gap-4 items-center">
           <LoadingIcon />
@@ -41,15 +57,12 @@ const Logout = () => {
       ) : (
         <>
           <div className="font-medium">Sign out was not successful.</div>
-          <AuthLoadingSubmitButton
-            variant="primary"
-            onClick={() => authClient.signOut()}
-          >
+          <Button variant="primary" onClick={onLogout} isLoading={loading}>
             Try Again
-          </AuthLoadingSubmitButton>
+          </Button>
         </>
       )}
-    </AuthFormCard>
+    </Card>
   );
 };
 

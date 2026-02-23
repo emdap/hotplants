@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import LoginForm from "components/auth/LoginForm";
+import LoginForm from "components/LoginForm";
 import { useAuthSession } from "config/authClient";
 import Card from "designSystem/Card";
 

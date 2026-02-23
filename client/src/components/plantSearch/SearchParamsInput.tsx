@@ -21,7 +21,7 @@ const SearchParamsInput = () => {
     !searchParamsDraft ||
     _.isEqual(searchParamsDraft, searchParams);
 
-  const submitLocation = (e: FormEvent<HTMLFormElement>) => {
+  const submitLocation = (e: FormEvent) => {
     e.preventDefault();
     if (!disableSubmit) {
       applySearchParams();
