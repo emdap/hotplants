@@ -24,8 +24,7 @@ const SIDEBAR_ITEMS: SidebarNavItem[] = [
   {
     icon: TbPlant2,
     text: "Gardens",
-    to: "/gardens/{-$gardenName}",
-    params: { gardenName: undefined },
+    to: "/user-gardens",
   },
 ];
 

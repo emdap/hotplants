@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import UserGardens from "pages/UserGardens";
+import Garden from "pages/Garden";
 import { validatePaginationParams } from "util/routeParamsUtil";
 
-export const Route = createFileRoute("/_private/gardens/{-$gardenName}")({
-  component: UserGardens,
+export const Route = createFileRoute("/_private/gardens/$gardenName")({
+  component: Garden,
   validateSearch: validatePaginationParams,
 });
