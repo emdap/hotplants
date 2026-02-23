@@ -12,13 +12,13 @@ import {
   MdChevronRight,
   MdOutlineMoreVert,
 } from "react-icons/md";
-import { SMALL_SCREEN_WIDTH } from "util/generalUtil";
+import { getLastPage, SMALL_SCREEN_WIDTH } from "util/generalUtil";
 import { PaginationParams } from "util/routeParamsUtil";
 import PaginatorDropdown from "./PaginatorDropdown";
 
 type PaginationControlProps = {
   page: number;
-  lastPage: number;
+  totalItems: number;
   minPage?: number;
   pageSize?: number;
   pageSizeOptions?: number[];
@@ -29,7 +29,7 @@ type PaginationControlProps = {
 
 export const PaginationControl = ({
   page,
-  lastPage,
+  totalItems,
   minPage = 1,
   pageSize = 10,
   pageSizeOptions = [10, 20, 30, 40, 50],
@@ -43,6 +43,7 @@ export const PaginationControl = ({
   const infiniteScrollSwitch = infiniteScroll
     ? { ...infiniteScroll, label: "Infinite scroll" }
     : null;
+  const lastPage = getLastPage(pageSize, totalItems);
 
   const pageList = useMemo(
     () => new Array(lastPage).fill(0).map((_, index) => index + 1),
@@ -100,14 +101,14 @@ export const PaginationControl = ({
               label="Page"
               selected={page}
               options={pageList}
-              disabled={pageList.length === 1}
+              disabled={pageList.length <= 1}
               onChange={(newPage) => navToPage({ page: newPage })}
             />
 
             <Button
               size="small"
               variant="icon-white"
-              disabled={page === lastPage}
+              disabled={page >= lastPage}
               onClick={() => navToPage({ page: page + 1 })}
               icon={<MdChevronRight />}
             />

@@ -1,6 +1,5 @@
 import { NetworkStatus } from "@apollo/client";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
-import { PaginationContext } from "contexts/pagination/PaginationContext";
 import {
   PlantSearchContext,
   PlantSearchContextType,
@@ -13,7 +12,7 @@ import usePlantSearchQueries, {
 import PlantSearch from "pages/PlantSearch";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
-import { getLastPage, isSmallScreen } from "util/generalUtil";
+import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("/plant-search");
 
@@ -104,13 +103,12 @@ const PlantSearchProvider = () => {
     !plantSearchQuery.loading && setIsPrefilledSearch(false);
   }, [plantSearchQuery.loading]);
 
-  const { lastPage, totalItems, hasCurrentResults } = useMemo(
+  const { totalItems, hasCurrentResults } = useMemo(
     () => ({
-      lastPage: getLastPage(pageSize, plantSearchData?.count),
       totalItems: plantSearchData?.count ?? 0,
       hasCurrentResults: Boolean(plantSearchData?.count),
     }),
-    [plantSearchData?.count, pageSize],
+    [plantSearchData?.count],
   );
 
   const fetchMorePlants = async () => {
@@ -124,7 +122,7 @@ const PlantSearchProvider = () => {
 
     if (!isInfiniteScroll) {
       return scrapeMoreData();
-    } else if (page < lastPage) {
+    } else if (plantSearchData.results.length < totalItems) {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
@@ -167,29 +165,25 @@ const PlantSearchProvider = () => {
         setSidebarExpanded,
       }}
     >
-      <PaginationContext.Provider
-        value={{
+      <PlantSelectionProvider
+        plantList={
+          (isInfiniteScroll
+            ? plantSearchData?.results
+            : plantSearchQuery.data?.plantSearch.results) ?? []
+        }
+        {...{
           page,
           pageSize,
-          lastPage,
           totalItems,
         }}
+        boundingPolygon={searchParams?.boundingPolyCoords}
       >
-        <PlantSelectionProvider
-          plantList={
-            (isInfiniteScroll
-              ? plantSearchData?.results
-              : plantSearchQuery.data?.plantSearch.results) ?? []
-          }
-          boundingPolygon={searchParams?.boundingPolyCoords}
-        >
-          {isPrefilledSearch ? (
-            <LoadingOverlay show transparent className="h-[80vh] w-full" />
-          ) : (
-            <PlantSearch />
-          )}
-        </PlantSelectionProvider>
-      </PaginationContext.Provider>
+        {isPrefilledSearch ? (
+          <LoadingOverlay show transparent className="h-[80vh] w-full" />
+        ) : (
+          <PlantSearch />
+        )}
+      </PlantSelectionProvider>
     </PlantSearchContext.Provider>
   );
 };

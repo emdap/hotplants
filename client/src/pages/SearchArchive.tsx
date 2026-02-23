@@ -15,7 +15,6 @@ import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
 import { useLayoutEffect, useMemo } from "react";
-import { getLastPage } from "util/generalUtil";
 
 const route = getRouteApi("/search-archive");
 
@@ -60,7 +59,6 @@ const SearchArchive = () => {
 
   const searchRecordCount =
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;
-  const lastPage = getLastPage(pageSize, searchRecordCount);
 
   return (
     <main className="page-buffer page-container">
@@ -97,8 +95,9 @@ const SearchArchive = () => {
         <PaginationControl
           className="ml-auto"
           pageSizeOptions={ARCHIVE_PAGE_SIZE_OPTIONS}
+          totalItems={searchRecordCount}
           replaceUrl
-          {...{ page, pageSize, lastPage }}
+          {...{ page, pageSize }}
         />
       </FloatingHeader>
 

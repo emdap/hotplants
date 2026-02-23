@@ -1,5 +1,5 @@
-import { usePaginationContext } from "contexts/pagination/PaginationContext";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
@@ -13,8 +13,7 @@ const PlantSearchHeader = () => {
     setIsInfiniteScroll,
     setSidebarExpanded,
   } = usePlantSearchContext();
-
-  const { page, pageSize, lastPage, totalItems } = usePaginationContext();
+  const { page, pageSize, totalItems } = usePlantSelectionContext();
 
   return (
     <FloatingHeader className="small-screen:mx-safe-2">
@@ -37,7 +36,7 @@ const PlantSearchHeader = () => {
           enabled: isInfiniteScroll,
           setEnabled: setIsInfiniteScroll,
         }}
-        {...{ page, pageSize, lastPage }}
+        {...{ page, pageSize, totalItems }}
       />
     </FloatingHeader>
   );

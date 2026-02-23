@@ -1,6 +1,5 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import PlantList from "components/plantResults/PlantList";
-import { PaginationContext } from "contexts/pagination/PaginationContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
@@ -18,7 +17,6 @@ import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import { useApolloMutation, useApolloQuery } from "hooks/useQuery";
 import pluralize from "pluralize";
 import { MdArrowBack } from "react-icons/md";
-import { getLastPage } from "util/generalUtil";
 
 const route = getRouteApi("/_private/gardens/{-$gardenName}");
 
@@ -55,7 +53,6 @@ const UserGardens = () => {
     getGardenPlantsQuery.data?.userGardenPlants ??
     getGardenPlantsQuery.previousData?.userGardenPlants;
   const gardenPlantsCount = gardenPlants?.count ?? 0;
-  const lastPage = getLastPage(pageSize, gardenPlantsCount);
 
   return (
     <main className="page-buffer page-container">
@@ -87,26 +84,27 @@ const UserGardens = () => {
 
       {/* TODO: This should be a separate component */}
       {gardenName ? (
-        <PaginationContext.Provider
-          value={{ page, pageSize, lastPage, totalItems: gardenPlantsCount }}
+        <PlantSelectionProvider
+          plantList={gardenPlants?.results ?? []}
+          totalItems={gardenPlantsCount}
+          {...{ page, pageSize }}
         >
-          <PlantSelectionProvider plantList={gardenPlants?.results ?? []}>
-            <FloatingHeader>
-              <ItemCountWithLoader
-                className="col-start-2"
-                label="Plant"
-                count={gardenPlantsCount}
-              />
+          <FloatingHeader>
+            <ItemCountWithLoader
+              className="col-start-2"
+              label="Plant"
+              count={gardenPlantsCount}
+            />
 
-              <PaginationControl
-                className="ml-auto"
-                replaceUrl
-                {...{ page, pageSize, lastPage }}
-              />
-            </FloatingHeader>
-            <PlantList />
-          </PlantSelectionProvider>
-        </PaginationContext.Provider>
+            <PaginationControl
+              className="ml-auto"
+              totalItems={gardenPlantsCount}
+              replaceUrl
+              {...{ page, pageSize }}
+            />
+          </FloatingHeader>
+          <PlantList />
+        </PlantSelectionProvider>
       ) : allUserGardens?.length ? (
         <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
           {allUserGardens.map(({ gardenName, plantCount }, index) => (

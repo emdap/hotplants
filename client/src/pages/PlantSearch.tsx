@@ -5,8 +5,8 @@ import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
 import SearchParamsInput from "components/plantSearch/SearchParamsInput";
 import SearchRecordProgressBar from "components/searchRecord/SearchRecordProgressBar";
-import { usePaginationContext } from "contexts/pagination/PaginationContext";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
@@ -30,7 +30,7 @@ const PlantSearch = () => {
 
     fetchMorePlants,
   } = usePlantSearchContext();
-  const { page, lastPage } = usePaginationContext();
+  const { page, lastPage } = usePlantSelectionContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor();
 

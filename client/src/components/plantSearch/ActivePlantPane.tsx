@@ -1,6 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
 import MapProvider from "components/interactiveMap/MapProvider";
-import { usePaginationContext } from "contexts/pagination/PaginationContext";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
@@ -30,9 +29,15 @@ const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
 const ActivePlantPane = () => {
   const navigate = useNavigate();
   const { searchParams } = usePlantSearchContext();
-  const { page, pageSize, totalItems } = usePaginationContext();
-  const { plantList, activePlant, setActivePlantId, setActiveMediaUrl } =
-    usePlantSelectionContext();
+  const {
+    plantList,
+    page,
+    pageSize,
+    totalItems,
+    activePlant,
+    setActivePlantId,
+    setActiveMediaUrl,
+  } = usePlantSelectionContext();
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const isTouchingMap = useRef(false);

@@ -2,17 +2,23 @@ import { useLazyQuery } from "@apollo/client/react";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { GET_PLANT, PlantQueryResults } from "graphqlHelpers/plantQueries";
 import { ReactNode, useEffect, useMemo, useState } from "react";
-import { PlantSelectionContext } from "./PlantSelectionContext";
+import { getLastPage } from "util/generalUtil";
+import { PaginationData, PlantSelectionContext } from "./PlantSelectionContext";
 
 const PlantSelectionProvider = ({
   plantList: originalPlantList,
   boundingPolygon,
+
+  page,
+  pageSize,
+  totalItems,
+
   children,
 }: {
   plantList: PlantQueryResults;
   boundingPolygon?: PlantDataInput["boundingPolyCoords"];
   children: ReactNode;
-}) => {
+} & Omit<PaginationData, "lastPage">) => {
   const [plantList, setPlantList] = useState(originalPlantList);
   const [activePlantId, setActivePlantId] = useState<string | null>(null);
   const [activeMediaUrl, setActiveMediaUrl] = useState<string | null>(null);
@@ -54,10 +60,17 @@ const PlantSelectionProvider = ({
     }
   };
 
+  const lastPage = getLastPage(totalItems, pageSize);
+
   return (
     <PlantSelectionContext.Provider
       value={{
         plantList,
+
+        page,
+        lastPage,
+        pageSize,
+        totalItems,
 
         activePlantId,
         activePlant,

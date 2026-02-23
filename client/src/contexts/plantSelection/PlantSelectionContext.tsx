@@ -10,6 +10,13 @@ import { createContext, Dispatch, SetStateAction, useContext } from "react";
 export type FlattenedPlantMedia = (Omit<PlantOccurrence, "media"> &
   PlantMediaObject)[];
 
+export type PaginationData = {
+  page: number;
+  lastPage: number;
+  pageSize: number;
+  totalItems: number;
+};
+
 type PlantSelectionContextType = {
   plantList: PlantQueryResults;
 
@@ -22,10 +29,15 @@ type PlantSelectionContextType = {
   setActiveMediaUrl: Dispatch<SetStateAction<string | null>>;
 
   syncPlant: (plantId: string) => void;
-};
+} & PaginationData;
 
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSelectionContextType = {
   plantList: [],
+
+  page: 0,
+  lastPage: 0,
+  pageSize: 0,
+  totalItems: 0,
 
   activePlantId: null,
   activePlantMedia: [],
