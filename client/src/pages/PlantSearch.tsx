@@ -160,9 +160,11 @@ const PlantSearch = () => {
                     />
                   }
 
-                  <Button className="w-full" onClick={fetchMorePlants}>
-                    Gather more data
-                  </Button>
+                  {searchRecordQuery.data.status !== "COMPLETE" && (
+                    <Button className="w-full" onClick={fetchMorePlants}>
+                      Gather more data
+                    </Button>
+                  )}
                 </Card>
               )}
             </div>
