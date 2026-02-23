@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/wakeUp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["WakeUp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/plants/getSearchRecord": {
         parameters: {
             query?: never;
@@ -90,6 +106,26 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    WakeUp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ok */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+        };
+    };
     GetSearchRecord: {
         parameters: {
             query?: never;

@@ -27,7 +27,7 @@ const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
   ],
 };
 
-const hotplantsClient = createClient<paths>({
+export const hotplantsClient = createClient<paths>({
   baseUrl: `${import.meta.env.VITE_SERVER_URL}/api`,
 });
 
