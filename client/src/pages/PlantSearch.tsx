@@ -14,7 +14,7 @@ import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
@@ -32,7 +32,7 @@ const PlantSearch = () => {
   } = usePlantSearchContext();
   const { page, lastPage } = usePlantSelectionContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
-  const ScrollAnchor = useScrollAnchor();
+  const ScrollAnchor = useScrollAnchor({ enabled: searchStatus === "READY" });
 
   const resultsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -66,12 +66,6 @@ const PlantSearch = () => {
     scrollContainerElement,
   ]);
 
-  useEffect(() => {
-    if (!hasCurrentResults && searchStatus === "SCRAPING_AND_POLLING") {
-      resultsContainerRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [searchStatus, hasCurrentResults]);
-
   return (
     <main className="w-full h-full">
       {!hasCurrentResults && <ScrollAnchor className="scroll-m-header-2" />}
@@ -95,7 +89,17 @@ const PlantSearch = () => {
           </>
         ) : (
           <div className="basis-1/2 max-w-2xl min-w-md max-md:min-w-full">
-            <SearchParamsInput />
+            <SearchParamsInput
+              onClickSearch={() =>
+                setTimeout(
+                  () =>
+                    resultsContainerRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                    }),
+                  300,
+                )
+              }
+            />
           </div>
         )}
 

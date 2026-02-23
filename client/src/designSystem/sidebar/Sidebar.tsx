@@ -6,6 +6,7 @@ import { AnimatePresence } from "motion/react";
 import { ReactNode, useEffect, useState } from "react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
+import { isLeafletEvent } from "util/generalUtil";
 
 type SidebarProps = {
   isExpanded?: boolean;
@@ -32,7 +33,7 @@ const Sidebar = ({
   const [isExpanded, setIsExpanded] = useState(Boolean(isExpandedProp));
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => setIsExpanded(false),
+    onSwipedLeft: ({ event }) => !isLeafletEvent(event) && setIsExpanded(false),
   });
   useCloseOnEscape(() => setIsExpanded(false), isExpanded);
 

@@ -34,7 +34,8 @@ export const MarkerClusterIcon = (
 
   const activeIconUrl = activeChild
     ? activeChild.getIcon().options.iconUrl
-    : defaultIconUrl;
+    : (children[children.length - 1]?.getIcon().options.iconUrl ??
+      defaultIconUrl);
 
   return activeIconUrl
     ? OccurrenceMarkerIcon(activeIconUrl, Boolean(activeChild))

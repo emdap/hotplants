@@ -47,6 +47,9 @@ export const findAnimation = (
 export const getLastPage = (pageSize: number, resultsCount?: number) =>
   resultsCount && pageSize ? Math.ceil(resultsCount / pageSize) : 0;
 
+export const isLeafletEvent = (event?: Pick<Event, "target">) =>
+  event?.target && "_leaflet_id" in event.target;
+
 // Seeing issues with scroll functionalities in Safari
 export const isSafari = /^((?!chrome|android).)*safari/i.test(
   navigator.userAgent,

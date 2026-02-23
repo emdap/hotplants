@@ -5,7 +5,11 @@ import { FormEvent, useState } from "react";
 import LocationParamsInput from "./LocationParamsInput";
 import OptionalSearchParamsInput from "./OptionalSearchParamsInput";
 
-const SearchParamsInput = () => {
+const SearchParamsInput = ({
+  onClickSearch,
+}: {
+  onClickSearch?: () => void;
+}) => {
   const {
     searchStatus,
     hasCurrentResults,
@@ -16,10 +20,10 @@ const SearchParamsInput = () => {
 
   const [locationPending, setLocationPending] = useState(false);
 
+  const paramsAreApplied = _.isEqual(searchParamsDraft, searchParams);
+
   const disableSubmit =
-    locationPending ||
-    !searchParamsDraft ||
-    _.isEqual(searchParamsDraft, searchParams);
+    locationPending || !searchParamsDraft || paramsAreApplied;
 
   const submitLocation = (e: FormEvent) => {
     e.preventDefault();
@@ -41,9 +45,10 @@ const SearchParamsInput = () => {
           className="small-screen:mt-auto!"
           disableOnLoading={false}
           disabled={disableSubmit}
-          isLoading={searchStatus !== "READY"}
+          isLoading={paramsAreApplied && searchStatus !== "READY"}
           type="submit"
           variant="primary"
+          onClick={onClickSearch}
         >
           Search
         </Button>

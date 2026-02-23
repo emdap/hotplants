@@ -3,6 +3,7 @@ import { PlantResult } from "graphqlHelpers/plantQueries";
 
 const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
   fullOccurrencesCount: "Occurrences Found",
+  scientificName: "Scientific Name",
   commonNames: "Common Names",
   bloomColors: "Bloom Colors",
   bloomTimes: "Bloom Times",
@@ -22,7 +23,9 @@ const PlantInfoCard = ({ plant }: { plant: PlantResult }) => (
                 <td className="text-right">
                   {Array.isArray(value)
                     ? value.join(", ")
-                    : JSON.stringify(value)}
+                    : typeof value === "string"
+                      ? value
+                      : JSON.stringify(value)}
                 </td>
               </tr>
             ),

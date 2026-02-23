@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
@@ -15,7 +16,7 @@ import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 import { useClickAway } from "react-use";
-import { ITERATE_DIRECTION } from "util/generalUtil";
+import { isLeafletEvent, ITERATE_DIRECTION } from "util/generalUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
 import PlantImageViewer from "../plantImages/PlantImageViewer";
 import PlantInfoCard from "../plantResults/PlantInfoCard";
@@ -40,7 +41,6 @@ const ActivePlantPane = () => {
   } = usePlantSelectionContext();
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
-  const isTouchingMap = useRef(false);
 
   const [overallIndex, setOverallIndex] = useState(0);
   const pageIndexOffset = (page - 1) * pageSize;
@@ -62,7 +62,7 @@ const ActivePlantPane = () => {
   useCloseOnEscape(resetActivePlant, !!activePlant && !imageModalOpen);
   useDisableHtmlScroll(Boolean(activePlant));
   const swipeHandlers = useSwipeable({
-    onSwipedRight: () => !isTouchingMap.current && resetActivePlant(),
+    onSwipedRight: ({ event }) => !isLeafletEvent(event) && resetActivePlant(),
   });
 
   const paneRef = useRef<HTMLDivElement>(null);
@@ -108,30 +108,33 @@ const ActivePlantPane = () => {
       {activePlant && (
         <Card
           key="plant-pane"
-          className="backdrop-blur-2xl small-screen:rounded-l-none rounded-r-none h-full small-screen:w-full fixed top-0 big-screen:w-4/7 big-screen:max-w-5xl flex flex-col z-50 p-0 overflow-hidden"
+          className={classNames(
+            "rounded-r-none py-2 px-safe-2 h-full fixed top-0 z-50",
+            "backdrop-blur-2xl small-screen:rounded-l-none small-screen:w-full",
+            "small-screen:w-full big-screen:w-4/7 big-screen:max-w-5xl",
+            "flex flex-col overflow-hidden",
+          )}
           {...CARD_SLIDE_IN}
           {...swipeHandlers}
           ref={refPassthrough}
         >
-          <header className="flex flex-wrap pt-2 px-safe-2 items-center gap-x-2 gap-y-4">
+          <header className="flex w-full items-center justify-between gap-8">
             <Button
               variant="icon-white"
+              className="sticky top-0"
               onClick={resetActivePlant}
-              icon={<MdClose size={24} />}
+              icon={<MdClose />}
             />
-            <div className="flex flex-col h-min">
-              <h2>{plantDisplayNames?.title}</h2>
-              {plantDisplayNames?.subTitle && (
-                <h6 className="italic h-0"> {plantDisplayNames.subTitle}</h6>
-              )}
-            </div>
-            <div className="ml-auto flex items-center gap-1">
+
+            <div className="ml-auto flex items-center gap-1 sticky top-0">
               {ITERATE_DIRECTION.map((direction) => (
                 <Fragment key={direction}>
                   <Button
                     key={direction}
+                    size="small"
                     disabled={disableIterate[direction]}
-                    variant="text-primary"
+                    className="text-primary"
+                    variant="icon-white"
                     onClick={() => iteratePlant(direction)}
                     icon={
                       direction === "prev" ? (
@@ -150,19 +153,19 @@ const ActivePlantPane = () => {
               ))}
             </div>
           </header>
+
           <div
             key={activePlant.scientificName}
-            className="flex flex-col small-screen:overflow-auto big-screen:overflow-hidden gap-4 py-6 px-safe-6"
+            className="flex flex-col small-screen:overflow-auto big-screen:overflow-hidden gap-4 pb-6 px-2"
           >
-            <div
-              onTouchStart={() => {
-                isTouchingMap.current = true;
-              }}
-              onTouchEnd={() => {
-                isTouchingMap.current = false;
-              }}
-              className="flex max-lg:flex-col-reverse gap-4 justify-between"
-            >
+            <div className="flex flex-col items-center p-2">
+              <h2>{plantDisplayNames?.title}</h2>
+              {plantDisplayNames?.subTitle && (
+                <h6 className="italic"> {plantDisplayNames.subTitle}</h6>
+              )}
+            </div>
+
+            <div className="flex max-lg:flex-col-reverse gap-4 justify-between px-2">
               <PlantImageViewer
                 isModalOpen={imageModalOpen}
                 setIsModalOpen={setImageModalOpen}
