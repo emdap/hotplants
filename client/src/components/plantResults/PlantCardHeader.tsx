@@ -1,14 +1,15 @@
-import { CombinedGraphQLErrors } from "@apollo/client";
 import classNames from "classnames";
 import { useIsSignedIn } from "config/authClient";
 import Button from "designSystem/Button";
+import { GraphQLFormattedError } from "graphql";
 import { ADD_PLANT_TO_GARDEN } from "graphqlHelpers/gardenQueries";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { FaHeart } from "react-icons/fa";
 import { toast } from "sonner";
+import { handleGraphQlError } from "util/generalUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
-import { defaultErrorToast, defaultWarningToast } from "util/toastUtil";
+import { defaultWarningToast } from "util/toastUtil";
 
 const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
   const isSignedIn = useIsSignedIn();
@@ -16,19 +17,24 @@ const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
   const plantDisplayNames = getPlantDisplayNames(plant);
 
   const retryAddAction = {
-    action: { label: "Retry", onClick: () => gardenAddMutation() },
+    action: { label: "Retry", onClick: () => addToGardenMutation() },
   };
 
-  const [gardenAddMutation, { loading: gardenAddLoading }] = useApolloMutation(
-    ADD_PLANT_TO_GARDEN,
-    { variables: { plantId: plant._id } },
-  );
+  const [addToGardenMutation, { loading: gardenAddLoading }] =
+    useApolloMutation(ADD_PLANT_TO_GARDEN, {
+      variables: { plantId: plant._id },
+    });
 
-  const run = async (e: React.MouseEvent) => {
+  const customGraphQlErrorHandler = (error: GraphQLFormattedError) =>
+    error.extensions?.code === 400
+      ? toast.warning(error.message)
+      : toast.error(error.message, retryAddAction);
+
+  const addToGarden = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
     try {
-      const { data } = await gardenAddMutation();
+      const { data } = await addToGardenMutation();
       if (data?.addToGarden) {
         toast.success(
           `Added "${plantDisplayNames.title}" to "${data.addToGarden.gardenName}".`,
@@ -37,19 +43,10 @@ const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
         defaultWarningToast(retryAddAction);
       }
     } catch (error) {
-      if (error instanceof CombinedGraphQLErrors) {
-        error.errors.map((error) => {
-          if (error.message) {
-            error.extensions?.code === 400
-              ? toast.warning(error.message)
-              : toast.error(error.message, retryAddAction);
-          } else {
-            defaultErrorToast(retryAddAction);
-          }
-        });
-      } else {
-        defaultErrorToast(retryAddAction);
-      }
+      handleGraphQlError(error, {
+        customErrorHandler: customGraphQlErrorHandler,
+        ...retryAddAction,
+      });
     }
   };
 
@@ -72,7 +69,7 @@ const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
       {isSignedIn && (
         <Button
           className="absolute top-0 right-0 text-white!"
-          onClick={run}
+          onClick={addToGarden}
           onMouseDown={(e) => e.preventDefault()}
           variant="icon-white"
           isLoading={gardenAddLoading}

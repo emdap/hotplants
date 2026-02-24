@@ -1,5 +1,9 @@
+import { CombinedGraphQLErrors } from "@apollo/client";
+import { GraphQLFormattedError } from "graphql";
 import { HTMLMotionProps } from "motion/react";
 import { HTMLProps } from "react";
+import { ExternalToast, toast } from "sonner";
+import { defaultErrorToast } from "./toastUtil";
 
 export type CommonMotionDivProps = Omit<HTMLMotionProps<"div">, "children"> &
   Pick<HTMLProps<HTMLDivElement>, "children">;
@@ -49,6 +53,30 @@ export const getLastPage = (pageSize: number, resultsCount?: number) =>
 
 export const isLeafletEvent = (event?: Pick<Event, "target">) =>
   event?.target && "_leaflet_id" in event.target;
+
+export const handleGraphQlError = (
+  error: unknown,
+  {
+    customErrorHandler,
+    ...toastProps
+  }: {
+    customErrorHandler?: (error: GraphQLFormattedError) => void;
+  } & ExternalToast = {},
+) => {
+  if (error instanceof CombinedGraphQLErrors) {
+    error.errors.map((error) => {
+      if (error.message) {
+        customErrorHandler
+          ? customErrorHandler(error)
+          : toast.error(error.message);
+      } else {
+        defaultErrorToast(toastProps);
+      }
+    });
+  } else {
+    defaultErrorToast(toastProps);
+  }
+};
 
 // Seeing issues with scroll functionalities in Safari
 export const isSafari = /^((?!chrome|android).)*safari/i.test(

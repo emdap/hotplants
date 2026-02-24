@@ -6,6 +6,9 @@ import PageTitle from "designSystem/PageTitle";
 import { CREATE_GARDEN, GET_ALL_GARDENS } from "graphqlHelpers/gardenQueries";
 import { useApolloMutation, useApolloQuery } from "hooks/useQuery";
 import pluralize from "pluralize";
+import { toast } from "sonner";
+import { handleGraphQlError } from "util/generalUtil";
+import { defaultErrorToast } from "util/toastUtil";
 
 const UserGardens = () => {
   const navigate = useNavigate();
@@ -19,8 +22,17 @@ const UserGardens = () => {
     useApolloMutation(CREATE_GARDEN);
 
   const createGardenAndRefetch = async () => {
-    await createGarden();
-    userGardensQuery.refetch();
+    try {
+      const { data } = await createGarden();
+      if (data?.newGarden) {
+        toast.success(`Created new garden "${data.newGarden}"`);
+        userGardensQuery.refetch();
+      } else {
+        defaultErrorToast();
+      }
+    } catch (error) {
+      handleGraphQlError(error);
+    }
   };
 
   return (
@@ -35,31 +47,28 @@ const UserGardens = () => {
         className="h-screen animate-pulse opacity-50"
       />
 
-      {allUserGardens?.length ? (
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
-          {allUserGardens.map(({ gardenName, plantCount }, index) => (
-            <Card
-              key={index}
-              className="space-y-2 cursor-pointer min-w-xs"
-              solidOnHover
-              onClick={() =>
-                navigate({ to: "/gardens/$gardenName", params: { gardenName } })
-              }
-            >
-              <h2 className="border-b border-secondary pb-2">{gardenName}</h2>
-              <h4>{pluralize("plant", plantCount, true)}</h4>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <Button
-          isLoading={createGardenLoading}
-          variant="accent"
-          onClick={createGardenAndRefetch}
-        >
-          Create a garden
-        </Button>
-      )}
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+        {allUserGardens?.map(({ gardenName, plantCount }, index) => (
+          <Card
+            key={index}
+            className="space-y-2 cursor-pointer min-w-xs"
+            solidOnHover
+            onClick={() =>
+              navigate({ to: "/gardens/$gardenName", params: { gardenName } })
+            }
+          >
+            <h2 className="border-b border-secondary pb-2">{gardenName}</h2>
+            <h4>{pluralize("plant", plantCount, true)}</h4>
+          </Card>
+        ))}
+      </div>
+      <Button
+        className="w-fit"
+        isLoading={createGardenLoading}
+        onClick={createGardenAndRefetch}
+      >
+        Create a garden
+      </Button>
     </main>
   );
 };

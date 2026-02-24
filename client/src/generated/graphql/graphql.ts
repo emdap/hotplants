@@ -17,14 +17,6 @@ export type Scalars = {
   ObjectId: { input: any; output: any; }
 };
 
-export type AddToGardenResult = {
-  _id: Scalars['ObjectId']['output'];
-  gardenName: Scalars['String']['output'];
-  plantCount: Scalars['Float']['output'];
-  plantRefs: Array<GardenPlantRef>;
-  userId: Scalars['String']['output'];
-};
-
 export type GardenPlantData = PlantDataInterface & {
   _id: Scalars['ObjectId']['output'];
   addedTimestamp: Scalars['Float']['output'];
@@ -62,7 +54,7 @@ export type LocationSource =
   | 'search';
 
 export type Mutation = {
-  addToGarden?: Maybe<AddToGardenResult>;
+  addToGarden?: Maybe<UserGarden>;
   newGarden: Scalars['ObjectId']['output'];
   replaceWithProxyUrl?: Maybe<Scalars['String']['output']>;
 };
@@ -327,6 +319,7 @@ export type SearchRecordStringFilterInput = {
 };
 
 export type UserGarden = {
+  _id: Scalars['ObjectId']['output'];
   gardenName: Scalars['String']['output'];
   gardenThumbnailUrl?: Maybe<Scalars['String']['output']>;
   plantCount: Scalars['Float']['output'];

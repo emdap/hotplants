@@ -1,6 +1,7 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import PlantList from "components/plantResults/PlantList";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
+import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import LoadingOverlay from "designSystem/LoadingOverlay";
@@ -37,18 +38,18 @@ const Garden = () => {
 
   return (
     <main className="page-buffer page-container">
-      <PageTitle>
-        <span className="flex gap-4 items-center">
-          <MdArrowBack
-            className="cursor-pointer"
-            onClick={() =>
-              navigate({
-                to: "/user-gardens",
-              })
-            }
-          />
-          {gardenName}
-        </span>
+      <PageTitle className="flex gap-4 items-center">
+        <Button
+          variant="icon-white"
+          onClick={() =>
+            navigate({
+              to: "/user-gardens",
+            })
+          }
+          className="!-my-8"
+          icon={<MdArrowBack />}
+        />
+        {gardenName}
       </PageTitle>
 
       <LoadingOverlay
