@@ -25,13 +25,11 @@ const ItemCountWithLoader = ({
     )}
     {...props}
   >
-    <span>
-      {pluralize(label, count, !(isLoading && replaceCountWithLoader))}
-    </span>
+    {pluralize(label, count, !(isLoading && replaceCountWithLoader))}
 
     {isLoading && (
       <LoadingIcon
-        className={classNames({ "order-first": replaceCountWithLoader })}
+        className={classNames({ "mr-2 order-first": replaceCountWithLoader })}
       />
     )}
   </div>

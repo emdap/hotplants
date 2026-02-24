@@ -32,6 +32,7 @@ const PlantSearchHeader = () => {
 
       <ItemCountWithLoader
         label="Plant"
+        className="col-start-2"
         count={totalItems}
         isLoading={searchStatus === "SCRAPING_AND_POLLING"}
       />
