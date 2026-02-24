@@ -46,7 +46,7 @@ const UserGardens = () => {
         className="absolute"
       />
 
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
         {allUserGardens?.map(({ gardenName, plantCount }, index) => (
           <Card
             key={index}
