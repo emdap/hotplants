@@ -35,8 +35,6 @@ const UserGardens = () => {
     }
   };
 
-  console.log(userGardensQuery.loading);
-
   return (
     <main className="page-buffer page-container relative">
       <PageTitle>Gardens</PageTitle>

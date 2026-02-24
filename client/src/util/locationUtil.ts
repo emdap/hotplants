@@ -1,7 +1,14 @@
 import { bboxPolygon, coordAll, simplify } from "@turf/turf";
 import type { paths } from "generated/schemas/nominatim";
-import { BBox, Polygon, Position } from "geojson";
+import {
+  BBox,
+  Feature,
+  Polygon,
+  Polygon as PolygonType,
+  Position,
+} from "geojson";
 import createClient from "openapi-fetch";
+import { LocationCoord } from "util/customSchemaTypes";
 import { LocationData, PlantSearchParams } from "./customSchemaTypes";
 
 export type LocationSearchParams = Pick<
@@ -107,3 +114,12 @@ export const crossesMeridian = (coordinates: Position[]) => {
     }
   });
 };
+
+// GeoJSON spec dictates lng, lat
+// Leaflet uses lat, lng
+export const swapLatLng = (
+  coords: number[][] | LocationCoord[],
+): LocationCoord[] => coords.map(([first, second]) => [second, first]);
+
+export const getOuterCoordinates = (feature: Feature<PolygonType>) =>
+  feature.geometry.coordinates[0];

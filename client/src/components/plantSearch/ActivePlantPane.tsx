@@ -17,6 +17,7 @@ import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 import { useClickAway } from "react-use";
 import { isLeafletEvent, ITERATE_DIRECTION } from "util/generalUtil";
+import { swapLatLng } from "util/locationUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
 import PlantImageViewer from "../plantImages/PlantImageViewer";
 import PlantInfoCard from "../plantResults/PlantInfoCard";
@@ -36,6 +37,7 @@ const ActivePlantPane = () => {
     pageSize,
     totalItems,
     activePlant,
+    activePlantMedia,
     setActivePlantId,
     setActiveMediaUrl,
   } = usePlantSelectionContext();
@@ -44,6 +46,14 @@ const ActivePlantPane = () => {
 
   const [overallIndex, setOverallIndex] = useState(0);
   const pageIndexOffset = (page - 1) * pageSize;
+
+  const mapCenter = useMemo(() => {
+    if (searchParams || !activePlantMedia.length) {
+      return undefined;
+    }
+
+    return swapLatLng([activePlantMedia[0].occurrenceCoords])[0];
+  }, [searchParams, activePlantMedia]);
 
   useEffect(() => {
     setOverallIndex(
@@ -174,6 +184,7 @@ const ActivePlantPane = () => {
                 showMarkers
                 className="min-h-60 w-full"
                 searchParams={searchParams}
+                {...(mapCenter && { center: mapCenter })}
               />
             </div>
             <PlantInfoCard plant={activePlant} />
