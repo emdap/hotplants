@@ -56,8 +56,7 @@ const Garden = () => {
         debounceShow
         transparent
         show={gardenPlantsQuery.loading || gardenQuery.loading}
-        size={30}
-        className="h-screen animate-pulse opacity-50"
+        className="absolute"
       />
 
       <PlantSelectionProvider

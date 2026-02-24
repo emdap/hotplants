@@ -90,7 +90,12 @@ const SearchArchive = () => {
           ))}
         </div>
 
-        <ItemCountWithLoader label="Search" count={searchRecordCount} />
+        <ItemCountWithLoader
+          label="Search"
+          count={searchRecordCount}
+          isLoading={!searchRecordCount && allSearchRecordsQuery.loading}
+          replaceCountWithLoader
+        />
 
         <PaginationControl
           className="ml-auto"
@@ -102,10 +107,10 @@ const SearchArchive = () => {
       </FloatingHeader>
 
       <LoadingOverlay
-        debounceShow={!previousData}
         transparent
+        className="min-h-[80vh]!"
+        debounceShow={!previousData}
         show={allSearchRecordsQuery.loading && !previousData}
-        className="h-screen animate-pulse opacity-50"
       />
 
       {allSearchRecords?.results.map((searchRecord, index) => (

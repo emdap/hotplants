@@ -125,7 +125,6 @@ const PlantSearch = () => {
               page > 1 &&
               loading
             }
-            className="h-[80vh] animate-pulse opacity-50"
           />
 
           {hasNextPage && searchStatus !== "CHECKING_STATUS" ? (

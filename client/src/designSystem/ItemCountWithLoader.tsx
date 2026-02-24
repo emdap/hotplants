@@ -3,17 +3,21 @@ import pluralize from "pluralize";
 import { HTMLProps } from "react";
 import LoadingIcon from "./LoadingIcon";
 
+type ItemCountWithLoaderProps = {
+  label: string;
+  count?: number;
+  replaceCountWithLoader?: boolean;
+  isLoading?: boolean;
+} & HTMLProps<HTMLDivElement>;
+
 const ItemCountWithLoader = ({
   label,
   count,
   isLoading,
+  replaceCountWithLoader,
   className,
   ...props
-}: {
-  label: string;
-  count?: number;
-  isLoading?: boolean;
-} & HTMLProps<HTMLDivElement>) => (
+}: ItemCountWithLoaderProps) => (
   <div
     className={classNames(
       "small-screen:text-default-text flex items-center gap-1",
@@ -21,8 +25,15 @@ const ItemCountWithLoader = ({
     )}
     {...props}
   >
-    {pluralize(label, count, true)}
-    {isLoading && <LoadingIcon />}
+    <span>
+      {pluralize(label, count, !(isLoading && replaceCountWithLoader))}
+    </span>
+
+    {isLoading && (
+      <LoadingIcon
+        className={classNames({ "order-first": replaceCountWithLoader })}
+      />
+    )}
   </div>
 );
 

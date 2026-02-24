@@ -179,7 +179,7 @@ const PlantSearchProvider = () => {
         boundingPolygon={searchParams?.boundingPolyCoords}
       >
         {isPrefilledSearch ? (
-          <LoadingOverlay show transparent className="h-[80vh] w-full" />
+          <LoadingOverlay show transparent />
         ) : (
           <PlantSearch />
         )}

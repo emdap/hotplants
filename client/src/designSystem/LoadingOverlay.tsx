@@ -8,7 +8,7 @@ import { MOTION_FADE_IN } from "./motionTransitions";
 type LoadingOverlayProps = {
   show?: boolean;
   debounceShow?: boolean;
-  size?: number;
+  iconSize?: number;
   transparent?: boolean;
   className?: string;
 };
@@ -16,14 +16,14 @@ type LoadingOverlayProps = {
 const LoadingOverlay = ({
   show,
   debounceShow,
-  size = 50,
+  iconSize = 50,
   transparent,
   className,
 }: LoadingOverlayProps) => {
   const [debouncedShow, setDebouncedShow] = useState(false);
   useDebounce(() => setDebouncedShow(Boolean(show)), 1000, [show]);
 
-  const showLoader = debounceShow !== undefined ? debouncedShow : show;
+  const showLoader = debounceShow ? debouncedShow : show;
 
   return (
     <AnimatePresence>
@@ -32,12 +32,15 @@ const LoadingOverlay = ({
           key="loading-overlay"
           {...MOTION_FADE_IN}
           className={classNames(
-            "z-20 rounded-sm flex justify-center items-center",
-            { "bg-gray-500/80 dark:bg-black/70": !transparent },
+            "rounded-sm flex justify-center items-center min-h-full w-full",
+            {
+              "opacity-50": transparent,
+              "bg-gray-500/80 dark:bg-black/70": !transparent,
+            },
             className,
           )}
         >
-          <LoadingIcon size={size} className="text-white" />
+          <LoadingIcon size={iconSize} className="text-white" />
         </motion.div>
       )}
     </AnimatePresence>

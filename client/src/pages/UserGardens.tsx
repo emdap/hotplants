@@ -35,16 +35,17 @@ const UserGardens = () => {
     }
   };
 
+  console.log(userGardensQuery.loading);
+
   return (
-    <main className="page-buffer page-container">
+    <main className="page-buffer page-container relative">
       <PageTitle>Gardens</PageTitle>
 
       <LoadingOverlay
-        debounceShow
+        debounceShow={Boolean(userGardensQuery.previousData)}
         transparent
-        show={userGardensQuery.loading || createGardenLoading}
-        size={30}
-        className="h-screen animate-pulse opacity-50"
+        show={userGardensQuery.loading}
+        className="absolute"
       />
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">

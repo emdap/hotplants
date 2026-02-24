@@ -60,8 +60,8 @@ const MapProvider = ({
     >
       <LoadingOverlay
         show={isLoading}
-        size={40}
-        className="absolute h-full w-full"
+        iconSize={30}
+        className="z-20 absolute"
       />
 
       <MapContainer
