@@ -5,6 +5,15 @@ const _GARDEN_PLANT_FIELDS = graphql(`
     addedTimestamp
     customThumbnailUrl
     ...PlantFields
+    notes
+  }
+`);
+
+const _GARDEN_FIELDS = graphql(`
+  fragment GardenFields on UserGarden {
+    gardenName
+    gardenThumbnailUrl
+    plantCount
   }
 `);
 
@@ -19,8 +28,9 @@ export const GET_ALL_GARDENS = graphql(`
 `);
 
 export const GET_GARDEN = graphql(`
-  query getGarden($gardenName: String!) {
-    userGarden(gardenName: $gardenName) {
+  query getGarden($gardenId: String, $gardenName: String) {
+    userGarden(gardenId: $gardenId, gardenName: $gardenName) {
+      _id
       gardenName
       plantCount
       plantRefs {
@@ -32,13 +42,13 @@ export const GET_GARDEN = graphql(`
 
 export const GET_GARDEN_PLANTS = graphql(`
   query getGardenPlants(
-    $gardenName: String!
+    $gardenId: String!
     $limit: Int
     $offset: Int
     $sort: [PlantSortInput!]
   ) {
     userGardenPlants(
-      gardenName: $gardenName
+      gardenId: $gardenId
       limit: $limit
       offset: $offset
       sort: $sort
@@ -58,9 +68,9 @@ export const CREATE_GARDEN = graphql(`
 `);
 
 export const ADD_PLANT_TO_GARDEN = graphql(`
-  mutation addPlant($plantId: String!, $gardenName: String) {
-    addToGarden(plantId: $plantId, gardenName: $gardenName) {
-      gardenName
+  mutation addPlant($plantId: String!, $gardenId: String) {
+    addToGarden(plantId: $plantId, gardenId: $gardenId) {
+      ...GardenFields
     }
   }
 `);

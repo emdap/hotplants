@@ -18,6 +18,7 @@ type GardenPlantData implements PlantDataInterface {
   isPerennial: Boolean
   lightLevels: [String!]
   maturityTime: String
+  notes: String
   occurrences: [PlantOccurrence!]!
   physicalCharactersticsDump: String
   scientificName: String!
@@ -41,9 +42,10 @@ enum LocationSource {
 }
 
 type Mutation {
-  addToGarden(gardenName: String, plantId: String!): UserGarden
+  addToGarden(gardenId: String, plantId: String!): UserGarden
   newGarden(gardenName: String): ObjectId!
   replaceWithProxyUrl(occurrenceId: Float!, plantId: String!, replaceUrl: String!): String
+  updateGardenPlant(customThumbnailUrl: String, gardenId: String!, note: String, plantId: String!): GardenPlantData
 }
 
 scalar ObjectId
@@ -169,14 +171,14 @@ input PlantSortInput {
 
 type Query {
   allSearchRecords(booleanFilter: [SearchRecordBooleanFilterInput!], limit: Int, offset: Int, sort: [SearchRecordSortInput!], stringFilter: [SearchRecordStringFilterInput!]): SearchRecordQueryResults!
-  allUserGardens: [UserGarden!]!
+  allUserGardens(gardenId: String, gardenName: String): [UserGarden!]!
   plant(boundingPolyCoords: [[[Float!]!]!], id: String!): PlantData
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
   plantSearch(limit: Int, offset: Int, sort: [PlantSortInput!], where: PlantDataInput): PlantSearchQueryResults!
   searchRecord(id: String!): SearchRecord
   searchRecordDataCounts(id: String!): SearchRecordPlantCountResults!
-  userGarden(gardenName: String!): UserGarden
-  userGardenPlants(gardenName: String!, limit: Int, offset: Int, sort: [PlantSortInput!]): UserGardenPlants
+  userGarden(gardenId: String, gardenName: String): UserGarden
+  userGardenPlants(gardenId: String!, limit: Int, offset: Int, sort: [PlantSortInput!]): UserGardenPlants
 }
 
 type SearchRecord {

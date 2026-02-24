@@ -23,11 +23,11 @@ const Garden = () => {
 
   const gardenPlantsQuery = useApolloQuery(GET_GARDEN_PLANTS, {
     variables: {
-      gardenName,
+      gardenId: gardenQuery.data?.userGarden?._id,
       limit: pageSize,
       offset: (page - 1) * pageSize,
     },
-    skip: !gardenName,
+    skip: !gardenQuery.data?.userGarden?._id,
     fetchPolicy: "cache-and-network",
   });
 
