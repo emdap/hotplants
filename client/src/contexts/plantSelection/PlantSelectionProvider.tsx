@@ -60,7 +60,7 @@ const PlantSelectionProvider = ({
     }
   };
 
-  const lastPage = getLastPage(totalItems, pageSize);
+  const lastPage = getLastPage(pageSize, totalItems);
 
   return (
     <PlantSelectionContext.Provider

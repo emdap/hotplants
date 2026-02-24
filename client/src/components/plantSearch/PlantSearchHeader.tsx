@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import FloatingHeader from "designSystem/FloatingHeader";
@@ -7,6 +8,7 @@ import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
 import { FaGlobe } from "react-icons/fa";
 
 const PlantSearchHeader = () => {
+  const navigate = useNavigate();
   const {
     searchStatus,
     isInfiniteScroll,
@@ -14,6 +16,11 @@ const PlantSearchHeader = () => {
     setSidebarExpanded,
   } = usePlantSearchContext();
   const { page, pageSize, totalItems } = usePlantSelectionContext();
+
+  const toggleInfiniteScroll = (enable: boolean) => {
+    enable && navigate({ to: ".", search: (prev) => ({ ...prev, page: 1 }) });
+    setIsInfiniteScroll(enable);
+  };
 
   return (
     <FloatingHeader className="small-screen:mx-safe-2">
@@ -34,7 +41,7 @@ const PlantSearchHeader = () => {
         replaceUrl
         infiniteScroll={{
           enabled: isInfiniteScroll,
-          setEnabled: setIsInfiniteScroll,
+          setEnabled: toggleInfiniteScroll,
         }}
         {...{ page, pageSize, totalItems }}
       />

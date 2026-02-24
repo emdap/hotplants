@@ -126,7 +126,7 @@ const PlantSearchProvider = () => {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
-      navigate({ to: ".", search: { page: page + 1 } });
+      navigate({ to: ".", search: (prev) => ({ ...prev, page: page + 1 }) });
     }
   };
 

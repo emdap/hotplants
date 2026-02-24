@@ -20,6 +20,7 @@ const MAX_POLLS = 10;
 const MAX_AUTO_SCRAPES = 3;
 
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
+  offset: 0,
   limit: DEFAULT_PAGE_SIZE,
   sort: [
     { field: "updatedTimestamp", value: 1 },
