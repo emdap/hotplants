@@ -45,7 +45,7 @@ const SearchRecordCard = ({
   const openSearchRecord = async () => {
     await navigate({
       to: ".",
-      search: { lastOpened: _id },
+      search: (prev) => ({ ...prev, lastOpened: _id }),
       replace: true,
     });
     navigate({
