@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { ReactNode, useMemo } from "react";
 import { MdCheck } from "react-icons/md";
 
-export type ComplexListboxOption<T extends string = string> = {
+export type ComplexListboxOption<T = unknown> = {
   label: string;
   value: T;
 };

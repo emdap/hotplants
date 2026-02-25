@@ -11,6 +11,8 @@ import {
 } from "generated/graphql/graphql";
 import { SearchRecordFilterInput } from "util/routeParamsUtil";
 
+// TODO: Should merge the filter inputs/types here with plant search filter types
+
 export type SearchRecordQueryInput =
   | SearchRecordSortInput
   | SearchRecordFilterInput;

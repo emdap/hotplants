@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Sidebar from "designSystem/sidebar/Sidebar";
-import SearchParamsInput from "./SearchParamsInput";
+import SearchParamsInput from "../plantSearchParams/PlantSearchParamsInput";
 
 const PlantSearchSidebar = () => {
   const {

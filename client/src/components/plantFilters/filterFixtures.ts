@@ -1,73 +1,83 @@
+import { ComplexListboxOption } from "designSystem/listbox/StyledListboxOptions";
 import { PlantDataKey } from "util/customSchemaTypes";
 
+type SelectValueType = "string" | "color" | "boolean";
+export type SelectInput = `select-${SelectValueType}`;
+
 export type FilterInputType =
+  | SelectInput
   | "text"
   | "number"
   | "checkbox"
-  | "select"
   | "range";
 
-// Keep filter type defs to all PlantDataKeys
-type BaseFilterInput<K extends PlantDataKey, T extends FilterInputType> = {
+type FilterBase<K extends PlantDataKey, T extends FilterInputType> = {
   plantDataKey: K;
   label: string;
   inputType: T;
-  isEnabled?: boolean;
-  isDisabled?: boolean;
-  advancedFilter?: boolean;
-};
-
-type FilterSelectInput<K extends PlantDataKey> = BaseFilterInput<
-  K,
-  "select"
-> & {
-  defaultOptions?: string[];
-  freeform?: boolean;
-};
-
-type FilterRangeInput<K extends PlantDataKey> = BaseFilterInput<K, "range"> & {
-  minMaxValue: [number, number];
 };
 
 export type FilterInput<
   K extends PlantDataKey = PlantDataKey,
   T extends FilterInputType = FilterInputType,
-> = T extends "select"
-  ? FilterSelectInput<K>
-  : T extends "range"
-    ? FilterRangeInput<K>
-    : BaseFilterInput<K, T>;
+> = FilterBase<K, T> &
+  (T extends SelectInput
+    ? FilterSelectInput<T>
+    : T extends "range" | "number"
+      ? FilterNumberInput
+      : { inputType: T });
 
-export const FILTER_DICT: { [key in PlantDataKey]?: FilterInput<key> } = {
+type FilterSelectInput<S extends SelectInput = "select-string"> = {
+  multiselect?: boolean;
+} & (S extends "select-string"
+  ? {
+      options?: string[];
+      freeform?: boolean;
+    }
+  : { options: ComplexListboxOption[]; freeform?: false });
+
+type FilterNumberInput = {
+  minValue?: number;
+  maxValue?: number;
+};
+
+export const FILTER_DICT: {
+  [key in PlantDataKey]?: FilterInput<key, FilterInputType>;
+} = {
   scientificName: {
     plantDataKey: "scientificName",
-    label: "Scientific name",
+    label: "Scientific name contains",
     inputType: "text",
   },
   commonName: {
     plantDataKey: "commonName",
-    label: "Common name",
+    label: "Common name contains",
     inputType: "text",
   },
   bloomColors: {
     plantDataKey: "bloomColors",
     label: "Bloom colors",
-    inputType: "select",
-    defaultOptions: [
-      "red",
-      "orange",
-      "yellow",
-      "green",
-      "blue",
-      "purple",
-      "white",
+    inputType: "select-color",
+    multiselect: true,
+    options: [
+      { label: "Red", value: "red" },
+      { label: "Orange", value: "orange" },
+      { label: "Yellow", value: "yellow" },
+      { label: "Green", value: "green" },
+      { label: "Blue", value: "blue" },
+      { label: "Purple", value: "purple" },
+      { label: "White", value: "white" },
     ],
-    freeform: true,
   },
   isPerennial: {
     plantDataKey: "isPerennial",
     label: "Perennial",
-    inputType: "checkbox",
+    inputType: "select-boolean",
+    options: [
+      { label: "Perennials only", value: true },
+      { label: "Annuals only", value: false },
+      { label: "Show all", value: false },
+    ],
   },
   physicalCharactersticsDump: {
     plantDataKey: "physicalCharactersticsDump",
@@ -80,60 +90,45 @@ export const FILTER_DICT: { [key in PlantDataKey]?: FilterInput<key> } = {
     plantDataKey: "height",
     label: "Plant height (cm)",
     inputType: "number",
-    advancedFilter: true,
-    isDisabled: true,
   },
   spread: {
     plantDataKey: "spread",
     label: "Plant spread (cm)",
     inputType: "number",
-    advancedFilter: true,
-    isDisabled: true,
   },
   bloomTimes: {
     plantDataKey: "bloomTimes",
     label: "Bloom time",
-    inputType: "select",
-    isDisabled: true,
+    inputType: "select-string",
+    multiselect: true,
+    freeform: true,
   },
   lightLevels: {
     plantDataKey: "lightLevels",
     label: "Light level",
-    inputType: "select",
-    advancedFilter: true,
-    isDisabled: true,
+    inputType: "select-string",
+    multiselect: true,
+    freeform: true,
   },
   habitat: {
     plantDataKey: "habitat",
     label: "Habitat",
-    inputType: "select",
-    isDisabled: true,
+    inputType: "select-string",
+    multiselect: true,
+    freeform: true,
   },
   hardiness: {
     plantDataKey: "hardiness",
     label: "Hardiness Zones",
     inputType: "range",
-    minMaxValue: [0, 9],
-    advancedFilter: true,
-    isDisabled: true,
+    minValue: 0,
+    maxValue: 9,
   },
   soilTypes: {
     plantDataKey: "soilTypes",
     label: "Soil type",
-    inputType: "select",
-    advancedFilter: true,
-    isDisabled: true,
+    inputType: "select-string",
+    multiselect: true,
+    freeform: true,
   },
 };
-
-export const OPTIONAL_SEARCH_PARAM_KEYS = [
-  "commonName",
-  "scientificName",
-] as const;
-export const OPTIONAL_SEARCH_PARAM_FILTERS = OPTIONAL_SEARCH_PARAM_KEYS.flatMap(
-  (key) => FILTER_DICT[key] ?? [],
-);
-
-export const ENABLED_FILTERS = Object.values(FILTER_DICT).filter(
-  ({ isDisabled }) => !isDisabled,
-);

@@ -17,7 +17,7 @@ import {
   SEARCH_RECORD_QUERY_LABELS,
   SearchRecordQueryInput,
   STRING_FILTER_OPTIONS_DICT,
-} from "./searchRecordQueryUtil";
+} from "./searchRecordParamUtil";
 
 const SearchArchiveParamControl = <T extends SearchRecordQueryInput>({
   field,

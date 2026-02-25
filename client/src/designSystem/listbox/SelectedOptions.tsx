@@ -37,7 +37,7 @@ const SelectedOptions = ({
         if (typeof cur === "string") {
           prev[cur] = cur;
         } else {
-          prev[cur.value] = cur.label;
+          prev[String(cur.value)] = cur.label;
         }
         return prev;
       }, {}),

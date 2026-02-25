@@ -5,7 +5,7 @@ import SearchArchiveQueryPopover from "components/searchRecord/SearchRecordParam
 import {
   parseFilterParams,
   SearchRecordQueryInput,
-} from "components/searchRecord/searchRecordQueryUtil";
+} from "components/searchRecord/searchRecordParamUtil";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import LoadingOverlay from "designSystem/LoadingOverlay";

@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { OPTIONAL_SEARCH_PARAM_FILTERS } from "components/plantSearchParams/optionalSearchParamsUtil";
 import { format } from "date-fns";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
@@ -13,7 +14,6 @@ import { MdDoubleArrow } from "react-icons/md";
 import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
 import { customLocationDisplay } from "util/locationUtil";
 import MapProvider from "../interactiveMap/MapProvider";
-import { OPTIONAL_SEARCH_PARAM_FILTERS } from "../plantFilters/filterFixtures";
 import SearchRecordProgressBar from "./SearchRecordProgressBar";
 
 const SearchRecordCard = ({

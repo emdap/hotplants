@@ -10,7 +10,7 @@ import {
   ParamType,
   SEARCH_RECORD_ORDERED_QUERY_KEYS,
   SearchRecordQueryInput,
-} from "./searchRecordQueryUtil";
+} from "./searchRecordParamUtil";
 
 type SearchArchiveQueryPopoverProps<T extends SearchRecordQueryInput> = {
   paramType: ParamType;

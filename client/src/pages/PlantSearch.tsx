@@ -3,7 +3,7 @@ import PlantList from "components/plantResults/PlantList";
 import PlantAnimation from "components/plantSearch/PlantAnimation";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
-import SearchParamsInput from "components/plantSearch/SearchParamsInput";
+import SearchParamsInput from "components/plantSearchParams/PlantSearchParamsInput";
 import SearchRecordProgressBar from "components/searchRecord/SearchRecordProgressBar";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";

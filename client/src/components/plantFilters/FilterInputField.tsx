@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
 import { PlantDataInput } from "generated/graphql/graphql";
-import { ChangeEvent } from "react";
-import { FilterInput, FilterInputType } from "./filterFixtures";
+import { ChangeEvent, useMemo } from "react";
+import { FilterInput, FilterInputType, SelectInput } from "./filterFixtures";
 
 const DEFAULT_INPUT_TYPE = ["text", "number", "checkbox"];
 
@@ -19,6 +19,7 @@ const FilterInputField = <
   onChange: (value: PlantDataInput[K]) => void;
 }) => {
   const { plantDataKey, inputType } = filterInput;
+  const options = "options" in filterInput ? filterInput.options : null;
 
   const inputOnChange = ({
     target: { value, checked },
@@ -35,6 +36,14 @@ const FilterInputField = <
       onChange(value);
     }
   };
+
+  const selectInput = useMemo(
+    () =>
+      inputType.includes("select")
+        ? ({ plantDataKey, inputType, options } as FilterInput<K, SelectInput>)
+        : null,
+    [inputType, plantDataKey, options],
+  );
 
   return (
     <div
@@ -56,13 +65,13 @@ const FilterInputField = <
             inputType === "checkbox" ? "styled-checkbox" : "styled-input"
           }
         />
-      ) : inputType === "select" ? (
+      ) : selectInput ? (
         <StyledMultipleListbox
           name={plantDataKey}
           value={value ?? []}
           onChange={onChange}
           multiple
-          defaultOptions={filterInput.defaultOptions}
+          defaultOptions={selectInput.options}
         />
       ) : null}
     </div>

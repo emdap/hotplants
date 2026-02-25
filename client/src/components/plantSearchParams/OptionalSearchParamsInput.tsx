@@ -1,8 +1,4 @@
 import classNames from "classnames";
-import {
-  OPTIONAL_SEARCH_PARAM_FILTERS,
-  OPTIONAL_SEARCH_PARAM_KEYS,
-} from "components/plantFilters/filterFixtures";
 import FilterInputField from "components/plantFilters/FilterInputField";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Button from "designSystem/Button";
@@ -10,13 +6,11 @@ import Card from "designSystem/Card";
 import _ from "lodash";
 import { Fragment, useEffect, useState } from "react";
 import { MdChevronRight } from "react-icons/md";
-
-type OptionalSearchKey = (typeof OPTIONAL_SEARCH_PARAM_KEYS)[number];
-
-const DEFAULT_OPTIONAL_PARAMS = {
-  commonName: undefined,
-  scientificName: undefined,
-};
+import {
+  DEFAULT_OPTIONAL_SEARCH_PARAMS,
+  OPTIONAL_SEARCH_PARAM_FILTERS,
+  OptionalSearchParamKey,
+} from "./optionalSearchParamsUtil";
 
 const OptionalSearchParamsInput = () => {
   const { searchParamsDraft, updateSearchParamsDraft } =
@@ -32,16 +26,16 @@ const OptionalSearchParamsInput = () => {
   }>({ commonName, scientificName });
 
   const updateOptionalSearch = (
-    key: OptionalSearchKey,
+    key: OptionalSearchParamKey,
     value?: string | null,
   ) => {
     if (value) {
-      const newParams = { ...DEFAULT_OPTIONAL_PARAMS, [key]: value };
+      const newParams = { ...DEFAULT_OPTIONAL_SEARCH_PARAMS, [key]: value };
       setOptionalSearch(newParams);
       updateSearchParamsDraft(newParams);
     } else {
-      setOptionalSearch(DEFAULT_OPTIONAL_PARAMS);
-      updateSearchParamsDraft(DEFAULT_OPTIONAL_PARAMS);
+      setOptionalSearch(DEFAULT_OPTIONAL_SEARCH_PARAMS);
+      updateSearchParamsDraft(DEFAULT_OPTIONAL_SEARCH_PARAMS);
     }
   };
 

@@ -1,7 +1,9 @@
 import { PlantDataInput } from "generated/graphql/graphql";
 import { Dispatch, SetStateAction } from "react";
-import { ENABLED_FILTERS } from "./filterFixtures";
 import FilterInputField from "./FilterInputField";
+import { FILTER_DICT } from "./filterFixtures";
+
+const ENABLED_FILTERS = Object.values(FILTER_DICT);
 
 const PlantSearchFilters = ({
   plantFilters,
