@@ -97,7 +97,7 @@ const usePlantSearchQueries = (
     queryFn: async () => {
       setStatusFromRunningQuery();
 
-      const { data } = await hotplantsClient.POST("/plants/getSearchRecord", {
+      const { data } = await hotplantsClient.POST("/plants/searchRecord", {
         body: searchParams!,
       });
 

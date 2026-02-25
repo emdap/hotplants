@@ -20,7 +20,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/plants/getSearchRecord": {
+    "/plants/searchRecord": {
         parameters: {
             query?: never;
             header?: never;
@@ -45,6 +45,22 @@ export interface paths {
         };
         /** @description Initiate a new search of occurrences from GBIF and combine with PFAF data. */
         get: operations["RunSearch"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/plants/filterValues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetFilterValues"];
         put?: never;
         post?: never;
         delete?: never;
@@ -97,6 +113,15 @@ export interface components {
             scientificName?: components["schemas"]["Maybe_string_"];
         };
         PlantSearchParams: components["schemas"]["Pick_SearchRecordDocument.locationName-or-locationSource-or-boundingPolyCoords-or-commonName-or-scientificName_"];
+        "Maybe_string-Array_": string[] | null;
+        "Maybe_number-Array_": number[] | null;
+        PlantArrayValuesDocument: {
+            bloomColors?: components["schemas"]["Maybe_string-Array_"];
+            bloomTimes?: components["schemas"]["Maybe_string-Array_"];
+            hardiness?: components["schemas"]["Maybe_number-Array_"];
+            lightLevels?: components["schemas"]["Maybe_string-Array_"];
+            soilTypes?: components["schemas"]["Maybe_string-Array_"];
+        };
     };
     responses: never;
     parameters: never;
@@ -184,6 +209,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": string;
+                };
+            };
+        };
+    };
+    GetFilterValues: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ok */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlantArrayValuesDocument"];
                 };
             };
         };
