@@ -1,4 +1,4 @@
-import { FilterInput } from "components/plantFilters/filterFixtures";
+import { FilterInput } from "components/plantFilters/plantFilterUtil";
 
 export type OptionalSearchParamKey = "commonName" | "scientificName";
 export const OPTIONAL_SEARCH_PARAM_FILTERS: FilterInput<OptionalSearchParamKey>[] =

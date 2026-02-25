@@ -2,7 +2,7 @@ import classNames from "classnames";
 import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { ChangeEvent, useMemo } from "react";
-import { FilterInput, FilterInputType, SelectInput } from "./filterFixtures";
+import { FilterInput, FilterInputType, SelectInput } from "./plantFilterUtil";
 
 const DEFAULT_INPUT_TYPE = ["text", "number", "checkbox"];
 
