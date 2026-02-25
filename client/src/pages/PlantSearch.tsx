@@ -68,7 +68,7 @@ const PlantSearch = () => {
 
   return (
     <main className="w-full h-full">
-      {!hasCurrentResults && <ScrollAnchor className="scroll-m-header-2" />}
+      {!hasCurrentResults && <ScrollAnchor className="scroll-m-header" />}
       <PageTitle className="page-buffer">Plant Search</PageTitle>
       {hasCurrentResults && <PlantSearchHeader />}
 

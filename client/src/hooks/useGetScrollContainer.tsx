@@ -2,27 +2,26 @@ import { useLayoutEffect, useState } from "react";
 import { isSmallScreen } from "util/generalUtil";
 
 export const useGetScrollContainer = () => {
-  const [scrollElements, setElements] = useState<{
-    scrollContainer: Document | HTMLElement | null;
-    scrollContainerElement: HTMLElement | null;
-  }>({ scrollContainer: null, scrollContainerElement: null });
-
-  const setScrollContainer = () => {
+  const getElements = () => {
     if (isSmallScreen()) {
-      setElements({
+      return {
         scrollContainer: document,
         scrollContainerElement: document.documentElement,
-      });
+      };
     } else {
       const body = document.querySelector("body");
-      setElements({
+      return {
         scrollContainer: body,
         scrollContainerElement: body,
-      });
+      };
     }
   };
 
+  const [scrollElements, setElements] = useState(getElements());
+
   useLayoutEffect(() => {
+    const setScrollContainer = () => setElements(getElements());
+
     setScrollContainer();
     window.addEventListener("resize", setScrollContainer);
 

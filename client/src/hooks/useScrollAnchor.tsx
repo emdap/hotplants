@@ -16,7 +16,6 @@ export const useScrollAnchor = ({
     if (!enabled || !scrollContainerElement || !anchorRef.current) {
       return;
     }
-
     if (scrollContainerElement.scrollTop > anchorRef.current.offsetTop) {
       scrollContainerElement.scrollTo({
         top: anchorRef.current.offsetTop,

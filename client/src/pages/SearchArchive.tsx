@@ -63,7 +63,6 @@ const SearchArchive = () => {
   return (
     <main className="page-buffer page-container">
       <PageTitle>Search Archive</PageTitle>
-
       <ScrollAnchor className="scroll-m-header -mb-4" />
       <FloatingHeader>
         <div className="flex items-center gap-1">
