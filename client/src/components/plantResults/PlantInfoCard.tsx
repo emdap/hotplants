@@ -1,5 +1,6 @@
 import Card from "designSystem/Card";
 import { PlantResult } from "graphqlHelpers/plantQueries";
+import { Entries } from "type-fest";
 
 const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
   fullOccurrencesCount: "Occurrences Found",
@@ -15,7 +16,7 @@ const PlantInfoCard = ({ plant }: { plant: PlantResult }) => (
   <Card className="big-screen:overflow-auto flex-grow">
     <table className="border-separate border-spacing-4 [&_th,td]:p-2 w-full">
       <tbody>
-        {(Object.entries(plant) as [keyof PlantResult, object][]).map(
+        {(Object.entries(plant) as Entries<PlantResult>).map(
           ([key, value], index) =>
             PLANT_FIELD_LABEL[key] && (
               <tr key={index} className="grid grid-cols-[2fr_3fr]">
