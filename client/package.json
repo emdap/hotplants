@@ -81,6 +81,7 @@
     "openapi-typescript": "^7.8.0",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4.1.11",
+    "type-fest": "^5.4.4",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.34.1",
     "vite": "^7.0.0",
