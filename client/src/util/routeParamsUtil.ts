@@ -5,7 +5,7 @@ import {
   SearchRecordSortInput,
   SearchRecordStringFilterInput,
 } from "generated/graphql/graphql";
-import { PlantSearchFilter, PlantSearchParams } from "./customSchemaTypes";
+import { PlantDataFilter, PlantSearchParams } from "./customSchemaTypes";
 
 export type PaginationParams = {
   page?: number;
@@ -29,7 +29,7 @@ type PlantSearchRouteParams = PaginationParams &
         pageSize?: number;
 
         search: PlantSearchParams | null;
-        filter: PlantSearchFilter;
+        filter: PlantDataFilter;
         lastOpened?: string;
       }
     | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
@@ -99,9 +99,9 @@ const validateSearch = (searchParams: unknown): PlantSearchParams | null => {
 };
 
 // TODO: actually validate the filter types
-const validateFilters = (filterParams: unknown): PlantSearchFilter => {
+const validateFilters = (filterParams: unknown): PlantDataFilter => {
   if (typeof filterParams === "object" && filterParams !== null) {
-    return filterParams as PlantSearchFilter;
+    return filterParams as PlantDataFilter;
   }
   return {};
 };

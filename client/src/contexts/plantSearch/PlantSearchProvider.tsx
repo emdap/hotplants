@@ -11,7 +11,7 @@ import usePlantSearchQueries, {
 } from "hooks/usePlantSearchQueries";
 import PlantSearch from "pages/PlantSearch";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantDataFilter, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("/plant-search");
@@ -71,7 +71,7 @@ const PlantSearchProvider = () => {
   );
 
   const applyPlantFilter = useCallback(
-    (filter?: PlantSearchFilter) =>
+    (filter?: PlantDataFilter) =>
       navigate({
         to: ".",
         search: (prev) => ({ ...prev, filter }),

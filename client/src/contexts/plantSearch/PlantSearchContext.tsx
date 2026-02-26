@@ -3,7 +3,7 @@ import {
   PlantSearchQueryStatus,
 } from "hooks/usePlantSearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantDataFilter, PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
 export const VOID_FUNCTION = () => {};
@@ -22,8 +22,8 @@ export type PlantSearchContextType = {
   updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
   applySearchParams: (params?: Partial<PlantSearchParams>) => void;
 
-  plantFilter: PlantSearchFilter;
-  applyPlantFilter: (filter?: PlantSearchFilter) => void;
+  plantFilter: PlantDataFilter;
+  applyPlantFilter: (filter?: PlantDataFilter) => void;
 
   searchStatus: PlantSearchQueryStatus;
   fetchMorePlants: () => Promise<unknown>;

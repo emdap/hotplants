@@ -6,7 +6,7 @@ import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import createClient from "openapi-fetch";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantDataFilter, PlantSearchParams } from "util/customSchemaTypes";
 import { PaginationParams } from "util/routeParamsUtil";
 
 export type PlantSearchQueryStatus =
@@ -34,7 +34,7 @@ export const hotplantsClient = createClient<paths>({
 
 const usePlantSearchQueries = (
   searchParams: PlantSearchParams | null = null,
-  plantFilters: PlantSearchFilter,
+  plantFilters: PlantDataFilter,
   {
     paginationEnabled,
     page,

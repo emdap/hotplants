@@ -10,9 +10,10 @@ export type LocationCoord = [number, number];
 export type PlantSearchParams =
   Hotplants.components["schemas"]["PlantSearchParams"];
 
-export type PlantSearchFilter = Omit<PlantDataInput, keyof PlantSearchParams>;
+export type OptionalSearchParamKey = "commonName" | "scientificName";
 
-export type PlantDataKey = keyof PlantDataInput;
+export type PlantDataFilter = Pick<PlantDataInput, OptionalSearchParamKey> &
+  Omit<PlantDataInput, keyof PlantSearchParams>;
 
 export type PlantArrayValues =
   Hotplants.components["schemas"]["PlantArrayValuesDocument"];

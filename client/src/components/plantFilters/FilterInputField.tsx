@@ -2,12 +2,13 @@ import classNames from "classnames";
 import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
 import { PlantDataInput } from "generated/graphql/graphql";
 import { ChangeEvent, useMemo } from "react";
+import { PlantDataFilter } from "util/customSchemaTypes";
 import { FilterInput, FilterInputType, SelectInput } from "./plantFilterUtil";
 
 const DEFAULT_INPUT_TYPE = ["text", "number", "checkbox"];
 
 const FilterInputField = <
-  K extends keyof PlantDataInput,
+  K extends keyof PlantDataFilter,
   T extends FilterInputType,
 >({
   filterInput,
@@ -39,7 +40,7 @@ const FilterInputField = <
 
   const selectInput = useMemo(
     () =>
-      inputType.includes("select")
+      inputType?.includes("select")
         ? ({ plantDataKey, inputType, options } as FilterInput<K, SelectInput>)
         : null,
     [inputType, plantDataKey, options],

@@ -1,6 +1,6 @@
 import { FilterInput } from "components/plantFilters/plantFilterUtil";
+import { OptionalSearchParamKey } from "util/customSchemaTypes";
 
-export type OptionalSearchParamKey = "commonName" | "scientificName";
 export const OPTIONAL_SEARCH_PARAM_FILTERS: FilterInput<OptionalSearchParamKey>[] =
   [
     {

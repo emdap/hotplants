@@ -6,10 +6,10 @@ import Card from "designSystem/Card";
 import _ from "lodash";
 import { Fragment, useEffect, useState } from "react";
 import { MdChevronRight } from "react-icons/md";
+import { OptionalSearchParamKey } from "util/customSchemaTypes";
 import {
   DEFAULT_OPTIONAL_SEARCH_PARAMS,
   OPTIONAL_SEARCH_PARAM_FILTERS,
-  OptionalSearchParamKey,
 } from "./optionalSearchParamsUtil";
 
 const OptionalSearchParamsInput = () => {
