@@ -4,22 +4,6 @@
  */
 
 export interface paths {
-    "/wakeUp": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["WakeUp"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/plants/searchRecord": {
         parameters: {
             query?: never;
@@ -63,6 +47,22 @@ export interface paths {
         get: operations["GetFilterValues"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/wakeUp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["WakeUp"];
         delete?: never;
         options?: never;
         head?: never;
@@ -118,6 +118,7 @@ export interface components {
         PlantArrayValuesDocument: {
             bloomColors?: components["schemas"]["Maybe_string-Array_"];
             bloomTimes?: components["schemas"]["Maybe_string-Array_"];
+            habitats?: components["schemas"]["Maybe_string-Array_"];
             hardiness?: components["schemas"]["Maybe_number-Array_"];
             lightLevels?: components["schemas"]["Maybe_string-Array_"];
             soilTypes?: components["schemas"]["Maybe_string-Array_"];
@@ -131,26 +132,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    WakeUp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Ok */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string;
-                };
-            };
-        };
-    };
     GetSearchRecord: {
         parameters: {
             query?: never;
@@ -229,6 +210,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlantArrayValuesDocument"];
+                };
+            };
+        };
+    };
+    WakeUp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Ok */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
                 };
             };
         };

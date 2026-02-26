@@ -13,3 +13,6 @@ export type PlantSearchParams =
 export type PlantSearchFilter = Omit<PlantDataInput, keyof PlantSearchParams>;
 
 export type PlantDataKey = keyof PlantDataInput;
+
+export type PlantArrayValues =
+  Hotplants.components["schemas"]["PlantArrayValuesDocument"];

@@ -26,7 +26,7 @@ export type GardenPlantData = PlantDataInterface & {
   commonNames?: Maybe<Array<Scalars['String']['output']>>;
   customThumbnailUrl?: Maybe<Scalars['String']['output']>;
   fullOccurrencesCount?: Maybe<Scalars['Int']['output']>;
-  habitat?: Maybe<Scalars['String']['output']>;
+  habitats?: Maybe<Array<Scalars['String']['output']>>;
   hardiness?: Maybe<Array<Scalars['Int']['output']>>;
   height?: Maybe<PlantSize>;
   isPerennial?: Maybe<Scalars['Boolean']['output']>;
@@ -94,7 +94,7 @@ export type PlantData = PlantDataInterface & {
   bloomTimes?: Maybe<Array<Scalars['String']['output']>>;
   commonNames?: Maybe<Array<Scalars['String']['output']>>;
   fullOccurrencesCount?: Maybe<Scalars['Int']['output']>;
-  habitat?: Maybe<Scalars['String']['output']>;
+  habitats?: Maybe<Array<Scalars['String']['output']>>;
   hardiness?: Maybe<Array<Scalars['Int']['output']>>;
   height?: Maybe<PlantSize>;
   isPerennial?: Maybe<Scalars['Boolean']['output']>;
@@ -118,7 +118,7 @@ export type PlantDataInput = {
   bloomTimes?: InputMaybe<Array<Scalars['String']['input']>>;
   boundingPolyCoords?: InputMaybe<Array<Array<Array<Scalars['Float']['input']>>>>;
   commonName?: InputMaybe<Scalars['String']['input']>;
-  habitat?: InputMaybe<Scalars['String']['input']>;
+  habitats?: InputMaybe<Array<Scalars['String']['input']>>;
   hardiness?: InputMaybe<Array<Scalars['Int']['input']>>;
   height?: InputMaybe<PlantSizeInput>;
   isPerennial?: InputMaybe<Scalars['Boolean']['input']>;
@@ -140,7 +140,7 @@ export type PlantDataInterface = {
   bloomTimes?: Maybe<Array<Scalars['String']['output']>>;
   commonNames?: Maybe<Array<Scalars['String']['output']>>;
   fullOccurrencesCount?: Maybe<Scalars['Int']['output']>;
-  habitat?: Maybe<Scalars['String']['output']>;
+  habitats?: Maybe<Array<Scalars['String']['output']>>;
   hardiness?: Maybe<Array<Scalars['Int']['output']>>;
   height?: Maybe<PlantSize>;
   isPerennial?: Maybe<Scalars['Boolean']['output']>;

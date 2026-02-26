@@ -12,7 +12,7 @@ type GardenPlantData implements PlantDataInterface {
   commonNames: [String!]
   customThumbnailUrl: String
   fullOccurrencesCount: Int
-  habitat: String
+  habitats: [String!]
   hardiness: [Int!]
   height: PlantSize
   isPerennial: Boolean
@@ -57,7 +57,7 @@ type PlantData implements PlantDataInterface {
   bloomTimes: [String!]
   commonNames: [String!]
   fullOccurrencesCount: Int
-  habitat: String
+  habitats: [String!]
   hardiness: [Int!]
   height: PlantSize
   isPerennial: Boolean
@@ -81,7 +81,7 @@ input PlantDataInput {
   bloomTimes: [String!]
   boundingPolyCoords: [[[Float!]!]!]
   commonName: String
-  habitat: String
+  habitats: [String!]
   hardiness: [Int!]
   height: PlantSizeInput
   isPerennial: Boolean
@@ -103,7 +103,7 @@ interface PlantDataInterface {
   bloomTimes: [String!]
   commonNames: [String!]
   fullOccurrencesCount: Int
-  habitat: String
+  habitats: [String!]
   hardiness: [Int!]
   height: PlantSize
   isPerennial: Boolean
