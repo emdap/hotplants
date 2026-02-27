@@ -11,14 +11,16 @@ import {
   ListboxValueType,
 } from "./listboxUtil";
 
-const StyledListbox = ({
+const StyledMultipleListbox = ({
   defaultOptions = [],
   value: listboxValue = [],
   allowCustomOption,
+  placeholder,
   className,
   onChange,
   ...listboxProps
 }: {
+  placeholder?: string;
   defaultOptions?: string[] | ComplexListboxOption[];
   allowCustomOption?: boolean;
 } & ListboxProps<"select", ListboxValueType[]>) => {
@@ -71,11 +73,18 @@ const StyledListbox = ({
   };
 
   return (
-    <Listbox {...listboxProps} value={listboxValue} onChange={handleChange}>
+    <Listbox
+      multiple
+      {...listboxProps}
+      value={listboxValue}
+      onChange={handleChange}
+    >
       <StyledListboxButton
         id={listboxProps.name}
         onMouseEnter={(e) => e.stopPropagation()}
         className={className}
+        value={listboxValue}
+        placeholder={placeholder}
       >
         {({ open }) => {
           open && customInputRef.current?.focus({ preventScroll: true });
@@ -123,4 +132,4 @@ const StyledListbox = ({
   );
 };
 
-export default StyledListbox;
+export default StyledMultipleListbox;

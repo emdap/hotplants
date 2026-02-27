@@ -1,19 +1,17 @@
 import { Listbox } from "@headlessui/react";
 import classNames from "classnames";
+import { BOOLEAN_OPTIONS } from "components/plantFilters/plantFilterUtil";
 import Button from "designSystem/Button";
 import StyledListboxButton from "designSystem/listbox/StyledListboxButton";
 import StyledListboxOptions from "designSystem/listbox/StyledListboxOptions";
-import StyledListbox from "designSystem/listbox/StyledMultipleListbox";
+import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
 import { SearchRecordStringFilterField } from "generated/graphql/graphql";
 import { useMemo } from "react";
 import { MdArrowDownward, MdArrowUpward, MdDragHandle } from "react-icons/md";
 import { SearchRecordFilterInput } from "util/routeParamsUtil";
 import {
-  BOOLEAN_FILTER_DICT,
-  BooleanFilterOption,
   getFilterParamKey,
   ParamType,
-  SEARCH_RECORD_ORDERED_BOOLEAN_OPTIONS,
   SEARCH_RECORD_QUERY_LABELS,
   SearchRecordQueryInput,
   STRING_FILTER_OPTIONS_DICT,
@@ -36,9 +34,6 @@ const SearchArchiveParamControl = <T extends SearchRecordQueryInput>({
     const nextValue = value === 1 ? -1 : value === -1 ? undefined : 1;
     onChange(nextValue);
   };
-
-  const getBooleanValue = (): BooleanFilterOption =>
-    value ? "Yes" : value === false ? "No" : "Show all";
 
   const paramKey = useMemo(
     () =>
@@ -76,24 +71,20 @@ const SearchArchiveParamControl = <T extends SearchRecordQueryInput>({
         />
       ) : paramKey === "booleanFilter" ? (
         <Listbox
-          onChange={(option: BooleanFilterOption) =>
-            onChange(BOOLEAN_FILTER_DICT[option])
-          }
-          value={getBooleanValue()}
+          onChange={(value) => onChange(value === null ? undefined : value)}
+          value={value ?? null}
         >
           <StyledListboxButton
-            id={field}
+            value={value ?? null}
+            options={BOOLEAN_OPTIONS}
             className="min-w-30 text-sm not-dark:bg-secondary/20 not-dark:focus:bg-secondary/20"
-          >
-            {getBooleanValue()}
-          </StyledListboxButton>
-          <StyledListboxOptions
-            options={[...SEARCH_RECORD_ORDERED_BOOLEAN_OPTIONS]}
           />
+          <StyledListboxOptions options={BOOLEAN_OPTIONS} />
         </Listbox>
       ) : (
-        <StyledListbox
-          className="min-w-50 max-w-50 not-dark:bg-secondary/20 not-dark:focus:bg-secondary/20"
+        <StyledMultipleListbox
+          className="min-w-50 max-w-50 not-dark:bg-secondary/20 not-dark:focus:bg-secondary/20 text-sm"
+          placeholder="Select"
           defaultOptions={
             STRING_FILTER_OPTIONS_DICT[field as SearchRecordStringFilterField]
           }

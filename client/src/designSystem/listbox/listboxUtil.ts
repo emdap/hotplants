@@ -1,8 +1,8 @@
-export type ListboxValueType = string | boolean | number;
+export type ListboxValueType = string | boolean | number | null;
 
 export type ComplexListboxOption<T = ListboxValueType> = {
   label: string;
-  value: T | null;
+  value: T;
 };
 
 export const getOptionValuesArray = (

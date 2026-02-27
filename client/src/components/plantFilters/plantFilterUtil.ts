@@ -187,3 +187,18 @@ export type FilterInputComponentProps<
 export type PlantArrayFilterInput =
   | PlantArrayFilterStringInput
   | PlantArrayFilterIntInput;
+
+export const BOOLEAN_OPTIONS: ComplexListboxOption<boolean | null>[] = [
+  {
+    label: "Yes",
+    value: true,
+  },
+  {
+    label: "No",
+    value: false,
+  },
+  {
+    label: "Show all",
+    value: null,
+  },
+];

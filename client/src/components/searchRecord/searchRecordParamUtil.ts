@@ -11,14 +11,13 @@ import {
 } from "generated/graphql/graphql";
 import { SearchRecordFilterInput } from "util/routeParamsUtil";
 
-// TODO: Should merge the filter inputs/types here with plant search filter types
-
 export type SearchRecordQueryInput =
   | SearchRecordSortInput
   | SearchRecordFilterInput;
 
 export type ParamType = "sort" | "filter";
 
+// TODO: Should merge the filter inputs/types here with plant search filter types
 export const SEARCH_RECORD_ORDERED_QUERY_KEYS: {
   sort: SearchRecordSortField[];
   filter: SearchRecordFilterInput["field"][];
@@ -85,34 +84,6 @@ export const parseFilterParams = (filter?: SearchRecordFilterInput[]) =>
 
     return prev;
   }, {}) as FilterQueryVars;
-
-export const SEARCH_RECORD_ORDERED_BOOLEAN_OPTIONS = [
-  "Show all",
-  "Yes",
-  "No",
-] as const;
-
-export type BooleanFilterOption =
-  (typeof SEARCH_RECORD_ORDERED_BOOLEAN_OPTIONS)[number];
-
-export const BOOLEAN_FILTER_DICT: Record<
-  BooleanFilterOption,
-  boolean | undefined
-> = {
-  Yes: true,
-  No: false,
-  "Show all": undefined,
-};
-
-// TODO: use this/replace above options/lable dicts
-export const BOOLEAN_OPTIONS: ComplexListboxOption<boolean | undefined>[] = [
-  {
-    label: "Yes",
-    value: true,
-  },
-  { label: "No", value: false },
-  { label: "Show all", value: undefined },
-];
 
 export const SEARCH_RECORD_ORDERED_LOCATION_SOURCE_OPTIONS: ComplexListboxOption<LocationSource>[] =
   [
