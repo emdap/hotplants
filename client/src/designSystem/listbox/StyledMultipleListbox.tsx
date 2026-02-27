@@ -11,7 +11,7 @@ import {
   ListboxValueType,
 } from "./listboxUtil";
 
-const StyledMultipleListbox = ({
+const StyledListbox = ({
   defaultOptions = [],
   value: listboxValue = [],
   allowCustomOption,
@@ -71,12 +71,7 @@ const StyledMultipleListbox = ({
   };
 
   return (
-    <Listbox
-      {...listboxProps}
-      multiple
-      value={listboxValue}
-      onChange={handleChange}
-    >
+    <Listbox {...listboxProps} value={listboxValue} onChange={handleChange}>
       <StyledListboxButton
         id={listboxProps.name}
         onMouseEnter={(e) => e.stopPropagation()}
@@ -128,4 +123,4 @@ const StyledMultipleListbox = ({
   );
 };
 
-export default StyledMultipleListbox;
+export default StyledListbox;

@@ -1,4 +1,4 @@
-import { ComplexListboxOption } from "designSystem/listbox/StyledListboxOptions";
+import { ComplexListboxOption } from "designSystem/listbox/listboxUtil";
 import {
   LocationSource,
   SearchRecordBooleanFilterField,
@@ -103,6 +103,16 @@ export const BOOLEAN_FILTER_DICT: Record<
   No: false,
   "Show all": undefined,
 };
+
+// TODO: use this/replace above options/lable dicts
+export const BOOLEAN_OPTIONS: ComplexListboxOption<boolean | undefined>[] = [
+  {
+    label: "Yes",
+    value: true,
+  },
+  { label: "No", value: false },
+  { label: "Show all", value: undefined },
+];
 
 export const SEARCH_RECORD_ORDERED_LOCATION_SOURCE_OPTIONS: ComplexListboxOption<LocationSource>[] =
   [

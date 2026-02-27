@@ -3,7 +3,7 @@ import classNames from "classnames";
 import Button from "designSystem/Button";
 import StyledListboxButton from "designSystem/listbox/StyledListboxButton";
 import StyledListboxOptions from "designSystem/listbox/StyledListboxOptions";
-import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
+import StyledListbox from "designSystem/listbox/StyledMultipleListbox";
 import { SearchRecordStringFilterField } from "generated/graphql/graphql";
 import { useMemo } from "react";
 import { MdArrowDownward, MdArrowUpward, MdDragHandle } from "react-icons/md";
@@ -88,17 +88,17 @@ const SearchArchiveParamControl = <T extends SearchRecordQueryInput>({
             {getBooleanValue()}
           </StyledListboxButton>
           <StyledListboxOptions
-            options={SEARCH_RECORD_ORDERED_BOOLEAN_OPTIONS}
+            options={[...SEARCH_RECORD_ORDERED_BOOLEAN_OPTIONS]}
           />
         </Listbox>
       ) : (
-        <StyledMultipleListbox
+        <StyledListbox
           className="min-w-50 max-w-50 not-dark:bg-secondary/20 not-dark:focus:bg-secondary/20"
           defaultOptions={
             STRING_FILTER_OPTIONS_DICT[field as SearchRecordStringFilterField]
           }
           value={(value || []) as string[]}
-          onChange={onChange}
+          onChange={(v) => onChange(v as T["value"])}
         />
       )}
     </div>

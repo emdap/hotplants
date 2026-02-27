@@ -1,5 +1,5 @@
 import { ListboxValueType } from "designSystem/listbox/listboxUtil";
-import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
+import StyledListbox from "designSystem/listbox/StyledMultipleListbox";
 import { useMemo } from "react";
 import { PlantArrayValues } from "util/customSchemaTypes";
 import {
@@ -47,7 +47,7 @@ const SelectFilterInputField = ({
     <div className="form-item">
       <label htmlFor={plantDataKey}>{label}</label>
 
-      <StyledMultipleListbox
+      <StyledListbox
         multiple
         name={plantDataKey}
         value={listboxValue}
