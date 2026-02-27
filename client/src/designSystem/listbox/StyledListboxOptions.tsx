@@ -6,11 +6,7 @@ import {
 import classNames from "classnames";
 import { ReactNode, useMemo } from "react";
 import { MdCheck } from "react-icons/md";
-
-export type ComplexListboxOption<T = unknown> = {
-  label: string;
-  value: T;
-};
+import { ComplexListboxOption, getComplexOptionArray } from "./listboxUtil";
 
 const StyledListboxOptions = ({
   options,
@@ -18,16 +14,10 @@ const StyledListboxOptions = ({
   className,
   ...props
 }: {
-  options: string[] | readonly string[] | (string | ComplexListboxOption)[];
+  options: (string | ComplexListboxOption)[];
   customOptionInput?: ReactNode;
 } & ListboxOptionsProps) => {
-  const optionArray = useMemo(
-    () =>
-      options.map((opt) =>
-        typeof opt === "string" ? { label: opt, value: opt } : opt,
-      ),
-    [options],
-  );
+  const optionArray = useMemo(() => getComplexOptionArray(options), [options]);
 
   return (
     <ListboxOptions

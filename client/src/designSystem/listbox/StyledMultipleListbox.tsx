@@ -1,18 +1,16 @@
 import { Listbox, ListboxProps } from "@headlessui/react";
-import { FunctionComponent, HTMLProps, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import Button from "../Button";
 import SelectedOptions from "./SelectedOptions";
 import StyledListboxButton from "./StyledListboxButton";
-import StyledListboxOptions, {
+import StyledListboxOptions from "./StyledListboxOptions";
+import {
   ComplexListboxOption,
-} from "./StyledListboxOptions";
+  getOptionValuesArray,
+  ListboxValueType,
+} from "./listboxUtil";
 
-export type CustomSelectedOption = FunctionComponent<
-  HTMLProps<HTMLDivElement> & { value: string }
->;
-
-// TODO: Half updated to support ComplexListboxOption
 const StyledMultipleListbox = ({
   defaultOptions = [],
   value: listboxValue = [],
@@ -21,18 +19,15 @@ const StyledMultipleListbox = ({
   onChange,
   ...listboxProps
 }: {
-  defaultOptions?: (string | ComplexListboxOption)[];
+  defaultOptions?: string[] | ComplexListboxOption[];
   allowCustomOption?: boolean;
-} & ListboxProps<"select", string[]>) => {
+} & ListboxProps<"select", ListboxValueType[]>) => {
   const [customOptions, setCustomOptions] = useState<string[]>([]);
   const [customOptionInput, setCustomOptionInput] = useState("");
   const customInputRef = useRef<HTMLInputElement>(null);
 
   const mappedOptionValues = useMemo(
-    () =>
-      defaultOptions.map((value) =>
-        typeof value === "string" ? value : value.value,
-      ),
+    () => getOptionValuesArray(defaultOptions),
     [defaultOptions],
   );
 
@@ -58,10 +53,13 @@ const StyledMultipleListbox = ({
     }
   };
 
-  const removeValue = (value: string | boolean | number) =>
+  const removeValue = (value: ListboxValueType) =>
     handleChange(listboxValue.filter((val) => val !== value) ?? []);
 
-  const handleChange = (value: string[], skipCustomOptionCheck?: boolean) => {
+  const handleChange = (
+    value: ListboxValueType[],
+    skipCustomOptionCheck?: boolean,
+  ) => {
     if (!skipCustomOptionCheck && customOptions.length) {
       setCustomOptions(
         value.length

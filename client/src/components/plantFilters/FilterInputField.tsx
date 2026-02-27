@@ -1,28 +1,18 @@
 import classNames from "classnames";
-import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
-import { PlantDataInput } from "generated/graphql/graphql";
-import { ChangeEvent, useMemo } from "react";
-import { PlantDataFilter } from "util/customSchemaTypes";
-import { FilterInput, FilterInputType, SelectInput } from "./plantFilterUtil";
+import { ChangeEvent } from "react";
+import { FilterInputComponentProps } from "./plantFilterUtil";
+import SelectFilterInputField, {
+  SelectFilterInputFieldProps,
+} from "./SelectFilterInputField";
 
-const DEFAULT_INPUT_TYPE = ["text", "number", "checkbox"];
+const FilterInputField = (props: FilterInputComponentProps) => {
+  const {
+    filterInput: { inputType, plantDataKey, label },
+    value,
+    onChange,
+  } = props;
 
-const FilterInputField = <
-  K extends keyof PlantDataFilter,
-  T extends FilterInputType,
->({
-  filterInput,
-  value,
-  onChange,
-}: {
-  filterInput: FilterInput<K, T>;
-  value: PlantDataInput[K];
-  onChange: (value: PlantDataInput[K]) => void;
-}) => {
-  const { plantDataKey, inputType } = filterInput;
-  const options = "options" in filterInput ? filterInput.options : null;
-
-  const inputOnChange = ({
+  const handleOnChange = ({
     target: { value, checked },
   }: ChangeEvent<HTMLInputElement>) => {
     if (inputType === "number") {
@@ -31,50 +21,33 @@ const FilterInputField = <
         onChange({ amount: newValue, unit: "cm" });
       }
     } else if (inputType === "checkbox") {
-      // Temp hack for filering for perennial plants, need to adjust filter to allow 'show all'
-      onChange(checked || undefined);
+      onChange([checked]);
     } else {
       onChange(value);
     }
   };
 
-  const selectInput = useMemo(
-    () =>
-      inputType?.includes("select")
-        ? ({ plantDataKey, inputType, options } as FilterInput<K, SelectInput>)
-        : null,
-    [inputType, plantDataKey, options],
-  );
-
-  return (
+  return inputType.includes("select") ? (
+    <SelectFilterInputField {...(props as SelectFilterInputFieldProps)} />
+  ) : (
     <div
       className={classNames(
         "form-item",
-        ["checkbox", "range"].includes(filterInput.inputType) &&
+        ["checkbox", "range"].includes(inputType) &&
           "flex-row items-center gap-4",
       )}
     >
-      <label htmlFor={plantDataKey}>{filterInput.label}</label>
-      {DEFAULT_INPUT_TYPE.includes(inputType) ? (
-        <input
-          id={plantDataKey}
-          value={(value as string) ?? ""}
-          type={inputType}
-          placeholder={`Enter ${inputType}`}
-          onChange={inputOnChange}
-          className={
-            inputType === "checkbox" ? "styled-checkbox" : "styled-input"
-          }
-        />
-      ) : selectInput ? (
-        <StyledMultipleListbox
-          name={plantDataKey}
-          value={value ?? []}
-          onChange={onChange}
-          multiple
-          defaultOptions={selectInput.options}
-        />
-      ) : null}
+      <label htmlFor={plantDataKey}>{label}</label>
+      <input
+        id={plantDataKey}
+        value={String(value)}
+        type={inputType}
+        placeholder={`Enter ${inputType}`}
+        onChange={handleOnChange}
+        className={
+          inputType === "checkbox" ? "styled-checkbox" : "styled-input"
+        }
+      />
     </div>
   );
 };

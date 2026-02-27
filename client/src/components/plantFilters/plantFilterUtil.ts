@@ -1,22 +1,27 @@
-import { ComplexListboxOption } from "designSystem/listbox/StyledListboxOptions";
-import { capitalize } from "lodash";
+import { ComplexListboxOption } from "designSystem/listbox/listboxUtil";
+import {
+  PlantArrayFilterIntInput,
+  PlantArrayFilterStringInput,
+  PlantDataInput,
+} from "generated/graphql/graphql";
+import { capitalize, sortBy } from "lodash";
 import { Entries } from "type-fest";
 import { PlantArrayValues, PlantDataFilter } from "util/customSchemaTypes";
 
-export type PlantDataKey = keyof PlantDataFilter;
+type PlantFilterKey = keyof PlantDataFilter;
 
 type SelectValueType = "string" | "color" | "boolean" | "number";
-export type SelectInput = `select-${SelectValueType}`;
+export type SelectInputType = `select-${SelectValueType}`;
 
 export type FilterInputType =
-  | SelectInput
+  | SelectInputType
   | "text"
   | "number"
   | "checkbox"
   | "range";
 
 type FilterBase<
-  K extends PlantDataKey = PlantDataKey,
+  K extends PlantFilterKey = PlantFilterKey,
   T extends FilterInputType = FilterInputType,
 > = {
   plantDataKey: K;
@@ -26,31 +31,32 @@ type FilterBase<
 };
 
 export type FilterInput<
-  K extends PlantDataKey = PlantDataKey,
   T extends FilterInputType = FilterInputType,
+  K extends PlantFilterKey = PlantFilterKey,
 > = FilterBase<K, T> &
-  (T extends SelectInput
+  (T extends SelectInputType
     ? FilterSelectInput<T>
     : T extends "range" | "number"
       ? FilterNumberInput
       : { inputType: T });
 
-type FilterSelectInput<S extends SelectInput = "select-string"> = {
+export type FilterSelectInput<S extends SelectInputType = SelectInputType> = {
   multiselect?: boolean;
+  matchAllCheckbox?: boolean;
 } & (S extends "select-string"
   ? {
       options?: string[];
       freeform?: boolean;
     }
-  : { options: ComplexListboxOption[]; freeform?: false });
+  : { options?: ComplexListboxOption[]; freeform?: false });
 
 type FilterNumberInput = {
   minValue?: number;
   maxValue?: number;
 };
 
-export type FilterDict<T extends PlantDataKey = PlantDataKey> = {
-  [key in T]?: FilterInput<key>;
+export type FilterDict<T extends PlantFilterKey = PlantFilterKey> = {
+  [key in T]?: FilterInput<FilterInputType, key>;
 };
 
 export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
@@ -60,36 +66,42 @@ export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
       label: "Bloom colors",
       inputType: "select-color",
       multiselect: true,
+      matchAllCheckbox: true,
     },
     bloomTimes: {
       plantDataKey: "bloomTimes",
       label: "Bloom time",
       inputType: "select-string",
       multiselect: true,
+      matchAllCheckbox: true,
     },
     lightLevels: {
       plantDataKey: "lightLevels",
       label: "Light level",
       inputType: "select-string",
       multiselect: true,
+      matchAllCheckbox: true,
     },
     habitats: {
       plantDataKey: "habitats",
       label: "Habitat",
       inputType: "select-string",
       multiselect: true,
+      matchAllCheckbox: true,
     },
     hardiness: {
       plantDataKey: "hardiness",
       label: "USDA Hardiness Zone",
       inputType: "select-number",
       multiselect: true,
+      matchAllCheckbox: true,
     },
     soilTypes: {
       plantDataKey: "soilTypes",
       label: "Soil type",
       inputType: "select-string",
       multiselect: true,
+      matchAllCheckbox: true,
     },
   };
 
@@ -145,15 +157,16 @@ export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
     Object.entries(filterValues) as Entries<PlantArrayValues>
   ).reduce<FilterDict>((prev, [key, values]) => {
     if (values && key in DYNAMIC_FILTER_DICT) {
-      const options = [...values].sort().map((value): ComplexListboxOption => {
+      const options = sortBy([...values]).map((value): ComplexListboxOption => {
         if (typeof value === "string") {
           return { label: capitalize(value), value };
         }
         return { label: String(value), value };
       });
+
       options.push(NON_SPECIFIED_OPTION);
 
-      (prev[key] as FilterInput<typeof key>) = {
+      (prev[key] as FilterInput) = {
         ...DYNAMIC_FILTER_DICT[key],
         options,
       };
@@ -163,7 +176,19 @@ export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
   }, {});
 
 export const getSortedFilterEntries = (filterDict: FilterDict) =>
-  (Object.entries(filterDict) as Entries<PlantDataFilter>).sort(
-    ([_a, { order: orderA }], [_b, { order: orderB }]) =>
-      (orderA ?? 0) - (orderB ?? 0),
+  (Object.entries(filterDict) as Entries<typeof filterDict>).sort(
+    ([_a, dataA], [_b, dataB]) => (dataA?.order ?? 0) - (dataB?.order ?? 0),
   );
+
+export type FilterInputComponentProps<
+  T extends FilterInput = FilterInput,
+  K extends PlantFilterKey = PlantFilterKey,
+> = {
+  filterInput: T;
+  value: PlantDataInput[K];
+  onChange: (value?: PlantDataInput[K]) => void;
+};
+
+export type PlantArrayFilterInput =
+  | PlantArrayFilterStringInput
+  | PlantArrayFilterIntInput;

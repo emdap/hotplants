@@ -50,6 +50,16 @@ type Mutation {
 
 scalar ObjectId
 
+input PlantArrayFilterIntInput {
+  matchAll: Boolean
+  value: [Int]
+}
+
+input PlantArrayFilterStringInput {
+  matchAll: Boolean
+  value: [String]
+}
+
 type PlantData implements PlantDataInterface {
   _id: ObjectId!
   addedTimestamp: Float!
@@ -75,29 +85,27 @@ type PlantData implements PlantDataInterface {
 }
 
 input PlantDataInput {
-  _id: ObjectId
   addedTimestamp: Float
-  bloomColors: [String!]
-  bloomTimes: [String!]
+  bloomColors: PlantArrayFilterStringInput
+  bloomTimes: PlantArrayFilterStringInput
   boundingPolyCoords: [[[Float!]!]!]
   commonName: String
-  habitats: [String!]
-  hardiness: [Int!]
+  habitats: PlantArrayFilterStringInput
+  hardiness: PlantArrayFilterIntInput
   height: PlantSizeInput
-  isPerennial: Boolean
-  lightLevels: [String!]
+  isPerennial: [Boolean]
+  lightLevels: PlantArrayFilterStringInput
   maturityTime: String
   physicalCharactersticsDump: String
   scientificName: String
-  scrapeSources: [String!]
-  soilTypes: [String!]
+  scrapeSources: [String]
+  soilTypes: PlantArrayFilterStringInput
   spread: PlantSizeInput
   updatedTimestamp: Float
-  uses: [String!]
+  uses: PlantArrayFilterStringInput
 }
 
 interface PlantDataInterface {
-  _id: ObjectId!
   addedTimestamp: Float!
   bloomColors: [String!]
   bloomTimes: [String!]

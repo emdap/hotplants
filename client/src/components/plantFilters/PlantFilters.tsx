@@ -1,4 +1,5 @@
 import { PlantSearchContextType } from "contexts/plantSearch/PlantSearchContext";
+import Card from "designSystem/Card";
 import { hotplantsClient } from "hooks/usePlantSearchQueries";
 import { useReactQuery } from "hooks/useQuery";
 import { useMemo } from "react";
@@ -39,21 +40,24 @@ const PlantFilters = ({
     return getSortedFilterEntries({ ...dynamicFilters, ...STATIC_FILTER_DICT });
   }, [filterValuesQuery.data]);
 
+  // TODO: consider putting FilterInputField code in here
   return (
-    <div>
+    <Card>
       {sortedFilters.map(([plantDataKey, filterInput]) => {
         return (
-          <FilterInputField
-            key={plantDataKey}
-            filterInput={filterInput}
-            value={plantFilter[plantDataKey]}
-            onChange={(value) =>
-              applyPlantFilter({ ...plantFilter, [plantDataKey]: value })
-            }
-          />
+          filterInput && (
+            <FilterInputField
+              key={plantDataKey}
+              filterInput={filterInput}
+              value={plantFilter[plantDataKey]}
+              onChange={(value) =>
+                applyPlantFilter({ ...plantFilter, [plantDataKey]: value })
+              }
+            />
+          )
         );
       })}
-    </div>
+    </Card>
   );
 };
 

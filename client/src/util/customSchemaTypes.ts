@@ -12,8 +12,7 @@ export type PlantSearchParams =
 
 export type OptionalSearchParamKey = "commonName" | "scientificName";
 
-export type PlantDataFilter = Pick<PlantDataInput, OptionalSearchParamKey> &
-  Omit<PlantDataInput, keyof PlantSearchParams>;
+export type PlantDataFilter = Omit<PlantDataInput, "boundingPolyCoords">;
 
 export type PlantArrayValues =
   Hotplants.components["schemas"]["PlantArrayValuesDocument"];

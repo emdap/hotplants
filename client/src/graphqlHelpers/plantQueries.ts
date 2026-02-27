@@ -3,7 +3,6 @@ import { SearchPlantsQuery } from "generated/graphql/graphql";
 
 const _PLANT_FIELDS_FRAGMENT = graphql(`
   fragment PlantFields on PlantDataInterface {
-    _id
     scientificName
     commonNames
     bloomColors
@@ -28,6 +27,7 @@ const _PLANT_FIELDS_FRAGMENT = graphql(`
 export const GET_PLANT = graphql(`
   query getPlant($id: String!, $boundingPolyCoords: [[[Float!]!]!]) {
     plant(id: $id, boundingPolyCoords: $boundingPolyCoords) {
+      _id
       ...PlantFields
     }
   }
@@ -43,6 +43,7 @@ export const SEARCH_PLANTS = graphql(`
     plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {
       count
       results {
+        _id
         ...PlantFields
       }
     }

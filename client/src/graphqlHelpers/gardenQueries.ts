@@ -2,6 +2,7 @@ import { graphql } from "generated/graphql";
 
 const _GARDEN_PLANT_FIELDS = graphql(`
   fragment GardenPlantFields on GardenPlantData {
+    _id
     addedTimestamp
     customThumbnailUrl
     ...PlantFields
