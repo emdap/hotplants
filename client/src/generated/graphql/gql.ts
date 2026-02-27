@@ -14,11 +14,11 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  fragment GardenPlantFields on GardenPlantData {\n    # _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n": typeof types.GardenPlantFieldsFragmentDoc,
+    "\n  fragment GardenPlantFields on GardenPlantData {\n    _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n": typeof types.GardenPlantFieldsFragmentDoc,
     "\n  fragment GardenFields on UserGarden {\n    gardenName\n    gardenThumbnailUrl\n    plantCount\n  }\n": typeof types.GardenFieldsFragmentDoc,
     "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n": typeof types.GetAllGardensDocument,
     "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n": typeof types.GetGardenDocument,
-    "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        ...GardenPlantFields\n      }\n    }\n  }\n": typeof types.GetGardenPlantsDocument,
+    "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        _id\n        ...GardenPlantFields\n      }\n    }\n  }\n": typeof types.GetGardenPlantsDocument,
     "\n  mutation createGarden($gardenName: String) {\n    newGarden(gardenName: $gardenName)\n  }\n": typeof types.CreateGardenDocument,
     "\n  mutation addPlant($plantId: String!, $gardenId: String) {\n    addToGarden(plantId: $plantId, gardenId: $gardenId) {\n      ...GardenFields\n    }\n  }\n": typeof types.AddPlantDocument,
     "\n  fragment PlantFields on PlantDataInterface {\n    scientificName\n    commonNames\n    bloomColors\n    bloomTimes\n    isPerennial\n    thumbnailUrl\n    physicalCharactersticsDump\n    scrapeSources\n\n    fullOccurrencesCount\n    occurrences {\n      occurrenceId\n      occurrenceCoords\n      media {\n        url\n        isProxyUrl\n      }\n    }\n  }\n": typeof types.PlantFieldsFragmentDoc,
@@ -29,11 +29,11 @@ type Documents = {
     "\n  query getSearchRecordDataCounts($id: String!) {\n    searchRecordDataCounts(id: $id) {\n      plantCount\n      occurrenceCount\n    }\n  }\n": typeof types.GetSearchRecordDataCountsDocument,
 };
 const documents: Documents = {
-    "\n  fragment GardenPlantFields on GardenPlantData {\n    # _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n": types.GardenPlantFieldsFragmentDoc,
+    "\n  fragment GardenPlantFields on GardenPlantData {\n    _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n": types.GardenPlantFieldsFragmentDoc,
     "\n  fragment GardenFields on UserGarden {\n    gardenName\n    gardenThumbnailUrl\n    plantCount\n  }\n": types.GardenFieldsFragmentDoc,
     "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n": types.GetAllGardensDocument,
     "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n": types.GetGardenDocument,
-    "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        ...GardenPlantFields\n      }\n    }\n  }\n": types.GetGardenPlantsDocument,
+    "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        _id\n        ...GardenPlantFields\n      }\n    }\n  }\n": types.GetGardenPlantsDocument,
     "\n  mutation createGarden($gardenName: String) {\n    newGarden(gardenName: $gardenName)\n  }\n": types.CreateGardenDocument,
     "\n  mutation addPlant($plantId: String!, $gardenId: String) {\n    addToGarden(plantId: $plantId, gardenId: $gardenId) {\n      ...GardenFields\n    }\n  }\n": types.AddPlantDocument,
     "\n  fragment PlantFields on PlantDataInterface {\n    scientificName\n    commonNames\n    bloomColors\n    bloomTimes\n    isPerennial\n    thumbnailUrl\n    physicalCharactersticsDump\n    scrapeSources\n\n    fullOccurrencesCount\n    occurrences {\n      occurrenceId\n      occurrenceCoords\n      media {\n        url\n        isProxyUrl\n      }\n    }\n  }\n": types.PlantFieldsFragmentDoc,
@@ -61,7 +61,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment GardenPlantFields on GardenPlantData {\n    # _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n"): (typeof documents)["\n  fragment GardenPlantFields on GardenPlantData {\n    # _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n"];
+export function graphql(source: "\n  fragment GardenPlantFields on GardenPlantData {\n    _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n"): (typeof documents)["\n  fragment GardenPlantFields on GardenPlantData {\n    _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -77,7 +77,7 @@ export function graphql(source: "\n  query getGarden($gardenId: String, $gardenN
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        ...GardenPlantFields\n      }\n    }\n  }\n"): (typeof documents)["\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        ...GardenPlantFields\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        _id\n        ...GardenPlantFields\n      }\n    }\n  }\n"): (typeof documents)["\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n    ) {\n      count\n      results {\n        _id\n        ...GardenPlantFields\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

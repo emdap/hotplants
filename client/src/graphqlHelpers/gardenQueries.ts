@@ -56,6 +56,7 @@ export const GET_GARDEN_PLANTS = graphql(`
     ) {
       count
       results {
+        _id
         ...GardenPlantFields
       }
     }
