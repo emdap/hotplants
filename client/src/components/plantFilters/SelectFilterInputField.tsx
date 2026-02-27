@@ -3,14 +3,13 @@ import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
 import { useMemo } from "react";
 import { PlantArrayValues } from "util/customSchemaTypes";
 import {
-  FilterInput,
   FilterInputComponentProps,
   PlantArrayFilterInput,
   SelectInputType,
 } from "./plantFilterUtil";
 
 export type SelectFilterInputFieldProps = FilterInputComponentProps<
-  FilterInput<SelectInputType>,
+  SelectInputType,
   keyof PlantArrayValues
 >;
 

@@ -1,11 +1,13 @@
 import classNames from "classnames";
 import { ChangeEvent } from "react";
-import { FilterInputComponentProps } from "./plantFilterUtil";
+import { FilterInputComponentProps, FilterInputType } from "./plantFilterUtil";
 import SelectFilterInputField, {
   SelectFilterInputFieldProps,
 } from "./SelectFilterInputField";
 
-const FilterInputField = (props: FilterInputComponentProps) => {
+const FilterInputField = <T extends FilterInputType = FilterInputType>(
+  props: FilterInputComponentProps<T>,
+) => {
   const {
     filterInput: { inputType, plantDataKey, label },
     value,

@@ -68,11 +68,11 @@ const OptionalSearchParamsInput = () => {
         <div className="my-3">
           {OPTIONAL_SEARCH_PARAM_FILTERS.map((filter, index) => (
             <Fragment key={index}>
-              <FilterInputField
+              <FilterInputField<"text">
                 filterInput={filter}
-                value={optionalSearch[filter.plantDataKey]}
+                value={optionalSearch[filter.plantDataKey] ?? ""}
                 onChange={(value) =>
-                  updateOptionalSearch(filter.plantDataKey, value)
+                  updateOptionalSearch(filter.plantDataKey, String(value))
                 }
               />
               {index === 0 && (

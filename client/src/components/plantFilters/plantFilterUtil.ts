@@ -8,7 +8,7 @@ import { capitalize, sortBy } from "lodash";
 import { Entries } from "type-fest";
 import { PlantArrayValues, PlantDataFilter } from "util/customSchemaTypes";
 
-type PlantFilterKey = keyof PlantDataFilter;
+export type PlantFilterKey = keyof PlantDataFilter;
 
 type SelectValueType = "string" | "color" | "boolean" | "number";
 export type SelectInputType = `select-${SelectValueType}`;
@@ -16,8 +16,8 @@ export type SelectInputType = `select-${SelectValueType}`;
 export type FilterInputType = SelectInputType | "text" | "number" | "range";
 
 type FilterBase<
-  K extends PlantFilterKey = PlantFilterKey,
   T extends FilterInputType = FilterInputType,
+  K extends PlantFilterKey = PlantFilterKey,
 > = {
   plantDataKey: K;
   label: string;
@@ -28,7 +28,7 @@ type FilterBase<
 export type FilterInput<
   T extends FilterInputType = FilterInputType,
   K extends PlantFilterKey = PlantFilterKey,
-> = FilterBase<K, T> &
+> = FilterBase<T, K> &
   (T extends SelectInputType
     ? FilterSelectInput<T>
     : T extends "range" | "number"
@@ -176,10 +176,10 @@ export const getSortedFilterEntries = (filterDict: FilterDict) =>
   );
 
 export type FilterInputComponentProps<
-  T extends FilterInput = FilterInput,
+  T extends FilterInputType = FilterInputType,
   K extends PlantFilterKey = PlantFilterKey,
 > = {
-  filterInput: T;
+  filterInput: FilterInput<T, K>;
   value: PlantDataInput[K];
   onChange: (value?: PlantDataInput[K]) => void;
 };
