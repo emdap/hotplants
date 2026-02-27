@@ -13,12 +13,7 @@ type PlantFilterKey = keyof PlantDataFilter;
 type SelectValueType = "string" | "color" | "boolean" | "number";
 export type SelectInputType = `select-${SelectValueType}`;
 
-export type FilterInputType =
-  | SelectInputType
-  | "text"
-  | "number"
-  | "checkbox"
-  | "range";
+export type FilterInputType = SelectInputType | "text" | "number" | "range";
 
 type FilterBase<
   K extends PlantFilterKey = PlantFilterKey,

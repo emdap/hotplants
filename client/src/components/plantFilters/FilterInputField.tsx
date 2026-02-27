@@ -13,15 +13,17 @@ const FilterInputField = (props: FilterInputComponentProps) => {
   } = props;
 
   const handleOnChange = ({
-    target: { value, checked },
+    target: { value },
   }: ChangeEvent<HTMLInputElement>) => {
-    if (inputType === "number") {
+    if (!value) {
+      onChange(undefined);
+    } else if (inputType === "number") {
       const newValue = value.length ? Number(value) : 0;
       if (["height", "width"].includes(plantDataKey)) {
         onChange({ amount: newValue, unit: "cm" });
+      } else {
+        onChange(newValue);
       }
-    } else if (inputType === "checkbox") {
-      onChange([checked]);
     } else {
       onChange(value);
     }
@@ -38,16 +40,16 @@ const FilterInputField = (props: FilterInputComponentProps) => {
       )}
     >
       <label htmlFor={plantDataKey}>{label}</label>
-      <input
-        id={plantDataKey}
-        value={String(value)}
-        type={inputType}
-        placeholder={`Enter ${inputType}`}
-        onChange={handleOnChange}
-        className={
-          inputType === "checkbox" ? "styled-checkbox" : "styled-input"
-        }
-      />
+      {
+        <input
+          id={plantDataKey}
+          value={value ? String(value) : ""}
+          type={inputType}
+          placeholder={`Enter ${inputType}`}
+          onChange={handleOnChange}
+          className="styled-input"
+        />
+      }
     </div>
   );
 };
