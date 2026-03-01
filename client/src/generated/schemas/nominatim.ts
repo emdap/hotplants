@@ -110,7 +110,13 @@ export interface components {
             message: string;
             /** Format: date-time */
             data_updated?: string;
-            /** @description A semver.org compliant version number (see https://semver.org). */
+            /**
+             * @description A semver.org compliant version number (see https://semver.org).
+             * @example 0.1.0
+             * @example 1.0.0-beta.1
+             * @example 1.0.0-0.3.7
+             * @example 2.2.4
+             */
             software_version?: string;
             database_version?: components["schemas"]["StatusResponse"]["software_version"];
         };
