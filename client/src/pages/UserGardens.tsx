@@ -36,7 +36,7 @@ const UserGardens = () => {
   };
 
   return (
-    <main className="page-buffer page-container relative">
+    <main className="page-buffer page-container">
       <PageTitle>Gardens</PageTitle>
 
       <LoadingOverlay
