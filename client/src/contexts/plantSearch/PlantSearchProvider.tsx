@@ -82,7 +82,7 @@ const PlantSearchProvider = () => {
           to: ".",
           search: ({ filter: _prevFilter, ...prev }) => ({
             ...prev,
-            ...(filterHasData && { filter }),
+            ...(filterHasData && { page: 1, filter }),
           }),
           replace: true,
         });
