@@ -45,7 +45,7 @@ const PlantList = ({
           "gap-4 items-stretch grid",
           {
             "justify-around": plantList.length > 3,
-            "grid-cols-3 max-w-page": plantList.length < 3,
+            "grid-cols-3 max-w-page": plantList.length <= 3,
           },
           className,
         )}
