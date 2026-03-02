@@ -27,6 +27,7 @@ const PlantSearch = () => {
     searchStatus,
     plantSearchQuery: { loading },
     searchRecordQuery,
+    plantFilter,
 
     fetchMorePlants,
   } = usePlantSearchContext();
@@ -66,21 +67,23 @@ const PlantSearch = () => {
     scrollContainerElement,
   ]);
 
+  const showResults = Boolean(hasCurrentResults || plantFilter);
+
   return (
     <main className="w-full h-full">
-      {!hasCurrentResults && <ScrollAnchor className="scroll-m-header" />}
+      {!showResults && <ScrollAnchor className="scroll-m-header" />}
       <PageTitle className="page-buffer">Plant Search</PageTitle>
-      {hasCurrentResults && <PlantSearchHeader />}
+      {showResults && <PlantSearchHeader />}
 
       <div
         className={classNames("flex grow", {
           "small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full":
-            hasCurrentResults,
+            showResults,
           "max-md:flex-col max-md:justify-between page-buffer pb-8 gap-8":
-            !hasCurrentResults,
+            !showResults,
         })}
       >
-        {hasCurrentResults ? (
+        {showResults ? (
           <>
             <PlantSearchSidebar />
             {!isInfiniteScroll && (
@@ -107,7 +110,7 @@ const PlantSearch = () => {
           ref={resultsContainerRef}
           className="grow flex flex-col relative scroll-m-header-2 pt-4 pb-10 big-screen:px-4 max-lg:basis-2/3 gap-20"
         >
-          {hasCurrentResults && (
+          {showResults && (
             <PlantList
               key="results-holder"
               parentSidebarExpanded={sidebarExpanded}

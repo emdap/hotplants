@@ -34,7 +34,7 @@ export const hotplantsClient = createClient<paths>({
 
 const usePlantSearchQueries = (
   searchParams: PlantSearchParams | null = null,
-  plantFilters: PlantDataFilter,
+  plantFilters: PlantDataFilter | undefined,
   {
     paginationEnabled,
     page,

@@ -22,14 +22,14 @@ export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
   lastOpened: undefined,
 };
 
-type PlantSearchRouteParams = PaginationParams &
+export type PlantSearchRouteParams = PaginationParams &
   (
     | {
         page?: number;
         pageSize?: number;
 
         search: PlantSearchParams | null;
-        filter: PlantDataFilter;
+        filter?: PlantDataFilter;
         lastOpened?: string;
       }
     | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
@@ -99,11 +99,13 @@ const validateSearch = (searchParams: unknown): PlantSearchParams | null => {
 };
 
 // TODO: actually validate the filter types
-const validateFilters = (filterParams: unknown): PlantDataFilter => {
+const validateFilters = (
+  filterParams: unknown,
+): PlantDataFilter | undefined => {
   if (typeof filterParams === "object" && filterParams !== null) {
     return filterParams as PlantDataFilter;
   }
-  return {};
+  return undefined;
 };
 
 const getNumParamValue = (param?: unknown) => {

@@ -25,7 +25,7 @@ const PlantSearchProvider = () => {
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
     search: searchParams = null,
-    filter: plantFilter = {},
+    filter: plantFilter,
   } = route.useSearch();
 
   const [searchParamsDraft, setSearchParamsDraft] =
@@ -71,12 +71,23 @@ const PlantSearchProvider = () => {
   );
 
   const applyPlantFilter = useCallback(
-    (filter?: PlantDataFilter) =>
-      navigate({
-        to: ".",
-        search: (prev) => ({ ...prev, filter }),
-        replace: true,
-      }),
+    (filter?: PlantDataFilter) => {
+      {
+        const filterHasData = Boolean(
+          filter &&
+          Object.values(filter).filter((val) => val !== undefined).length,
+        );
+
+        navigate({
+          to: ".",
+          search: ({ filter: _prevFilter, ...prev }) => ({
+            ...prev,
+            ...(filterHasData && { filter }),
+          }),
+          replace: true,
+        });
+      }
+    },
     [navigate],
   );
 
