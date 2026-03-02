@@ -18,7 +18,7 @@ export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
   page: undefined,
   pageSize: undefined,
   search: undefined,
-  filter: undefined,
+  plantFilter: undefined,
   lastOpened: undefined,
 };
 
@@ -29,7 +29,7 @@ export type PlantSearchRouteParams = PaginationParams &
         pageSize?: number;
 
         search: PlantSearchParams | null;
-        filter?: PlantDataFilter;
+        plantFilter?: PlantDataFilter;
         lastOpened?: string;
       }
     | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
@@ -99,7 +99,7 @@ const validateSearch = (searchParams: unknown): PlantSearchParams | null => {
 };
 
 // TODO: actually validate the filter types
-const validateFilters = (
+const validatePlantFilter = (
   filterParams: unknown,
 ): PlantDataFilter | undefined => {
   if (typeof filterParams === "object" && filterParams !== null) {
@@ -128,7 +128,7 @@ export const validatePlantSearchParams = (
   if (search) {
     return {
       ...validatePaginationParams(params),
-      filter: validateFilters(params.filter),
+      plantFilter: validatePlantFilter(params.plantFilter),
       search,
     };
   }
@@ -157,3 +157,12 @@ export const validateSearchArchiveParams = (
     ...validatePaginationParams(params),
   };
 };
+
+type GardenParams = Pick<PlantSearchRouteParams, "plantFilter"> &
+  PaginationParams;
+export const validateGardenParams = (
+  params: Record<string, unknown>,
+): GardenParams => ({
+  ...validatePaginationParams(params),
+  plantFilter: validatePlantFilter(params.plantFilter),
+});

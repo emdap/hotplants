@@ -20,14 +20,15 @@ const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
 const PlantSearch = () => {
   const {
-    isInfiniteScroll,
     hasCurrentResults,
+
+    isInfiniteScroll,
     sidebarExpanded,
 
+    searchParams,
     searchStatus,
     plantSearchQuery: { loading },
     searchRecordQuery,
-    plantFilter,
 
     fetchMorePlants,
   } = usePlantSearchContext();
@@ -36,6 +37,14 @@ const PlantSearch = () => {
   const ScrollAnchor = useScrollAnchor({ enabled: searchStatus === "READY" });
 
   const resultsContainerRef = useRef<HTMLDivElement>(null);
+  const scrollToResults = () =>
+    setTimeout(
+      () =>
+        resultsContainerRef.current?.scrollIntoView({
+          behavior: "smooth",
+        }),
+      300,
+    );
 
   const hasNextPage = page < lastPage;
 
@@ -67,7 +76,7 @@ const PlantSearch = () => {
     scrollContainerElement,
   ]);
 
-  const showResults = Boolean(hasCurrentResults || plantFilter);
+  const showResults = Boolean(hasCurrentResults || searchParams);
 
   return (
     <main className="w-full h-full">
@@ -92,17 +101,7 @@ const PlantSearch = () => {
           </>
         ) : (
           <div className="basis-1/2 max-w-2xl min-w-md max-md:min-w-full">
-            <SearchParamsInput
-              onClickSearch={() =>
-                setTimeout(
-                  () =>
-                    resultsContainerRef.current?.scrollIntoView({
-                      behavior: "smooth",
-                    }),
-                  300,
-                )
-              }
-            />
+            <SearchParamsInput onClickSearch={scrollToResults} />
           </div>
         )}
 

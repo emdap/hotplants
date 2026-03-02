@@ -47,12 +47,14 @@ export const GET_GARDEN_PLANTS = graphql(`
     $limit: Int
     $offset: Int
     $sort: [PlantSortInput!]
+    $where: PlantDataInput
   ) {
     userGardenPlants(
       gardenId: $gardenId
       limit: $limit
       offset: $offset
       sort: $sort
+      where: $where
     ) {
       count
       results {

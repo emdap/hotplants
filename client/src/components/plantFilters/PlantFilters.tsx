@@ -1,9 +1,13 @@
-import { PlantSearchContextType } from "contexts/plantSearch/PlantSearchContext";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import Button from "designSystem/Button";
 import Card from "designSystem/Card";
+import StyledPopover from "designSystem/StyledPopover";
+import FilterButton from "designSystem/iconButtons/FilterButton";
 import { hotplantsClient } from "hooks/usePlantSearchQueries";
 import { useReactQuery } from "hooks/useQuery";
 import { useMemo } from "react";
 import { toast } from "sonner";
+import { PlantDataFilter } from "util/customSchemaTypes";
 import FilterInputField from "./FilterInputField";
 import {
   constructDynamicFilters,
@@ -11,11 +15,39 @@ import {
   STATIC_FILTER_DICT,
 } from "./plantFilterUtil";
 
-// TODO: Decide if auto-apply or 'apply' button is best
-const PlantFilters = ({
-  plantFilter,
-  applyPlantFilter,
-}: Pick<PlantSearchContextType, "plantFilter" | "applyPlantFilter">) => {
+export type PlantFilterProps = {
+  plantFilter?: PlantDataFilter;
+  applyPlantFilter: (filter?: PlantDataFilter) => void;
+};
+
+const PlantFilters = ({ asPopover }: { asPopover?: boolean }) => {
+  const navigate = useNavigate();
+  const { plantFilter } = useSearch({ strict: false });
+
+  const clearFilter = () =>
+    navigate({
+      to: ".",
+      search: ({ plantFilter: _prevFilter, ...prev }) => prev,
+    });
+
+  const applyFilter = (newFilter?: PlantDataFilter) => {
+    {
+      const filterHasData = Boolean(
+        newFilter &&
+        Object.values(newFilter).filter((val) => val !== undefined).length,
+      );
+
+      navigate({
+        to: ".",
+        search: ({ plantFilter: _prevFilter, ...prev }) => ({
+          ...prev,
+          ...(filterHasData && { page: 1, plantFilter: newFilter }),
+        }),
+        replace: true,
+      });
+    }
+  };
+
   const filterValuesQuery = useReactQuery({
     queryKey: ["plant-filters"],
     refetchOnWindowFocus: false,
@@ -40,7 +72,7 @@ const PlantFilters = ({
     return getSortedFilterEntries({ ...dynamicFilters, ...STATIC_FILTER_DICT });
   }, [filterValuesQuery.data]);
 
-  return (
+  const filterCard = (
     <Card>
       {sortedFilters.map(([plantDataKey, filterInput]) => {
         return (
@@ -50,13 +82,25 @@ const PlantFilters = ({
               filterInput={filterInput}
               value={plantFilter?.[plantDataKey]}
               onChange={(value) =>
-                applyPlantFilter({ ...plantFilter, [plantDataKey]: value })
+                applyFilter({ ...plantFilter, [plantDataKey]: value })
               }
             />
           )
         );
       })}
+      <Button onClick={clearFilter}>Clear filters</Button>
     </Card>
+  );
+
+  return asPopover ? (
+    <StyledPopover
+      anchor="bottom start"
+      button={<FilterButton size="small" active={Boolean(plantFilter)} />}
+    >
+      {filterCard}
+    </StyledPopover>
+  ) : (
+    filterCard
   );
 };
 

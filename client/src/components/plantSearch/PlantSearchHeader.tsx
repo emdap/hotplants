@@ -3,11 +3,9 @@ import PlantFilters from "components/plantFilters/PlantFilters";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import FloatingHeader from "designSystem/FloatingHeader";
-import FilterButton from "designSystem/iconButtons/FilterButton";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
-import StyledPopover from "designSystem/StyledPopover";
 import { FaGlobe } from "react-icons/fa";
 
 const PlantSearchHeader = () => {
@@ -15,8 +13,6 @@ const PlantSearchHeader = () => {
   const {
     searchStatus,
     isInfiniteScroll,
-    plantFilter,
-    applyPlantFilter,
     setIsInfiniteScroll,
     setSidebarExpanded,
   } = usePlantSearchContext();
@@ -36,12 +32,7 @@ const PlantSearchHeader = () => {
           icon={<FaGlobe size={16} />}
         />
 
-        <StyledPopover
-          anchor="bottom start"
-          button={<FilterButton active={Boolean(plantFilter)} />}
-        >
-          <PlantFilters {...{ plantFilter, applyPlantFilter }} />
-        </StyledPopover>
+        <PlantFilters asPopover />
       </div>
 
       <ItemCountWithLoader

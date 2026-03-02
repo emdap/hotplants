@@ -187,7 +187,7 @@ type Query {
   searchRecord(id: String!): SearchRecord
   searchRecordDataCounts(id: String!): SearchRecordPlantCountResults!
   userGarden(gardenId: String, gardenName: String): UserGarden
-  userGardenPlants(gardenId: String!, limit: Int, offset: Int, sort: [PlantSortInput!]): UserGardenPlants
+  userGardenPlants(gardenId: String!, limit: Int, offset: Int, sort: [PlantSortInput!], where: PlantDataInput): UserGardenPlants
 }
 
 type SearchRecord {

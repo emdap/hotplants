@@ -1,17 +1,17 @@
 import { NetworkStatus } from "@apollo/client";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import PlantAnimation from "components/plantSearch/PlantAnimation";
 import {
   PlantSearchContext,
   PlantSearchContextType,
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
-import LoadingOverlay from "designSystem/LoadingOverlay";
 import usePlantSearchQueries, {
   DEFAULT_PAGE_SIZE,
 } from "hooks/usePlantSearchQueries";
 import PlantSearch from "pages/PlantSearch";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PlantDataFilter, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("/plant-search");
@@ -22,10 +22,11 @@ const PlantSearchProvider = () => {
   const navigate = useNavigate();
 
   const {
+    plantFilter,
+
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
     search: searchParams = null,
-    filter: plantFilter,
   } = route.useSearch();
 
   const [searchParamsDraft, setSearchParamsDraft] =
@@ -68,27 +69,6 @@ const PlantSearchProvider = () => {
       }
     },
     [navigate, searchParamsDraft],
-  );
-
-  const applyPlantFilter = useCallback(
-    (filter?: PlantDataFilter) => {
-      {
-        const filterHasData = Boolean(
-          filter &&
-          Object.values(filter).filter((val) => val !== undefined).length,
-        );
-
-        navigate({
-          to: ".",
-          search: ({ filter: _prevFilter, ...prev }) => ({
-            ...prev,
-            ...(filterHasData && { page: 1, filter }),
-          }),
-          replace: true,
-        });
-      }
-    },
-    [navigate],
   );
 
   const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =
@@ -165,9 +145,6 @@ const PlantSearchProvider = () => {
         updateSearchParamsDraft,
         applySearchParams,
 
-        plantFilter,
-        applyPlantFilter,
-
         searchStatus,
         searchRecordQuery,
         plantSearchQuery,
@@ -191,7 +168,10 @@ const PlantSearchProvider = () => {
         boundingPolygon={searchParams?.boundingPolyCoords}
       >
         {isPrefilledSearch ? (
-          <LoadingOverlay show transparent />
+          <PlantAnimation
+            className="h-dvh-header"
+            queryStatus="CHECKING_STATUS"
+          />
         ) : (
           <PlantSearch />
         )}

@@ -1,4 +1,5 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import PlantFilters from "components/plantFilters/PlantFilters";
 import PlantList from "components/plantResults/PlantList";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import Button from "designSystem/Button";
@@ -17,7 +18,11 @@ const route = getRouteApi("/_private/gardens/$gardenName");
 const Garden = () => {
   const navigate = useNavigate();
   const { gardenName } = route.useParams();
-  const { page = 1, pageSize = DEFAULT_PAGE_SIZE } = route.useSearch();
+  const {
+    page = 1,
+    pageSize = DEFAULT_PAGE_SIZE,
+    plantFilter,
+  } = route.useSearch();
 
   const gardenQuery = useApolloQuery(GET_GARDEN, { variables: { gardenName } });
 
@@ -26,6 +31,7 @@ const Garden = () => {
       gardenId: gardenQuery.data?.userGarden?._id,
       limit: pageSize,
       offset: (page - 1) * pageSize,
+      where: plantFilter,
     },
     skip: !gardenQuery.data?.userGarden?._id,
     fetchPolicy: "cache-and-network",
@@ -65,6 +71,8 @@ const Garden = () => {
         {...{ page, pageSize }}
       >
         <FloatingHeader>
+          <PlantFilters asPopover />
+
           <ItemCountWithLoader
             className="col-start-2"
             label="Plant"
