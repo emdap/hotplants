@@ -19,6 +19,7 @@ type SearchArchiveQueryPopoverProps<T extends SearchRecordQueryInput> = {
   clearParams: () => void;
 };
 
+// TODO: Auto-apply params, show sorting order, can merge popup content component
 const SearchArchiveParamPopover = <T extends SearchRecordQueryInput>(
   props: SearchArchiveQueryPopoverProps<T>,
 ) => {
