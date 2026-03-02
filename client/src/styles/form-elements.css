@@ -16,6 +16,8 @@
   @apply bg-white/60 dark:bg-white/10 focus:bg-white/70 dark:focus:bg-white/15;
   @apply autofill:shadow-[inset_0_0_0px_1000px_#e8f0fe];
 
+  field-sizing: fixed;
+
   &::placeholder {
     @apply text-placeholder;
   }

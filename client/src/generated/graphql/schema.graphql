@@ -92,7 +92,7 @@ input PlantDataInput {
   commonName: String
   habitats: PlantArrayFilterStringInput
   hardiness: PlantArrayFilterIntInput
-  height: PlantSizeInput
+  height: PlantSizeRangeInput
   isPerennial: [Boolean]
   lightLevels: PlantArrayFilterStringInput
   maturityTime: String
@@ -100,7 +100,7 @@ input PlantDataInput {
   scientificName: String
   scrapeSources: [String]
   soilTypes: PlantArrayFilterStringInput
-  spread: PlantSizeInput
+  spread: PlantSizeRangeInput
   updatedTimestamp: Float
   uses: PlantArrayFilterStringInput
 }
@@ -150,20 +150,21 @@ type PlantSearchQueryResults {
 }
 
 type PlantSize {
-  amount: Int
-  unit: PlantSizeUnit
+  amount: Float!
+  unit: PlantSizeUnit!
 }
 
-input PlantSizeInput {
-  amount: Int
-  unit: PlantSizeUnit
+input PlantSizeRangeInput {
+  maxAmount: Float
+  minAmount: Float
+  unit: PlantSizeUnit!
 }
 
 enum PlantSizeUnit {
-  cm
-  ft
-  in
-  m
+  centimeters
+  feet
+  inches
+  meters
 }
 
 enum PlantSortField {

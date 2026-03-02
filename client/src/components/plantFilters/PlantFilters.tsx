@@ -40,7 +40,6 @@ const PlantFilters = ({
     return getSortedFilterEntries({ ...dynamicFilters, ...STATIC_FILTER_DICT });
   }, [filterValuesQuery.data]);
 
-  // TODO: consider putting FilterInputField code in here
   return (
     <Card>
       {sortedFilters.map(([plantDataKey, filterInput]) => {
@@ -49,7 +48,7 @@ const PlantFilters = ({
             <FilterInputField
               key={plantDataKey}
               filterInput={filterInput}
-              value={plantFilter[plantDataKey]}
+              value={plantFilter?.[plantDataKey]}
               onChange={(value) =>
                 applyPlantFilter({ ...plantFilter, [plantDataKey]: value })
               }

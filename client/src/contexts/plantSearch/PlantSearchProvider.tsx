@@ -75,6 +75,7 @@ const PlantSearchProvider = () => {
       navigate({
         to: ".",
         search: (prev) => ({ ...prev, filter }),
+        replace: true,
       }),
     [navigate],
   );

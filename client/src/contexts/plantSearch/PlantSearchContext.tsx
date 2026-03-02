@@ -22,7 +22,7 @@ export type PlantSearchContextType = {
   updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
   applySearchParams: (params?: Partial<PlantSearchParams>) => void;
 
-  plantFilter: PlantDataFilter;
+  plantFilter?: PlantDataFilter;
   applyPlantFilter: (filter?: PlantDataFilter) => void;
 
   searchStatus: PlantSearchQueryStatus;
@@ -48,7 +48,6 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   updateSearchParamsDraft: VOID_FUNCTION,
   applySearchParams: VOID_FUNCTION,
 
-  plantFilter: {},
   applyPlantFilter: VOID_FUNCTION,
 
   searchStatus: "READY",

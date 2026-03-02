@@ -1,6 +1,6 @@
-import classNames from "classnames";
 import { ChangeEvent } from "react";
 import { FilterInputComponentProps, FilterInputType } from "./plantFilterUtil";
+import RangeFilterInput, { NumberFilterInputProps } from "./RangeFilterInput";
 import SelectFilterInputField, {
   SelectFilterInputFieldProps,
 } from "./SelectFilterInputField";
@@ -19,13 +19,6 @@ const FilterInputField = <T extends FilterInputType = FilterInputType>(
   }: ChangeEvent<HTMLInputElement>) => {
     if (!value) {
       onChange(undefined);
-    } else if (inputType === "number") {
-      const newValue = value.length ? Number(value) : 0;
-      if (["height", "width"].includes(plantDataKey)) {
-        onChange({ amount: newValue, unit: "cm" });
-      } else {
-        onChange(newValue);
-      }
     } else {
       onChange(value);
     }
@@ -33,25 +26,19 @@ const FilterInputField = <T extends FilterInputType = FilterInputType>(
 
   return inputType.includes("select") ? (
     <SelectFilterInputField {...(props as SelectFilterInputFieldProps)} />
+  ) : inputType === "range" ? (
+    <RangeFilterInput {...(props as NumberFilterInputProps)} />
   ) : (
-    <div
-      className={classNames(
-        "form-item",
-        ["checkbox", "range"].includes(inputType) &&
-          "flex-row items-center gap-4",
-      )}
-    >
+    <div className="form-item">
       <label htmlFor={plantDataKey}>{label}</label>
-      {
-        <input
-          id={plantDataKey}
-          value={value ? String(value) : ""}
-          type={inputType}
-          placeholder={`Enter ${inputType}`}
-          onChange={handleOnChange}
-          className="styled-input"
-        />
-      }
+      <input
+        id={plantDataKey}
+        value={value ? String(value) : ""}
+        type={inputType}
+        placeholder={`Enter ${inputType}`}
+        onChange={handleOnChange}
+        className="styled-input"
+      />
     </div>
   );
 };

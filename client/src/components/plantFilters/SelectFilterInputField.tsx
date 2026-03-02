@@ -1,6 +1,5 @@
 import { ListboxValueType } from "designSystem/listbox/listboxUtil";
 import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
-import { useMemo } from "react";
 import { PlantArrayValues } from "util/customSchemaTypes";
 import {
   FilterInputComponentProps,
@@ -18,11 +17,6 @@ const SelectFilterInputField = ({
   value: filterValue,
   onChange,
 }: SelectFilterInputFieldProps) => {
-  const listboxValue = useMemo(
-    () => (filterValue?.value ? filterValue.value.map((v) => String(v)) : []),
-    [filterValue?.value],
-  );
-
   const handleOnValueChange = (newValue: ListboxValueType[]) => {
     if (filterValue?.matchAll === undefined && !newValue.length) {
       onChange(undefined);
@@ -50,7 +44,7 @@ const SelectFilterInputField = ({
         multiple
         placeholder="Select"
         name={plantDataKey}
-        value={listboxValue}
+        value={filterValue?.value ?? []}
         onChange={handleOnValueChange}
         defaultOptions={options}
       />

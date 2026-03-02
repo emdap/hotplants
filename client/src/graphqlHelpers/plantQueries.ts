@@ -12,6 +12,17 @@ const _PLANT_FIELDS_FRAGMENT = graphql(`
     physicalCharactersticsDump
     scrapeSources
 
+    hardiness
+
+    height {
+      amount
+      unit
+    }
+    spread {
+      amount
+      unit
+    }
+
     fullOccurrencesCount
     occurrences {
       occurrenceId

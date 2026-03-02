@@ -9,6 +9,8 @@ const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
   bloomColors: "Bloom Colors",
   bloomTimes: "Bloom Times",
   isPerennial: "Perennial",
+  height: "Height",
+  spread: "Spread",
   physicalCharactersticsDump: "General Info",
 };
 

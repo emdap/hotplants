@@ -13,7 +13,7 @@ export type PlantFilterKey = keyof PlantDataFilter;
 type SelectValueType = "string" | "color" | "boolean" | "number";
 export type SelectInputType = `select-${SelectValueType}`;
 
-export type FilterInputType = SelectInputType | "text" | "number" | "range";
+export type FilterInputType = SelectInputType | "text" | "range";
 
 type FilterBase<
   T extends FilterInputType = FilterInputType,
@@ -127,16 +127,16 @@ export const STATIC_FILTER_DICT: FilterDict = {
     inputType: "text",
   },
 
-  // TODO: Better filters for these on BE -- min/max, select unit?
+  // TODO: BE to support selecting unit
   height: {
     plantDataKey: "height",
-    label: "Plant height (cm)",
+    label: "Plant height",
     inputType: "range",
     minValue: 0,
   },
   spread: {
     plantDataKey: "spread",
-    label: "Plant spread (cm)",
+    label: "Plant spread",
     inputType: "range",
     minValue: 0,
   },
