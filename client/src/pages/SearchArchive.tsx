@@ -60,8 +60,6 @@ const SearchArchive = () => {
   const searchRecordCount =
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;
 
-  console.log(allSearchRecordsQuery);
-
   return (
     <main className="page-buffer page-container">
       <PageTitle>Search Archive</PageTitle>
