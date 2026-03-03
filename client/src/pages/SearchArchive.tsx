@@ -60,6 +60,8 @@ const SearchArchive = () => {
   const searchRecordCount =
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;
 
+  console.log(allSearchRecordsQuery);
+
   return (
     <main className="page-buffer page-container">
       <PageTitle>Search Archive</PageTitle>
@@ -107,9 +109,12 @@ const SearchArchive = () => {
 
       <LoadingOverlay
         transparent
-        className="min-h-[80vh]!"
+        className="min-h-0! h-dvh-header-2"
         debounceShow={!previousData}
-        show={allSearchRecordsQuery.loading && !previousData}
+        show={
+          allSearchRecordsQuery.loading &&
+          allSearchRecordsQuery.dataState !== "complete"
+        }
       />
 
       {allSearchRecords?.results.map((searchRecord, index) => (
