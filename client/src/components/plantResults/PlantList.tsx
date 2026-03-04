@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import ActivePlantPane from "components/plantSearch/ActivePlantPane";
+import ActivePlantPane from "components/plantResults/ActivePlantPane";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import { useSidebarContext } from "contexts/sidebar/SidebarContext";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";

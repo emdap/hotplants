@@ -1,6 +1,6 @@
 import { NetworkStatus } from "@apollo/client";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
-import PlantAnimation from "components/plantSearch/PlantAnimation";
+import PlantAnimation from "components/PlantAnimation";
 import {
   PlantSearchContext,
   PlantSearchContextType,
@@ -63,9 +63,13 @@ const PlantSearchProvider = () => {
 
         navigate({
           to: ".",
-          search: ({ pageSize }) => ({ pageSize, search: applyParams }),
+          search: ({ pageSize, plantFilter }) => ({
+            pageSize,
+            search: applyParams,
+            plantFilter,
+          }),
         });
-        isSmallScreen() && setSidebarExpanded(false);
+        isSmallScreen() && setShowSearchForm(false);
       }
     },
     [navigate, searchParamsDraft],
@@ -122,9 +126,9 @@ const PlantSearchProvider = () => {
     }
   };
 
-  const [sidebarExpanded, setSidebarExpanded] = useState(!isSmallScreen());
+  const [showSearchForm, setShowSearchForm] = useState(!isSmallScreen());
   useEffect(() => {
-    const toggleSidebar = () => setSidebarExpanded(!isSmallScreen());
+    const toggleSidebar = () => setShowSearchForm(!isSmallScreen());
 
     window.addEventListener("resize", toggleSidebar);
     return () => window.removeEventListener("resize", toggleSidebar);
@@ -150,8 +154,8 @@ const PlantSearchProvider = () => {
         plantSearchQuery,
         fetchMorePlants,
 
-        sidebarExpanded,
-        setSidebarExpanded,
+        showSearchForm,
+        setShowSearchForm,
       }}
     >
       <PlantSelectionProvider
@@ -160,12 +164,13 @@ const PlantSearchProvider = () => {
             ? plantSearchData?.results
             : plantSearchQuery.data?.plantSearch.results) ?? []
         }
+        plantListLoading={plantSearchQuery.loading}
+        boundingPolygon={searchParams?.boundingPolyCoords}
         {...{
           page,
           pageSize,
           totalItems,
         }}
-        boundingPolygon={searchParams?.boundingPolyCoords}
       >
         {isPrefilledSearch ? (
           <PlantAnimation

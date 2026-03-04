@@ -5,14 +5,14 @@ import SortButton from "designSystem/iconButtons/SortButton";
 import StyledPopover from "designSystem/StyledPopover";
 import { isEqual } from "lodash";
 import { useEffect, useMemo, useState } from "react";
-import SearchArchiveParamControl from "./SearchRecordParamControl";
 import {
   ParamType,
   SEARCH_RECORD_ORDERED_QUERY_KEYS,
   SearchRecordQueryInput,
 } from "./searchRecordParamUtil";
+import SearchRecordSortFilterInput from "./SearchRecordSortFilterInput";
 
-type SearchArchiveQueryPopoverProps<T extends SearchRecordQueryInput> = {
+type SearchRecordSortFilterPopoverProps<T extends SearchRecordQueryInput> = {
   paramType: ParamType;
   currentParams?: T[];
   applyParams: (params?: T[]) => void;
@@ -20,12 +20,12 @@ type SearchArchiveQueryPopoverProps<T extends SearchRecordQueryInput> = {
 };
 
 // TODO: Auto-apply params, show sorting order, can merge popup content component
-const SearchArchiveParamPopover = <T extends SearchRecordQueryInput>(
-  props: SearchArchiveQueryPopoverProps<T>,
+const SearchRecordSortFilterPopover = <T extends SearchRecordQueryInput>(
+  props: SearchRecordSortFilterPopoverProps<T>,
 ) => {
   const buttonProps: IconButtonVariantProps = {
     active: Boolean(props.currentParams?.length),
-    size: "small",
+    className: "m-0!",
   };
 
   return (
@@ -50,7 +50,7 @@ const PopoverContent = <T extends SearchRecordQueryInput>({
   applyParams,
   clearParams,
   close,
-}: SearchArchiveQueryPopoverProps<T> & {
+}: SearchRecordSortFilterPopoverProps<T> & {
   close: () => void;
 }) => {
   const [localParams, setLocalParams] = useState<T[] | undefined>(
@@ -106,7 +106,7 @@ const PopoverContent = <T extends SearchRecordQueryInput>({
       </h4>
       <div className="gap-x-2 gap-y-1 items-center mt-2 mb-4">
         {SEARCH_RECORD_ORDERED_QUERY_KEYS[paramType].map((key) => (
-          <SearchArchiveParamControl
+          <SearchRecordSortFilterInput
             key={key}
             field={key}
             paramType={paramType}
@@ -145,4 +145,4 @@ const PopoverContent = <T extends SearchRecordQueryInput>({
   );
 };
 
-export default SearchArchiveParamPopover;
+export default SearchRecordSortFilterPopover;

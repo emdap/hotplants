@@ -19,6 +19,7 @@ export type PaginationData = {
 
 type PlantSelectionContextType = {
   plantList: PlantQueryResults;
+  plantListLoading?: boolean;
 
   activePlantId: string | null;
   activePlant?: PlantResult;

@@ -124,8 +124,9 @@ export const PaginationControl = ({
         )}
       </motion.div>
 
-      {showOptionsMenu && (
+      {showOptionsMenu ? (
         <StyledPopover
+          className="space-y-2"
           button={
             <Button
               size="small"
@@ -145,6 +146,8 @@ export const PaginationControl = ({
           )}
           {infiniteScrollSwitch && <StyledSwitch {...infiniteScrollSwitch} />}
         </StyledPopover>
+      ) : (
+        <span className="w-2" />
       )}
     </div>
   );

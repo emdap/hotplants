@@ -25,8 +25,8 @@ export type PlantSearchContextType = {
   searchStatus: PlantSearchQueryStatus;
   fetchMorePlants: () => Promise<unknown>;
 
-  sidebarExpanded: boolean;
-  setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
+  showSearchForm: boolean;
+  setShowSearchForm: Dispatch<SetStateAction<boolean>>;
 } & Pick<
   PlantSearchQueriesReturnType,
   "searchRecordQuery" | "plantSearchQuery"
@@ -50,8 +50,8 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   plantSearchQuery: {} as PlantSearchQueriesReturnType["plantSearchQuery"],
   fetchMorePlants: VOID_PROMISE_FUNCTION,
 
-  sidebarExpanded: !isSmallScreen(),
-  setSidebarExpanded: VOID_FUNCTION,
+  showSearchForm: !isSmallScreen(),
+  setShowSearchForm: VOID_FUNCTION,
 };
 
 export const PlantSearchContext = createContext<PlantSearchContextType>(

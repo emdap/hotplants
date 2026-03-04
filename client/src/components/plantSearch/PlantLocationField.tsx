@@ -11,7 +11,7 @@ import {
   validateNominatimLocation,
 } from "util/locationUtil";
 
-const LocationParamsInput = ({
+const PlantLocationField = ({
   setLocationPending,
 }: {
   setLocationPending: (isPending: boolean) => void;
@@ -136,4 +136,4 @@ const LocationParamsInput = ({
   );
 };
 
-export default LocationParamsInput;
+export default PlantLocationField;

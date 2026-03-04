@@ -65,8 +65,7 @@ const Sidebar = ({
             "small-screen:translate-x-0": isExpanded,
             "small-screen:-translate-x-full big-screen:w-header big-screen:min-w-header":
               !isExpanded,
-            "big-screen:relative small-screen:overflow-auto":
-              externalCollapseButton,
+            "small-screen:overflow-auto": externalCollapseButton,
             "big-screen:mr-4": externalCollapseButton && isExpanded,
             "overflow-auto": !externalCollapseButton,
           },

@@ -87,15 +87,15 @@ const RangeFilterInput = ({
   const unitInputId = `${filterInput.plantDataKey}-unit`;
 
   return (
-    <fieldset className="form-item border border-secondary rounded-md max-w-max p-3">
+    <fieldset className="styled-fieldset">
       <legend className="px-2 font-medium">{filterInput.label}</legend>
-      <div className="grid grid-cols-[1fr_1fr_auto] gap-4 w-fit">
+      <div className="grid grid-cols-[1fr_1fr_auto] gap-4">
         {VALUE_PREFIXES.map((valuePrefix) => {
           const elementId = `${filterInput.plantDataKey}-${valuePrefix}`;
           const oppositePrefix = getOppositeValuePrefix(valuePrefix);
 
           return (
-            <div key={valuePrefix} className="form-item basis-1/2">
+            <div key={valuePrefix} className="form-item min-w-20">
               <label
                 className="whitespace-nowrap min-w-fit"
                 htmlFor={elementId}
@@ -106,7 +106,7 @@ const RangeFilterInput = ({
                 id={elementId}
                 value={value?.[`${valuePrefix}Amount`] || ""}
                 type="number"
-                className="styled-input min-w-[unset]"
+                className="styled-input"
                 placeholder="None"
                 onChange={({ target }) =>
                   handleValueChange(target.value, valuePrefix)

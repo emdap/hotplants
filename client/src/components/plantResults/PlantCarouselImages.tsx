@@ -1,6 +1,6 @@
-import PlantOccurrenceImage from "components/plantImages/PlantOccurrenceImage";
 import { FlattenedPlantMedia } from "contexts/plantSelection/PlantSelectionContext";
 import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
+import PlantOccurrenceImage from "./PlantOccurrenceImage";
 
 const CONTAINER_CLASS = "w-full h-full flex justify-center";
 

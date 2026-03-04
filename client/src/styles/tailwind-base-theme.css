@@ -13,8 +13,8 @@
   --color-scrollbar: #ffffff85;
   --color-default-background: #fff;
 
-  --color-primary-faded: #b8a1e0;
-  --color-primary: #ad8ce5;
+  --color-primary-faded: #b4abe3;
+  --color-primary: #9b7cce;
   --color-primary-dark: #a577e3;
 
   --color-secondary-faded: #d7d7d7;
@@ -58,8 +58,8 @@
       --color-default-text: #eee;
       --color-default-background: var(--color-gray-800);
 
-      --color-primary-faded: #776491;
-      --color-primary: #a577e3;
+      --color-primary-faded: #603c8f;
+      --color-primary: #7c57ab;
       --color-primary-dark: #5d4995;
 
       --color-secondary-faded: #5c5c5c;

@@ -19,8 +19,8 @@ import { useClickAway } from "react-use";
 import { isLeafletEvent, ITERATE_DIRECTION } from "util/generalUtil";
 import { swapLatLng } from "util/locationUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
-import PlantImageViewer from "../plantImages/PlantImageViewer";
-import PlantInfoCard from "../plantResults/PlantInfoCard";
+import PlantImageViewer from "./PlantImageViewer";
+import PlantInfoCard from "./PlantInfoCard";
 
 const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
   initial: { right: "-100%" },

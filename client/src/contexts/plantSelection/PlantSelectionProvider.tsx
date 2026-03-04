@@ -7,6 +7,7 @@ import { PaginationData, PlantSelectionContext } from "./PlantSelectionContext";
 
 const PlantSelectionProvider = ({
   plantList: originalPlantList,
+  plantListLoading,
   boundingPolygon,
 
   page,
@@ -16,6 +17,7 @@ const PlantSelectionProvider = ({
   children,
 }: {
   plantList: PlantQueryResults;
+  plantListLoading?: boolean;
   boundingPolygon?: PlantDataInput["boundingPolyCoords"];
   children: ReactNode;
 } & Omit<PaginationData, "lastPage">) => {
@@ -66,6 +68,7 @@ const PlantSelectionProvider = ({
     <PlantSelectionContext.Provider
       value={{
         plantList,
+        plantListLoading,
 
         page,
         lastPage,

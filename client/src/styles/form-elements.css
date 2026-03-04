@@ -11,16 +11,22 @@
 }
 
 @utility styled-input {
-  @apply min-w-[230px] px-2 h-8 text-base;
-  @apply rounded-md border-transparent outline-none ring-primary/50 ring-offset-1 ring-offset-primary;
-  @apply bg-white/60 dark:bg-white/10 focus:bg-white/70 dark:focus:bg-white/15;
+  @apply px-2 h-8 text-base rounded-md;
+  @apply border-transparent outline-none ring-primary/50 ring-offset-1 ring-offset-primary;
   @apply autofill:shadow-[inset_0_0_0px_1000px_#e8f0fe];
+
+  @apply bg-white/60 dark:bg-white/10 focus:bg-white/70 dark:focus:bg-white/15;
+  @apply not-dark:bg-secondary/20 not-dark:focus:bg-secondary/20;
 
   field-sizing: fixed;
 
   &::placeholder {
     @apply text-placeholder;
   }
+}
+
+@utility styled-fieldset {
+  @apply border border-secondary rounded-md p-3;
 }
 
 @utility styled-checkbox {

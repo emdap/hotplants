@@ -3,8 +3,8 @@ import Card from "designSystem/Card";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useEffect, useRef } from "react";
-import PlantOccurrenceImage from "../plantImages/PlantOccurrenceImage";
 import PlantCardHeader from "./PlantCardHeader";
+import PlantOccurrenceImage from "./PlantOccurrenceImage";
 
 const PlantCard = ({
   plant,

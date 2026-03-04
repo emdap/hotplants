@@ -2,10 +2,10 @@ import { useNavigate } from "@tanstack/react-router";
 import PlantFilters from "components/plantFilters/PlantFilters";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
-import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
 import { FaGlobe } from "react-icons/fa";
 
 const PlantSearchHeader = () => {
@@ -14,7 +14,7 @@ const PlantSearchHeader = () => {
     searchStatus,
     isInfiniteScroll,
     setIsInfiniteScroll,
-    setSidebarExpanded,
+    setShowSearchForm,
   } = usePlantSearchContext();
   const { page, pageSize, totalItems } = usePlantSelectionContext();
 
@@ -24,15 +24,16 @@ const PlantSearchHeader = () => {
   };
 
   return (
-    <FloatingHeader className="small-screen:mx-safe-2">
-      <div className="flex gap-2 items-center">
-        <OpenSidebarButton
-          openSidebar={() => setSidebarExpanded(true)}
-          className="text-accent/80! hover:text-accent! big-screen:hidden dark:text-white/80! dark:hover:text-white!"
+    <FloatingHeader className="small-screen:mx-safe-2 big-screen:pl-1">
+      <div className="flex gap-1 items-center">
+        <Button
+          variant="icon-white"
+          onClick={() => setShowSearchForm(true)}
+          className="m-0! big-screen:hidden"
           icon={<FaGlobe size={16} />}
         />
 
-        <PlantFilters asPopover />
+        <PlantFilters className="big-screen:hidden" asPopover />
       </div>
 
       <ItemCountWithLoader

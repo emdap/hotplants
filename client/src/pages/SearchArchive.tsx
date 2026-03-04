@@ -1,7 +1,7 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
-import PlantAnimation from "components/plantSearch/PlantAnimation";
+import PlantAnimation from "components/PlantAnimation";
 import SearchRecordCard from "components/searchRecord/SearchRecordCard";
-import SearchArchiveQueryPopover from "components/searchRecord/SearchRecordParamPopover";
+import SearchRecordSortFilterPopover from "components/searchRecord/SearchRecordSortFilterPopover";
 import {
   parseFilterParams,
   SearchRecordQueryInput,
@@ -65,9 +65,9 @@ const SearchArchive = () => {
       <PageTitle>Search Archive</PageTitle>
       <ScrollAnchor className="scroll-m-header -mb-4" />
       <FloatingHeader>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           {(["filter", "sort"] as const).map((param) => (
-            <SearchArchiveQueryPopover
+            <SearchRecordSortFilterPopover
               key={param}
               paramType={param}
               currentParams={queryParams[param] as SearchRecordQueryInput[]}

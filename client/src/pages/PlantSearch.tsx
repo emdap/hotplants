@@ -1,9 +1,8 @@
 import classNames from "classnames";
+import PlantAnimation from "components/PlantAnimation";
 import PlantList from "components/plantResults/PlantList";
-import PlantAnimation from "components/plantSearch/PlantAnimation";
+import PlantSearchForm from "components/plantSearch/PlantSearchForm";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
-import PlantSearchSidebar from "components/plantSearch/PlantSearchSidebar";
-import SearchParamsInput from "components/plantSearchParams/PlantSearchParamsInput";
 import SearchRecordProgressBar from "components/searchRecord/SearchRecordProgressBar";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
@@ -23,7 +22,7 @@ const PlantSearch = () => {
     hasCurrentResults,
 
     isInfiniteScroll,
-    sidebarExpanded,
+    showSearchForm: sidebarExpanded,
 
     searchParams,
     searchStatus,
@@ -80,7 +79,7 @@ const PlantSearch = () => {
 
   return (
     <main className="w-full h-full">
-      {!showResults && <ScrollAnchor className="scroll-m-header" />}
+      {!showResults && <ScrollAnchor id="plant" className="absolute top-0" />}
       <PageTitle className="page-buffer">Plant Search</PageTitle>
       {showResults && <PlantSearchHeader />}
 
@@ -92,17 +91,16 @@ const PlantSearch = () => {
             !showResults,
         })}
       >
-        {showResults ? (
-          <>
-            <PlantSearchSidebar />
-            {!isInfiniteScroll && (
-              <ScrollAnchor className="scroll-m-header-2" />
-            )}
-          </>
-        ) : (
-          <div className="basis-1/2 max-w-2xl min-w-md max-md:min-w-full">
-            <SearchParamsInput onClickSearch={scrollToResults} />
-          </div>
+        <PlantSearchForm
+          className={classNames(
+            !showResults && "basis-1/2 max-w-2xl min-w-md max-md:min-w-full",
+          )}
+          asSidebar={showResults}
+          onClickSearch={scrollToResults}
+        />
+
+        {showResults && !isInfiniteScroll && (
+          <ScrollAnchor className="scroll-m-header-2" />
         )}
 
         <div
@@ -129,46 +127,48 @@ const PlantSearch = () => {
             }
           />
 
-          {hasNextPage && searchStatus !== "CHECKING_STATUS" ? (
-            isInfiniteScroll && (
-              // Show loading icon when next results are loading in infinite scroll
-              <div className="pb-4 mx-auto -mt-10 mb-10">
-                <LoadingIcon size={25} className="text-white" />
+          {hasNextPage &&
+          searchStatus !== "CHECKING_STATUS" &&
+          isInfiniteScroll ? (
+            // Show loading icon when next results are loading in infinite scroll
+            <div className="pb-4 mx-auto -mt-10 mb-10">
+              <LoadingIcon size={25} className="text-white" />
+            </div>
+          ) : (
+            (isInfiniteScroll || !hasNextPage) && (
+              <div className="flex flex-col gap-8 my-auto h-[600px] overflow-hidden">
+                <PlantAnimation
+                  queryStatus={searchStatus}
+                  isInitialSearch={!searchRecordQuery.dataUpdatedAt}
+                  hasCurrentResults={hasCurrentResults}
+                />
+
+                {searchRecordQuery.data && (
+                  <Card
+                    className={classNames(
+                      "mx-auto flex flex-col items-center gap-6 transition-opacity",
+                      searchStatus === "READY"
+                        ? "opacity-100"
+                        : "opacity-0 pointer-events-none",
+                    )}
+                  >
+                    {
+                      <SearchRecordProgressBar
+                        hideTitle
+                        {...searchRecordQuery.data}
+                        status="READY"
+                      />
+                    }
+
+                    {searchRecordQuery.data.status !== "COMPLETE" && (
+                      <Button className="w-full" onClick={fetchMorePlants}>
+                        Gather more data
+                      </Button>
+                    )}
+                  </Card>
+                )}
               </div>
             )
-          ) : (
-            <div className="flex flex-col gap-8 my-auto h-[600px] overflow-hidden">
-              <PlantAnimation
-                queryStatus={searchStatus}
-                isInitialSearch={!searchRecordQuery.dataUpdatedAt}
-                hasCurrentResults={hasCurrentResults}
-              />
-
-              {searchRecordQuery.data && (
-                <Card
-                  className={classNames(
-                    "mx-auto flex flex-col items-center gap-6 transition-opacity",
-                    searchStatus === "READY"
-                      ? "opacity-100"
-                      : "opacity-0 pointer-events-none",
-                  )}
-                >
-                  {
-                    <SearchRecordProgressBar
-                      hideTitle
-                      {...searchRecordQuery.data}
-                      status="READY"
-                    />
-                  }
-
-                  {searchRecordQuery.data.status !== "COMPLETE" && (
-                    <Button className="w-full" onClick={fetchMorePlants}>
-                      Gather more data
-                    </Button>
-                  )}
-                </Card>
-              )}
-            </div>
           )}
         </div>
       </div>

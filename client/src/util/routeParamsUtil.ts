@@ -110,7 +110,7 @@ const validatePlantFilter = (
 
 const getNumParamValue = (param?: unknown) => {
   const numParam = Number(param);
-  return isNaN(numParam) ? undefined : numParam;
+  return isNaN(numParam) ? undefined : Math.max(1, numParam);
 };
 
 export const validatePaginationParams = (

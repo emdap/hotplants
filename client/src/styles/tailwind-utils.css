@@ -42,6 +42,10 @@
   --max-width-page: 1500px;
 }
 
+@utility border-default {
+  @apply border-default-text/20;
+}
+
 @utility border-header {
   @apply border-white/10;
 }
@@ -102,7 +106,7 @@
   @apply w-full px-safe-4 lg:px-safe-6;
 
   .floating-header {
-    @apply small-screen:-mx-2.5 big-screen:-mx-6 big-screen:px-6;
+    @apply small-screen:-mx-2.5 big-screen:-mx-6 big-screen:px-4;
   }
 }
 

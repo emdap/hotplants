@@ -118,7 +118,7 @@ export const STATIC_FILTER_DICT: FilterDict = {
     options: [
       { label: "Perennials only", value: true },
       { label: "Annuals only", value: false },
-      { label: "Show all", value: false },
+      { label: "Show all", value: null },
     ],
   },
   physicalCharactersticsDump: {

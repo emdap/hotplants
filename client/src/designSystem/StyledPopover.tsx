@@ -23,10 +23,7 @@ const StyledPopover = ({
     <PopoverPanel
       anchor="bottom end"
       modal={false}
-      className={classNames(
-        "z-20 py-2 mt-3 text-sm card card-solid",
-        className,
-      )}
+      className={classNames("z-20 p-4 mt-3 text-sm card card-solid", className)}
       {...panelProps}
     >
       {typeof children === "function" ? (props) => children(props) : children}

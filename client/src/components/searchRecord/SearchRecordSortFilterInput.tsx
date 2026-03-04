@@ -17,7 +17,7 @@ import {
   STRING_FILTER_OPTIONS_DICT,
 } from "./searchRecordParamUtil";
 
-const SearchArchiveParamControl = <T extends SearchRecordQueryInput>({
+const SearchRecordSortFilterInput = <T extends SearchRecordQueryInput>({
   field,
   value,
   paramType,
@@ -77,13 +77,13 @@ const SearchArchiveParamControl = <T extends SearchRecordQueryInput>({
           <StyledListboxButton
             value={value ?? null}
             options={BOOLEAN_OPTIONS}
-            className="min-w-30 text-sm not-dark:bg-secondary/20 not-dark:focus:bg-secondary/20"
+            className="min-w-30 text-sm"
           />
           <StyledListboxOptions options={BOOLEAN_OPTIONS} />
         </Listbox>
       ) : (
         <StyledMultipleListbox
-          className="min-w-50 max-w-50 not-dark:bg-secondary/20 not-dark:focus:bg-secondary/20 text-sm"
+          className="min-w-50 max-w-50 text-sm"
           placeholder="Select"
           defaultOptions={
             STRING_FILTER_OPTIONS_DICT[field as SearchRecordStringFilterField]
@@ -96,4 +96,4 @@ const SearchArchiveParamControl = <T extends SearchRecordQueryInput>({
   );
 };
 
-export default SearchArchiveParamControl;
+export default SearchRecordSortFilterInput;

@@ -1,4 +1,5 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import PlantAnimation from "components/PlantAnimation";
 import PlantFilters from "components/plantFilters/PlantFilters";
 import PlantList from "components/plantResults/PlantList";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
@@ -43,7 +44,7 @@ const Garden = () => {
   const gardenPlantsCount = gardenPlants?.count ?? 0;
 
   return (
-    <main className="page-buffer page-container">
+    <main className="page-buffer page-container h-dvh-header">
       <PageTitle className="flex gap-4 items-center">
         <Button
           variant="icon-white"
@@ -67,6 +68,7 @@ const Garden = () => {
 
       <PlantSelectionProvider
         plantList={gardenPlants?.results ?? []}
+        plantListLoading={gardenPlantsQuery.loading}
         totalItems={gardenPlantsCount}
         {...{ page, pageSize }}
       >
@@ -86,6 +88,10 @@ const Garden = () => {
             {...{ page, pageSize }}
           />
         </FloatingHeader>
+
+        {!gardenPlants?.results?.length && (
+          <PlantAnimation className="my-auto" />
+        )}
         <PlantList />
       </PlantSelectionProvider>
     </main>

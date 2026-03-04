@@ -35,7 +35,6 @@ export type ButtonProps = {
 const getClasses = (props: ButtonProps) => {
   const hasChildren = Boolean(props.children);
   const loadingWithText = hasChildren && props.isLoading !== undefined;
-  const iconWithText = Boolean(hasChildren && props.icon);
 
   const isTextVariant = props.variant?.includes("text");
   const isIconVariant = props.variant?.includes("icon");
@@ -49,16 +48,16 @@ const getClasses = (props: ButtonProps) => {
     "rounded-md flex gap-3 items-center justify-center font-medium",
     props.className,
     {
-      "bg-primary/90 dark:bg-primary/80 enabled:hover:bg-primary outline-primary text-white":
+      "bg-primary enabled:hover:bg-primary-faded outline-primary/80 text-white":
         props.variant === "primary",
       "bg-accent/90 dark:bg-accent/80 enabled:hover:bg-accent outline-accent text-white":
         props.variant === "accent",
       "bg-secondary/80 enabled:hover:bg-secondary outline-secondary":
         props.variant === "secondary",
 
-      "bg-primary/80 enabled:hover:bg-primary text-white":
+      "bg-primary enabled:hover:bg-primary-faded text-white":
         props.variant === "icon-primary",
-      "enabled:hover:bg-white/20 outline-primary":
+      "enabled:hover:bg-white/20 outline-white/50":
         props.variant === "icon-white",
 
       "enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
@@ -69,14 +68,13 @@ const getClasses = (props: ButtonProps) => {
       "opacity-50":
         props.disabled || (props.isLoading && props.disableOnLoading),
       "cursor-pointer": !props.disabled,
-      "pl-10 [&_.icon-wrapper]:-ml-7": loadingWithText || iconWithText,
+      "pl-10 [&_.icon-wrapper]:-ml-7 pr-10": loadingWithText,
       "pr-10": loadingWithText,
 
       "focus-ring": !isTextVariant,
       "hover:shadow-sm": !isTextVariant && !props.disabled,
     },
 
-    loadingWithText ? "pr-10" : iconWithText && "pr-3",
     buttonSize,
   );
 };

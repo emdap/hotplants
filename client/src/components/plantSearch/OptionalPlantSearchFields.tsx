@@ -10,9 +10,9 @@ import { OptionalSearchParamKey } from "util/customSchemaTypes";
 import {
   DEFAULT_OPTIONAL_SEARCH_PARAMS,
   OPTIONAL_SEARCH_PARAM_FILTERS,
-} from "./optionalSearchParamsUtil";
+} from "./optionalPlantSearchFieldsUtil";
 
-const OptionalSearchParamsInput = () => {
+const OptionalPlantSearchFields = () => {
   const { searchParamsDraft, updateSearchParamsDraft } =
     usePlantSearchContext();
   const { scientificName, commonName } = searchParamsDraft ?? {};
@@ -88,4 +88,4 @@ const OptionalSearchParamsInput = () => {
   );
 };
 
-export default OptionalSearchParamsInput;
+export default OptionalPlantSearchFields;

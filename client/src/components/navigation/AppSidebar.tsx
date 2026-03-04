@@ -2,7 +2,7 @@ import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useSidebarContext } from "contexts/sidebar/SidebarContext";
 import Button from "designSystem/Button";
-import Sidebar from "designSystem/sidebar/Sidebar";
+import Sidebar from "designSystem/Sidebar";
 import { IconType } from "react-icons/lib";
 import { MdOutlineSearch, MdOutlineYoutubeSearchedFor } from "react-icons/md";
 import { TbPlant2 } from "react-icons/tb";

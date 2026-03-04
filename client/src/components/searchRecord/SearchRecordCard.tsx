@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { OPTIONAL_SEARCH_PARAM_FILTERS } from "components/plantSearchParams/optionalSearchParamsUtil";
+import { OPTIONAL_SEARCH_PARAM_FILTERS } from "components/plantSearch/optionalPlantSearchFieldsUtil";
 import { format } from "date-fns";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";

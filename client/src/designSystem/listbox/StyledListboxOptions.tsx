@@ -25,8 +25,8 @@ const StyledListboxOptions = ({
       modal={false}
       transition
       className={classNames(
-        "w-(--button-width) rounded-xl border border-none shadow-xs shadow-default-background/50 backdrop-blur-3xl dark:bg-transparent bg-default-background/60  p-1 [--anchor-gap:--spacing(1)] focus:outline-none",
-        "transition duration-100 ease-in data-leave:data-closed:opacity-0 z-20",
+        "w-(--button-width) rounded-md border border-accent/20 shadow-xs shadow-default-background/50 backdrop-blur-3xl dark:bg-transparent bg-default-background/60  p-1 [--anchor-gap:--spacing(1)] focus:outline-none",
+        "transition duration-100 ease-in data-leave:data-closed:opacity-0 z-50",
         className,
       )}
     >
@@ -34,7 +34,7 @@ const StyledListboxOptions = ({
         <div
           className={classNames(
             "flex gap-4 items-center pl-6 pr-0.5",
-            options.length && "mb-1 pb-1 border-b border-default-text/20",
+            options.length && "mb-1 pb-1 border-b border-default",
           )}
         >
           {customOptionInput}

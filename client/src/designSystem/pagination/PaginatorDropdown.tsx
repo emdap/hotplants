@@ -32,7 +32,7 @@ const PaginatorDropdown = ({
         <MenuItems
           anchor="bottom"
           modal={false}
-          className="z-20 -ml-1.5 mt-3 py-1 text-sm relative translate-x-1/4 outline-none overflow-visible!"
+          className="z-20 -ml-1.5 mt-2 py-1 text-sm relative translate-x-1/4 outline-none overflow-visible!"
         >
           <PaginatorDropdownItems selected={selected} {...props} />
         </MenuItems>
@@ -83,7 +83,7 @@ const PaginatorDropdownItems = ({
       className="text-sm max-h-20 px-1.5 py-0.5 min-w-max overflow-y-auto overflow-x-hidden flex flex-col items-center gap-1 stable-scrollbar"
     >
       <div
-        className="card card-solid p-0 absolute top-0 left-0 h-full -z-10"
+        className="card card-solid dark:border-accent/20 p-0 absolute top-0 left-0 h-full -z-10"
         style={{ width: isSafari ? "100%" : `calc(100% - ${scrollbarWidth}px` }}
       />
 
