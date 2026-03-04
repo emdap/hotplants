@@ -13,17 +13,10 @@ export const useScrollAnchor = ({
   });
 
   useLayoutEffect(() => {
-    console.log(
-      "effect",
-      scrollContainerElement?.scrollTop,
-      anchorRef.current,
-      anchorRef.current?.offsetTop,
-    );
     if (!enabled || !scrollContainerElement || !anchorRef.current) {
       return;
     }
     if (scrollContainerElement.scrollTop > anchorRef.current.offsetTop) {
-      console.log("scroll");
       scrollContainerElement.scrollTo({
         top: anchorRef.current.offsetTop,
         behavior: "instant",
