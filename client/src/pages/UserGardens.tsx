@@ -42,8 +42,10 @@ const UserGardens = () => {
       <LoadingOverlay
         debounceShow={Boolean(userGardensQuery.previousData)}
         transparent
-        show={userGardensQuery.loading}
-        className="absolute"
+        show={
+          userGardensQuery.loading && userGardensQuery.dataState !== "complete"
+        }
+        className="absolute top-0 left-0"
       />
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">

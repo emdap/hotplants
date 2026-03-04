@@ -53,8 +53,8 @@ const Garden = () => {
               to: "/user-gardens",
             })
           }
-          className="!-my-8"
-          icon={<MdArrowBack />}
+          className="!-my-8 small-screen:w-8"
+          icon={<MdArrowBack className="small-screen:w-8" />}
         />
         {gardenName}
       </PageTitle>
@@ -73,7 +73,7 @@ const Garden = () => {
         {...{ page, pageSize }}
       >
         <FloatingHeader>
-          <PlantFilters asPopover />
+          <PlantFilters />
 
           <ItemCountWithLoader
             className="col-start-2"
@@ -92,7 +92,7 @@ const Garden = () => {
         {!gardenPlants?.results?.length && (
           <PlantAnimation className="my-auto" />
         )}
-        <PlantList />
+        <PlantList className="pb-10" />
       </PlantSelectionProvider>
     </main>
   );
