@@ -17,13 +17,8 @@
   --color-primary: #9b7cce;
   --color-primary-dark: #a577e3;
 
-  --color-secondary-faded: #d7d7d7;
   --color-secondary: #c7c7c7;
-
-  --color-accent: #8fb7dc;
   --color-accent: #6f97bc;
-
-  --color-light-accent: #92c8f0;
 
   --animate-background-shift: background-shift 40s ease infinite;
 
@@ -62,18 +57,13 @@
       --color-primary: #7c57ab;
       --color-primary-dark: #5d4995;
 
-      --color-secondary-faded: #5c5c5c;
       --color-secondary: #868686;
-
-      --color-accent-faded: #496d74;
       --color-accent: #3b7f8c;
-
-      --color-light-accent: #41749b;
     }
   }
 
   * {
-    @apply scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-accent scrollbar-track-transparent;
+    @apply scrollbar-thin! scrollbar-thumb-rounded-full scrollbar-thumb-scrollbar scrollbar-track-rounded;
   }
 
   html,
