@@ -1,4 +1,3 @@
-import { VOID_FUNCTION } from "contexts/plantSearch/PlantSearchContext";
 import {
   PlantMediaObject,
   PlantOccurrence,
@@ -6,6 +5,7 @@ import {
   PlantResult,
 } from "graphqlHelpers/plantQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { VOID_FUNCTION } from "util/generalUtil";
 
 export type FlattenedPlantMedia = (Omit<PlantOccurrence, "media"> &
   PlantMediaObject)[];

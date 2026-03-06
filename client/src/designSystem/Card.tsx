@@ -13,7 +13,7 @@ const Card = ({ solid, solidOnHover, className, ...props }: CardProps) => (
     className={classNames(
       "card",
       { "card-solid": solid, "hover:card-solid": solidOnHover },
-      className
+      className,
     )}
   />
 );

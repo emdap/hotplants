@@ -12,7 +12,7 @@ import { useApolloQuery } from "hooks/useQuery";
 import { ReactNode, useMemo } from "react";
 import { MdDoubleArrow } from "react-icons/md";
 import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
-import { customLocationDisplay } from "util/locationUtil";
+import { locationDisplay } from "util/locationUtil";
 import MapProvider from "../interactiveMap/MapProvider";
 import SearchRecordProgressBar from "./SearchRecordProgressBar";
 
@@ -30,17 +30,10 @@ const SearchRecordCard = ({
       variables: { id: _id },
     });
 
-  const { title, subTitle } = useMemo(() => {
-    if (searchParams.locationSource === "custom") {
-      return { title: customLocationDisplay(searchParams) };
-    }
-
-    const splitName = searchParams.locationName.split(", ");
-    return {
-      title: splitName[0],
-      subTitle: splitName.slice(1).join(", "),
-    };
-  }, [searchParams]);
+  const { title, subTitle } = useMemo(
+    () => locationDisplay(searchParams),
+    [searchParams],
+  );
 
   const openSearchRecord = async () => {
     await navigate({

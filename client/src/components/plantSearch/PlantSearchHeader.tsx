@@ -1,20 +1,23 @@
 import { useNavigate } from "@tanstack/react-router";
-import PlantFilters from "components/plantFilters/PlantFilters";
+import PlantFiltersButton from "components/plantFilters/PlantFiltersButton";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
-import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
+import IconButton from "designSystem/iconButtons/IconButton";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
+import { useMemo } from "react";
 import { FaGlobe } from "react-icons/fa";
+import { locationDisplay } from "util/locationUtil";
 
 const PlantSearchHeader = () => {
   const navigate = useNavigate();
   const {
+    searchParams,
     searchStatus,
     isInfiniteScroll,
     setIsInfiniteScroll,
-    setShowSearchForm,
+    setSearchFormState,
   } = usePlantSearchContext();
   const { page, pageSize, totalItems } = usePlantSelectionContext();
 
@@ -23,17 +26,25 @@ const PlantSearchHeader = () => {
     setIsInfiniteScroll(enable);
   };
 
-  return (
-    <FloatingHeader className="small-screen:mx-safe-2 big-screen:pl-1">
-      <div className="flex gap-1 items-center">
-        <Button
-          variant="icon-white"
-          onClick={() => setShowSearchForm(true)}
-          className="m-0! big-screen:hidden"
-          icon={<FaGlobe size={16} />}
-        />
+  const locationTitle = useMemo(
+    () => (searchParams ? locationDisplay(searchParams).title : "Location"),
+    [searchParams],
+  );
 
-        <PlantFilters className="big-screen:hidden" asPopover />
+  return (
+    <FloatingHeader className="small-screen:mx-safe-2 big-screen:px-4">
+      <div className="flex lg:gap-4 items-center">
+        <IconButton
+          icon={<FaGlobe />}
+          size="small"
+          active={Boolean(searchParams)}
+          onClick={() => setSearchFormState({ tab: "location", isOpen: true })}
+        >
+          <span className="max-lg:hidden">{locationTitle}</span>
+        </IconButton>
+        <PlantFiltersButton
+          onClick={() => setSearchFormState({ tab: "filters", isOpen: true })}
+        />
       </div>
 
       <ItemCountWithLoader

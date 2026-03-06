@@ -78,6 +78,9 @@ export const handleGraphQlError = (
   }
 };
 
+export const VOID_FUNCTION = () => {};
+export const VOID_PROMISE_FUNCTION = async () => {};
+
 // Seeing issues with scroll functionalities in Safari
 export const isSafari = /^((?!chrome|android).)*safari/i.test(
   navigator.userAgent,

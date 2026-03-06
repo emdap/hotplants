@@ -47,11 +47,11 @@
 }
 
 @utility border-header {
-  @apply border-white/10;
+  @apply border-b border-white/10;
 }
 
 @utility bg-header {
-  @apply bg-fixed bg-top pretty-background border-b;
+  @apply bg-fixed bg-top pretty-background;
 }
 
 @utility top-header-* {
@@ -117,7 +117,7 @@
 @utility card {
   @apply rounded border shadow-md p-4 md:p-6;
   @apply border-gray-200 dark:border-default-background/20;
-  @apply bg-default-background/80;
+  @apply bg-default-background/80 not-dark:scrollbar-thumb-accent [&_*]:not-dark:scrollbar-thumb-accent;
 }
 
 @utility card-solid {

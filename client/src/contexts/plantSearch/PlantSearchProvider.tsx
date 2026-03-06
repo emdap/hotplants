@@ -2,6 +2,7 @@ import { NetworkStatus } from "@apollo/client";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
 import {
+  DEFAULT_SEARCH_FORM_STATE,
   PlantSearchContext,
   PlantSearchContextType,
 } from "contexts/plantSearch/PlantSearchContext";
@@ -10,20 +11,16 @@ import usePlantSearchQueries, {
   DEFAULT_PAGE_SIZE,
 } from "hooks/usePlantSearchQueries";
 import PlantSearch from "pages/PlantSearch";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PlantSearchParams } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("/plant-search");
 
 const PlantSearchProvider = () => {
-  const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
-
   const navigate = useNavigate();
-
   const {
     plantFilter,
-
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
     search: searchParams = null,
@@ -31,6 +28,18 @@ const PlantSearchProvider = () => {
 
   const [searchParamsDraft, setSearchParamsDraft] =
     useState<Partial<PlantSearchParams> | null>(searchParams);
+  const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
+  const [searchFormState, setSearchFormState] = useState(
+    DEFAULT_SEARCH_FORM_STATE(),
+  );
+
+  useEffect(() => {
+    const toggleSearchForm = () =>
+      setSearchFormState(DEFAULT_SEARCH_FORM_STATE());
+
+    window.addEventListener("resize", toggleSearchForm);
+    return () => window.removeEventListener("resize", toggleSearchForm);
+  }, []);
 
   useEffect(() => {
     setIsPrefilledSearch;
@@ -69,7 +78,8 @@ const PlantSearchProvider = () => {
             plantFilter,
           }),
         });
-        isSmallScreen() && setShowSearchForm(false);
+        isSmallScreen() &&
+          setSearchFormState((prev) => ({ ...prev, isOpen: false }));
       }
     },
     [navigate, searchParamsDraft],
@@ -107,6 +117,16 @@ const PlantSearchProvider = () => {
     [plantSearchData?.count],
   );
 
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
+  const scrollToResults = () =>
+    setTimeout(
+      () =>
+        resultsContainerRef.current?.scrollIntoView({
+          behavior: "smooth",
+        }),
+      300,
+    );
+
   const fetchMorePlants = async () => {
     if (
       searchStatus !== "READY" ||
@@ -125,14 +145,6 @@ const PlantSearchProvider = () => {
       navigate({ to: ".", search: (prev) => ({ ...prev, page: page + 1 }) });
     }
   };
-
-  const [showSearchForm, setShowSearchForm] = useState(!isSmallScreen());
-  useEffect(() => {
-    const toggleSidebar = () => setShowSearchForm(!isSmallScreen());
-
-    window.addEventListener("resize", toggleSidebar);
-    return () => window.removeEventListener("resize", toggleSidebar);
-  }, []);
 
   return (
     <PlantSearchContext.Provider
@@ -154,8 +166,10 @@ const PlantSearchProvider = () => {
         plantSearchQuery,
         fetchMorePlants,
 
-        showSearchForm,
-        setShowSearchForm,
+        searchFormState,
+        setSearchFormState,
+
+        scrollToResults,
       }}
     >
       <PlantSelectionProvider
@@ -178,7 +192,7 @@ const PlantSearchProvider = () => {
             queryStatus="CHECKING_STATUS"
           />
         ) : (
-          <PlantSearch />
+          <PlantSearch resultsContainerRef={resultsContainerRef} />
         )}
       </PlantSelectionProvider>
     </PlantSearchContext.Provider>

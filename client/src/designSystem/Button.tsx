@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import LoadingIcon from "./LoadingIcon";
 
-type ButtonVariant =
+export type ButtonVariant =
   | "primary"
   | "accent"
   | "secondary"
@@ -13,13 +13,13 @@ type ButtonVariant =
   | "icon-white";
 
 const BUTTON_SIZES = {
-  default: "py-2 px-3",
-  small: "py-1 px-1.5 text-sm",
-  flush: "p-0",
+  default: "py-2 px-3 gap-3",
+  small: "py-1 px-1.5 text-sm gap-2",
+  flush: "p-0 gap-2",
   icon: {
-    default: "p-2",
-    small: "p-1 text-sm",
-    flush: "p-0",
+    default: "p-2 gap-3",
+    small: "max-lg:p-1 p-1 text-sm gap-2",
+    flush: "p-0 gap-2",
   },
 };
 
@@ -45,7 +45,7 @@ const getClasses = (props: ButtonProps) => {
     : BUTTON_SIZES[buttonSizeKey];
 
   return classNames(
-    "rounded-md flex gap-3 items-center justify-center font-medium",
+    "rounded-md flex items-center justify-center font-medium",
     props.className,
     {
       "bg-primary enabled:hover:bg-primary-faded outline-primary/80 text-white":
@@ -68,11 +68,12 @@ const getClasses = (props: ButtonProps) => {
       "opacity-50":
         props.disabled || (props.isLoading && props.disableOnLoading),
       "cursor-pointer": !props.disabled,
-      "pl-10 [&_.icon-wrapper]:-ml-7 pr-10": loadingWithText,
-      "pr-10": loadingWithText,
+      "[&_.icon-wrapper]:-ml-7 px-10": loadingWithText,
 
       "focus-ring": !isTextVariant,
       "hover:shadow-sm": !isTextVariant && !props.disabled,
+
+      "py-0.5 px-2": isIconVariant && buttonSizeKey === "small" && hasChildren,
     },
 
     buttonSize,

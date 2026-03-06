@@ -13,16 +13,20 @@ import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
-import { useLayoutEffect, useRef } from "react";
+import { Ref, useLayoutEffect } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
-const PlantSearch = () => {
+const PlantSearch = ({
+  resultsContainerRef,
+}: {
+  resultsContainerRef: Ref<HTMLDivElement>;
+}) => {
   const {
     hasCurrentResults,
 
     isInfiniteScroll,
-    showSearchForm: sidebarExpanded,
+    searchFormState,
 
     searchParams,
     searchStatus,
@@ -34,16 +38,6 @@ const PlantSearch = () => {
   const { page, lastPage } = usePlantSelectionContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor({ enabled: searchStatus === "READY" });
-
-  const resultsContainerRef = useRef<HTMLDivElement>(null);
-  const scrollToResults = () =>
-    setTimeout(
-      () =>
-        resultsContainerRef.current?.scrollIntoView({
-          behavior: "smooth",
-        }),
-      300,
-    );
 
   const hasNextPage = page < lastPage;
 
@@ -96,7 +90,6 @@ const PlantSearch = () => {
             !showResults && "basis-1/2 max-w-2xl min-w-md max-md:min-w-full",
           )}
           asSidebar={showResults}
-          onClickSearch={scrollToResults}
         />
 
         {showResults && !isInfiniteScroll && (
@@ -110,7 +103,8 @@ const PlantSearch = () => {
           {showResults && (
             <PlantList
               key="results-holder"
-              parentSidebarExpanded={sidebarExpanded}
+              parentSidebarExpanded={searchFormState.isOpen}
+              showFadeInAnimation={!isInfiniteScroll}
               className={classNames({
                 "pb-20": isInfiniteScroll && hasNextPage,
               })}
@@ -136,7 +130,7 @@ const PlantSearch = () => {
             </div>
           ) : (
             (isInfiniteScroll || !hasNextPage) && (
-              <div className="flex flex-col gap-8 my-auto h-[600px] overflow-hidden">
+              <div className="flex flex-col gap-8 my-auto overflow-hidden">
                 <PlantAnimation
                   queryStatus={searchStatus}
                   isInitialSearch={!searchRecordQuery.dataUpdatedAt}

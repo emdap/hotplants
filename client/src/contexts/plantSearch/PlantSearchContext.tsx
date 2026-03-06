@@ -4,10 +4,18 @@ import {
 } from "hooks/usePlantSearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { PlantSearchParams } from "util/customSchemaTypes";
-import { isSmallScreen } from "util/generalUtil";
+import {
+  isSmallScreen,
+  VOID_FUNCTION,
+  VOID_PROMISE_FUNCTION,
+} from "util/generalUtil";
 
-export const VOID_FUNCTION = () => {};
-const VOID_PROMISE_FUNCTION = async () => {};
+type SearchFormTab = "location" | "filters";
+type SearchFormState = { tab: SearchFormTab; isOpen: boolean };
+export const DEFAULT_SEARCH_FORM_STATE = (): SearchFormState => ({
+  tab: "location",
+  isOpen: !isSmallScreen(),
+});
 
 export type PlantSearchContextType = {
   hasCurrentResults: boolean;
@@ -25,8 +33,10 @@ export type PlantSearchContextType = {
   searchStatus: PlantSearchQueryStatus;
   fetchMorePlants: () => Promise<unknown>;
 
-  showSearchForm: boolean;
-  setShowSearchForm: Dispatch<SetStateAction<boolean>>;
+  searchFormState: SearchFormState;
+  setSearchFormState: Dispatch<SetStateAction<SearchFormState>>;
+
+  scrollToResults: () => void;
 } & Pick<
   PlantSearchQueriesReturnType,
   "searchRecordQuery" | "plantSearchQuery"
@@ -50,8 +60,10 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   plantSearchQuery: {} as PlantSearchQueriesReturnType["plantSearchQuery"],
   fetchMorePlants: VOID_PROMISE_FUNCTION,
 
-  showSearchForm: !isSmallScreen(),
-  setShowSearchForm: VOID_FUNCTION,
+  searchFormState: DEFAULT_SEARCH_FORM_STATE(),
+  setSearchFormState: VOID_FUNCTION,
+
+  scrollToResults: VOID_FUNCTION,
 };
 
 export const PlantSearchContext = createContext<PlantSearchContextType>(

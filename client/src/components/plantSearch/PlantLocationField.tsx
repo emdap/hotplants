@@ -96,28 +96,26 @@ const PlantLocationField = ({
 
   return (
     <Card className="flex flex-col gap-2">
-      <div className="form-item">
-        <label htmlFor="search-location" className="max-w-fit pb-2">
-          <h2>Location</h2>
-        </label>
-        <input
-          id="search-location"
-          value={searchInput}
-          className={classNames(
-            "styled-input flex-grow min-w-20",
-            (locationQuery.isError || locationInvalid) &&
-              "dark:!border-red-700 ring-offset-red-500/70 !border-red-500",
-          )}
-          onBlur={() => setDebouncedInput(searchInput)}
-          onKeyDown={handleKeyDown}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder={
-            searchParamsDraft?.locationSource === "custom"
-              ? customLocationDisplay(searchParamsDraft)
-              : "Enter Location"
-          }
-        />
-      </div>
+      <label htmlFor="search-location" className="max-w-fit">
+        <h2>Location</h2>
+      </label>
+      <input
+        id="search-location"
+        value={searchInput}
+        className={classNames(
+          "styled-input flex-grow min-w-20",
+          (locationQuery.isError || locationInvalid) &&
+            "dark:!border-red-700 ring-offset-red-500/70 !border-red-500",
+        )}
+        onBlur={() => setDebouncedInput(searchInput)}
+        onKeyDown={handleKeyDown}
+        onChange={(e) => setSearchInput(e.target.value)}
+        placeholder={
+          searchParamsDraft?.locationSource === "custom"
+            ? customLocationDisplay(searchParamsDraft)
+            : "Enter Location"
+        }
+      />
 
       <div className="px-1 text-xs font-medium text-default-text/70">
         {locationQuery.isError
@@ -130,7 +128,7 @@ const PlantLocationField = ({
         isLoading={locationQuery.isLoading || locationQuery.isFetching}
         searchParams={validatedSearchParamsDraft}
         setSearchParams={updateSearchParamsDraft}
-        className="w-full h-[200px] lg:h-[300px] grow"
+        className="w-full h-[200px] lg:h-[300px] grow mt-3"
       />
     </Card>
   );

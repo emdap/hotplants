@@ -95,6 +95,23 @@ export const validateNominatimLocation = (
   );
 };
 
+export const locationDisplay = (
+  location: Omit<LocationSearchParams, "boundingPolyCoords">,
+  shortenCustom?: boolean,
+) => {
+  if (location.locationSource === "custom") {
+    return {
+      title: shortenCustom ? "Custom" : customLocationDisplay(location),
+    };
+  }
+
+  const splitName = location.locationName.split(", ");
+  return {
+    title: splitName[0],
+    subTitle: splitName.slice(1).join(", "),
+  };
+};
+
 export const customLocationDisplay = (
   location: Partial<LocationSearchParams>,
 ) => `Custom Location: (${location.locationName ?? "N/A"})`;

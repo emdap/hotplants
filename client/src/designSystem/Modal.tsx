@@ -57,7 +57,7 @@ const Modal = ({
               key="card"
               solid
               className={classNames(
-                "fixed left-1/2 -translate-1/2 w-[90dvw] h-[95dvh] sm:w-3/4 sm:h-5/6 flex flex-col gap-4 overflow-auto z-50 p-4",
+                "fixed left-1/2 -translate-1/2 w-[90dvw] h-[95dvh] sm:w-3/4 sm:h-5/6 flex flex-col overflow-auto z-50 p-4 [&_>_:last-child]:pt-2",
                 { "pt-0": stickyHeader },
                 className,
               )}

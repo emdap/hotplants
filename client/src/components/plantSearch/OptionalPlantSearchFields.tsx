@@ -54,14 +54,18 @@ const OptionalPlantSearchFields = () => {
         className="cursor-pointer flex justify-between items-center -mr-3"
       >
         Plant name (optional)
-        <Button type="button" size="small" variant="icon-white">
-          <MdChevronRight
-            className={classNames(
-              "transition-transform",
-              isExpanded ? "rotate-90" : "-rotate-90",
-            )}
-          />
-        </Button>
+        <Button
+          type="button"
+          variant="icon-white"
+          icon={
+            <MdChevronRight
+              className={classNames(
+                "transition-transform",
+                isExpanded ? "rotate-90" : "-rotate-90",
+              )}
+            />
+          }
+        />
       </h2>
 
       {isExpanded && (

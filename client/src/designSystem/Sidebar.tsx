@@ -30,20 +30,22 @@ const Sidebar = ({
   className,
   children,
 }: SidebarProps & SidebarReactiveProps) => {
-  const [isExpanded, setIsExpanded] = useState(Boolean(isExpandedProp));
+  const booleanExpandedProp = Boolean(isExpandedProp);
+  const [isExpanded, setIsExpanded] = useState(booleanExpandedProp);
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: ({ event }) => !isLeafletEvent(event) && setIsExpanded(false),
   });
   useCloseOnEscape(() => setIsExpanded(false), isExpanded);
 
-  useEffect(() => {
-    setIsExpanded(Boolean(isExpandedProp));
-  }, [isExpandedProp]);
+  const toggleExpanded = (expanded: boolean) => {
+    setIsExpanded(expanded);
+    setIsExpandedProp && setIsExpandedProp(expanded);
+  };
 
   useEffect(() => {
-    setIsExpandedProp && setIsExpandedProp(isExpanded);
-  }, [isExpanded, setIsExpandedProp]);
+    setIsExpanded(booleanExpandedProp);
+  }, [booleanExpandedProp]);
 
   return (
     <AnimatePresence>
@@ -51,7 +53,7 @@ const Sidebar = ({
         show={isExpanded}
         key="mask"
         className="big-screen:hidden bg-accent/10!"
-        onClick={() => setIsExpanded(false)}
+        onClick={() => toggleExpanded(false)}
       />
 
       <nav
@@ -91,7 +93,7 @@ const Sidebar = ({
               },
             ],
           )}
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={() => toggleExpanded(!isExpanded)}
           icon={
             <MdKeyboardDoubleArrowLeft
               className={classNames(!isExpanded && "big-screen:rotate-180")}
@@ -100,7 +102,7 @@ const Sidebar = ({
         />
 
         {typeof children === "function"
-          ? children({ isExpanded, setIsExpanded })
+          ? children({ isExpanded, setIsExpanded: toggleExpanded })
           : children}
       </nav>
     </AnimatePresence>
