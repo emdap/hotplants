@@ -49,10 +49,10 @@ const Modal = ({
   // the fixed positioning to be relative to that parent
   return createPortal(
     <>
-      <OverlayMask show={isOpen} key="mask" onClick={onClose} />
       <AnimatePresence>
         {isOpen && (
           <>
+            <OverlayMask show key="mask" onClick={onClose} />
             <Card
               key="card"
               solid

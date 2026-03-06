@@ -49,12 +49,13 @@ const Sidebar = ({
 
   return (
     <AnimatePresence>
-      <OverlayMask
-        show={isExpanded}
-        key="mask"
-        className="big-screen:hidden bg-accent/10!"
-        onClick={() => toggleExpanded(false)}
-      />
+      {isExpanded && (
+        <OverlayMask
+          key="mask"
+          className="big-screen:hidden bg-accent/10!"
+          onClick={() => toggleExpanded(false)}
+        />
+      )}
 
       <nav
         key="sidebar"
