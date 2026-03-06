@@ -15,7 +15,9 @@ export type ModalProps = {
   isOpen?: boolean;
   stickyHeader?: boolean;
   onClose?: () => void;
-} & CardProps;
+} & Omit<CardProps, "onClick"> & {
+    onClick?: React.MouseEventHandler<HTMLElement>;
+  };
 
 const MODAL_BODY_FADE_IN = mergeMotionProps(MOTION_FADE_IN, {
   initial: { top: "55%" },
@@ -57,7 +59,7 @@ const Modal = ({
               key="card"
               solid
               className={classNames(
-                "fixed left-1/2 -translate-1/2 w-[90dvw] h-[95dvh] sm:w-3/4 sm:h-5/6 flex flex-col overflow-auto z-50 p-4 [&_>_:last-child]:pt-2",
+                "fixed left-1/2 -translate-1/2 w-[90dvw] max-h-[95dvh] sm:w-3/4 sm:max-h-5/6 flex flex-col overflow-auto z-50 p-4 [&_>_:last-child]:pt-2",
                 { "pt-0": stickyHeader },
                 className,
               )}

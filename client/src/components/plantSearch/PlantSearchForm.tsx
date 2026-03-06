@@ -1,13 +1,21 @@
 import classNames from "classnames";
-import ClearPlantFiltersButton from "components/plantFilters/ClearPlantFiltersButton";
-import PlantFiltersBody from "components/plantFilters/PlantFiltersBody";
-import PlantFiltersModal from "components/plantFilters/PlantFiltersModal";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
-import Card from "designSystem/Card";
-import Modal from "designSystem/Modal";
+import PlantLocationForm from "components/plantSearch/plantLocation/PlantLocationForm";
+import PlantNameForm from "components/plantSearch/plantName/PlantNameForm";
+import {
+  SearchFormTab,
+  usePlantSearchContext,
+} from "contexts/plantSearch/PlantSearchContext";
 import Sidebar from "designSystem/Sidebar";
+import { ReactElement } from "react";
 import { isSmallScreen } from "util/generalUtil";
-import LocationSearchForm from "./LocationSearchForm";
+import PlantFiltersForm from "./plantFilters/PlantFilterForm";
+import { PlantSearchFormProps } from "./plantSearchFormUtil";
+
+const formComponents: Record<SearchFormTab, ReactElement> = {
+  location: <PlantLocationForm renderMode="card" />,
+  "plant-name": <PlantNameForm renderMode="card" />,
+  filters: <PlantFiltersForm renderMode="card" />,
+};
 
 const PlantSearchForm = ({
   asSidebar,
@@ -27,21 +35,17 @@ const PlantSearchForm = ({
   const toggleIsOpen = (isOpen: boolean) =>
     setSearchFormState((prev) => ({ ...prev, isOpen }));
 
+  const modalProps = (tabName: SearchFormTab): PlantSearchFormProps => ({
+    renderMode: "modal",
+    isOpen: isOpen && tab === tabName,
+    onClose: () => toggleIsOpen(false),
+  });
+
   return asModal ? (
     <>
-      <Modal
-        title="Location Parameters"
-        isOpen={isOpen && tab === "location"}
-        onClose={() => toggleIsOpen(false)}
-        className="[&_.card]:p-1 [&_.card]:shadow-none [&_.card]:border-none"
-      >
-        <LocationSearchForm showSeparator={asModal} />
-      </Modal>
-
-      <PlantFiltersModal
-        isOpen={isOpen && tab === "filters"}
-        onClose={() => toggleIsOpen(false)}
-      />
+      <PlantLocationForm {...modalProps("location")} />
+      <PlantNameForm {...modalProps("plant-name")} />
+      <PlantFiltersForm {...modalProps("filters")} />
     </>
   ) : asSidebar ? (
     <Sidebar
@@ -68,22 +72,13 @@ const PlantSearchForm = ({
             },
           )}
         >
-          {tab === "location" ? (
-            <LocationSearchForm />
-          ) : (
-            <div className="flex flex-col min-h-[400px] gap-2 pr-2">
-              <Card className="overflow-auto">
-                <PlantFiltersBody title={<h2>Plant filters</h2>} />
-              </Card>
-              <ClearPlantFiltersButton />
-            </div>
-          )}
+          {formComponents[tab]}
         </div>
       )}
     </Sidebar>
   ) : (
     <div className={className}>
-      <LocationSearchForm />
+      <PlantLocationForm renderMode="card" />
     </div>
   );
 };

@@ -34,14 +34,6 @@ const PlantSearchProvider = () => {
   );
 
   useEffect(() => {
-    const toggleSearchForm = () =>
-      setSearchFormState(DEFAULT_SEARCH_FORM_STATE());
-
-    window.addEventListener("resize", toggleSearchForm);
-    return () => window.removeEventListener("resize", toggleSearchForm);
-  }, []);
-
-  useEffect(() => {
     setIsPrefilledSearch;
   }, [searchParams, plantFilter, page, pageSize]);
 
@@ -118,14 +110,10 @@ const PlantSearchProvider = () => {
   );
 
   const resultsContainerRef = useRef<HTMLDivElement>(null);
-  const scrollToResults = () =>
-    setTimeout(
-      () =>
-        resultsContainerRef.current?.scrollIntoView({
-          behavior: "smooth",
-        }),
-      300,
-    );
+  const getResultsContainer = useCallback(
+    () => resultsContainerRef.current,
+    [],
+  );
 
   const fetchMorePlants = async () => {
     if (
@@ -169,7 +157,7 @@ const PlantSearchProvider = () => {
         searchFormState,
         setSearchFormState,
 
-        scrollToResults,
+        getResultsContainer,
       }}
     >
       <PlantSelectionProvider

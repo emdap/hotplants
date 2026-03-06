@@ -106,7 +106,7 @@
   @apply w-full px-safe-4 lg:px-safe-6;
 
   .floating-header {
-    @apply small-screen:-mx-2.5 big-screen:-mx-6 big-screen:px-4;
+    @apply small-screen:-mx-1 big-screen:-mx-6 big-screen:px-4;
   }
 }
 

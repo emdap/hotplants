@@ -1,19 +1,19 @@
 import { useNavigate } from "@tanstack/react-router";
-import PlantFiltersButton from "components/plantFilters/PlantFiltersButton";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import PlantLocationOpenButton from "components/plantSearch/plantLocation/PlantLocationOpenButton";
+import PlantNameOpenButton from "components/plantSearch/plantName/PlantNameOpenButton";
+import {
+  SearchFormTab,
+  usePlantSearchContext,
+} from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import FloatingHeader from "designSystem/FloatingHeader";
-import IconButton from "designSystem/iconButtons/IconButton";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
-import { useMemo } from "react";
-import { FaGlobe } from "react-icons/fa";
-import { locationDisplay } from "util/locationUtil";
+import PlantFilterOpenButton from "./plantFilters/PlantFilterOpenButton";
 
 const PlantSearchHeader = () => {
   const navigate = useNavigate();
   const {
-    searchParams,
     searchStatus,
     isInfiniteScroll,
     setIsInfiniteScroll,
@@ -26,25 +26,16 @@ const PlantSearchHeader = () => {
     setIsInfiniteScroll(enable);
   };
 
-  const locationTitle = useMemo(
-    () => (searchParams ? locationDisplay(searchParams).title : "Location"),
-    [searchParams],
-  );
+  const searchTabButtonProps = (tabName: SearchFormTab) => ({
+    onClick: () => setSearchFormState({ tab: tabName, isOpen: true }),
+  });
 
   return (
-    <FloatingHeader className="small-screen:mx-safe-2 big-screen:px-4">
+    <FloatingHeader className="small-screen:mx-safe-3 big-screen:px-4">
       <div className="flex lg:gap-4 items-center">
-        <IconButton
-          icon={<FaGlobe />}
-          size="small"
-          active={Boolean(searchParams)}
-          onClick={() => setSearchFormState({ tab: "location", isOpen: true })}
-        >
-          <span className="max-lg:hidden">{locationTitle}</span>
-        </IconButton>
-        <PlantFiltersButton
-          onClick={() => setSearchFormState({ tab: "filters", isOpen: true })}
-        />
+        <PlantLocationOpenButton {...searchTabButtonProps("location")} />
+        <PlantNameOpenButton {...searchTabButtonProps("plant-name")} />
+        <PlantFilterOpenButton {...searchTabButtonProps("filters")} />
       </div>
 
       <ItemCountWithLoader

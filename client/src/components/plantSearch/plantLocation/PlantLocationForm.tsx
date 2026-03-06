@@ -1,8 +1,15 @@
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
+import PlantSearchFormFooter from "components/plantSearch/PlantSearchFormFooter";
+import {
+  PLANT_FORM_TITLES,
+  PlantSearchFormProps,
+} from "components/plantSearch/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
+import Modal from "designSystem/Modal";
 import { useReactQuery } from "hooks/useQuery";
+import { isEqual } from "lodash";
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import {
@@ -11,18 +18,20 @@ import {
   validateNominatimLocation,
 } from "util/locationUtil";
 
-const PlantLocationField = ({
-  setLocationPending,
-}: {
-  setLocationPending: (isPending: boolean) => void;
-}) => {
+const PlantLocationForm = ({
+  renderMode,
+  ...modalProps
+}: PlantSearchFormProps) => {
   const {
     searchParams,
     searchParamsDraft,
     validatedSearchParamsDraft,
     updateSearchParamsDraft,
+    applySearchParams,
+    getResultsContainer,
   } = usePlantSearchContext();
 
+  const [locationPending, setLocationPending] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [debouncedInput, setDebouncedInput] = useState<string | null>(null);
   const [locationInvalid, setLocationInvalid] = useState(false);
@@ -94,33 +103,60 @@ const PlantLocationField = ({
     setDebouncedInput(e.target.value);
   };
 
-  return (
-    <Card className="flex flex-col gap-2">
-      <label htmlFor="search-location" className="max-w-fit">
-        <h2>Location</h2>
-      </label>
-      <input
-        id="search-location"
-        value={searchInput}
-        className={classNames(
-          "styled-input flex-grow min-w-20",
-          (locationQuery.isError || locationInvalid) &&
-            "dark:!border-red-700 ring-offset-red-500/70 !border-red-500",
-        )}
-        onBlur={() => setDebouncedInput(searchInput)}
-        onKeyDown={handleKeyDown}
-        onChange={(e) => setSearchInput(e.target.value)}
-        placeholder={
-          searchParamsDraft?.locationSource === "custom"
-            ? customLocationDisplay(searchParamsDraft)
-            : "Enter Location"
-        }
-      />
+  const searchParamsApplied = isEqual(searchParamsDraft, searchParams);
 
-      <div className="px-1 text-xs font-medium text-default-text/70">
-        {locationQuery.isError
-          ? "Error loading location"
-          : locationInvalid && "Cannot find location"}
+  const submitSearchLocation = () => {
+    applySearchParams();
+    getResultsContainer()?.scrollIntoView();
+  };
+
+  const plantLocationFooter = (
+    <PlantSearchFormFooter
+      submitButtonProps={{
+        disabled: locationPending || !searchParamsDraft || searchParamsApplied,
+        onClick: submitSearchLocation,
+      }}
+      // clearButtonProps={{
+      //   disabled: isEqual(
+      //     { scientificName, commonName },
+      //     DEFAULT_PLANT_NAME_FIELDS,
+      //   ),
+      //   onClick: clearPlantNameSearch,
+      // }}
+    />
+  );
+
+  const plantLocationFields = (
+    <div className="space-y-3 mb-3">
+      {renderMode === "card" && <h2>{PLANT_FORM_TITLES.location}</h2>}
+
+      <div className="form-item">
+        <label htmlFor="search-location" className="max-w-fit">
+          Location name
+        </label>
+        <input
+          id="search-location"
+          value={searchInput}
+          className={classNames(
+            "styled-input flex-grow min-w-20",
+            (locationQuery.isError || locationInvalid) &&
+              "dark:!border-red-700 ring-offset-red-500/70 !border-red-500",
+          )}
+          onBlur={() => setDebouncedInput(searchInput)}
+          onKeyDown={handleKeyDown}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder={
+            searchParamsDraft?.locationSource === "custom"
+              ? customLocationDisplay(searchParamsDraft)
+              : "Enter Location"
+          }
+        />
+
+        <div className="px-1 text-xs font-medium text-default-text/70">
+          {locationQuery.isError
+            ? "Error loading location"
+            : locationInvalid && "Cannot find location"}
+        </div>
       </div>
 
       <MapProvider
@@ -128,10 +164,22 @@ const PlantLocationField = ({
         isLoading={locationQuery.isLoading || locationQuery.isFetching}
         searchParams={validatedSearchParamsDraft}
         setSearchParams={updateSearchParamsDraft}
-        className="w-full h-[200px] lg:h-[300px] grow mt-3"
+        className="w-full h-[200px] lg:h-[300px] grow"
       />
-    </Card>
+    </div>
+  );
+
+  return renderMode === "card" ? (
+    <>
+      <Card className="flex flex-col gap-2">{plantLocationFields}</Card>
+      {plantLocationFooter}
+    </>
+  ) : (
+    <Modal title={PLANT_FORM_TITLES.location} {...modalProps}>
+      {plantLocationFields}
+      {plantLocationFooter}
+    </Modal>
   );
 };
 
-export default PlantLocationField;
+export default PlantLocationForm;

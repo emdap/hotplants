@@ -1,6 +1,6 @@
 import { Listbox } from "@headlessui/react";
 import classNames from "classnames";
-import { BOOLEAN_OPTIONS } from "components/plantFilters/plantFilterUtil";
+import { BOOLEAN_OPTIONS } from "components/plantSearch/plantFilters/plantFilterUtil";
 import Button from "designSystem/Button";
 import StyledListboxButton from "designSystem/listbox/StyledListboxButton";
 import StyledListboxOptions from "designSystem/listbox/StyledListboxOptions";

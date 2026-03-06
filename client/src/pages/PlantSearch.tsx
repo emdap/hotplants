@@ -29,6 +29,7 @@ const PlantSearch = ({
     searchFormState,
 
     searchParams,
+    validatedSearchParamsDraft,
     searchStatus,
     plantSearchQuery: { loading },
     searchRecordQuery,
@@ -87,7 +88,9 @@ const PlantSearch = ({
       >
         <PlantSearchForm
           className={classNames(
-            !showResults && "basis-1/2 max-w-2xl min-w-md max-md:min-w-full",
+            !showResults &&
+              "basis-1/2 max-w-2xl min-w-md max-md:min-w-full space-y-6",
+            { "[&_button]:opacity-0": !validatedSearchParamsDraft },
           )}
           asSidebar={showResults}
         />

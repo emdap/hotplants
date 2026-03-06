@@ -10,7 +10,7 @@ import {
   VOID_PROMISE_FUNCTION,
 } from "util/generalUtil";
 
-type SearchFormTab = "location" | "filters";
+export type SearchFormTab = "location" | "plant-name" | "filters";
 type SearchFormState = { tab: SearchFormTab; isOpen: boolean };
 export const DEFAULT_SEARCH_FORM_STATE = (): SearchFormState => ({
   tab: "location",
@@ -36,7 +36,7 @@ export type PlantSearchContextType = {
   searchFormState: SearchFormState;
   setSearchFormState: Dispatch<SetStateAction<SearchFormState>>;
 
-  scrollToResults: () => void;
+  getResultsContainer: () => HTMLDivElement | null | void;
 } & Pick<
   PlantSearchQueriesReturnType,
   "searchRecordQuery" | "plantSearchQuery"
@@ -63,7 +63,7 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   searchFormState: DEFAULT_SEARCH_FORM_STATE(),
   setSearchFormState: VOID_FUNCTION,
 
-  scrollToResults: VOID_FUNCTION,
+  getResultsContainer: VOID_FUNCTION,
 };
 
 export const PlantSearchContext = createContext<PlantSearchContextType>(

@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { OPTIONAL_SEARCH_PARAM_FILTERS } from "components/plantSearch/optionalPlantSearchFieldsUtil";
+import { PLANT_NAME_FIELDS } from "components/plantSearch/plantSearchFormUtil";
 import { format } from "date-fns";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
@@ -89,7 +89,7 @@ const SearchRecordCard = ({
               }
             />
 
-            {OPTIONAL_SEARCH_PARAM_FILTERS.map(({ plantDataKey, label }) => (
+            {PLANT_NAME_FIELDS.map(({ plantDataKey, label }) => (
               <InfoRow
                 key={plantDataKey}
                 title={label}

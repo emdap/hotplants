@@ -1,7 +1,7 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
-import PlantFiltersPopOut from "components/plantFilters/PlantFiltersPopOut";
 import PlantList from "components/plantResults/PlantList";
+import PlantFiltersForm from "components/plantSearch/plantFilters/PlantFilterForm";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
@@ -12,6 +12,7 @@ import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { GET_GARDEN, GET_GARDEN_PLANTS } from "graphqlHelpers/gardenQueries";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import { useApolloQuery } from "hooks/useQuery";
+import { useState } from "react";
 import { MdArrowBack } from "react-icons/md";
 
 const route = getRouteApi("/_private/gardens/$gardenName");
@@ -24,6 +25,8 @@ const Garden = () => {
     pageSize = DEFAULT_PAGE_SIZE,
     plantFilter,
   } = route.useSearch();
+
+  const [showFiltersModal, setShowFiltersModal] = useState(false);
 
   const gardenQuery = useApolloQuery(GET_GARDEN, { variables: { gardenName } });
 
@@ -44,7 +47,7 @@ const Garden = () => {
   const gardenPlantsCount = gardenPlants?.count ?? 0;
 
   return (
-    <main className="page-buffer page-container h-dvh-header">
+    <main className="page-buffer page-container h-full">
       <PageTitle className="flex gap-4 items-center">
         <Button
           variant="icon-white"
@@ -73,7 +76,12 @@ const Garden = () => {
         {...{ page, pageSize }}
       >
         <FloatingHeader>
-          <PlantFiltersPopOut />
+          <PlantFiltersForm
+            renderMode="popover"
+            onClick={() => setShowFiltersModal(true)}
+            onClose={() => setShowFiltersModal(false)}
+            isOpen={showFiltersModal}
+          />
 
           <ItemCountWithLoader
             className="col-start-2"
