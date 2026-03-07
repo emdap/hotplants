@@ -25,7 +25,7 @@ const SearchRecordSortFilterPopover = <T extends SearchRecordQueryInput>(
 ) => {
   const buttonProps: IconButtonVariantProps = {
     active: Boolean(props.currentParams?.length),
-    className: "m-0!",
+    size: "small",
   };
 
   return (
@@ -33,9 +33,13 @@ const SearchRecordSortFilterPopover = <T extends SearchRecordQueryInput>(
       anchor="bottom start"
       button={
         props.paramType === "sort" ? (
-          <SortButton {...buttonProps} />
+          <SortButton {...buttonProps}>
+            <span className="max-lg:hidden text-sm">Sort</span>
+          </SortButton>
         ) : (
-          <FilterButton {...buttonProps} />
+          <FilterButton {...buttonProps}>
+            <span className="max-lg:hidden text-sm">Filter</span>
+          </FilterButton>
         )
       }
     >
@@ -104,7 +108,7 @@ const PopoverContent = <T extends SearchRecordQueryInput>({
       <h4 className="font-semibold">
         {paramType === "sort" ? "Sort results" : "Filter results"}
       </h4>
-      <div className="gap-x-2 gap-y-1 items-center mt-2 mb-4">
+      <div className="space-y-2 items-center mt-2 mb-4">
         {SEARCH_RECORD_ORDERED_QUERY_KEYS[paramType].map((key) => (
           <SearchRecordSortFilterInput
             key={key}
