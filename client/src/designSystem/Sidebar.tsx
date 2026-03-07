@@ -3,7 +3,13 @@ import Button from "designSystem/Button";
 import OverlayMask from "designSystem/OverlayMask";
 import { useCloseOnEscape } from "hooks/useCloseOnEscape";
 import { AnimatePresence } from "motion/react";
-import { ReactNode, useEffect, useState } from "react";
+import {
+  HTMLAttributes,
+  ReactNode,
+  RefObject,
+  useEffect,
+  useState,
+} from "react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 import { isLeafletEvent } from "util/generalUtil";
@@ -11,11 +17,16 @@ import { isLeafletEvent } from "util/generalUtil";
 type SidebarProps = {
   isExpanded?: boolean;
   setIsExpanded?: (expanded: boolean) => void;
+
   externalCollapseButton?: boolean;
+  ref?: RefObject<HTMLElement | null>;
+  style?: HTMLAttributes<HTMLElement>["style"];
 };
 
 type SidebarChild = (
-  props: Required<Omit<SidebarProps, "externalCollapseButton">>,
+  props: Required<
+    Omit<SidebarProps, "externalCollapseButton" | "ref" | "style">
+  >,
 ) => ReactNode;
 
 type SidebarReactiveProps = {
@@ -29,6 +40,8 @@ const Sidebar = ({
   externalCollapseButton,
   className,
   children,
+  ref,
+  style,
 }: SidebarProps & SidebarReactiveProps) => {
   const booleanExpandedProp = Boolean(isExpandedProp);
   const [isExpanded, setIsExpanded] = useState(booleanExpandedProp);
@@ -47,6 +60,13 @@ const Sidebar = ({
     setIsExpanded(booleanExpandedProp);
   }, [booleanExpandedProp]);
 
+  const refPassthrough = (el: HTMLElement) => {
+    swipeHandlers.ref(el);
+    if (ref) {
+      ref.current = el;
+    }
+  };
+
   return (
     <AnimatePresence>
       {isExpanded && (
@@ -60,6 +80,7 @@ const Sidebar = ({
       <nav
         key="sidebar"
         {...swipeHandlers}
+        ref={refPassthrough}
         className={classNames(
           "border-header bg-gradient-to-t from-default-background/30 to-90%",
           "flex flex-col transition-all duration-300 z-50",
@@ -74,6 +95,7 @@ const Sidebar = ({
           },
           typeof className === "function" ? className(isExpanded) : className,
         )}
+        style={style}
       >
         <Button
           variant="text-primary"

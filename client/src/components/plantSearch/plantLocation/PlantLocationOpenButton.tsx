@@ -7,7 +7,7 @@ import { locationDisplay } from "util/locationUtil";
 
 const PlantLocationOpenButton = ({ onClick }: { onClick?: () => void }) => {
   const { search } = useSearch({ strict: false });
-  const locationName = search ? locationDisplay(search).title : null;
+  const locationName = search ? locationDisplay(search, true).title : null;
   const isActive = Boolean(locationName);
 
   return (

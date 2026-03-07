@@ -127,7 +127,12 @@ const PlantLocationForm = ({
   );
 
   const plantLocationFields = (
-    <div className="space-y-3 mb-3">
+    <div
+      className={classNames("flex flex-col gap-4", {
+        "pt-4": renderMode === "modal",
+        "pr-4 overflow-auto": renderMode === "modal",
+      })}
+    >
       {renderMode === "card" && <h2>{PLANT_FORM_TITLES.location}</h2>}
 
       <div className="form-item">
@@ -159,19 +164,22 @@ const PlantLocationForm = ({
         </div>
       </div>
 
-      <MapProvider
-        locationCustomizeable
-        isLoading={locationQuery.isLoading || locationQuery.isFetching}
-        searchParams={validatedSearchParamsDraft}
-        setSearchParams={updateSearchParamsDraft}
-        className="w-full h-[200px] lg:h-[300px] grow"
-      />
+      <div className="form-item">
+        <label>Map view</label>
+        <MapProvider
+          locationCustomizeable
+          isLoading={locationQuery.isLoading || locationQuery.isFetching}
+          searchParams={validatedSearchParamsDraft}
+          setSearchParams={updateSearchParamsDraft}
+          className="w-full h-40 big-screen:h-80 grow"
+        />
+      </div>
     </div>
   );
 
   return renderMode === "card" ? (
     <>
-      <Card className="flex flex-col gap-2">{plantLocationFields}</Card>
+      <Card className="overflow-auto">{plantLocationFields}</Card>
       {plantLocationFooter}
     </>
   ) : (

@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import FilterInputField from "components/plantSearch/plantFilters/FilterInputField";
 import PlantSearchFormFooter from "components/plantSearch/PlantSearchFormFooter";
 import {
@@ -63,10 +64,14 @@ const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
   );
 
   const plantNameFields = (
-    <>
+    <div
+      className={classNames("flex flex-col", {
+        "pr-4 overflow-auto": renderMode === "modal",
+      })}
+    >
       {renderMode === "card" && <h2>{PLANT_FORM_TITLES["plant-name"]}</h2>}
 
-      <div className="my-3 min-h-min">
+      <div className="my-4 min-h-min">
         {PLANT_NAME_FIELDS.map((field, index) => (
           <Fragment key={index}>
             <FilterInputField<"text">
@@ -84,12 +89,12 @@ const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
           </Fragment>
         ))}
       </div>
-    </>
+    </div>
   );
 
   return renderMode === "card" ? (
     <>
-      <Card>{plantNameFields}</Card>
+      <Card className="overflow-auto">{plantNameFields}</Card>
       {plantNameFooter}
     </>
   ) : (

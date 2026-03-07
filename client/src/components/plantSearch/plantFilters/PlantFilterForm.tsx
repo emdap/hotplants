@@ -117,7 +117,7 @@ const PlantFiltersForm = ({
   const plantFilterForm = (
     <div
       className={classNames("grow flex flex-col gap-4", {
-        "mb-2 max-h-full overflow-hidden": renderMode !== "card",
+        "max-h-full overflow-hidden": renderMode !== "card",
       })}
     >
       {renderMode === "card" ? (

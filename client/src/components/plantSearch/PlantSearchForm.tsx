@@ -6,7 +6,9 @@ import {
   usePlantSearchContext,
 } from "contexts/plantSearch/PlantSearchContext";
 import Sidebar from "designSystem/Sidebar";
-import { ReactElement } from "react";
+import { useGetScrollContainer } from "hooks/useGetScrollContainer";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import { useMount } from "react-use";
 import { isSmallScreen } from "util/generalUtil";
 import PlantFiltersForm from "./plantFilters/PlantFilterForm";
 import { PlantSearchFormProps } from "./plantSearchFormUtil";
@@ -29,8 +31,36 @@ const PlantSearchForm = ({
     searchFormState: { tab, isOpen },
     setSearchFormState,
   } = usePlantSearchContext();
+  const { scrollContainerElement } = useGetScrollContainer();
 
   const asModal = asSidebar && isSmallScreen();
+
+  const [sidebarHeight, setSidebarHeight] = useState<number | undefined>(
+    undefined,
+  );
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  const resizeSidebar = useCallback(() => {
+    if (sidebarRef.current) {
+      const { height, top } = sidebarRef.current.getBoundingClientRect();
+      const availableHeight = window.innerHeight - top;
+      availableHeight !== height && setSidebarHeight(availableHeight);
+    } else {
+      setSidebarHeight(undefined);
+    }
+  }, []);
+
+  useMount(() => resizeSidebar());
+
+  useEffect(() => {
+    window.addEventListener("resize", resizeSidebar);
+    scrollContainerElement?.addEventListener("scroll", resizeSidebar);
+
+    return () => {
+      window.removeEventListener("resize", resizeSidebar);
+      scrollContainerElement?.removeEventListener("scroll", resizeSidebar);
+    };
+  }, [resizeSidebar, scrollContainerElement]);
 
   const toggleIsOpen = (isOpen: boolean) =>
     setSearchFormState((prev) => ({ ...prev, isOpen }));
@@ -49,6 +79,7 @@ const PlantSearchForm = ({
     </>
   ) : asSidebar ? (
     <Sidebar
+      ref={sidebarRef}
       isExpanded={isOpen}
       setIsExpanded={toggleIsOpen}
       externalCollapseButton
@@ -61,6 +92,7 @@ const PlantSearchForm = ({
           "overflow-hidden": !isExpanded,
         })
       }
+      style={{ height: sidebarHeight }}
     >
       {({ isExpanded }) => (
         <div
