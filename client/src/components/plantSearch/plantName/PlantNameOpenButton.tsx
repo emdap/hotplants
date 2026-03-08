@@ -5,8 +5,12 @@ import { capitalize } from "lodash";
 import { RiPlantFill, RiPlantLine } from "react-icons/ri";
 
 const PlantNameOpenButton = ({ onClick }: { onClick?: () => void }) => {
-  const { search } = useSearch({ strict: false });
-  const plantName = search?.commonName || search?.scientificName;
+  const { plantName: plantNameParam } = useSearch({ strict: false });
+  const plantName =
+    plantNameParam &&
+    ("commonName" in plantNameParam
+      ? plantNameParam.commonName
+      : plantNameParam.scientificName);
   const isActive = Boolean(plantName);
 
   return (

@@ -11,7 +11,7 @@ const PlantSearchFormFooter = (props: {
         const defaultProps: ButtonProps =
           key === "submitButtonProps"
             ? { variant: "primary", children: "Search" }
-            : { variant: "accent", children: "Clear" };
+            : { variant: "accent", children: "Clear", type: "button" };
 
         return (
           <Button

@@ -9,6 +9,8 @@ export type LocationCoord = [number, number];
 
 export type PlantSearchParams =
   Hotplants.components["schemas"]["PlantSearchParams"];
+export type PlantLocationParams = Required<PlantSearchParams>["location"];
+export type PlantNameParam = Required<PlantSearchParams>["plantName"];
 
 export type OptionalSearchParamKey = "commonName" | "scientificName";
 

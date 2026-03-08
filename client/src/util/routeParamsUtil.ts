@@ -5,19 +5,28 @@ import {
   SearchRecordSortInput,
   SearchRecordStringFilterInput,
 } from "generated/graphql/graphql";
-import { PlantDataFilter, PlantSearchParams } from "./customSchemaTypes";
+import {
+  PlantDataFilter,
+  PlantLocationParams,
+  PlantNameParam,
+  PlantSearchParams,
+} from "./customSchemaTypes";
 
 export type PaginationParams = {
   page?: number;
   pageSize?: number;
 };
 
-const validateString = (input: unknown) => String(input || "") || undefined;
+const validateString = (input: unknown, subKey?: string) =>
+  (subKey && input && typeof input === "object" && subKey in input
+    ? String(input[subKey as keyof typeof input] || "")
+    : String(input || "")) || undefined;
 
 export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
   page: undefined,
   pageSize: undefined,
-  search: undefined,
+  location: undefined,
+  plantName: undefined,
   plantFilter: undefined,
   lastOpened: undefined,
 };
@@ -28,84 +37,76 @@ export type PlantSearchRouteParams = PaginationParams &
         page?: number;
         pageSize?: number;
 
-        search: PlantSearchParams | null;
+        location?: PlantLocationParams;
+        plantName?: PlantNameParam;
         plantFilter?: PlantDataFilter;
         lastOpened?: string;
       }
     | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
   );
 
-const STRING_SEARCH_PARAMS: (keyof PlantSearchParams)[] = [
-  "commonName",
-  "scientificName",
-];
+const validateSearch = (
+  searchParams: Record<string, unknown>,
+): PlantSearchParams | null => {
+  let typesafeParams: PlantSearchParams | null = null;
 
-const extractStringParams = (
-  searchParams: object,
-): Partial<PlantSearchParams> =>
-  STRING_SEARCH_PARAMS.reduce<Partial<PlantSearchParams>>((prev, cur) => {
-    if (cur in searchParams) {
-      const typesafeKey = cur as keyof typeof searchParams;
-      if (searchParams[typesafeKey]) {
-        return { ...prev, [typesafeKey]: searchParams[typesafeKey] };
+  if (searchParams.location && typeof searchParams.location === "object") {
+    const locationParams = searchParams.location;
+    if (
+      "boundingPolyCoords" in locationParams &&
+      "locationName" in locationParams &&
+      "locationSource" in locationParams
+    ) {
+      try {
+        const boundingPolyCoords = polygon(
+          locationParams.boundingPolyCoords as number[][][],
+        ).geometry.coordinates;
+
+        const locationName = validateString(locationParams.locationName);
+        const stringSource = validateString(locationParams.locationSource);
+        const locationSource =
+          stringSource && ["custom", "search"].includes(stringSource)
+            ? (stringSource as LocationSource)
+            : undefined;
+
+        if (locationName && locationSource) {
+          typesafeParams = {
+            location: { boundingPolyCoords, locationName, locationSource },
+          };
+        }
+      } catch (e) {
+        console.error("Invalid parameters:", e);
+        return null;
       }
     }
-    return prev;
-  }, {});
-
-const validateSearch = (searchParams: unknown): PlantSearchParams | null => {
-  if (typeof searchParams === "object" && searchParams !== null) {
-    const typesafeParams = searchParams as Record<string, unknown>;
-
-    if (!typesafeParams?.boundingPolyCoords) {
-      return null;
-    }
-
-    let boundingPolyCoords: number[][][] | undefined;
-
-    try {
-      boundingPolyCoords = polygon(
-        typesafeParams.boundingPolyCoords as number[][][],
-      ).geometry.coordinates;
-    } catch (e) {
-      console.error("Invalid parameters:", e);
-      return null;
-    }
-
-    const locationName = validateString(typesafeParams?.locationName);
-    if (!locationName) {
-      return null;
-    }
-
-    const stringSource = validateString(typesafeParams?.locationSource);
-    const locationSource =
-      stringSource && ["custom", "search"].includes(stringSource)
-        ? (stringSource as LocationSource)
-        : undefined;
-
-    if (!locationSource) {
-      return null;
-    }
-
-    return {
-      ...extractStringParams(searchParams),
-      locationName,
-      locationSource,
-      boundingPolyCoords,
-    };
   }
 
-  return null;
+  if (searchParams.plantName && typeof searchParams.plantName === "object") {
+    const commonName = validateString(searchParams.plantName, "commonName");
+    if (commonName) {
+      typesafeParams = { ...typesafeParams, plantName: { commonName } };
+    } else {
+      const scientificName = validateString(
+        searchParams.plantName,
+        "scientificName",
+      );
+      if (scientificName) {
+        typesafeParams = { ...typesafeParams, plantName: { scientificName } };
+      }
+    }
+  }
+
+  return typesafeParams;
 };
 
 // TODO: actually validate the filter types
 const validatePlantFilter = (
-  filterParams: unknown,
-): PlantDataFilter | undefined => {
-  if (typeof filterParams === "object" && filterParams !== null) {
-    return filterParams as PlantDataFilter;
+  params: Record<string, unknown>,
+): { plantFilter: PlantDataFilter } | null => {
+  if ("filter" in params && typeof params.filter === "object") {
+    return { plantFilter: params.filter as PlantDataFilter };
   }
-  return undefined;
+  return null;
 };
 
 const getNumParamValue = (param?: unknown) => {
@@ -122,19 +123,11 @@ export const validatePaginationParams = (
 
 export const validatePlantSearchParams = (
   params: Record<string, unknown>,
-): PlantSearchRouteParams => {
-  const search = validateSearch(params.search);
-
-  if (search) {
-    return {
-      ...validatePaginationParams(params),
-      plantFilter: validatePlantFilter(params.plantFilter),
-      search,
-    };
-  }
-
-  return {};
-};
+): PlantSearchRouteParams => ({
+  ...validatePaginationParams(params),
+  ...validatePlantFilter(params),
+  ...validateSearch(params),
+});
 
 export type SearchRecordFilterInput =
   | SearchRecordStringFilterInput
@@ -164,5 +157,5 @@ export const validateGardenParams = (
   params: Record<string, unknown>,
 ): GardenParams => ({
   ...validatePaginationParams(params),
-  plantFilter: validatePlantFilter(params.plantFilter),
+  ...validatePlantFilter(params),
 });

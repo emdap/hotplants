@@ -9,15 +9,24 @@ import {
 } from "components/plantSearch/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
+import Form from "designSystem/Form";
 import Modal from "designSystem/Modal";
 import { isEqual } from "lodash";
 import { Fragment, useEffect, useState } from "react";
-import { OptionalSearchParamKey } from "util/customSchemaTypes";
+import { OptionalSearchParamKey, PlantNameParam } from "util/customSchemaTypes";
 
 const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
-  const { searchParams, updateSearchParamsDraft, applySearchParams } =
-    usePlantSearchContext();
-  const { scientificName, commonName } = searchParams ?? {};
+  const {
+    searchParams: { plantName },
+    updateSearchParamsDraft,
+    applySearchParams,
+  } = usePlantSearchContext();
+
+  const { commonName, scientificName } = {
+    scientificName: undefined,
+    commonName: undefined,
+    ...plantName,
+  };
 
   const [plantNameSearch, setPlantNameSearch] = useState({
     scientificName,
@@ -33,18 +42,18 @@ const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
     value?: string | null,
   ) => {
     if (value) {
-      const newParams = { ...DEFAULT_PLANT_NAME_FIELDS, [key]: value };
-      setPlantNameSearch(newParams);
-      updateSearchParamsDraft(newParams);
+      const newParam = { [key]: value } as PlantNameParam;
+      setPlantNameSearch({ ...DEFAULT_PLANT_NAME_FIELDS, ...newParam });
+      updateSearchParamsDraft({ plantName: newParam });
     } else {
       setPlantNameSearch(DEFAULT_PLANT_NAME_FIELDS);
-      updateSearchParamsDraft(DEFAULT_PLANT_NAME_FIELDS);
+      updateSearchParamsDraft({ plantName: undefined });
     }
   };
 
   const clearPlantNameSearch = () => {
     setPlantNameSearch(DEFAULT_PLANT_NAME_FIELDS);
-    applySearchParams(DEFAULT_PLANT_NAME_FIELDS);
+    applySearchParams({ plantName: undefined });
   };
 
   const plantNameFooter = (
@@ -93,14 +102,16 @@ const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
   );
 
   return renderMode === "card" ? (
-    <>
+    <Form onSubmit={() => applySearchParams()}>
       <Card className="overflow-auto">{plantNameFields}</Card>
       {plantNameFooter}
-    </>
+    </Form>
   ) : (
     <Modal title={PLANT_FORM_TITLES["plant-name"]} {...modalProps}>
-      {plantNameFields}
-      {plantNameFooter}
+      <Form onSubmit={() => applySearchParams()}>
+        {plantNameFields}
+        {plantNameFooter}
+      </Form>
     </Modal>
   );
 };

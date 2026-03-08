@@ -7,6 +7,7 @@ import {
 } from "components/plantSearch/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
+import Form from "designSystem/Form";
 import Modal from "designSystem/Modal";
 import { useReactQuery } from "hooks/useQuery";
 import { isEqual } from "lodash";
@@ -23,9 +24,9 @@ const PlantLocationForm = ({
   ...modalProps
 }: PlantSearchFormProps) => {
   const {
-    searchParams,
+    searchParams: { location: locationParams },
     searchParamsDraft,
-    validatedSearchParamsDraft,
+
     updateSearchParamsDraft,
     applySearchParams,
     getResultsContainer,
@@ -45,26 +46,26 @@ const PlantLocationForm = ({
   );
 
   useEffect(() => {
-    if (searchParamsDraft?.locationSource === "custom") {
+    if (locationParams?.locationSource === "custom") {
       setLocationInvalid(false);
       setSearchInput("");
       setDebouncedInput("");
     }
-  }, [searchParamsDraft?.locationSource]);
+  }, [locationParams?.locationSource]);
 
   useEffect(() => {
-    if (searchParams?.locationSource !== "custom") {
-      setSearchInput(searchParams?.locationName ?? "");
-      setDebouncedInput(searchParams?.locationName ?? "");
+    if (locationParams?.locationSource !== "custom") {
+      setSearchInput(locationParams?.locationName ?? "");
+      setDebouncedInput(locationParams?.locationName ?? "");
     }
-  }, [searchParams?.locationSource, searchParams?.locationName]);
+  }, [locationParams?.locationSource, locationParams?.locationName]);
 
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
     enabled:
       debouncedInput !== null &&
-      searchParams?.locationName !== null &&
-      searchParams?.locationName !== debouncedInput,
+      locationParams?.locationName !== null &&
+      locationParams?.locationName !== debouncedInput,
     retry: false,
     queryFn: async () => {
       setLocationInvalid(false);
@@ -73,7 +74,7 @@ const PlantLocationForm = ({
         const { data } = await lookupLocationInput(debouncedInput);
         const validLocation = validateNominatimLocation(data?.[0]);
         if (validLocation) {
-          updateSearchParamsDraft(validLocation);
+          updateSearchParamsDraft({ location: validLocation });
           return validLocation;
         } else {
           setLocationInvalid(true);
@@ -103,7 +104,10 @@ const PlantLocationForm = ({
     setDebouncedInput(e.target.value);
   };
 
-  const searchParamsApplied = isEqual(searchParamsDraft, searchParams);
+  const searchParamsApplied = isEqual(
+    searchParamsDraft?.location,
+    locationParams,
+  );
 
   const submitSearchLocation = () => {
     applySearchParams();
@@ -116,13 +120,10 @@ const PlantLocationForm = ({
         disabled: locationPending || !searchParamsDraft || searchParamsApplied,
         onClick: submitSearchLocation,
       }}
-      // clearButtonProps={{
-      //   disabled: isEqual(
-      //     { scientificName, commonName },
-      //     DEFAULT_PLANT_NAME_FIELDS,
-      //   ),
-      //   onClick: clearPlantNameSearch,
-      // }}
+      clearButtonProps={{
+        disabled: !locationParams,
+        onClick: () => applySearchParams({ location: undefined }),
+      }}
     />
   );
 
@@ -151,8 +152,8 @@ const PlantLocationForm = ({
           onKeyDown={handleKeyDown}
           onChange={(e) => setSearchInput(e.target.value)}
           placeholder={
-            searchParamsDraft?.locationSource === "custom"
-              ? customLocationDisplay(searchParamsDraft)
+            searchParamsDraft?.location?.locationSource === "custom"
+              ? customLocationDisplay(searchParamsDraft.location)
               : "Enter Location"
           }
         />
@@ -169,8 +170,10 @@ const PlantLocationForm = ({
         <MapProvider
           locationCustomizeable
           isLoading={locationQuery.isLoading || locationQuery.isFetching}
-          searchParams={validatedSearchParamsDraft}
-          setSearchParams={updateSearchParamsDraft}
+          locationParams={searchParamsDraft?.location}
+          setLocationParams={(location) =>
+            updateSearchParamsDraft({ location })
+          }
           className="w-full h-40 big-screen:h-80 grow"
         />
       </div>
@@ -178,14 +181,16 @@ const PlantLocationForm = ({
   );
 
   return renderMode === "card" ? (
-    <>
+    <Form onSubmit={submitSearchLocation}>
       <Card className="overflow-auto">{plantLocationFields}</Card>
       {plantLocationFooter}
-    </>
+    </Form>
   ) : (
     <Modal title={PLANT_FORM_TITLES.location} {...modalProps}>
-      {plantLocationFields}
-      {plantLocationFooter}
+      <Form onSubmit={submitSearchLocation}>
+        {plantLocationFields}
+        {plantLocationFooter}
+      </Form>
     </Modal>
   );
 };

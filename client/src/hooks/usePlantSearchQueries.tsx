@@ -17,7 +17,6 @@ export type PlantSearchQueryStatus =
 export const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
-const MAX_AUTO_SCRAPES = 3;
 
 const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
   offset: 0,
@@ -33,7 +32,7 @@ export const hotplantsClient = createClient<paths>({
 });
 
 const usePlantSearchQueries = (
-  searchParams: PlantSearchParams | null = null,
+  { location, plantName }: PlantSearchParams,
   plantFilters: PlantDataFilter | undefined,
   {
     paginationEnabled,
@@ -45,7 +44,6 @@ const usePlantSearchQueries = (
     useState<PlantSearchQueryStatus>("READY");
 
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [autoScrapesRemaining, setAutoScrapesRemaining] = useState(0);
   const [pollInterval, setPollInterval] = useState(0);
 
   // #region Queries
@@ -63,16 +61,13 @@ const usePlantSearchQueries = (
 
   const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
     pollInterval,
-    skip: !searchParams,
 
     variables: {
       ...DEFAULT_PLANT_SEARCH_GQL_VARS,
       ...paginationVars,
       where: {
-        boundingPolyCoords: searchParams?.boundingPolyCoords,
-        commonName: searchParams?.commonName,
-        scientificName: searchParams?.scientificName,
-
+        boundingPolyCoords: location?.boundingPolyCoords,
+        ...plantName,
         ...plantFilters,
       },
     },
@@ -90,15 +85,15 @@ const usePlantSearchQueries = (
   }, [plantSearchQuery.loading, plantSearchQuery.networkStatus]);
 
   const searchRecordQuery = useReactQuery({
-    queryKey: ["search-record", searchParams],
+    queryKey: ["search-record", location, plantName],
     refetchInterval: pollInterval,
-    enabled: Boolean(searchParams),
+    enabled: Boolean(location || plantName),
 
     queryFn: async () => {
       setStatusFromRunningQuery();
 
       const { data } = await hotplantsClient.POST("/plants/searchRecord", {
-        body: searchParams!,
+        body: { location, plantName },
       });
 
       if (data?.status !== "SCRAPING" && pollInterval) {
@@ -111,27 +106,17 @@ const usePlantSearchQueries = (
   });
   const searchRecordData = searchRecordQuery.data;
 
-  useEffect(() => {
-    if (searchRecordData?.id && !searchRecordData.lastRanTimestamp) {
-      setAutoScrapesRemaining(MAX_AUTO_SCRAPES);
-    } else {
-      setAutoScrapesRemaining(0);
-    }
-  }, [searchRecordData?.id, searchRecordData?.lastRanTimestamp]);
-
-  const scrapeOccurrencesQuery = useReactQuery({
-    queryKey: [
-      "scrape-occurrences",
-      searchRecordData?.id,
-      autoScrapesRemaining,
-    ],
+  const { refetch: scrapeMoreData, ...scrapeOccurrencesQuery } = useReactQuery({
+    queryKey: ["scrape-occurrences", searchRecordData?.id],
     enabled: Boolean(
-      searchRecordData?.id &&
-      searchRecordData.status === "READY" &&
-      autoScrapesRemaining > 0,
+      searchRecordData?.id && !searchRecordData.lastRanTimestamp,
     ),
 
-    queryFn: async () => {
+    queryFn: async ({ meta }: { meta?: { searchRecordId?: string } }) => {
+      const id = meta?.searchRecordId ?? searchRecordData?.id;
+      if (!id) {
+        return {};
+      }
       setStatusFromRunningQuery();
 
       const { data } = await hotplantsClient.GET(
@@ -168,9 +153,7 @@ const usePlantSearchQueries = (
 
   const stopPolling = () => {
     stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
-
     setPollInterval(0);
-    setAutoScrapesRemaining((prev) => Math.max(0, prev - 1));
   };
 
   const startPolling = () => {
@@ -219,7 +202,7 @@ const usePlantSearchQueries = (
     searchStatus,
     plantSearchQuery,
     searchRecordQuery,
-    scrapeMoreData: scrapeOccurrencesQuery.refetch,
+    scrapeMoreData,
   };
 };
 

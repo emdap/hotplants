@@ -26,7 +26,7 @@ type Documents = {
     "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        _id\n        ...PlantFields\n      }\n    }\n  }\n": typeof types.SearchPlantsDocument,
     "\n  mutation replaceWithProxyUrl(\n    $plantId: String!\n    $occurrenceId: Float!\n    $replaceUrl: String!\n  ) {\n    replaceWithProxyUrl(\n      plantId: $plantId\n      occurrenceId: $occurrenceId\n      replaceUrl: $replaceUrl\n    )\n  }\n": typeof types.ReplaceWithProxyUrlDocument,
     "\n  query getAllSearchRecords(\n    $sort: [SearchRecordSortInput!]\n    $limit: Int\n    $offset: Int\n    $booleanFilter: [SearchRecordBooleanFilterInput!]\n    $stringFilter: [SearchRecordStringFilterInput!]\n  ) {\n    allSearchRecords(\n      sort: $sort\n      limit: $limit\n      offset: $offset\n      booleanFilter: $booleanFilter\n      stringFilter: $stringFilter\n    ) {\n      count\n      results {\n        _id\n        createdTimestamp\n        status\n        lastRanTimestamp\n\n        locationName\n        locationSource\n        boundingPolyCoords\n        scientificName\n        commonName\n\n        totalOccurrences\n        occurrencesOffset\n      }\n    }\n  }\n": typeof types.GetAllSearchRecordsDocument,
-    "\n  query getSearchRecordDataCounts($id: String!) {\n    searchRecordDataCounts(id: $id) {\n      plantCount\n      occurrenceCount\n    }\n  }\n": typeof types.GetSearchRecordDataCountsDocument,
+    "\n  query getSearchRecordDataCounts($id: String!) {\n    searchRecordDataCounts(id: $id) {\n      plantCount\n      occurrenceCount\n\n      firstPlant {\n        _id\n        occurrenceId\n        thumbnailUrl\n        url\n        isProxyUrl\n      }\n    }\n  }\n": typeof types.GetSearchRecordDataCountsDocument,
 };
 const documents: Documents = {
     "\n  fragment GardenPlantFields on GardenPlantData {\n    _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n": types.GardenPlantFieldsFragmentDoc,
@@ -41,7 +41,7 @@ const documents: Documents = {
     "\n  query searchPlants(\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n    $where: PlantDataInput\n  ) {\n    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {\n      count\n      results {\n        _id\n        ...PlantFields\n      }\n    }\n  }\n": types.SearchPlantsDocument,
     "\n  mutation replaceWithProxyUrl(\n    $plantId: String!\n    $occurrenceId: Float!\n    $replaceUrl: String!\n  ) {\n    replaceWithProxyUrl(\n      plantId: $plantId\n      occurrenceId: $occurrenceId\n      replaceUrl: $replaceUrl\n    )\n  }\n": types.ReplaceWithProxyUrlDocument,
     "\n  query getAllSearchRecords(\n    $sort: [SearchRecordSortInput!]\n    $limit: Int\n    $offset: Int\n    $booleanFilter: [SearchRecordBooleanFilterInput!]\n    $stringFilter: [SearchRecordStringFilterInput!]\n  ) {\n    allSearchRecords(\n      sort: $sort\n      limit: $limit\n      offset: $offset\n      booleanFilter: $booleanFilter\n      stringFilter: $stringFilter\n    ) {\n      count\n      results {\n        _id\n        createdTimestamp\n        status\n        lastRanTimestamp\n\n        locationName\n        locationSource\n        boundingPolyCoords\n        scientificName\n        commonName\n\n        totalOccurrences\n        occurrencesOffset\n      }\n    }\n  }\n": types.GetAllSearchRecordsDocument,
-    "\n  query getSearchRecordDataCounts($id: String!) {\n    searchRecordDataCounts(id: $id) {\n      plantCount\n      occurrenceCount\n    }\n  }\n": types.GetSearchRecordDataCountsDocument,
+    "\n  query getSearchRecordDataCounts($id: String!) {\n    searchRecordDataCounts(id: $id) {\n      plantCount\n      occurrenceCount\n\n      firstPlant {\n        _id\n        occurrenceId\n        thumbnailUrl\n        url\n        isProxyUrl\n      }\n    }\n  }\n": types.GetSearchRecordDataCountsDocument,
 };
 
 /**
@@ -109,7 +109,7 @@ export function graphql(source: "\n  query getAllSearchRecords(\n    $sort: [Sea
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getSearchRecordDataCounts($id: String!) {\n    searchRecordDataCounts(id: $id) {\n      plantCount\n      occurrenceCount\n    }\n  }\n"): (typeof documents)["\n  query getSearchRecordDataCounts($id: String!) {\n    searchRecordDataCounts(id: $id) {\n      plantCount\n      occurrenceCount\n    }\n  }\n"];
+export function graphql(source: "\n  query getSearchRecordDataCounts($id: String!) {\n    searchRecordDataCounts(id: $id) {\n      plantCount\n      occurrenceCount\n\n      firstPlant {\n        _id\n        occurrenceId\n        thumbnailUrl\n        url\n        isProxyUrl\n      }\n    }\n  }\n"): (typeof documents)["\n  query getSearchRecordDataCounts($id: String!) {\n    searchRecordDataCounts(id: $id) {\n      plantCount\n      occurrenceCount\n\n      firstPlant {\n        _id\n        occurrenceId\n        thumbnailUrl\n        url\n        isProxyUrl\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

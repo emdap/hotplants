@@ -15,18 +15,20 @@ const LocationDrawings = ({
     const [lat, lng] = center.map((num) => Math.round(num * 100) / 100);
 
     updateSearchParamsDraft({
-      locationName: `${lat}, ${lng}`,
-      locationSource: "custom",
-      boundingPolyCoords: boundingPolygon.geometry.coordinates,
+      location: {
+        locationName: `${lat}, ${lng}`,
+        locationSource: "custom",
+        boundingPolyCoords: boundingPolygon.geometry.coordinates,
+      },
     });
   };
 
   return (
     <>
-      {searchParams && (
+      {searchParams.location && (
         <LocationPolygon
           {...{ locationCustomizeable, setCustomPolygon }}
-          {...searchParams}
+          {...searchParams.location}
         />
       )}
 

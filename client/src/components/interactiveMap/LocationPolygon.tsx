@@ -11,8 +11,7 @@ import { LeafletEvent, Marker as MarkerType } from "leaflet";
 import { useEffect, useMemo, useState } from "react";
 import { Marker, Polygon, useMap } from "react-leaflet";
 import { useMount } from "react-use";
-import { LocationCoord } from "util/customSchemaTypes";
-import { LocationSearchParams } from "util/locationUtil";
+import { LocationCoord, PlantLocationParams } from "util/customSchemaTypes";
 import CrossingMeridianTooltip from "./CrossingMeridianTooltip";
 import { PolygonCenterIcon, PolygonCornerIcon } from "./MarkerIcons";
 import { SetCustomPolygonFn } from "./PolygonDrawing";
@@ -30,7 +29,7 @@ const LocationPolygon = ({
   locationSource,
   locationCustomizeable,
   setCustomPolygon,
-}: LocationSearchParams & {
+}: PlantLocationParams & {
   locationCustomizeable?: boolean;
   setCustomPolygon: SetCustomPolygonFn;
 }) => {

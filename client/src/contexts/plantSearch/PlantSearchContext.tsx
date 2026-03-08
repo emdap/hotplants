@@ -23,9 +23,8 @@ export type PlantSearchContextType = {
   isInfiniteScroll: boolean;
   setIsInfiniteScroll: (enabled: boolean) => void;
 
-  searchParams: PlantSearchParams | null;
+  searchParams: PlantSearchParams;
   searchParamsDraft: Partial<PlantSearchParams> | null;
-  validatedSearchParamsDraft: PlantSearchParams | null;
 
   updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
   applySearchParams: (params?: Partial<PlantSearchParams>) => void;
@@ -48,9 +47,8 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   isInfiniteScroll: !isSmallScreen(),
   setIsInfiniteScroll: VOID_FUNCTION,
 
-  searchParams: null,
+  searchParams: {},
   searchParamsDraft: null,
-  validatedSearchParamsDraft: null,
 
   updateSearchParamsDraft: VOID_FUNCTION,
   applySearchParams: VOID_FUNCTION,

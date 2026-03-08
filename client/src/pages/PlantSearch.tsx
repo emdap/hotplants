@@ -29,14 +29,15 @@ const PlantSearch = ({
     searchFormState,
 
     searchParams,
-    validatedSearchParamsDraft,
+    searchParamsDraft,
+
     searchStatus,
     plantSearchQuery: { loading },
     searchRecordQuery,
 
     fetchMorePlants,
   } = usePlantSearchContext();
-  const { page, lastPage } = usePlantSelectionContext();
+  const { page, lastPage, totalItems } = usePlantSelectionContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor({ enabled: searchStatus === "READY" });
 
@@ -90,7 +91,7 @@ const PlantSearch = ({
           className={classNames(
             !showResults &&
               "basis-1/2 max-w-2xl min-w-md max-md:min-w-full space-y-6",
-            { "[&_button]:opacity-0": !validatedSearchParamsDraft },
+            { "[&_button]:opacity-0": !searchParamsDraft?.location },
           )}
           asSidebar={showResults}
         />
@@ -149,15 +150,13 @@ const PlantSearch = ({
                         : "opacity-0 pointer-events-none",
                     )}
                   >
-                    {
-                      <SearchRecordProgressBar
-                        hideTitle
-                        {...searchRecordQuery.data}
-                        status="READY"
-                      />
-                    }
+                    <SearchRecordProgressBar
+                      hideTitle
+                      {...searchRecordQuery.data}
+                      totalGraphQlResults={totalItems}
+                    />
 
-                    {searchRecordQuery.data.status !== "COMPLETE" && (
+                    {searchRecordQuery.data.status === "READY" && (
                       <Button className="w-full" onClick={fetchMorePlants}>
                         Gather more data
                       </Button>

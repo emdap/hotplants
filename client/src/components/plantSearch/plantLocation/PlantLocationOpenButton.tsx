@@ -6,8 +6,8 @@ import { FaGlobe } from "react-icons/fa";
 import { locationDisplay } from "util/locationUtil";
 
 const PlantLocationOpenButton = ({ onClick }: { onClick?: () => void }) => {
-  const { search } = useSearch({ strict: false });
-  const locationName = search ? locationDisplay(search, true).title : null;
+  const { location } = useSearch({ strict: false });
+  const locationName = location ? locationDisplay(location, true).title : null;
   const isActive = Boolean(locationName);
 
   return (

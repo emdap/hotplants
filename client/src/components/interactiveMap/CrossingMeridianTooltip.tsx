@@ -1,12 +1,13 @@
 import { tooltip, Tooltip as TooltipType } from "leaflet";
 import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
-import { crossesMeridian, LocationSearchParams } from "util/locationUtil";
+import { PlantLocationParams } from "util/customSchemaTypes";
+import { crossesMeridian } from "util/locationUtil";
 
 const CrossingMeridianTooltip = ({
   boundingPolyCoords,
   centerCoords,
-}: Pick<LocationSearchParams, "boundingPolyCoords"> & {
+}: Pick<PlantLocationParams, "boundingPolyCoords"> & {
   centerCoords: [number, number];
 }) => {
   const map = useMap();

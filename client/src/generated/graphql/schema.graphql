@@ -84,6 +84,14 @@ type PlantData implements PlantDataInterface {
   uses: [String!]
 }
 
+type PlantDataExcerpt {
+  _id: String!
+  isProxyUrl: Boolean
+  occurrenceId: Float!
+  thumbnailUrl: String
+  url: String!
+}
+
 input PlantDataInput {
   addedTimestamp: Float
   bloomColors: PlantArrayFilterStringInput
@@ -192,12 +200,12 @@ type Query {
 
 type SearchRecord {
   _id: ObjectId!
-  boundingPolyCoords: [[[Float!]!]!]!
+  boundingPolyCoords: [[[Float!]!]!]
   commonName: String
   createdTimestamp: Float!
   lastRanTimestamp: Float
-  locationName: String!
-  locationSource: LocationSource!
+  locationName: String
+  locationSource: LocationSource
   occurrencesOffset: Int!
   scientificName: String
   status: SearchRecordStatus!
@@ -216,6 +224,7 @@ input SearchRecordBooleanFilterInput {
 }
 
 type SearchRecordPlantCountResults {
+  firstPlant: PlantDataExcerpt
   occurrenceCount: Float!
   plantCount: Float!
 }

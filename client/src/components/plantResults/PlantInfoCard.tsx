@@ -23,7 +23,7 @@ const PlantInfoCard = ({ plant }: { plant: PlantResult }) => (
             PLANT_FIELD_LABEL[key] && (
               <tr key={index} className="grid grid-cols-[2fr_3fr]">
                 <th className="text-left">{PLANT_FIELD_LABEL[key]}</th>
-                <td className="text-right">
+                <td className="text-right break-all">
                   {Array.isArray(value)
                     ? value.join(", ")
                     : typeof value === "string"

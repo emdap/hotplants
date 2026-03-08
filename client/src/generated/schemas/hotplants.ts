@@ -73,11 +73,13 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        "Maybe_number-Array-Array-Array_": number[][][] | null;
         Maybe_string_: string | null;
         /** Format: double */
         Maybe_number_: number | null;
         /** @enum {string} */
         LocationSource: "custom" | "search";
+        Maybe_LocationSource_: components["schemas"]["LocationSource"] | null;
         /** @enum {string} */
         SearchRecordStatus: "COMPLETE" | "READY" | "SCRAPING";
         /** @description From T, pick a set of properties whose keys are in the union K */
@@ -85,13 +87,13 @@ export interface components {
             taxonKeys?: number[];
             /** @enum {string} */
             __typename?: "SearchRecord";
-            boundingPolyCoords: number[][][];
+            boundingPolyCoords?: components["schemas"]["Maybe_number-Array-Array-Array_"];
             commonName?: components["schemas"]["Maybe_string_"];
             /** Format: double */
             createdTimestamp: number;
             lastRanTimestamp?: components["schemas"]["Maybe_number_"];
-            locationName: string;
-            locationSource: components["schemas"]["LocationSource"];
+            locationName?: components["schemas"]["Maybe_string_"];
+            locationSource?: components["schemas"]["Maybe_LocationSource_"];
             /** Format: double */
             occurrencesOffset: number;
             scientificName?: components["schemas"]["Maybe_string_"];
@@ -104,15 +106,21 @@ export interface components {
         SearchRecordSummary: {
             id: string;
         } & components["schemas"]["Omit_SearchRecordDocument._id_"];
-        /** @description From T, pick a set of properties whose keys are in the union K */
-        "Pick_SearchRecordDocument.locationName-or-locationSource-or-boundingPolyCoords-or-commonName-or-scientificName_": {
+        PlantSearchLocationParams: {
             boundingPolyCoords: number[][][];
-            commonName?: components["schemas"]["Maybe_string_"];
+            /** @enum {string} */
+            locationSource: "search" | "custom";
             locationName: string;
-            locationSource: components["schemas"]["LocationSource"];
-            scientificName?: components["schemas"]["Maybe_string_"];
         };
-        PlantSearchParams: components["schemas"]["Pick_SearchRecordDocument.locationName-or-locationSource-or-boundingPolyCoords-or-commonName-or-scientificName_"];
+        PlantSearchNameParams: {
+            commonName: string;
+        } | {
+            scientificName: string;
+        };
+        PlantSearchParams: {
+            plantName?: components["schemas"]["PlantSearchNameParams"];
+            location?: components["schemas"]["PlantSearchLocationParams"];
+        };
         "Maybe_string-Array_": string[] | null;
         "Maybe_number-Array_": number[] | null;
         PlantArrayValuesDocument: {
@@ -152,6 +160,14 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchRecordSummary"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
                 };
             };
             500: {

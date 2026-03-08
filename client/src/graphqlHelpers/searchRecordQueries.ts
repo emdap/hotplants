@@ -41,6 +41,14 @@ export const GET_SEARCH_RECORD_PLANT_COUNT = graphql(`
     searchRecordDataCounts(id: $id) {
       plantCount
       occurrenceCount
+
+      firstPlant {
+        _id
+        occurrenceId
+        thumbnailUrl
+        url
+        isProxyUrl
+      }
     }
   }
 `);

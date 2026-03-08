@@ -48,7 +48,7 @@ const ActivePlantPane = () => {
   const pageIndexOffset = (page - 1) * pageSize;
 
   const mapCenter = useMemo(() => {
-    if (searchParams || !activePlantMedia.length) {
+    if (searchParams.location || !activePlantMedia.length) {
       return undefined;
     }
 
@@ -183,7 +183,7 @@ const ActivePlantPane = () => {
               <MapProvider
                 showMarkers
                 className="min-h-60 w-full"
-                searchParams={searchParams}
+                locationParams={searchParams.location}
                 {...(mapCenter && { center: mapCenter })}
               />
             </div>

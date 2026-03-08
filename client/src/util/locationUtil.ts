@@ -8,13 +8,8 @@ import {
   Position,
 } from "geojson";
 import createClient from "openapi-fetch";
-import { LocationCoord } from "util/customSchemaTypes";
-import { LocationData, PlantSearchParams } from "./customSchemaTypes";
-
-export type LocationSearchParams = Pick<
-  PlantSearchParams,
-  "locationName" | "locationSource" | "boundingPolyCoords"
->;
+import { LocationCoord, PlantLocationParams } from "util/customSchemaTypes";
+import { LocationData } from "./customSchemaTypes";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
@@ -79,7 +74,7 @@ const convertNominatimGeojson = (location: LocationData) => {
 
 export const validateNominatimLocation = (
   location?: LocationData,
-): null | LocationSearchParams => {
+): null | PlantLocationParams => {
   if (!location?.display_name) {
     return null;
   }
@@ -96,7 +91,7 @@ export const validateNominatimLocation = (
 };
 
 export const locationDisplay = (
-  location: Omit<LocationSearchParams, "boundingPolyCoords">,
+  location: Omit<PlantLocationParams, "boundingPolyCoords">,
   shortenCustom?: boolean,
 ) => {
   if (location.locationSource === "custom") {
@@ -113,7 +108,7 @@ export const locationDisplay = (
 };
 
 export const customLocationDisplay = (
-  location: Partial<LocationSearchParams>,
+  location: Omit<PlantLocationParams, "boundingPolyCoords">,
 ) => `Custom Location: (${location.locationName ?? "N/A"})`;
 
 export const crossesMeridian = (coordinates: Position[]) => {
@@ -140,3 +135,18 @@ export const swapLatLng = (
 
 export const getOuterCoordinates = (feature: Feature<PolygonType>) =>
   feature.geometry.coordinates[0];
+
+export const validateLocationParams = ({
+  locationName,
+  locationSource,
+  boundingPolyCoords,
+}: {
+  [key in keyof PlantLocationParams]?:
+    | PlantLocationParams[key]
+    | null
+    | undefined;
+}): PlantLocationParams | undefined => {
+  if (locationName && locationSource && boundingPolyCoords) {
+    return { locationName, locationSource, boundingPolyCoords };
+  }
+};

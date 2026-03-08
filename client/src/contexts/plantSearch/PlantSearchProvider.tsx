@@ -23,7 +23,8 @@ const PlantSearchProvider = () => {
     plantFilter,
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
-    search: searchParams = null,
+    lastOpened: _lastOpened,
+    ...searchParams
   } = route.useSearch();
 
   const [searchParamsDraft, setSearchParamsDraft] =
@@ -34,46 +35,27 @@ const PlantSearchProvider = () => {
   );
 
   useEffect(() => {
-    setIsPrefilledSearch;
-  }, [searchParams, plantFilter, page, pageSize]);
-
-  useEffect(() => {
+    console.log("effect");
     setSearchParamsDraft(searchParams);
-  }, [searchParams]);
-
-  const validateSearchParams = (
-    params?: Partial<PlantSearchParams> | null,
-  ): PlantSearchParams | null =>
-    params?.boundingPolyCoords && params.locationName && params.locationSource
-      ? (params as PlantSearchParams)
-      : null;
-
-  const validatedSearchParamsDraft = useMemo(
-    () => validateSearchParams(searchParamsDraft),
-    [searchParamsDraft],
-  );
+  }, [searchParams.location, searchParams.plantName]);
 
   const applySearchParams = useCallback(
     (params?: Partial<PlantSearchParams>) => {
-      const applyParams = validateSearchParams({
-        ...searchParamsDraft,
-        ...params,
-      });
-      if (applyParams) {
-        setIsPrefilledSearch(false);
+      setIsPrefilledSearch(false);
 
-        navigate({
-          to: ".",
-          search: ({ pageSize, plantFilter }) => ({
-            pageSize,
-            search: applyParams,
-            plantFilter,
-          }),
-        });
-        isSmallScreen() &&
-          setSearchFormState((prev) => ({ ...prev, isOpen: false }));
-      }
+      navigate({
+        to: ".",
+        search: ({ pageSize, plantFilter }) => ({
+          pageSize,
+          ...searchParamsDraft,
+          ...params,
+          plantFilter,
+        }),
+      });
+      isSmallScreen() &&
+        setSearchFormState((prev) => ({ ...prev, isOpen: false }));
     },
+
     [navigate, searchParamsDraft],
   );
 
@@ -144,7 +126,6 @@ const PlantSearchProvider = () => {
 
         searchParams,
         searchParamsDraft,
-        validatedSearchParamsDraft,
 
         updateSearchParamsDraft,
         applySearchParams,
@@ -167,7 +148,7 @@ const PlantSearchProvider = () => {
             : plantSearchQuery.data?.plantSearch.results) ?? []
         }
         plantListLoading={plantSearchQuery.loading}
-        boundingPolygon={searchParams?.boundingPolyCoords}
+        boundingPolygon={searchParams.location?.boundingPolyCoords}
         {...{
           page,
           pageSize,

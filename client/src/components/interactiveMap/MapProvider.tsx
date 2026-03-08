@@ -7,7 +7,7 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
-import { PlantSearchParams } from "util/customSchemaTypes";
+import { PlantLocationParams, PlantSearchParams } from "util/customSchemaTypes";
 import LocationPolygon from "./LocationPolygon";
 import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
 import PolygonDrawing, { SetCustomPolygonFn } from "./PolygonDrawing";
@@ -22,13 +22,13 @@ type MapProviderProps = {
   isLoading?: boolean;
   showMarkers?: boolean;
   locationCustomizeable?: boolean;
-  searchParams: PlantSearchParams | null;
-  setSearchParams?: (newParams: PlantSearchParams) => void;
+  locationParams: PlantSearchParams["location"];
+  setLocationParams?: (newParams: PlantLocationParams) => void;
 } & MapContainerProps;
 
 const MapProvider = ({
-  searchParams,
-  setSearchParams,
+  locationParams: searchParams,
+  setLocationParams: setSearchParams,
 
   isLoading,
   showMarkers,
