@@ -17,4 +17,5 @@ export type OptionalSearchParamKey = "commonName" | "scientificName";
 export type PlantDataFilter = Omit<PlantDataInput, "boundingPolyCoords">;
 
 export type PlantArrayValues =
-  Hotplants.components["schemas"]["PlantArrayValuesDocument"];
+  // TODO: Omitted habitats from BE as well, not scraping good values
+  Omit<Hotplants.components["schemas"]["PlantArrayValuesDocument"], "habitats">;

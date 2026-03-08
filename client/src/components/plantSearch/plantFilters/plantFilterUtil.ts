@@ -77,13 +77,13 @@ export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
       multiselect: true,
       matchAllCheckbox: true,
     },
-    habitats: {
-      plantDataKey: "habitats",
-      label: "Habitat",
-      inputType: "select-string",
-      multiselect: true,
-      matchAllCheckbox: true,
-    },
+    // habitats: {
+    //   plantDataKey: "habitats",
+    //   label: "Habitat",
+    //   inputType: "select-string",
+    //   multiselect: true,
+    //   matchAllCheckbox: true,
+    // },
     hardiness: {
       plantDataKey: "hardiness",
       label: "USDA Hardiness Zone",
@@ -105,16 +105,19 @@ export const STATIC_FILTER_DICT: FilterDict = {
     plantDataKey: "scientificName",
     label: "Scientific name contains",
     inputType: "text",
+    order: -3,
   },
   commonName: {
     plantDataKey: "commonName",
     label: "Common name contains",
     inputType: "text",
+    order: -2,
   },
   isPerennial: {
     plantDataKey: "isPerennial",
     label: "Perennial",
     inputType: "select-boolean",
+    order: 0,
     options: [
       { label: "Perennials only", value: true },
       { label: "Annuals only", value: false },
@@ -125,6 +128,7 @@ export const STATIC_FILTER_DICT: FilterDict = {
     plantDataKey: "physicalCharactersticsDump",
     label: "Description keyword search",
     inputType: "text",
+    order: -1,
   },
 
   // TODO: BE to support selecting unit
@@ -133,12 +137,14 @@ export const STATIC_FILTER_DICT: FilterDict = {
     label: "Plant height",
     inputType: "range",
     minValue: 0,
+    order: 2,
   },
   spread: {
     plantDataKey: "spread",
     label: "Plant spread",
     inputType: "range",
     minValue: 0,
+    order: 3,
   },
 };
 
@@ -164,6 +170,7 @@ export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
       (prev[key] as FilterInput) = {
         ...DYNAMIC_FILTER_DICT[key],
         options,
+        order: 1,
       };
     }
 

@@ -88,7 +88,7 @@ const RangeFilterInput = ({
 
   return (
     <fieldset className="styled-fieldset">
-      <legend className="px-2 font-medium">{filterInput.label}</legend>
+      <legend>{filterInput.label}</legend>
       <div className="grid grid-cols-[1fr_1fr_auto] gap-4">
         {VALUE_PREFIXES.map((valuePrefix) => {
           const elementId = `${filterInput.plantDataKey}-${valuePrefix}`;

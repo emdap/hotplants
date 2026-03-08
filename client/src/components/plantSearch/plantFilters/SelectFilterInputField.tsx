@@ -1,5 +1,6 @@
 import { ListboxValueType } from "designSystem/listbox/listboxUtil";
 import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
+import { useState } from "react";
 import { PlantArrayValues } from "util/customSchemaTypes";
 import {
   FilterInputComponentProps,
@@ -17,18 +18,23 @@ const SelectFilterInputField = ({
   value: filterValue,
   onChange,
 }: SelectFilterInputFieldProps) => {
+  const [matchAll, setMatchAll] = useState(filterValue?.matchAll || false);
+
   const handleOnValueChange = (newValue: ListboxValueType[]) => {
     if (filterValue?.matchAll === undefined && !newValue.length) {
       onChange(undefined);
     } else {
-      onChange({ ...filterValue, value: newValue } as PlantArrayFilterInput);
+      onChange({
+        ...filterValue,
+        value: newValue,
+        matchAll,
+      } as PlantArrayFilterInput);
     }
   };
 
   const handleOnMatchAllChange = (newValue: boolean) => {
-    if (!filterValue?.value && !newValue) {
-      onChange(undefined);
-    } else {
+    setMatchAll(newValue);
+    if (filterValue?.value) {
       onChange({
         ...filterValue,
         matchAll: newValue || undefined,
@@ -36,9 +42,13 @@ const SelectFilterInputField = ({
     }
   };
 
+  const checkboxInputId = `${plantDataKey}-checkbox`;
+
   return (
-    <div className="form-item">
-      <label htmlFor={plantDataKey}>{label}</label>
+    <fieldset className="styled-fieldset form-item">
+      <legend>
+        <label htmlFor={plantDataKey}>{label}</label>
+      </legend>
 
       <StyledMultipleListbox
         multiple
@@ -51,18 +61,18 @@ const SelectFilterInputField = ({
 
       {matchAllCheckbox && (
         <div className="form-item flex-row items-center gap-2">
-          <label htmlFor={plantDataKey}>Include all</label>
           <input
-            id={plantDataKey}
+            id={checkboxInputId}
             type="checkbox"
-            checked={Boolean(filterValue?.matchAll)}
+            checked={matchAll}
             placeholder={`Enter ${inputType}`}
             onChange={({ target }) => handleOnMatchAllChange(target.checked)}
             className="styled-checkbox"
           />
+          <label htmlFor={checkboxInputId}>Data includes all</label>
         </div>
       )}
-    </div>
+    </fieldset>
   );
 };
 
