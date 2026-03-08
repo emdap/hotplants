@@ -28,9 +28,6 @@ const PlantSearch = ({
     isInfiniteScroll,
     searchFormState,
 
-    searchParams,
-    searchParamsDraft,
-
     searchStatus,
     plantSearchQuery: { loading },
     searchRecordQuery,
@@ -71,32 +68,16 @@ const PlantSearch = ({
     scrollContainerElement,
   ]);
 
-  const showResults = Boolean(hasCurrentResults || searchParams);
-
   return (
     <main className="w-full h-full">
-      {!showResults && <ScrollAnchor id="plant" className="absolute top-0" />}
+      {!page && <ScrollAnchor id="plant" className="absolute top-0" />}
       <PageTitle className="page-buffer">Plant Search</PageTitle>
-      {showResults && <PlantSearchHeader />}
+      <PlantSearchHeader />
 
-      <div
-        className={classNames("flex grow", {
-          "small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full":
-            showResults,
-          "max-md:flex-col max-md:justify-between page-buffer pb-8 gap-8":
-            !showResults,
-        })}
-      >
-        <PlantSearchForm
-          className={classNames(
-            !showResults &&
-              "basis-1/2 max-w-2xl min-w-md max-md:min-w-full space-y-6",
-            { "[&_button]:opacity-0": !searchParamsDraft?.location },
-          )}
-          asSidebar={showResults}
-        />
+      <div className="flex grow small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full">
+        <PlantSearchForm />
 
-        {showResults && !isInfiniteScroll && (
+        {page && !isInfiniteScroll && (
           <ScrollAnchor className="scroll-m-header-2" />
         )}
 
@@ -104,16 +85,14 @@ const PlantSearch = ({
           ref={resultsContainerRef}
           className="grow flex flex-col relative scroll-m-header-2 pt-4 pb-10 big-screen:px-4 max-lg:basis-2/3 gap-20"
         >
-          {showResults && (
-            <PlantList
-              key="results-holder"
-              parentSidebarExpanded={searchFormState.isOpen}
-              showFadeInAnimation={!isInfiniteScroll}
-              className={classNames({
-                "pb-20": isInfiniteScroll && hasNextPage,
-              })}
-            />
-          )}
+          <PlantList
+            key="results-holder"
+            parentSidebarExpanded={searchFormState.isOpen}
+            showFadeInAnimation={!isInfiniteScroll}
+            className={classNames({
+              "pb-20": isInfiniteScroll && hasNextPage,
+            })}
+          />
 
           <LoadingOverlay
             transparent
@@ -137,7 +116,7 @@ const PlantSearch = ({
               <div className="flex flex-col gap-8 my-auto overflow-hidden">
                 <PlantAnimation
                   queryStatus={searchStatus}
-                  isInitialSearch={!searchRecordQuery.dataUpdatedAt}
+                  // isInitialSearch={!searchRecordQuery}
                   hasCurrentResults={hasCurrentResults}
                 />
 

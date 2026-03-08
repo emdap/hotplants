@@ -19,21 +19,13 @@ const formComponents: Record<SearchFormTab, ReactElement> = {
   filters: <PlantFiltersForm renderMode="card" />,
 };
 
-const PlantSearchForm = ({
-  asSidebar,
-  className,
-}: {
-  asSidebar?: boolean;
-  className?: string;
-}) => {
+const PlantSearchForm = () => {
   const {
     hasCurrentResults,
     searchFormState: { tab, isOpen },
     setSearchFormState,
   } = usePlantSearchContext();
   const { scrollContainerElement } = useGetScrollContainer();
-
-  const asModal = asSidebar && isSmallScreen();
 
   const [sidebarHeight, setSidebarHeight] = useState<number | undefined>(
     undefined,
@@ -71,23 +63,20 @@ const PlantSearchForm = ({
     onClose: () => toggleIsOpen(false),
   });
 
-  return asModal ? (
+  return isSmallScreen() ? (
     <>
       <PlantLocationForm {...modalProps("location")} />
       <PlantNameForm {...modalProps("plant-name")} />
       <PlantFiltersForm {...modalProps("filters")} />
     </>
-  ) : asSidebar ? (
+  ) : (
     <Sidebar
       ref={sidebarRef}
       isExpanded={isOpen}
       setIsExpanded={toggleIsOpen}
       externalCollapseButton
       className={(isExpanded) =>
-        classNames({
-          "sticky top-header-2 h-dvh-header-2 border-r": hasCurrentResults,
-          "h-max": !hasCurrentResults,
-
+        classNames("sticky top-header-2 h-dvh-header-2 border-r", {
           "w-md [&_.sidebar-button]:bg-accent": isExpanded,
           "overflow-hidden": !isExpanded,
         })
@@ -108,10 +97,6 @@ const PlantSearchForm = ({
         </div>
       )}
     </Sidebar>
-  ) : (
-    <div className={className}>
-      <PlantLocationForm renderMode="card" />
-    </div>
   );
 };
 
