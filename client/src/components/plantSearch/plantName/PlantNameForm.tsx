@@ -74,13 +74,13 @@ const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
 
   const plantNameFields = (
     <div
-      className={classNames("flex flex-col", {
-        "pr-4 overflow-auto": renderMode === "modal",
+      className={classNames("flex flex-col items-center", {
+        "px-4 overflow-auto": renderMode === "modal",
       })}
     >
       {renderMode === "card" && <h2>{PLANT_FORM_TITLES["plant-name"]}</h2>}
 
-      <div className="my-4 min-h-min">
+      <div className="my-4 min-h-min w-full max-w-[400px]">
         {PLANT_NAME_FIELDS.map((field, index) => (
           <Fragment key={index}>
             <FilterInputField<"text">
@@ -91,7 +91,7 @@ const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
               }
             />
             {index === 0 && (
-              <p className="text-center">
+              <p className="text-center mt-2 opacity-50">
                 {"\u2013"} or {"\u2013"}
               </p>
             )}
@@ -102,13 +102,20 @@ const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
   );
 
   return renderMode === "card" ? (
-    <Form onSubmit={() => applySearchParams()}>
+    // TODO: Repeat form/styling/pattern with other 'Plant...Form' components
+    <Form
+      className="flex flex-col overflow-hidden gap-4"
+      onSubmit={() => applySearchParams()}
+    >
       <Card className="overflow-auto">{plantNameFields}</Card>
       {plantNameFooter}
     </Form>
   ) : (
     <Modal title={PLANT_FORM_TITLES["plant-name"]} {...modalProps}>
-      <Form onSubmit={() => applySearchParams()}>
+      <Form
+        className="flex flex-col overflow-hidden gap-4"
+        onSubmit={() => applySearchParams()}
+      >
         {plantNameFields}
         {plantNameFooter}
       </Form>

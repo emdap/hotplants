@@ -11,7 +11,7 @@ import Form from "designSystem/Form";
 import Modal from "designSystem/Modal";
 import { useReactQuery } from "hooks/useQuery";
 import { isEqual } from "lodash";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import {
   customLocationDisplay,
@@ -21,6 +21,7 @@ import {
 
 const PlantLocationForm = ({
   renderMode,
+  onClose,
   ...modalProps
 }: PlantSearchFormProps) => {
   const {
@@ -45,20 +46,20 @@ const PlantLocationForm = ({
     [searchInput],
   );
 
-  useEffect(() => {
+  const syncWithParams = useCallback(() => {
     if (locationParams?.locationSource === "custom") {
       setLocationInvalid(false);
       setSearchInput("");
       setDebouncedInput("");
-    }
-  }, [locationParams?.locationSource]);
-
-  useEffect(() => {
-    if (locationParams?.locationSource !== "custom") {
+    } else {
       setSearchInput(locationParams?.locationName ?? "");
       setDebouncedInput(locationParams?.locationName ?? "");
     }
   }, [locationParams?.locationSource, locationParams?.locationName]);
+
+  useEffect(() => {
+    syncWithParams();
+  }, [syncWithParams]);
 
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
@@ -104,34 +105,44 @@ const PlantLocationForm = ({
     setDebouncedInput(e.target.value);
   };
 
-  const searchParamsApplied = isEqual(
-    searchParamsDraft?.location,
-    locationParams,
-  );
-
   const submitSearchLocation = () => {
     applySearchParams();
     getResultsContainer()?.scrollIntoView();
   };
 
+  const onModalClose = () => {
+    if (onClose) {
+      syncWithParams();
+      updateSearchParamsDraft({ location: locationParams });
+      onClose();
+    }
+  };
+
   const plantLocationFooter = (
     <PlantSearchFormFooter
       submitButtonProps={{
-        disabled: locationPending || !searchParamsDraft || searchParamsApplied,
+        disabled:
+          locationPending ||
+          !searchParamsDraft?.location ||
+          isEqual(searchParamsDraft?.location, locationParams),
         onClick: submitSearchLocation,
       }}
       clearButtonProps={{
-        disabled: !locationParams,
-        onClick: () => applySearchParams({ location: undefined }),
+        disabled: !locationParams && !searchParamsDraft?.location,
+        onClick: () => {
+          applySearchParams({ location: undefined });
+          updateSearchParamsDraft({ location: undefined });
+          syncWithParams();
+        },
       }}
     />
   );
 
   const plantLocationFields = (
     <div
-      className={classNames("flex flex-col gap-4", {
-        "pt-4": renderMode === "modal",
-        "pr-4 overflow-auto": renderMode === "modal",
+      className={classNames("flex flex-col gap-4 mb-4", {
+        "pt-4 pr-4 overflow-auto md:flex-row justify-between md:items-start":
+          renderMode === "modal",
       })}
     >
       {renderMode === "card" && <h2>{PLANT_FORM_TITLES.location}</h2>}
@@ -165,7 +176,7 @@ const PlantLocationForm = ({
         </div>
       </div>
 
-      <div className="form-item">
+      <div className="form-item grow">
         <label>Map view</label>
         <MapProvider
           locationCustomizeable
@@ -174,20 +185,30 @@ const PlantLocationForm = ({
           setLocationParams={(location) =>
             updateSearchParamsDraft({ location })
           }
-          className="w-full h-40 big-screen:h-80 grow"
+          className="h-[45vh] big-screen:h-80 grow"
         />
       </div>
     </div>
   );
 
   return renderMode === "card" ? (
-    <Form onSubmit={submitSearchLocation}>
+    <Form
+      className="flex flex-col gap-4 overflow-hidden"
+      onSubmit={submitSearchLocation}
+    >
       <Card className="overflow-auto">{plantLocationFields}</Card>
       {plantLocationFooter}
     </Form>
   ) : (
-    <Modal title={PLANT_FORM_TITLES.location} {...modalProps}>
-      <Form onSubmit={submitSearchLocation}>
+    <Modal
+      title={PLANT_FORM_TITLES.location}
+      onClose={onModalClose}
+      {...modalProps}
+    >
+      <Form
+        className="flex flex-col gap-4 md:overflow-hidden"
+        onSubmit={submitSearchLocation}
+      >
         {plantLocationFields}
         {plantLocationFooter}
       </Form>

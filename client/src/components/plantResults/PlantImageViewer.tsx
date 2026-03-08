@@ -94,6 +94,7 @@ const PlantImageViewer = ({
             setIsModalOpen(false);
             setCarouselIndex(largeCarouselIndex);
           }}
+          className="h-5/6"
         >
           <Carousel
             carouselIndex={carouselIndex}

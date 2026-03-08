@@ -35,8 +35,8 @@ const PlantSearchProvider = () => {
   );
 
   useEffect(() => {
-    console.log("effect");
     setSearchParamsDraft(searchParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.location, searchParams.plantName]);
 
   const applySearchParams = useCallback(
