@@ -14,12 +14,6 @@ const PlantLocationOpenButton = ({ onClick }: { onClick?: () => void }) => {
   const locationName = location ? locationDisplay(location, true).title : null;
   const isActive = Boolean(locationName);
 
-  console.log(
-    location,
-    searchParamsDraft?.location,
-    isEqual(searchParamsDraft?.location, location),
-  );
-
   return (
     <IconButton
       size="small"
