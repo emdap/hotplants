@@ -1,4 +1,4 @@
-import Card from "designSystem/Card";
+import Card, { CardProps } from "designSystem/Card";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { Entries } from "type-fest";
 
@@ -14,8 +14,11 @@ const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {
   physicalCharactersticsDump: "General Info",
 };
 
-const PlantInfoCard = ({ plant }: { plant: PlantResult }) => (
-  <Card className="big-screen:overflow-auto flex-grow">
+const PlantInfoCard = ({
+  plant,
+  ...props
+}: { plant: PlantResult } & CardProps) => (
+  <Card {...props}>
     <table className="border-separate border-spacing-4 [&_th,td]:p-2 w-full">
       <tbody>
         {(Object.entries(plant) as Entries<PlantResult>).map(

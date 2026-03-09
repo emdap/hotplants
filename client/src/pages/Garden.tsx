@@ -28,16 +28,19 @@ const Garden = () => {
 
   const [showFiltersModal, setShowFiltersModal] = useState(false);
 
-  const gardenQuery = useApolloQuery(GET_GARDEN, { variables: { gardenName } });
+  const { data: { userGarden } = {}, ...gardenQuery } = useApolloQuery(
+    GET_GARDEN,
+    { variables: { gardenName } },
+  );
 
   const gardenPlantsQuery = useApolloQuery(GET_GARDEN_PLANTS, {
     variables: {
-      gardenId: gardenQuery.data?.userGarden?._id,
+      gardenId: userGarden?._id,
       limit: pageSize,
       offset: (page - 1) * pageSize,
       where: plantFilter,
     },
-    skip: !gardenQuery.data?.userGarden?._id,
+    skip: !userGarden?._id,
     fetchPolicy: "cache-and-network",
   });
 
@@ -73,6 +76,7 @@ const Garden = () => {
         plantList={gardenPlants?.results ?? []}
         plantListLoading={gardenPlantsQuery.loading}
         totalItems={gardenPlantsCount}
+        activeGardenId={userGarden?._id}
         {...{ page, pageSize }}
       >
         <FloatingHeader>

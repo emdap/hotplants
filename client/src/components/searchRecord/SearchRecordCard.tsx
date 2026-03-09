@@ -79,7 +79,7 @@ const SearchRecordCard = ({
       {...MOTION_FADE_IN}
     >
       <div
-        className="border-b border-transparent hover:border-default-text/80 cursor-pointer pb-0.5 flex gap-4 justify-between items-center"
+        className="border-b border-transparent hover:border-default-text/80 transition-colors cursor-pointer pb-0.5 flex gap-4 justify-between items-center"
         onClick={openSearchRecord}
       >
         <span>

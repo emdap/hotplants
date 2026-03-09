@@ -27,32 +27,35 @@ const PlantSearchForm = () => {
   } = usePlantSearchContext();
   const { scrollContainerElement } = useGetScrollContainer();
 
-  const [sidebarHeight, setSidebarHeight] = useState<number | undefined>(
-    undefined,
-  );
+  const [sidebarContentHeight, setSidebarContentHeight] = useState<
+    number | undefined
+  >(undefined);
   const sidebarRef = useRef<HTMLElement>(null);
 
-  const resizeSidebar = useCallback(() => {
+  const resizeSidbarContent = useCallback(() => {
     if (sidebarRef.current) {
       const { height, top } = sidebarRef.current.getBoundingClientRect();
       const availableHeight = window.innerHeight - top;
-      availableHeight !== height && setSidebarHeight(availableHeight);
+      availableHeight !== height && setSidebarContentHeight(availableHeight);
     } else {
-      setSidebarHeight(undefined);
+      setSidebarContentHeight(undefined);
     }
   }, []);
 
-  useMount(() => resizeSidebar());
+  useMount(() => resizeSidbarContent());
 
   useEffect(() => {
-    window.addEventListener("resize", resizeSidebar);
-    scrollContainerElement?.addEventListener("scroll", resizeSidebar);
+    window.addEventListener("resize", resizeSidbarContent);
+    scrollContainerElement?.addEventListener("scroll", resizeSidbarContent);
 
     return () => {
-      window.removeEventListener("resize", resizeSidebar);
-      scrollContainerElement?.removeEventListener("scroll", resizeSidebar);
+      window.removeEventListener("resize", resizeSidbarContent);
+      scrollContainerElement?.removeEventListener(
+        "scroll",
+        resizeSidbarContent,
+      );
     };
-  }, [resizeSidebar, scrollContainerElement]);
+  }, [resizeSidbarContent, scrollContainerElement]);
 
   const toggleIsOpen = (isOpen: boolean) =>
     setSearchFormState((prev) => ({ ...prev, isOpen }));
@@ -81,17 +84,18 @@ const PlantSearchForm = () => {
           "overflow-hidden": !isExpanded,
         })
       }
-      style={{ height: sidebarHeight }}
+      // style={{ height: sidebarHeight }}
     >
       {({ isExpanded }) => (
         <div
           className={classNames(
-            "w-md h-full flex flex-col gap-4 p-4 pr-5 transition-opacity",
+            "w-md h-full flex flex-col gap-4 p-4 pr-5 transition-[height,_opacity]",
             hasCurrentResults && {
               "opacity-100 delay-150": isExpanded,
               "opacity-0": !isExpanded,
             },
           )}
+          style={{ height: sidebarContentHeight }}
         >
           {formComponents[tab]}
         </div>

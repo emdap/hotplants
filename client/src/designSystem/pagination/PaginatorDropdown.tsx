@@ -25,7 +25,12 @@ const PaginatorDropdown = ({
       {inPopover ? label : <span className="small-screen:hidden">{label}</span>}
       <Menu>
         <MenuButton as="div" disabled={disabled}>
-          <Button variant="text" size="flush" disabled={disabled}>
+          <Button
+            variant="text"
+            size="flush"
+            disabled={disabled}
+            className="font-bold!"
+          >
             {selected}
           </Button>
         </MenuButton>

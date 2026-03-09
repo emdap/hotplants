@@ -6,7 +6,7 @@ import { useLottie } from "lottie-react";
 import { motion } from "motion/react";
 import movingPlant from "placeholderImages/movingPlant.json";
 import stillPlant from "placeholderImages/stillPlant.json";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 type PlantAnimationProps = {
   queryStatus?: PlantSearchQueryStatus;
@@ -21,9 +21,14 @@ const getDescription = ({
   dataType = "plants",
   hasCurrentResults,
   isInitialSearch,
-}: Partial<PlantAnimationProps>) => {
+}: Partial<PlantAnimationProps>): [number, ReactNode] => {
   if (queryStatus === "CHECKING_STATUS") {
-    return [0, ""];
+    return [
+      0,
+      <span className="flex gap-2 items-center justify-center">
+        <LoadingIcon /> Loading
+      </span>,
+    ];
   } else if (queryStatus === "SCRAPING_AND_POLLING") {
     return [1, `Searching for ${hasCurrentResults ? "more " : ""}${dataType}`];
   } else if (!hasCurrentResults && isInitialSearch) {
@@ -87,7 +92,7 @@ const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
           lottieAnimation === "MOVING" && "animate-pulse",
         )}
       >
-        {description || <LoadingIcon />}
+        {description}
       </motion.h4>
     </motion.div>
   );

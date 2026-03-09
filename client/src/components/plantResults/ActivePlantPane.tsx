@@ -187,7 +187,11 @@ const ActivePlantPane = () => {
                 {...(mapCenter && { center: mapCenter })}
               />
             </div>
-            <PlantInfoCard plant={activePlant} />
+            <PlantInfoCard
+              plant={activePlant}
+              className="big-screen:overflow-auto flex-grow"
+              onTouchEndCapture={(e) => e.stopPropagation()}
+            />
           </div>
         </Card>
       )}

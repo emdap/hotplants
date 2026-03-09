@@ -1,17 +1,22 @@
 import classNames from "classnames";
 import { useIsSignedIn } from "config/authClient";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import { GraphQLFormattedError } from "graphql";
-import { ADD_PLANT_TO_GARDEN } from "graphqlHelpers/gardenQueries";
+import {
+  ADD_PLANT_TO_GARDEN,
+  REMOVE_PLANT_FROM_GARDEN,
+} from "graphqlHelpers/gardenQueries";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaHeartBroken } from "react-icons/fa";
 import { toast } from "sonner";
 import { handleGraphQlError } from "util/generalUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
 import { defaultWarningToast } from "util/toastUtil";
 
 const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
+  const { activeGardenId } = usePlantSelectionContext();
   const isSignedIn = useIsSignedIn();
   const hasCommonName = plant.commonNames?.length;
   const plantDisplayNames = getPlantDisplayNames(plant);
@@ -25,14 +30,17 @@ const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
       variables: { plantId: plant._id },
     });
 
+  const [removeFromGardenMutation, { loading: gardenRemoveLoading }] =
+    useApolloMutation(REMOVE_PLANT_FROM_GARDEN, {
+      variables: { plantId: plant._id, gardenId: activeGardenId },
+    });
+
   const customGraphQlErrorHandler = (error: GraphQLFormattedError) =>
     error.extensions?.code === 400
       ? toast.warning(error.message)
       : toast.error(error.message, retryAddAction);
 
-  const addToGarden = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
+  const addToGarden = async () => {
     try {
       const { data } = await addToGardenMutation();
       if (data?.addToGarden) {
@@ -47,6 +55,29 @@ const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
         customErrorHandler: customGraphQlErrorHandler,
         ...retryAddAction,
       });
+    }
+  };
+
+  const removeFromGarden = async () => {
+    try {
+      const data = await removeFromGardenMutation();
+      if (!data.error) {
+        toast.success(`Removed "${plantDisplayNames.title}" from garden"`);
+      } else {
+        defaultWarningToast();
+      }
+    } catch (error) {
+      handleGraphQlError(error);
+    }
+  };
+
+  const onClickHeart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (activeGardenId) {
+      removeFromGarden();
+    } else {
+      addToGarden();
     }
   };
 
@@ -69,12 +100,12 @@ const PlantCardHeader = ({ plant }: { plant: PlantResult }) => {
       {isSignedIn && (
         <Button
           className="absolute top-0 right-0 text-white!"
-          onClick={addToGarden}
+          onClick={onClickHeart}
           onMouseDown={(e) => e.preventDefault()}
           variant="icon-white"
-          isLoading={gardenAddLoading}
+          isLoading={gardenAddLoading || gardenRemoveLoading}
           disableOnLoading
-          icon={<FaHeart />}
+          icon={activeGardenId ? <FaHeartBroken /> : <FaHeart />}
         />
       )}
     </div>

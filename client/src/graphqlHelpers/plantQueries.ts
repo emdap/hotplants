@@ -77,7 +77,9 @@ export const REPLACE_WITH_PROXY_URL = graphql(`
 
 export type PlantQueryData = SearchPlantsQuery["plantSearch"];
 export type PlantQueryResults = PlantQueryData["results"];
-export type PlantResult = PlantQueryResults[number];
+export type PlantResult = Omit<PlantQueryResults[number], "_id"> & {
+  _id: string;
+};
 
 export type PlantOccurrence = PlantResult["occurrences"][number];
 export type PlantMediaObject = PlantOccurrence["media"][number];

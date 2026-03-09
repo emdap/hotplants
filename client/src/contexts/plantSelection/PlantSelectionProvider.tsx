@@ -5,6 +5,9 @@ import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getLastPage } from "util/generalUtil";
 import { PaginationData, PlantSelectionContext } from "./PlantSelectionContext";
 
+// TODO: Pass down a plant card menu as child, custom actions depending on where plantCards are rendered
+// OR: garden context?
+// current use case -- add plants to garden if 'not' in garden; remove plants from garden if 'in' garden, and then refresh plants
 const PlantSelectionProvider = ({
   plantList: originalPlantList,
   plantListLoading,
@@ -14,11 +17,14 @@ const PlantSelectionProvider = ({
   pageSize,
   totalItems,
 
+  activeGardenId,
   children,
 }: {
   plantList: PlantQueryResults;
   plantListLoading?: boolean;
   boundingPolygon?: PlantDataInput["boundingPolyCoords"];
+
+  activeGardenId?: string;
   children: ReactNode;
 } & Omit<PaginationData, "lastPage">) => {
   const [plantList, setPlantList] = useState(originalPlantList);
@@ -74,6 +80,8 @@ const PlantSelectionProvider = ({
         lastPage,
         pageSize,
         totalItems,
+
+        activeGardenId,
 
         activePlantId,
         activePlant,

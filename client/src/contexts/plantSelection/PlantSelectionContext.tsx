@@ -26,6 +26,8 @@ type PlantSelectionContextType = {
   activePlantMedia: FlattenedPlantMedia | [];
   activeMediaUrl: string | null;
 
+  activeGardenId?: string;
+
   setActivePlantId: Dispatch<SetStateAction<string | null>>;
   setActiveMediaUrl: Dispatch<SetStateAction<string | null>>;
 

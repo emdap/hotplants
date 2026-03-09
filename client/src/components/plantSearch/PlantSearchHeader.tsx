@@ -31,7 +31,7 @@ const PlantSearchHeader = () => {
   });
 
   return (
-    <FloatingHeader className="small-screen:mx-safe-3 big-screen:px-4">
+    <FloatingHeader className="small-screen:mx-safe-3 big-screen:px-4 overflow-auto">
       <div className="flex lg:gap-4 items-center">
         <PlantLocationOpenButton {...searchTabButtonProps("location")} />
         <PlantNameOpenButton {...searchTabButtonProps("plant-name")} />
@@ -40,7 +40,7 @@ const PlantSearchHeader = () => {
 
       <ItemCountWithLoader
         label="Plant"
-        className="col-start-2"
+        className="col-start-2 whitespace-nowrap"
         count={totalItems}
         isLoading={searchStatus === "SCRAPING_AND_POLLING"}
       />

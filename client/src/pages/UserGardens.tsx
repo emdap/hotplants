@@ -24,8 +24,8 @@ const UserGardens = () => {
   const createGardenAndRefetch = async () => {
     try {
       const { data } = await createGarden();
-      if (data?.newGarden) {
-        toast.success(`Created new garden "${data.newGarden}"`);
+      if (data?.createGarden) {
+        toast.success(`Created new garden "${data.createGarden.gardenName}"`);
         userGardensQuery.refetch();
       } else {
         defaultErrorToast();
