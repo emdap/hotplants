@@ -4,7 +4,6 @@ import AppHeader from "components/navigation/header/AppHeader";
 import { authClient } from "config/authClient";
 import SidebarContextProvider from "contexts/sidebar/SidebarContextProvider";
 import { useDarkMode } from "designSystem/darkMode/DarkModeContext";
-import { hotplantsClient } from "hooks/usePlantSearchQueries";
 import { useMount } from "react-use";
 import { Toaster } from "sonner";
 import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
@@ -14,7 +13,6 @@ const App = () => {
 
   useMount(() => {
     authClient.getSession();
-    hotplantsClient.POST("/wakeUp");
   });
 
   return (
