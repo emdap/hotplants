@@ -63,7 +63,7 @@
   }
 
   * {
-    @apply scrollbar-thin! scrollbar-thumb-rounded-full scrollbar-thumb-scrollbar scrollbar-track-rounded;
+    @apply scrollbar-thin! scrollbar-thumb-rounded-full scrollbar-thumb-scrollbar scrollbar-track-rounded scrollbar-track-transparent;
   }
 
   html,

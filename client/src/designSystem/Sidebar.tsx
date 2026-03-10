@@ -49,7 +49,7 @@ const Sidebar = ({
   const swipeHandlers = useSwipeable({
     onSwipedLeft: ({ event }) => !isLeafletEvent(event) && setIsExpanded(false),
   });
-  useCloseOnEscape(() => setIsExpanded(false), isExpanded);
+  useCloseOnEscape(() => toggleExpanded(false), isExpanded);
 
   const toggleExpanded = (expanded: boolean) => {
     setIsExpanded(expanded);

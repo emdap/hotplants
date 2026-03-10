@@ -1,3 +1,4 @@
+import Button from "designSystem/Button";
 import { MOTION_FADE_SLIDE } from "designSystem/motionTransitions";
 import { motion } from "motion/react";
 import { useRef } from "react";
@@ -23,15 +24,19 @@ const DarkModeToggle = () => {
   };
 
   return (
-    <div
-      className="cursor-pointer text-white/80 hover:text-white"
+    <Button
+      variant="text"
+      size="flush"
+      className="opacity-80 focus:opacity-100 hover:opacity-100 outline-none transition-opacity"
+      onClick={() => setIsDarkMode(!isDarkMode)}
       onMouseDown={startTimer}
       onMouseUp={stopTimer}
-    >
-      <motion.div key={isDarkMode ? "dark" : "light"} {...MOTION_FADE_SLIDE}>
-        {isDarkMode ? <MdDarkMode /> : <MdLightMode />}
-      </motion.div>
-    </div>
+      icon={
+        <motion.div key={isDarkMode ? "dark" : "light"} {...MOTION_FADE_SLIDE}>
+          {isDarkMode ? <MdDarkMode /> : <MdLightMode />}
+        </motion.div>
+      }
+    />
   );
 };
 

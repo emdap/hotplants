@@ -21,7 +21,7 @@ const AppHeader = () => {
         <h6 className="font-mono text-white/80!">hotplants</h6>
       </div>
 
-      <div className="flex gap-4 items-center ml-auto">
+      <div className="flex gap-4 items-center ml-auto h-full">
         <DarkModeToggle />
         <UserMenu />
       </div>

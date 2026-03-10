@@ -55,15 +55,15 @@ const getClasses = (props: ButtonProps) => {
       "bg-secondary/80 enabled:hover:bg-secondary outline-secondary":
         props.variant === "secondary",
 
-      "bg-primary enabled:hover:bg-primary-faded text-white":
+      "bg-primary enabled:hover:bg-primary-faded text-white outline-primary/50":
         props.variant === "icon-primary",
-      "enabled:hover:bg-white/20 outline-white/50":
+      "enabled:hover:bg-white/20 outline-primary/50":
         props.variant === "icon-white",
 
-      "enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
+      "enabled:hover:underline underline-offset-3 focus-visible:underline":
         isTextVariant && hasChildren,
-      "text-inherit": props.variant === "text",
-      "text-primary": props.variant === "text-primary",
+      "text-inherit outline-primary": props.variant === "text",
+      "text-primary outline-primary": props.variant === "text-primary",
 
       "opacity-50":
         props.disabled || (props.isLoading && props.disableOnLoading),
