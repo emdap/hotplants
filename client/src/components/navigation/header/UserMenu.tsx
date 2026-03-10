@@ -5,10 +5,10 @@ import { FaUserCircle } from "react-icons/fa";
 import { MdLogin, MdLogout } from "react-icons/md";
 
 const USER_LINKS: MenuItemData[] = [
-  { label: "Log Out", linkTo: "/logout", Icon: MdLogout },
+  { label: "Log Out", linkProps: { to: "/logout" }, Icon: MdLogout },
 ];
 const ANON_LINKS: MenuItemData[] = [
-  { label: "Log In", linkTo: "/login", Icon: MdLogin },
+  { label: "Log In", linkProps: { to: "/login" }, Icon: MdLogin },
 ];
 
 const UserMenu = () => {

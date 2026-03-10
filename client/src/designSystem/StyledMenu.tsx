@@ -5,18 +5,18 @@ import {
   MenuItems,
   MenuItemsProps,
 } from "@headlessui/react";
-import { Link } from "@tanstack/react-router";
+import { Link, LinkProps } from "@tanstack/react-router";
 import classNames from "classnames";
 import { ReactNode } from "react";
 import { IconType } from "react-icons/lib";
-import { FileRoutesByTo } from "routeTree.gen";
 import { ButtonVariant } from "./Button";
 
 export type MenuItemData<T = never, R = void> = {
   label: ReactNode;
-  linkTo?: keyof FileRoutesByTo;
+  Icon?: IconType;
+  iconNode?: ReactNode;
+  linkProps?: LinkProps;
   onClick?: (data: T) => R;
-  Icon?: IconType | ReactNode;
 };
 
 type StyledMenuProps = {
@@ -65,8 +65,8 @@ const StyledMenu = ({
 
           return (
             <MenuItem key={index}>
-              {item.linkTo ? (
-                <Link to={item.linkTo}>
+              {item.linkProps ? (
+                <Link {...item.linkProps}>
                   <StyledMenuItem {...styledItemProps} />
                 </Link>
               ) : (
@@ -83,6 +83,7 @@ const StyledMenu = ({
 const StyledMenuItem = ({
   className,
   Icon,
+  iconNode,
   ...item
 }: MenuItemData & { className?: string }) => (
   <div
@@ -92,7 +93,8 @@ const StyledMenuItem = ({
       className,
     )}
   >
-    {Icon && (typeof Icon === "function" ? <Icon size={16} /> : Icon)}
+    {Icon && <Icon size={16} />}
+    {iconNode}
     {item.label}
   </div>
 );

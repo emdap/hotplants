@@ -60,7 +60,7 @@ export const usePlantSearchActionList = (): PlantAction[] => {
         )}
       </span>
     ),
-    Icon: garden?.gardenThumbnailUrl ? (
+    iconNode: garden?.gardenThumbnailUrl ? (
       <img
         className="w-6 h-6 bg-default-background/50 rounded-full"
         src={garden.gardenThumbnailUrl}
