@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import LoadingIcon from "./LoadingIcon";
@@ -86,24 +85,30 @@ const Button = ({
   isLoading,
   linkAddress,
   className,
+  children,
+  icon,
   disabled,
   disableOnLoading = true,
   ...directButtonProps
 }: ButtonProps) => {
   const isDisabled = (disableOnLoading && isLoading) || disabled;
-  const classes = getClasses({
-    variant,
-    size,
-    linkAddress,
-    className,
-    disabled: isDisabled,
-    isLoading,
-    disableOnLoading,
-    ...directButtonProps,
-  });
 
-  const renderButton = ({ children, icon, ...props }: Partial<ButtonProps>) => (
-    <button {...props}>
+  return (
+    <button
+      disabled={isDisabled}
+      className={getClasses({
+        variant,
+        size,
+        linkAddress,
+        className,
+        isLoading,
+        disabled: isDisabled,
+        disableOnLoading,
+        children,
+        ...directButtonProps,
+      })}
+      {...directButtonProps}
+    >
       {(isLoading || icon) && (
         <div className="icon-wrapper">
           {isLoading ? <LoadingIcon size={16} /> : icon}
@@ -111,18 +116,6 @@ const Button = ({
       )}
       {children}
     </button>
-  );
-
-  return linkAddress && !isDisabled ? (
-    <Link className="block w-fit" to={linkAddress}>
-      {renderButton({ className: classes, ...directButtonProps })}
-    </Link>
-  ) : (
-    renderButton({
-      disabled: isDisabled,
-      className: classes,
-      ...directButtonProps,
-    })
   );
 };
 
