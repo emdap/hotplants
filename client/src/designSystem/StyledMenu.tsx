@@ -56,6 +56,7 @@ const StyledMenu = ({
           { "card card-solid p-1": itemsAsCard },
           className?.menuItemsList,
         )}
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
 

@@ -19,6 +19,7 @@ import { useClickAway } from "react-use";
 import { isLeafletEvent, ITERATE_DIRECTION } from "util/generalUtil";
 import { swapLatLng } from "util/locationUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
+import PlantActions from "./PlantActions";
 import PlantImageViewer from "./PlantImageViewer";
 import PlantInfoCard from "./PlantInfoCard";
 
@@ -119,7 +120,7 @@ const ActivePlantPane = () => {
         <Card
           key="plant-pane"
           className={classNames(
-            "rounded-r-none py-2 px-safe-2 h-full fixed top-0 z-50",
+            "rounded-r-none py-2 px-safe-2 h-full fixed top-0 z-30",
             "backdrop-blur-2xl small-screen:rounded-l-none small-screen:w-full",
             "small-screen:w-full big-screen:w-4/7 big-screen:max-w-5xl",
             "flex flex-col overflow-hidden",
@@ -136,14 +137,13 @@ const ActivePlantPane = () => {
               icon={<MdClose />}
             />
 
-            <div className="ml-auto flex items-center gap-1 sticky top-0">
+            <div className="ml-auto flex items-center gap-1 sticky top-0 text-primary dark:text-default-text">
               {ITERATE_DIRECTION.map((direction) => (
                 <Fragment key={direction}>
                   <Button
                     key={direction}
                     size="small"
                     disabled={disableIterate[direction]}
-                    className="text-primary"
                     variant="icon-white"
                     onClick={() => iteratePlant(direction)}
                     icon={
@@ -161,6 +161,7 @@ const ActivePlantPane = () => {
                   )}
                 </Fragment>
               ))}
+              <PlantActions plant={activePlant} />
             </div>
           </header>
 
