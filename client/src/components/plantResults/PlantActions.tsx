@@ -4,14 +4,38 @@ import {
 } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import LoadingIcon from "designSystem/LoadingIcon";
-import StyledMenu from "designSystem/StyledMenu";
+import StyledMenu, { MenuItemData } from "designSystem/StyledMenu";
 import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useCallback, useMemo, useState } from "react";
+import { FaLeaf } from "react-icons/fa";
 import { MdOutlineMoreVert } from "react-icons/md";
 
-const PlantActions = ({ plant }: { plant: PlantResult }) => {
+const PlantActions = ({
+  plant,
+  disableDefaultActions,
+}: {
+  plant: PlantResult;
+  disableDefaultActions?: boolean;
+}) => {
   const { plantActions } = usePlantSelectionContext();
   const [hasLoadingAction, setHasLoadingAction] = useState(false);
+
+  const defaultPlantActions = useMemo(
+    (): MenuItemData[] =>
+      disableDefaultActions
+        ? []
+        : [
+            {
+              label: "Find more occurrences",
+              Icon: FaLeaf,
+              linkProps: {
+                to: "/plant-search",
+                search: { plantName: { scientificName: plant.scientificName } },
+              },
+            },
+          ],
+    [plant.scientificName, disableDefaultActions],
+  );
 
   const handlePlantClick = useCallback(
     async (action: PlantAction) => {
@@ -23,17 +47,27 @@ const PlantActions = ({ plant }: { plant: PlantResult }) => {
   );
 
   const mappedPlantActions = useMemo(
-    () =>
-      plantActions?.map((action) => ({
-        ...action,
-        onClick: () => handlePlantClick(action),
-      })),
+    (): MenuItemData[] =>
+      plantActions
+        ? plantActions.map((action) => ({
+            ...action,
+            onClick: () => handlePlantClick(action),
+          }))
+        : [],
     [plantActions, handlePlantClick],
   );
 
-  return plantActions?.length ? (
+  const fullActions = useMemo(
+    () =>
+      mappedPlantActions.length || defaultPlantActions.length
+        ? mappedPlantActions.concat(defaultPlantActions)
+        : null,
+    [mappedPlantActions, defaultPlantActions],
+  );
+
+  return fullActions ? (
     <StyledMenu
-      items={mappedPlantActions}
+      items={fullActions}
       anchor="bottom end"
       itemsAsCard
       disabled={hasLoadingAction}

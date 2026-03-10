@@ -17,10 +17,16 @@ export type PaginationParams = {
   pageSize?: number;
 };
 
-const validateString = (input: unknown, subKey?: string) =>
-  (subKey && input && typeof input === "object" && subKey in input
-    ? String(input[subKey as keyof typeof input] || "")
-    : String(input || "")) || undefined;
+const validateString = (input: unknown, subKey?: string) => {
+  const inputObject = input && typeof input === "object" ? input : null;
+
+  if (subKey && inputObject) {
+    return subKey in inputObject
+      ? String(inputObject[subKey as keyof typeof inputObject] || "")
+      : undefined;
+  }
+  return inputObject ? String(inputObject) : undefined;
+};
 
 export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
   page: undefined,
@@ -45,11 +51,9 @@ export type PlantSearchRouteParams = PaginationParams &
     | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
   );
 
-const validateSearch = (
+const validateLocation = (
   searchParams: Record<string, unknown>,
 ): PlantSearchParams | null => {
-  let typesafeParams: PlantSearchParams | null = null;
-
   if (searchParams.location && typeof searchParams.location === "object") {
     const locationParams = searchParams.location;
     if (
@@ -70,33 +74,37 @@ const validateSearch = (
             : undefined;
 
         if (locationName && locationSource) {
-          typesafeParams = {
+          return {
             location: { boundingPolyCoords, locationName, locationSource },
           };
         }
       } catch (e) {
         console.error("Invalid parameters:", e);
-        return null;
       }
     }
   }
+  return null;
+};
 
+const validatePlantName = (
+  searchParams: Record<string, unknown>,
+): PlantSearchParams | null => {
   if (searchParams.plantName && typeof searchParams.plantName === "object") {
     const commonName = validateString(searchParams.plantName, "commonName");
     if (commonName) {
-      typesafeParams = { ...typesafeParams, plantName: { commonName } };
+      return { plantName: { commonName } };
     } else {
       const scientificName = validateString(
         searchParams.plantName,
         "scientificName",
       );
       if (scientificName) {
-        typesafeParams = { ...typesafeParams, plantName: { scientificName } };
+        return { plantName: { scientificName } };
       }
     }
   }
 
-  return typesafeParams;
+  return null;
 };
 
 // TODO: actually validate the filter types
@@ -126,7 +134,8 @@ export const validatePlantSearchParams = (
 ): PlantSearchRouteParams => ({
   ...validatePaginationParams(params),
   ...validatePlantFilter(params),
-  ...validateSearch(params),
+  ...validateLocation(params),
+  ...validatePlantName(params),
 });
 
 export type SearchRecordFilterInput =

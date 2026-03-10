@@ -22,7 +22,7 @@ const SearchRecordProgressBar = ({
       total={totalOccurrences}
       isError={status === "COMPLETE" && totalOccurrences === 0}
     />
-    {totalGraphQlResults && totalGraphQlResults > totalOccurrences && (
+    {Boolean(totalGraphQlResults && totalGraphQlResults > totalOccurrences) && (
       <Card solid className="bg-default-text/20! border-0 text-sm">
         <MdInfo className="inline text-base mb-0.5 mr-2" />
         There may be discrepancies between the "plant occurrences analyzed"
