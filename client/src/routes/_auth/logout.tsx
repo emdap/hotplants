@@ -1,4 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  retainSearchParams,
+} from "@tanstack/react-router";
 import { authClient, useAuthSession } from "config/authClient";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
@@ -42,14 +46,19 @@ const Logout = () => {
             You've been successfully signed out.
           </p>
           <div className="w-full flex gap-4 justify-center">
-            <Link to={".."} replace className="flex flex-grow">
+            <Link
+              to="/plant-search"
+              search={(prev) => prev}
+              replace
+              className="flex flex-grow"
+            >
               <Button variant="primary" className="max-w-full w-full">
-                Back
+                Go to Plant search
               </Button>
             </Link>
             <Link to={"/login"} className="flex-grow" replace>
               <Button variant="secondary" className="max-w-full w-full">
-                Go to Log In page
+                Go to Log In
               </Button>
             </Link>
           </div>
@@ -68,4 +77,7 @@ const Logout = () => {
 
 export const Route = createFileRoute("/_auth/logout")({
   component: Logout,
+  search: {
+    middlewares: [retainSearchParams(true)],
+  },
 });

@@ -69,7 +69,7 @@ const LoginForm = () => {
         const nextPath = location.pathname.includes("login")
           ? "/plant-search"
           : ".";
-        navigate({ to: nextPath, replace: true });
+        navigate({ to: nextPath, search: (prev) => prev, replace: true });
       }
     } catch (error) {
       console.error(error);
@@ -116,7 +116,7 @@ const LoginForm = () => {
         <Button
           variant="text-primary"
           type="button"
-          className="ml-auto"
+          className="ml-auto dark:text-white/80"
           onClick={() => setUseForm(useForm === "login" ? "signup" : "login")}
         >
           {FORM_LABELS[useForm].switch} {">"}
