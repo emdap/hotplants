@@ -1,3 +1,4 @@
+import { useIsSignedIn } from "config/authClient";
 import { PlantAction } from "contexts/plantSelection/PlantSelectionContext";
 import { GraphQLFormattedError } from "graphql";
 import {
@@ -11,16 +12,20 @@ import { TbPlant2 } from "react-icons/tb";
 import { toast } from "sonner";
 import { handleGraphQlError } from "util/generalUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
-import { defaultWarningToast } from "util/toastUtil";
+import { defaultWarningToast, needsAuthenticationToast } from "util/toastUtil";
 
 export const usePlantSearchActionList = (): PlantAction[] => {
+  const isSignedIn = useIsSignedIn();
   const [addToGardenMutation] = useApolloMutation(ADD_PLANT_TO_GARDEN);
 
   const addToGarden = async (plant: PlantResult, garden?: UserGarden) => {
-    const customGraphQlErrorHandler = (error: GraphQLFormattedError) =>
-      error.extensions?.code === 400
-        ? toast.warning(error.message)
-        : toast.error(error.message);
+    const customGraphQlErrorHandler = (error: GraphQLFormattedError) => {
+      if (error.extensions?.code === 400) {
+        toast.warning(error.message);
+      } else {
+        toast.error(error.message);
+      }
+    };
 
     try {
       const { data } = await addToGardenMutation({
@@ -40,7 +45,9 @@ export const usePlantSearchActionList = (): PlantAction[] => {
     }
   };
 
-  const userGardensQuery = useApolloQuery(GET_ALL_GARDENS);
+  const userGardensQuery = useApolloQuery(GET_ALL_GARDENS, {
+    skip: !isSignedIn,
+  });
 
   const addToGardenAction = (garden?: UserGarden): PlantAction => ({
     label: (
@@ -61,12 +68,16 @@ export const usePlantSearchActionList = (): PlantAction[] => {
     ) : (
       <TbPlant2 />
     ),
-    onClick: (plant: PlantResult) => addToGarden(plant, garden),
+    onClick: (plant: PlantResult) => {
+      isSignedIn ? addToGarden(plant, garden) : needsAuthenticationToast();
+    },
   });
 
-  return userGardensQuery.data?.allUserGardens?.length
+  const gardenActions = userGardensQuery.data?.allUserGardens?.length
     ? userGardensQuery.data.allUserGardens.map(addToGardenAction)
     : [addToGardenAction()];
+
+  return gardenActions;
 };
 
 export default usePlantSearchActionList;
