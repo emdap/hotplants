@@ -57,7 +57,7 @@ const PlantCard = ({ plant }: { plant: PlantResult }) => {
         </h2>
 
         <div
-          className="absolute right-2 top-2 [&_button]:bg-default-background/60 [&_button]:hover:bg-default-background/80!  rounded-md hover:text-default-text"
+          className="absolute right-0.5 top-0.5 md:top-2 md:right-2 [&_button]:bg-default-background/60 [&_button]:hover:bg-default-background/80!  rounded-md hover:text-default-text"
           onClick={(e) => e.stopPropagation()}
           onFocus={(e) => e.stopPropagation()}
         >
