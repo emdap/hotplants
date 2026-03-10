@@ -126,7 +126,7 @@ export const PaginationControl = ({
 
       {showOptionsMenu ? (
         <StyledPopover
-          className="space-y-2"
+          className="space-y-2 p-1"
           button={
             <Button
               size="small"

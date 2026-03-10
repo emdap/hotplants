@@ -1,8 +1,9 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { MenuItem } from "@headlessui/react";
 import classNames from "classnames";
+import Button from "designSystem/Button";
+import StyledMenu from "designSystem/StyledMenu";
 import { useLayoutEffect, useRef, useState } from "react";
 import { isSafari } from "util/generalUtil";
-import Button from "../Button";
 
 type PaginatorDropdownProps = {
   label: string;
@@ -23,8 +24,8 @@ const PaginatorDropdown = ({
   return (
     <div className="whitespace-nowrap flex gap-1.5 items-center justify-between">
       {inPopover ? label : <span className="small-screen:hidden">{label}</span>}
-      <Menu>
-        <MenuButton as="div" disabled={disabled}>
+      <StyledMenu
+        menuButton={
           <Button
             variant="text"
             size="flush"
@@ -33,15 +34,15 @@ const PaginatorDropdown = ({
           >
             {selected}
           </Button>
-        </MenuButton>
-        <MenuItems
-          anchor="bottom"
-          modal={false}
-          className="z-20 -ml-1.5 mt-2 py-1 text-sm relative translate-x-1/4 outline-none overflow-visible!"
-        >
-          <PaginatorDropdownItems selected={selected} {...props} />
-        </MenuItems>
-      </Menu>
+        }
+        disabled={disabled}
+        className={{
+          menuItemsList:
+            "-ml-1.5 py-1 text-sm relative translate-x-1/4 overflow-visible!",
+        }}
+      >
+        <PaginatorDropdownItems selected={selected} {...props} />
+      </StyledMenu>
     </div>
   );
 };
