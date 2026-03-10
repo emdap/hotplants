@@ -3,20 +3,14 @@ import Button from "designSystem/Button";
 import OverlayMask from "designSystem/OverlayMask";
 import { useCloseOnEscape } from "hooks/useCloseOnEscape";
 import { AnimatePresence } from "motion/react";
-import {
-  HTMLAttributes,
-  ReactNode,
-  RefObject,
-  useEffect,
-  useState,
-} from "react";
+import { HTMLAttributes, ReactNode, RefObject } from "react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 import { isLeafletEvent } from "util/generalUtil";
 
 type SidebarProps = {
-  isExpanded?: boolean;
-  setIsExpanded?: (expanded: boolean) => void;
+  isExpanded: boolean;
+  setIsExpanded: (expanded: boolean) => void;
 
   externalCollapseButton?: boolean;
   ref?: RefObject<HTMLElement | null>;
@@ -35,30 +29,18 @@ type SidebarReactiveProps = {
 };
 
 const Sidebar = ({
-  isExpanded: isExpandedProp,
-  setIsExpanded: setIsExpandedProp,
+  isExpanded,
+  setIsExpanded,
   externalCollapseButton,
   className,
   children,
   ref,
   style,
 }: SidebarProps & SidebarReactiveProps) => {
-  const booleanExpandedProp = Boolean(isExpandedProp);
-  const [isExpanded, setIsExpanded] = useState(booleanExpandedProp);
-
   const swipeHandlers = useSwipeable({
     onSwipedLeft: ({ event }) => !isLeafletEvent(event) && setIsExpanded(false),
   });
-  useCloseOnEscape(() => toggleExpanded(false), isExpanded);
-
-  const toggleExpanded = (expanded: boolean) => {
-    setIsExpanded(expanded);
-    setIsExpandedProp && setIsExpandedProp(expanded);
-  };
-
-  useEffect(() => {
-    setIsExpanded(booleanExpandedProp);
-  }, [booleanExpandedProp]);
+  useCloseOnEscape(() => setIsExpanded(false), isExpanded);
 
   const refPassthrough = (el: HTMLElement) => {
     swipeHandlers.ref(el);
@@ -73,7 +55,7 @@ const Sidebar = ({
         <OverlayMask
           key="mask"
           className="big-screen:hidden bg-accent/10!"
-          onClick={() => toggleExpanded(false)}
+          onClick={() => setIsExpanded(false)}
         />
       )}
 
@@ -116,7 +98,7 @@ const Sidebar = ({
               },
             ],
           )}
-          onClick={() => toggleExpanded(!isExpanded)}
+          onClick={() => setIsExpanded(!isExpanded)}
           icon={
             <MdKeyboardDoubleArrowLeft
               className={classNames(!isExpanded && "big-screen:rotate-180")}
@@ -125,7 +107,7 @@ const Sidebar = ({
         />
 
         {typeof children === "function"
-          ? children({ isExpanded, setIsExpanded: toggleExpanded })
+          ? children({ isExpanded, setIsExpanded })
           : children}
       </nav>
     </AnimatePresence>
