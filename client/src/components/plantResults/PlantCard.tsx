@@ -59,6 +59,7 @@ const PlantCard = ({ plant }: { plant: PlantResult }) => {
         <div
           className="absolute right-0.5 top-0.5 md:top-2 md:right-2 [&_button]:bg-default-background/60 [&_button]:hover:bg-default-background/80!  rounded-md hover:text-default-text"
           onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.preventDefault()}
           onFocus={(e) => e.stopPropagation()}
         >
           <PlantActions plant={plant} />
