@@ -16,8 +16,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 type Documents = {
     "\n  fragment GardenPlantFields on GardenPlantData {\n    _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n": typeof types.GardenPlantFieldsFragmentDoc,
     "\n  fragment GardenFields on UserGarden {\n    gardenName\n    gardenThumbnailUrl\n    plantCount\n  }\n": typeof types.GardenFieldsFragmentDoc,
-    "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n": typeof types.GetAllGardensDocument,
-    "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n": typeof types.GetGardenDocument,
+    "\n  query getAllGardens {\n    allUserGardens {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n": typeof types.GetAllGardensDocument,
+    "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n      plantRefs {\n        _id\n      }\n    }\n  }\n": typeof types.GetGardenDocument,
     "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n    $where: PlantDataInput\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n      where: $where\n    ) {\n      count\n      results {\n        _id\n        ...GardenPlantFields\n      }\n    }\n  }\n": typeof types.GetGardenPlantsDocument,
     "\n  mutation createGarden($gardenName: String) {\n    createGarden(gardenName: $gardenName) {\n      gardenName\n    }\n  }\n": typeof types.CreateGardenDocument,
     "\n  mutation addPlant($plantId: String!, $gardenId: String) {\n    addToGarden(plantId: $plantId, gardenId: $gardenId) {\n      ...GardenFields\n    }\n  }\n": typeof types.AddPlantDocument,
@@ -32,8 +32,8 @@ type Documents = {
 const documents: Documents = {
     "\n  fragment GardenPlantFields on GardenPlantData {\n    _id\n    addedTimestamp\n    customThumbnailUrl\n    ...PlantFields\n    notes\n  }\n": types.GardenPlantFieldsFragmentDoc,
     "\n  fragment GardenFields on UserGarden {\n    gardenName\n    gardenThumbnailUrl\n    plantCount\n  }\n": types.GardenFieldsFragmentDoc,
-    "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n": types.GetAllGardensDocument,
-    "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n": types.GetGardenDocument,
+    "\n  query getAllGardens {\n    allUserGardens {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n": types.GetAllGardensDocument,
+    "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n      plantRefs {\n        _id\n      }\n    }\n  }\n": types.GetGardenDocument,
     "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n    $where: PlantDataInput\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n      where: $where\n    ) {\n      count\n      results {\n        _id\n        ...GardenPlantFields\n      }\n    }\n  }\n": types.GetGardenPlantsDocument,
     "\n  mutation createGarden($gardenName: String) {\n    createGarden(gardenName: $gardenName) {\n      gardenName\n    }\n  }\n": types.CreateGardenDocument,
     "\n  mutation addPlant($plantId: String!, $gardenId: String) {\n    addToGarden(plantId: $plantId, gardenId: $gardenId) {\n      ...GardenFields\n    }\n  }\n": types.AddPlantDocument,
@@ -71,11 +71,11 @@ export function graphql(source: "\n  fragment GardenFields on UserGarden {\n    
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n"): (typeof documents)["\n  query getAllGardens {\n    allUserGardens {\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n"];
+export function graphql(source: "\n  query getAllGardens {\n    allUserGardens {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n"): (typeof documents)["\n  query getAllGardens {\n    allUserGardens {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n"): (typeof documents)["\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      plantRefs {\n        _id\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n      plantRefs {\n        _id\n      }\n    }\n  }\n"): (typeof documents)["\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n      plantRefs {\n        _id\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

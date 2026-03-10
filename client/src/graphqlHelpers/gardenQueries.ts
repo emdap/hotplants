@@ -1,4 +1,5 @@
 import { graphql } from "generated/graphql";
+import { GetAllGardensQuery, GetGardenQuery } from "generated/graphql/graphql";
 
 const _GARDEN_PLANT_FIELDS = graphql(`
   fragment GardenPlantFields on GardenPlantData {
@@ -21,6 +22,7 @@ const _GARDEN_FIELDS = graphql(`
 export const GET_ALL_GARDENS = graphql(`
   query getAllGardens {
     allUserGardens {
+      _id
       gardenName
       plantCount
       gardenThumbnailUrl
@@ -34,6 +36,7 @@ export const GET_GARDEN = graphql(`
       _id
       gardenName
       plantCount
+      gardenThumbnailUrl
       plantRefs {
         _id
       }
@@ -88,3 +91,8 @@ export const REMOVE_PLANT_FROM_GARDEN = graphql(`
     }
   }
 `);
+
+export type UserGarden = Omit<
+  GetAllGardensQuery["allUserGardens"][number] & GetGardenQuery["userGarden"],
+  "_id" | "plantRefs"
+> & { _id: string; plantRefs?: GetGardenQuery["userGarden"] };

@@ -16,7 +16,7 @@ const StyledPopover = ({
   button: ReactNode;
 } & PopoverPanelProps) => (
   <Popover>
-    <PopoverButton as="div" className="data-active:[&_button]:outline-2">
+    <PopoverButton as="div" className="data-active:[&_button]:outline-2 w-fit">
       {button}
     </PopoverButton>
 

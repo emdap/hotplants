@@ -10,6 +10,7 @@ import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { GET_GARDEN, GET_GARDEN_PLANTS } from "graphqlHelpers/gardenQueries";
+import useGardenActionList from "hooks/plantActionLists/useGardenActionList";
 import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useState } from "react";
@@ -49,6 +50,11 @@ const Garden = () => {
     gardenPlantsQuery.previousData?.userGardenPlants;
   const gardenPlantsCount = gardenPlants?.count ?? 0;
 
+  const gardenActionList = useGardenActionList({
+    gardenId: userGarden?._id,
+    refetchGarden: gardenPlantsQuery.refetch,
+  });
+
   return (
     <main className="page-buffer page-container h-full">
       <PageTitle className="flex gap-4 items-center">
@@ -76,7 +82,7 @@ const Garden = () => {
         plantList={gardenPlants?.results ?? []}
         plantListLoading={gardenPlantsQuery.loading}
         totalItems={gardenPlantsCount}
-        activeGardenId={userGarden?._id}
+        plantActions={gardenActionList}
         {...{ page, pageSize }}
       >
         <FloatingHeader>

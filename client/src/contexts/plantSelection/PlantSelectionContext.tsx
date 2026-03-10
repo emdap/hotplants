@@ -1,3 +1,4 @@
+import { MenuItemData } from "designSystem/StyledMenu";
 import {
   PlantMediaObject,
   PlantOccurrence,
@@ -17,16 +18,17 @@ export type PaginationData = {
   totalItems: number;
 };
 
-type PlantSelectionContextType = {
+export type PlantAction = MenuItemData<PlantResult, Promise<void> | void>;
+
+export type PlantSelectionContextType = {
   plantList: PlantQueryResults;
   plantListLoading?: boolean;
+  plantActions?: PlantAction[];
 
   activePlantId: string | null;
   activePlant?: PlantResult;
   activePlantMedia: FlattenedPlantMedia | [];
   activeMediaUrl: string | null;
-
-  activeGardenId?: string;
 
   setActivePlantId: Dispatch<SetStateAction<string | null>>;
   setActiveMediaUrl: Dispatch<SetStateAction<string | null>>;

@@ -20,13 +20,7 @@ const PlantList = ({
   const { sidebarExpanded } = useSidebarContext();
   const { scrollContainerElement } = useGetScrollContainer();
 
-  const {
-    page,
-    plantList,
-    activePlantId,
-    setActivePlantId: setActivePlantId,
-    setActiveMediaUrl: setActiveMediaUrl,
-  } = usePlantSelectionContext();
+  const { page, plantList } = usePlantSelectionContext();
 
   const [shrinkCols, setShrinkCols] = useState(false);
 
@@ -65,17 +59,7 @@ const PlantList = ({
         }
       >
         {plantList.map((plant) => (
-          <PlantCard
-            key={`${plant._id}`}
-            setActive={() => {
-              setActivePlantId(plant._id);
-              setActiveMediaUrl(
-                plant.thumbnailUrl ?? plant.occurrences[0].media[0].url,
-              );
-            }}
-            isActive={activePlantId === plant._id}
-            plant={plant}
-          />
+          <PlantCard key={`${plant._id}`} plant={plant} />
         ))}
       </motion.div>
 

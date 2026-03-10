@@ -7,6 +7,7 @@ import {
   PlantSearchContextType,
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
+import usePlantSearchActionList from "hooks/plantActionLists/usePlantSearchActionList";
 import usePlantSearchQueries, {
   DEFAULT_PAGE_SIZE,
 } from "hooks/usePlantSearchQueries";
@@ -116,6 +117,8 @@ const PlantSearchProvider = () => {
     }
   };
 
+  const plantSearchActionList = usePlantSearchActionList();
+
   return (
     <PlantSearchContext.Provider
       value={{
@@ -148,6 +151,7 @@ const PlantSearchProvider = () => {
             : plantSearchQuery.data?.plantSearch.results) ?? []
         }
         plantListLoading={plantSearchQuery.loading}
+        plantActions={plantSearchActionList}
         boundingPolygon={searchParams.location?.boundingPolyCoords}
         {...{
           page,

@@ -16,7 +16,7 @@ export type MenuItemData<T = never, R = void> = {
   label: ReactNode;
   linkTo?: keyof FileRoutesByTo;
   onClick?: (data: T) => R;
-  Icon?: IconType;
+  Icon?: IconType | ReactNode;
 };
 
 type StyledMenuProps = {
@@ -91,7 +91,7 @@ const StyledMenuItem = ({
       className,
     )}
   >
-    {Icon && <Icon size={16} />}
+    {Icon && (typeof Icon === "function" ? <Icon size={16} /> : Icon)}
     {item.label}
   </div>
 );

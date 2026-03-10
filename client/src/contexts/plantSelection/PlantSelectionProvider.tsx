@@ -3,7 +3,11 @@ import { PlantDataInput } from "generated/graphql/graphql";
 import { GET_PLANT, PlantQueryResults } from "graphqlHelpers/plantQueries";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getLastPage } from "util/generalUtil";
-import { PaginationData, PlantSelectionContext } from "./PlantSelectionContext";
+import {
+  PaginationData,
+  PlantSelectionContext,
+  PlantSelectionContextType,
+} from "./PlantSelectionContext";
 
 // TODO: Pass down a plant card menu as child, custom actions depending on where plantCards are rendered
 // OR: garden context?
@@ -11,13 +15,13 @@ import { PaginationData, PlantSelectionContext } from "./PlantSelectionContext";
 const PlantSelectionProvider = ({
   plantList: originalPlantList,
   plantListLoading,
+  plantActions,
   boundingPolygon,
 
   page,
   pageSize,
   totalItems,
 
-  activeGardenId,
   children,
 }: {
   plantList: PlantQueryResults;
@@ -26,7 +30,8 @@ const PlantSelectionProvider = ({
 
   activeGardenId?: string;
   children: ReactNode;
-} & Omit<PaginationData, "lastPage">) => {
+} & Omit<PaginationData, "lastPage"> &
+  Pick<PlantSelectionContextType, "plantActions">) => {
   const [plantList, setPlantList] = useState(originalPlantList);
   const [activePlantId, setActivePlantId] = useState<string | null>(null);
   const [activeMediaUrl, setActiveMediaUrl] = useState<string | null>(null);
@@ -75,13 +80,12 @@ const PlantSelectionProvider = ({
       value={{
         plantList,
         plantListLoading,
+        plantActions,
 
         page,
         lastPage,
         pageSize,
         totalItems,
-
-        activeGardenId,
 
         activePlantId,
         activePlant,
