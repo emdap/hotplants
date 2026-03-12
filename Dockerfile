@@ -70,5 +70,3 @@ RUN chmod +x /start.sh
 
 # Use the start script as the command
 CMD ["/start.sh"]
-
-# CMD ["nginx", "-g", "daemon off;"]
