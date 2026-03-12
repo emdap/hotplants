@@ -62,6 +62,7 @@ const MapProvider = ({
         show={isLoading}
         iconSize={30}
         className="z-20 absolute"
+        disableAnimationFallback
       />
 
       <MapContainer
