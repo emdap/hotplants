@@ -10,13 +10,26 @@ const hostname = "0.0.0.0";
 
 const app = express();
 
+app.get(
+  "/health",
+  cors({
+    origin: trustedOrigins,
+  }),
+  (_req, res) =>
+    res.status(200).json({
+      status: "ok",
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    }),
+);
+
 app.all(
   "/auth/*splat",
   cors({
     origin: trustedOrigins,
     credentials: true,
   }),
-  toNodeHandler(auth)
+  toNodeHandler(auth),
 );
 
 app.use(
@@ -24,7 +37,7 @@ app.use(
   createProxyMiddleware({
     target: `${serverURL}/graphql`,
     changeOrigin: true,
-  })
+  }),
 );
 
 app.use(
@@ -32,7 +45,7 @@ app.use(
   createProxyMiddleware({
     target: `${serverURL}/api`,
     changeOrigin: true,
-  })
+  }),
 );
 
 app.listen(port, hostname, async () => {
