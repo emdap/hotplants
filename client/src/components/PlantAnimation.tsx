@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useAppContext } from "contexts/AppContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
@@ -16,31 +17,49 @@ type PlantAnimationProps = {
   className?: string;
 };
 
-const getDescription = ({
-  queryStatus,
-  dataType = "plants",
-  hasCurrentResults,
-  isInitialSearch,
-}: Partial<PlantAnimationProps>): [number, ReactNode] => {
-  if (queryStatus === "CHECKING_STATUS") {
-    return [
-      0,
-      <span className="flex gap-2 items-center justify-center">
-        <LoadingIcon /> Loading
-      </span>,
-    ];
+const getDescription = (
+  serverReady: boolean | "error",
+  {
+    queryStatus,
+    dataType = "plants",
+    hasCurrentResults,
+    isInitialSearch,
+  }: Partial<PlantAnimationProps>,
+): { key: number; text: ReactNode; showLoader?: boolean } => {
+  if (serverReady === "error") {
+    return {
+      key: -2,
+      text: (
+        <>
+          Server not responding :(
+          <br />
+          You can try refreshing!
+        </>
+      ),
+    };
+  } else if (!serverReady) {
+    return { key: -1, text: "Waking up server", showLoader: true };
+  } else if (queryStatus === "CHECKING_STATUS") {
+    return { key: 0, text: "Loading", showLoader: true };
   } else if (queryStatus === "SCRAPING_AND_POLLING") {
-    return [1, `Searching for ${hasCurrentResults ? "more " : ""}${dataType}`];
+    return {
+      key: 1,
+      text: `Searching for ${hasCurrentResults ? "more " : ""}${dataType}`,
+    };
   } else if (!hasCurrentResults && isInitialSearch) {
-    return [2, "Set a location to get started!"];
+    return { key: 2, text: "Set a location to get started!" };
   } else if (!hasCurrentResults) {
-    return [3, `No ${dataType} found, try adjusting your filters.`];
+    return {
+      key: 3,
+      text: `No ${dataType} found, try adjusting your filters.`,
+    };
   } else {
-    return [4, "End of results"];
+    return { key: 4, text: "End of results" };
   }
 };
 
 const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
+  const { serverReady } = useAppContext();
   const { queryStatus, hasCurrentResults } = props;
 
   const [lottieAnimation, setLottieAnimation] = useState<"STILL" | "MOVING">(
@@ -72,7 +91,7 @@ const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
     }
   }, [queryStatus, Lottie]);
 
-  const [descriptionKey, description] = getDescription(props);
+  const { key, text, showLoader } = getDescription(serverReady, props);
 
   return (
     <motion.div
@@ -85,14 +104,15 @@ const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
     >
       {Lottie.View}
       <motion.h4
-        key={descriptionKey}
+        key={key}
         {...MOTION_FADE_IN}
         className={classNames(
-          "text-white text-center px-4 text-base big-screen:text-lg min-h-fit",
+          "text-white text-center px-4 text-base big-screen:text-lg min-h-fit flex gap-3 items-center",
           lottieAnimation === "MOVING" && "animate-pulse",
         )}
       >
-        {description}
+        {showLoader && <LoadingIcon />}
+        {text}
       </motion.h4>
     </motion.div>
   );

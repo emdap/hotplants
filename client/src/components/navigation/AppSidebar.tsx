@@ -1,6 +1,6 @@
 import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import classNames from "classnames";
-import { useSidebarContext } from "contexts/sidebar/SidebarContext";
+import { useAppContext } from "contexts/AppContext";
 import Button from "designSystem/Button";
 import Sidebar from "designSystem/Sidebar";
 import { MenuItemData } from "designSystem/StyledMenu";
@@ -33,7 +33,7 @@ const SIDEBAR_ITEMS: SidebarNavItem[] = [
 
 const AppSidebar = () => {
   const location = useLocation();
-  const { sidebarExpanded, setSidebarExpanded } = useSidebarContext();
+  const { sidebarExpanded, setSidebarExpanded } = useAppContext();
 
   const isActiveLink = (link: LinkProps) =>
     link.params

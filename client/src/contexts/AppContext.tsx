@@ -1,9 +1,11 @@
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
-export const SidebarContext = createContext({
+export const AppContext = createContext({
   sidebarExpanded: false,
   setSidebarExpanded: VOID_FUNCTION as Dispatch<SetStateAction<boolean>>,
+
+  serverReady: false as boolean | "error",
 });
 
-export const useSidebarContext = () => useContext(SidebarContext);
+export const useAppContext = () => useContext(AppContext);

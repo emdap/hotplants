@@ -1,41 +1,77 @@
+import { ApolloProvider } from "@apollo/client/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet } from "@tanstack/react-router";
 import AppSidebar from "components/navigation/AppSidebar";
 import AppHeader from "components/navigation/header/AppHeader";
+import { apolloClient, setApolloReady } from "config/apolloConfig";
 import { authClient } from "config/authClient";
-import SidebarContextProvider from "contexts/sidebar/SidebarContextProvider";
+import { AppContext } from "contexts/AppContext";
 import { useDarkMode } from "designSystem/darkMode/DarkModeContext";
-import { useMount } from "react-use";
+import { useGetServerReadiness } from "hooks/useGetServerReadiness";
+import { useEffect, useMemo, useState } from "react";
 import { Toaster } from "sonner";
 import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
 
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+});
+
 const App = () => {
   const { isDarkMode } = useDarkMode();
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
-  useMount(() => {
-    authClient.getSession();
-  });
+  const serverReadiness = useGetServerReadiness();
+  const serverReady = useMemo(() => {
+    if (
+      serverReadiness.proxyServer === "error" ||
+      serverReadiness.hotplants === "error"
+    ) {
+      return "error";
+    }
+    return serverReadiness.proxyServer && serverReadiness.hotplants;
+  }, [serverReadiness.proxyServer, serverReadiness.hotplants]);
+
+  useEffect(() => {
+    if (serverReadiness.proxyServer) {
+      authClient.getSession();
+    }
+  }, [serverReadiness.proxyServer]);
+
+  useEffect(() => {
+    serverReady === true && setApolloReady();
+  }, [serverReady]);
 
   return (
-    <SidebarContextProvider>
-      <div
-        id={BACKGROUND_ANIMATION_ID}
-        className="fixed -z-10 h-dvh w-dvw pretty-background"
-      />
-      <Toaster
-        theme={isDarkMode ? "dark" : "light"}
-        richColors
-        toastOptions={{
-          classNames: {
-            error: "bg-orange-100",
-          },
-        }}
-      />
-      <AppHeader />
-      <div className="flex [&_main]:grow">
-        <AppSidebar />
-        <Outlet />
-      </div>
-    </SidebarContextProvider>
+    <AppContext.Provider
+      value={{
+        sidebarExpanded,
+        setSidebarExpanded,
+        serverReady,
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <ApolloProvider client={apolloClient}>
+          <div
+            id={BACKGROUND_ANIMATION_ID}
+            className="fixed -z-10 h-dvh w-dvw pretty-background"
+          />
+          <Toaster
+            theme={isDarkMode ? "dark" : "light"}
+            richColors
+            toastOptions={{
+              classNames: {
+                error: "bg-orange-100",
+              },
+            }}
+          />
+          <AppHeader />
+          <div className="flex [&_main]:grow">
+            <AppSidebar />
+            <Outlet />
+          </div>
+        </ApolloProvider>
+      </QueryClientProvider>
+    </AppContext.Provider>
   );
 };
 

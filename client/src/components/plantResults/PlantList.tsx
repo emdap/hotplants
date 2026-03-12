@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import ActivePlantPane from "components/plantResults/ActivePlantPane";
+import { useAppContext } from "contexts/AppContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
-import { useSidebarContext } from "contexts/sidebar/SidebarContext";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { motion } from "motion/react";
@@ -17,7 +17,7 @@ const PlantList = ({
   parentSidebarExpanded?: boolean;
   className?: string;
 }) => {
-  const { sidebarExpanded } = useSidebarContext();
+  const { sidebarExpanded } = useAppContext();
   const { scrollContainerElement } = useGetScrollContainer();
 
   const { page, plantList } = usePlantSelectionContext();
