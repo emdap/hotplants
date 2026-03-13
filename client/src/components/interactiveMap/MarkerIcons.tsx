@@ -17,8 +17,8 @@ export const OccurrenceMarkerIcon = (iconUrl: string, isActive: boolean) =>
     // Re-using this property to pass information to MarkerClusterGroup
     pane: isActive ? "active" : undefined,
     className: classNames(
-      "!h-10 !w-10 overflow-hidden !bg-default-background/50 !border-none",
-      isActive && "!outline-2 outline-white",
+      "!h-10 !w-10 overflow-hidden !bg-primary !border-purple-400",
+      isActive && "!outline-2 !outline-white",
     ),
   });
 

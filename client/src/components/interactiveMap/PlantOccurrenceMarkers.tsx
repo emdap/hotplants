@@ -20,6 +20,11 @@ const PlantOccurrenceMarkers = () => {
       maxClusterRadius={80}
     >
       {activePlantMedia.map(({ occurrenceCoords, url }, index) => {
+        // Encountered case of missing coordinates
+        if (occurrenceCoords.length !== 2) {
+          return null;
+        }
+
         const isActive = url === activeMediaUrl;
         isActive &&
           map.fitBounds(swapLatLng([occurrenceCoords]), {
