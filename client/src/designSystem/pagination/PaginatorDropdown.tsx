@@ -64,9 +64,10 @@ const PaginatorDropdownItems = ({
           "active-page-button",
         )?.[0];
 
+      console.log(isSafari);
       if (isSafari && activePageButton instanceof HTMLElement) {
         pageSizeContainerRef.current.scrollTo({
-          top: activePageButton.offsetTop,
+          top: activePageButton.offsetTop - 32,
         });
       } else {
         //   @ts-expect-error missing "container" property
