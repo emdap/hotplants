@@ -1,7 +1,8 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import classNames from "classnames";
 import PlantAnimation from "components/PlantAnimation";
 import PlantList from "components/plantResults/PlantList";
-import PlantFiltersForm from "components/plantSearch/plantFilters/PlantFilterForm";
+import PlantFilterForm from "components/plantSearch/plantFilters/PlantFilterForm";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
@@ -50,6 +51,7 @@ const Garden = () => {
     gardenPlants?.count ??
     gardenPlantsQuery.previousData?.userGardenPlants?.count ??
     0;
+  const hasNoResults = gardenPlants && !gardenPlants.count;
 
   const gardenActionList = useGardenActionList({
     gardenId: userGarden?._id,
@@ -57,7 +59,11 @@ const Garden = () => {
   });
 
   return (
-    <main className="page-buffer page-container h-dvh-header">
+    <main
+      className={classNames("page-buffer page-container", {
+        "h-dvh-header": hasNoResults,
+      })}
+    >
       <PageTitle className="flex gap-4 items-center">
         <Button
           variant="icon-white"
@@ -76,7 +82,7 @@ const Garden = () => {
         debounceShow
         transparent
         show={gardenPlantsQuery.loading || gardenQuery.loading}
-        className="absolute"
+        className="absolute top-0 left-0"
       />
 
       <PlantSelectionProvider
@@ -87,11 +93,11 @@ const Garden = () => {
         {...{ page, pageSize }}
       >
         <FloatingHeader>
-          <PlantFiltersForm
+          <PlantFilterForm
             renderMode="popover"
-            onClick={() => setShowFiltersModal(true)}
+            onOpenPopover={() => setShowFiltersModal(true)}
             onClose={() => setShowFiltersModal(false)}
-            isOpen={showFiltersModal}
+            popoverIsOpen={showFiltersModal}
           />
 
           <ItemCountWithLoader
@@ -108,8 +114,8 @@ const Garden = () => {
           />
         </FloatingHeader>
 
-        {gardenPlants && !gardenPlants.count && (
-          <PlantAnimation className="my-auto" />
+        {hasNoResults && (
+          <PlantAnimation isInitialSearch={!plantFilter} className="my-auto" />
         )}
 
         <PlantList showFadeInAnimation className="pb-10" />

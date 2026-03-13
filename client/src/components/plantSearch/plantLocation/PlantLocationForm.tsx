@@ -7,8 +7,6 @@ import {
 } from "components/plantSearch/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
-import Form from "designSystem/Form";
-import Modal from "designSystem/Modal";
 import { useReactQuery } from "hooks/useQuery";
 import { isEqual } from "lodash";
 import { useCallback, useEffect, useState } from "react";
@@ -18,12 +16,9 @@ import {
   lookupLocationInput,
   validateNominatimLocation,
 } from "util/locationUtil";
+import StyledPlantForm from "../StyledPlantForm";
 
-const PlantLocationForm = ({
-  renderMode,
-  onClose,
-  ...modalProps
-}: PlantSearchFormProps) => {
+const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   const {
     searchParams: { location: locationParams },
     searchParamsDraft,
@@ -108,30 +103,24 @@ const PlantLocationForm = ({
   const submitSearchLocation = () => {
     applySearchParams();
     getResultsContainer()?.scrollIntoView();
+
+    renderMode === "modal" && onClose();
   };
 
-  const onModalClose = () => {
-    if (onClose) {
-      syncWithParams();
-      updateSearchParamsDraft({ location: locationParams });
-      onClose();
-    }
-  };
+  const draftIsApplied = isEqual(searchParamsDraft?.location, locationParams);
 
   const plantLocationFooter = (
     <PlantSearchFormFooter
       submitButtonProps={{
         disabled:
-          locationPending ||
-          !searchParamsDraft?.location ||
-          isEqual(searchParamsDraft?.location, locationParams),
+          locationPending || !searchParamsDraft?.location || draftIsApplied,
         onClick: submitSearchLocation,
       }}
       clearButtonProps={{
-        disabled: !locationParams && !searchParamsDraft?.location,
+        disabled: !searchParamsDraft?.location || draftIsApplied,
         onClick: () => {
-          applySearchParams({ location: undefined });
           updateSearchParamsDraft({ location: undefined });
+          applySearchParams({ location: undefined });
           syncWithParams();
         },
       }}
@@ -191,28 +180,20 @@ const PlantLocationForm = ({
     </div>
   );
 
-  return renderMode === "card" ? (
-    <Form
-      className="flex flex-col gap-4 overflow-hidden"
-      onSubmit={submitSearchLocation}
-    >
-      <Card className="overflow-auto">{plantLocationFields}</Card>
-      {plantLocationFooter}
-    </Form>
-  ) : (
-    <Modal
-      title={PLANT_FORM_TITLES.location}
-      onClose={onModalClose}
-      {...modalProps}
-    >
-      <Form
-        className="flex flex-col gap-4 md:overflow-hidden"
-        onSubmit={submitSearchLocation}
-      >
-        {plantLocationFields}
-        {plantLocationFooter}
-      </Form>
-    </Modal>
+  return (
+    <StyledPlantForm onSubmit={submitSearchLocation}>
+      {renderMode === "card" ? (
+        <>
+          <Card className="overflow-auto">{plantLocationFields}</Card>
+          {plantLocationFooter}
+        </>
+      ) : (
+        <>
+          {plantLocationFields}
+          {plantLocationFooter}
+        </>
+      )}
+    </StyledPlantForm>
   );
 };
 

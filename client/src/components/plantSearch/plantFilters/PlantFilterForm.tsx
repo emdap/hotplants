@@ -7,16 +7,16 @@ import Modal from "designSystem/Modal";
 import StyledPopover from "designSystem/StyledPopover";
 import { hotplantsClient } from "hooks/usePlantSearchQueries";
 import { useReactQuery } from "hooks/useQuery";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { toast } from "sonner";
-import { PlantDataFilter } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
 import PlantSearchFormFooter from "../PlantSearchFormFooter";
 import {
   PLANT_FORM_TITLES,
   PlantSearchFormProps,
 } from "../plantSearchFormUtil";
+import StyledPlantForm from "../StyledPlantForm";
 import FilterInputField from "./FilterInputField";
 import PlantFilterOpenButton from "./PlantFilterOpenButton";
 import {
@@ -25,35 +25,40 @@ import {
   STATIC_FILTER_DICT,
 } from "./plantFilterUtil";
 
-const PlantFiltersForm = ({
+const PlantFilterForm = ({
   renderMode: renderModeProp,
-  onClick,
-  ...modalProps
-}: PlantSearchFormProps) => {
+  onClose,
+
+  onOpenPopover,
+  popoverIsOpen,
+}: PlantSearchFormProps & {
+  onOpenPopover?: () => void;
+  popoverIsOpen?: boolean;
+}) => {
   const navigate = useNavigate();
   const { plantListLoading, totalItems } = usePlantSelectionContext();
   const { plantFilter } = useSearch({ strict: false });
   const [filterDraft, setFilterDraft] = useState(plantFilter);
 
-  useDebounce(() => applyFilter(filterDraft), 500, [filterDraft]);
-
-  const applyFilter = (newFilter?: PlantDataFilter) => {
+  const submitFilter = useCallback(() => {
     {
       const filterHasData = Boolean(
-        newFilter &&
-        Object.values(newFilter).filter((val) => val !== undefined).length,
+        filterDraft &&
+        Object.values(filterDraft).filter((val) => val !== undefined).length,
       );
 
       navigate({
         to: ".",
         search: ({ plantFilter: _prevFilter, ...prev }) => ({
           ...prev,
-          ...(filterHasData && { page: 1, plantFilter: newFilter }),
+          ...(filterHasData && { page: 1, plantFilter: filterDraft }),
         }),
         replace: true,
       });
     }
-  };
+  }, [navigate, filterDraft]);
+
+  useDebounce(submitFilter, 500, [submitFilter]);
 
   const clearFilter = () => {
     setFilterDraft(undefined);
@@ -97,7 +102,7 @@ const PlantFiltersForm = ({
       submitButtonProps={
         renderMode === "modal"
           ? {
-              onClick: modalProps?.onClose,
+              onClick: onClose,
               className: "basis-1/2",
               children: (
                 <span className="flex gap-1 relative">
@@ -159,32 +164,40 @@ const PlantFiltersForm = ({
     </div>
   );
 
-  return renderMode === "card" ? (
-    <>
-      <Card className="overflow-auto">{plantFilterForm}</Card>
+  const formWrappedBody = (
+    <StyledPlantForm onSubmit={submitFilter}>
+      {plantFilterForm}
       {plantFilterFooter}
-    </>
-  ) : renderMode === "modal" ? (
-    <>
-      <Modal title={PLANT_FORM_TITLES["filters"]} {...modalProps}>
-        {plantFilterForm}
-        {plantFilterFooter}
-      </Modal>
+    </StyledPlantForm>
+  );
 
-      {renderModeProp === "popover" && (
-        <PlantFilterOpenButton onClick={onClick} />
-      )}
-    </>
-  ) : (
+  return renderMode === "popover" ? (
     <StyledPopover
       anchor="bottom start"
       className="max-h-3/5! max-w-3/4! flex flex-col"
       button={<PlantFilterOpenButton />}
     >
-      {plantFilterForm}
-      {plantFilterFooter}
+      {formWrappedBody}
     </StyledPopover>
+  ) : renderModeProp === "popover" && renderMode === "modal" ? (
+    <>
+      <Modal
+        title={PLANT_FORM_TITLES["plant-name"]}
+        onClose={onClose}
+        isOpen={popoverIsOpen}
+      >
+        {formWrappedBody}
+      </Modal>
+      <PlantFilterOpenButton onClick={onOpenPopover} />
+    </>
+  ) : renderMode === "card" ? (
+    <StyledPlantForm onSubmit={submitFilter}>
+      <Card className="overflow-auto">{plantFilterForm}</Card>
+      {plantFilterFooter}
+    </StyledPlantForm>
+  ) : (
+    formWrappedBody
   );
 };
 
-export default PlantFiltersForm;
+export default PlantFilterForm;

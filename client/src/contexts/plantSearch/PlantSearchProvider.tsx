@@ -14,7 +14,6 @@ import usePlantSearchQueries, {
 import PlantSearch from "pages/PlantSearch";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PlantSearchParams } from "util/customSchemaTypes";
-import { isSmallScreen } from "util/generalUtil";
 
 const route = getRouteApi("/plant-search");
 
@@ -53,8 +52,6 @@ const PlantSearchProvider = () => {
           plantFilter,
         }),
       });
-      isSmallScreen() &&
-        setSearchFormState((prev) => ({ ...prev, isOpen: false }));
     },
 
     [navigate, searchParamsDraft],

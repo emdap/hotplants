@@ -1,27 +1,40 @@
 import classNames from "classnames";
-import PlantLocationForm from "components/plantSearch/plantLocation/PlantLocationForm";
-import PlantNameForm from "components/plantSearch/plantName/PlantNameForm";
 import {
   SearchFormTab,
   usePlantSearchContext,
 } from "contexts/plantSearch/PlantSearchContext";
+import Modal from "designSystem/Modal";
 import Sidebar from "designSystem/Sidebar";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
-import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useMount } from "react-use";
+import { Entries } from "type-fest";
 import { isSmallScreen } from "util/generalUtil";
-import PlantFiltersForm from "./plantFilters/PlantFilterForm";
-import { PlantSearchFormProps } from "./plantSearchFormUtil";
+import PlantFilterForm from "./plantFilters/PlantFilterForm";
+import PlantLocationForm from "./plantLocation/PlantLocationForm";
+import PlantNameForm from "./plantName/PlantNameForm";
+import { PLANT_FORM_TITLES, PlantSearchFormProps } from "./plantSearchFormUtil";
 
-const formComponents: Record<SearchFormTab, ReactElement> = {
-  location: <PlantLocationForm renderMode="card" />,
-  "plant-name": <PlantNameForm renderMode="card" />,
-  filters: <PlantFiltersForm renderMode="card" />,
+const PLANT_FORM_COMPONENTS: Record<
+  SearchFormTab,
+  FunctionComponent<PlantSearchFormProps>
+> = {
+  location: PlantLocationForm,
+  "plant-name": PlantNameForm,
+  filters: PlantFilterForm,
 };
 
 const PlantSearchForm = () => {
   const {
-    hasCurrentResults,
+    searchParams,
+    updateSearchParamsDraft,
+
     searchFormState: { tab, isOpen },
     setSearchFormState,
   } = usePlantSearchContext();
@@ -57,21 +70,36 @@ const PlantSearchForm = () => {
     };
   }, [resizeSidbarContent, scrollContainerElement]);
 
-  const toggleIsOpen = (isOpen: boolean) =>
+  const toggleIsOpen = (isOpen: boolean = false) =>
     setSearchFormState((prev) => ({ ...prev, isOpen }));
 
-  const modalProps = (tabName: SearchFormTab): PlantSearchFormProps => ({
-    renderMode: "modal",
-    isOpen: isOpen && tab === tabName,
-    onClose: () => toggleIsOpen(false),
-  });
+  const searchFormProps: PlantSearchFormProps = {
+    renderMode: isSmallScreen() ? "modal" : "card",
+    onClose: () => toggleIsOpen(),
+  };
 
-  return isSmallScreen() ? (
-    <>
-      <PlantLocationForm {...modalProps("location")} />
-      <PlantNameForm {...modalProps("plant-name")} />
-      <PlantFiltersForm {...modalProps("filters")} />
-    </>
+  return searchFormProps.renderMode === "modal" ? (
+    (
+      Object.entries(PLANT_FORM_COMPONENTS) as Entries<
+        typeof PLANT_FORM_COMPONENTS
+      >
+    ).map(([tabName, Component]) => {
+      const modalIsOpen = isOpen && tab === tabName;
+
+      return (
+        <Modal
+          key={tabName}
+          title={PLANT_FORM_TITLES[tabName]}
+          isOpen={modalIsOpen}
+          onClose={() => {
+            updateSearchParamsDraft(searchParams);
+            toggleIsOpen();
+          }}
+        >
+          {modalIsOpen && <Component {...searchFormProps} />}
+        </Modal>
+      );
+    })
   ) : (
     <Sidebar
       ref={sidebarRef}
@@ -84,22 +112,25 @@ const PlantSearchForm = () => {
           "overflow-hidden": !isExpanded,
         })
       }
-      // style={{ height: sidebarHeight }}
     >
-      {({ isExpanded }) => (
-        <div
-          className={classNames(
-            "w-md h-full flex flex-col gap-4 p-4 pr-5 transition-[height,_opacity]",
-            hasCurrentResults && {
-              "opacity-100 delay-150": isExpanded,
-              "opacity-0": !isExpanded,
-            },
-          )}
-          style={{ height: sidebarContentHeight }}
-        >
-          {formComponents[tab]}
-        </div>
-      )}
+      {({ isExpanded }) => {
+        const Component = PLANT_FORM_COMPONENTS[tab];
+
+        return (
+          <div
+            className={classNames("w-md h-full flex flex-col gap-4 p-4 pr-5", {
+              "opacity-100 w-md": isExpanded,
+              "opacity-0 w-0! pointer-events-none": !isExpanded,
+            })}
+            style={{
+              height: sidebarContentHeight,
+              transition: `height 150ms, opacity 150ms ${isExpanded ? "200ms" : "0ms"}, width 1ms ${isExpanded ? "0ms" : "200ms"}`,
+            }}
+          >
+            <Component {...searchFormProps} />
+          </div>
+        );
+      }}
     </Sidebar>
   );
 };

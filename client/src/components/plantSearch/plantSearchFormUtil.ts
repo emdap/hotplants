@@ -1,11 +1,11 @@
 import { FilterInput } from "components/plantSearch/plantFilters/plantFilterUtil";
 import { SearchFormTab } from "contexts/plantSearch/PlantSearchContext";
-import { ModalProps } from "designSystem/Modal";
 import { OptionalSearchParamKey } from "util/customSchemaTypes";
 
 export type PlantSearchFormProps = {
   renderMode: "card" | "modal" | "popover";
-} & ModalProps;
+  onClose: () => void;
+};
 
 export const PLANT_NAME_FIELDS: FilterInput<"text", OptionalSearchParamKey>[] =
   [

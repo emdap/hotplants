@@ -9,13 +9,12 @@ import {
 } from "components/plantSearch/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
-import Form from "designSystem/Form";
-import Modal from "designSystem/Modal";
 import { isEqual } from "lodash";
 import { Fragment, useEffect, useState } from "react";
 import { OptionalSearchParamKey, PlantNameParam } from "util/customSchemaTypes";
+import StyledPlantForm from "../StyledPlantForm";
 
-const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
+const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   const {
     searchParams: { plantName },
     updateSearchParamsDraft,
@@ -56,11 +55,16 @@ const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
     applySearchParams({ plantName: undefined });
   };
 
+  const submitPlantName = () => {
+    applySearchParams();
+    renderMode === "modal" && onClose();
+  };
+
   const plantNameFooter = (
     <PlantSearchFormFooter
       submitButtonProps={{
         disabled: isEqual({ commonName, scientificName }, plantNameSearch),
-        onClick: () => applySearchParams(),
+        onClick: submitPlantName,
       }}
       clearButtonProps={{
         disabled: isEqual(
@@ -101,25 +105,20 @@ const PlantNameForm = ({ renderMode, ...modalProps }: PlantSearchFormProps) => {
     </div>
   );
 
-  return renderMode === "card" ? (
-    // TODO: Repeat form/styling/pattern with other 'Plant...Form' components
-    <Form
-      className="flex flex-col overflow-hidden gap-4"
-      onSubmit={() => applySearchParams()}
-    >
-      <Card className="overflow-auto">{plantNameFields}</Card>
-      {plantNameFooter}
-    </Form>
-  ) : (
-    <Modal title={PLANT_FORM_TITLES["plant-name"]} {...modalProps}>
-      <Form
-        className="flex flex-col overflow-hidden gap-4"
-        onSubmit={() => applySearchParams()}
-      >
-        {plantNameFields}
-        {plantNameFooter}
-      </Form>
-    </Modal>
+  return (
+    <StyledPlantForm onSubmit={submitPlantName}>
+      {renderMode === "card" ? (
+        <>
+          <Card className="overflow-auto">{plantNameFields}</Card>
+          {plantNameFooter}
+        </>
+      ) : (
+        <>
+          {plantNameFields}
+          {plantNameFooter}
+        </>
+      )}
+    </StyledPlantForm>
   );
 };
 
