@@ -20,7 +20,7 @@ const PlantList = ({
   const { sidebarExpanded } = useAppContext();
   const { scrollContainerElement } = useGetScrollContainer();
 
-  const { page, plantList } = usePlantSelectionContext();
+  const { page, plantList, totalItems } = usePlantSelectionContext();
 
   const [shrinkCols, setShrinkCols] = useState(false);
 
@@ -40,7 +40,7 @@ const PlantList = ({
   return (
     <>
       <motion.div
-        key={showFadeInAnimation ? page : undefined}
+        key={showFadeInAnimation ? totalItems + page : undefined}
         {...MOTION_FADE_IN}
         className={classNames(
           "gap-4 items-stretch grid",
