@@ -7,7 +7,8 @@ import Modal from "designSystem/Modal";
 import StyledPopover from "designSystem/StyledPopover";
 import { hotplantsClient } from "hooks/usePlantSearchQueries";
 import { useReactQuery } from "hooks/useQuery";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { useDebounce } from "react-use";
 import { toast } from "sonner";
 import { PlantDataFilter } from "util/customSchemaTypes";
 import { isSmallScreen } from "util/generalUtil";
@@ -30,11 +31,11 @@ const PlantFiltersForm = ({
   ...modalProps
 }: PlantSearchFormProps) => {
   const navigate = useNavigate();
-  const { plantFilter } = useSearch({ strict: false });
   const { plantListLoading, totalItems } = usePlantSelectionContext();
+  const { plantFilter } = useSearch({ strict: false });
+  const [filterDraft, setFilterDraft] = useState(plantFilter);
 
-  const renderMode =
-    renderModeProp === "popover" && isSmallScreen() ? "modal" : renderModeProp;
+  useDebounce(() => applyFilter(filterDraft), 500, [filterDraft]);
 
   const applyFilter = (newFilter?: PlantDataFilter) => {
     {
@@ -54,12 +55,15 @@ const PlantFiltersForm = ({
     }
   };
 
-  const clearFilter = () =>
+  const clearFilter = () => {
+    setFilterDraft(undefined);
+
     navigate({
       to: ".",
       search: ({ plantFilter: _prevFilter, ...prev }) => prev,
       replace: true,
     });
+  };
 
   const filterValuesQuery = useReactQuery({
     queryKey: ["plant-filters"],
@@ -84,6 +88,9 @@ const PlantFiltersForm = ({
 
     return getSortedFilterEntries({ ...dynamicFilters, ...STATIC_FILTER_DICT });
   }, [filterValuesQuery.data]);
+
+  const renderMode =
+    renderModeProp === "popover" && isSmallScreen() ? "modal" : renderModeProp;
 
   const plantFilterFooter = (
     <PlantSearchFormFooter
@@ -141,9 +148,9 @@ const PlantFiltersForm = ({
               <FilterInputField
                 key={plantDataKey}
                 filterInput={filterInput}
-                value={plantFilter?.[plantDataKey]}
+                value={filterDraft?.[plantDataKey]}
                 onChange={(value) =>
-                  applyFilter({ ...plantFilter, [plantDataKey]: value })
+                  setFilterDraft({ ...filterDraft, [plantDataKey]: value })
                 }
               />
             ),
