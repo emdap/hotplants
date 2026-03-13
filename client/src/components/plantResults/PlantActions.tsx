@@ -39,9 +39,11 @@ const PlantActions = ({
 
   const handlePlantClick = useCallback(
     async (action: PlantAction) => {
-      setHasLoadingAction(true);
-      await (action.onClick && action.onClick(plant));
-      setHasLoadingAction(false);
+      if (action.onClick) {
+        setHasLoadingAction(true);
+        await action.onClick(plant);
+        setHasLoadingAction(false);
+      }
     },
     [plant],
   );

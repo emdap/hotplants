@@ -7,11 +7,11 @@ import {
 } from "@headlessui/react";
 import { Link, LinkProps } from "@tanstack/react-router";
 import classNames from "classnames";
-import { ReactNode } from "react";
+import { MouseEvent, ReactNode } from "react";
 import { IconType } from "react-icons/lib";
 import { ButtonVariant } from "./Button";
 
-export type MenuItemData<T = never, R = void> = {
+export type MenuItemData<T = MouseEvent, R = void> = {
   label: ReactNode;
   Icon?: IconType;
   iconNode?: ReactNode;
@@ -57,6 +57,7 @@ const StyledMenu = ({
           className?.menuItemsList,
         )}
         onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
       >
         {children}
 
