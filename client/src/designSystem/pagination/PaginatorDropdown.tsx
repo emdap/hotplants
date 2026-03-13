@@ -64,7 +64,6 @@ const PaginatorDropdownItems = ({
           "active-page-button",
         )?.[0];
 
-      console.log(isSafari);
       if (isSafari && activePageButton instanceof HTMLElement) {
         pageSizeContainerRef.current.scrollTo({
           top: activePageButton.offsetTop - 32,
