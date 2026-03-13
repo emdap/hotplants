@@ -93,7 +93,7 @@ export const readinessLink = new ApolloLink((operation, forward) => {
 });
 
 const httpLink = new HttpLink({
-  uri: `${import.meta.env.VITE_SERVER_URL}/graphql`,
+  uri: `${import.meta.env.VITE_PROXY_SERVER_URL}/graphql`,
   credentials: "include",
 });
 

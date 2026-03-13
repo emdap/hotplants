@@ -3,7 +3,8 @@ declare module "wkt" {
   export const stringify = (geoJson: import("geojson").GeoJsonObject) => string;
 }
 interface ImportMetaEnv {
-  readonly VITE_SERVER_URL: string;
+  readonly VITE_PROXY_SERVER_URL: string;
+  readonly VITE_HOTPLANTS_URL: string;
 }
 
 interface ImportMeta {

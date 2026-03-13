@@ -1,14 +1,15 @@
-import { hotplantsBaseUrl } from "hooks/usePlantSearchQueries";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type ServerKey = "proxyServer" | "hotplants";
 const BASE_URLS: Record<ServerKey, string> = {
-  proxyServer: import.meta.env.VITE_SERVER_URL,
-  hotplants: hotplantsBaseUrl,
+  proxyServer: import.meta.env.VITE_PROXY_SERVER_URL,
+  hotplants: import.meta.env.VITE_HOTPLANTS_URL,
 };
 const HEALTH_PING_INTERVAL_MS = 500;
 const MAX_CHECKS = 20;
 
+// TODO: Ping ACTUAL server URL to wake up -- otherwise, is waiting for proxy to be ready -> ping server through proxy -> wait for server ...
+// Slower than waking both up at same time, separately
 export const useGetServerReadiness = () => {
   const [serverReadiness, setServerReadiness] = useState<
     Record<ServerKey, boolean | "error">
@@ -54,6 +55,9 @@ export const useGetServerReadiness = () => {
 
     healthCheckCount.current = healthCheckCount.current - 1;
     setServerReadiness({ proxyServer, hotplants });
+    if (proxyServer && hotplants) {
+      intervalRef.current && clearInterval(intervalRef.current);
+    }
   }, [checkHealth]);
 
   useEffect(() => {
