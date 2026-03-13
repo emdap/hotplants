@@ -45,10 +45,11 @@ const Garden = () => {
     fetchPolicy: "cache-and-network",
   });
 
-  const gardenPlants =
-    gardenPlantsQuery.data?.userGardenPlants ??
-    gardenPlantsQuery.previousData?.userGardenPlants;
-  const gardenPlantsCount = gardenPlants?.count ?? 0;
+  const gardenPlants = gardenPlantsQuery.data?.userGardenPlants;
+  const displayCount =
+    gardenPlants?.count ??
+    gardenPlantsQuery.previousData?.userGardenPlants?.count ??
+    0;
 
   const gardenActionList = useGardenActionList({
     gardenId: userGarden?._id,
@@ -56,7 +57,7 @@ const Garden = () => {
   });
 
   return (
-    <main className="page-buffer page-container h-full">
+    <main className="page-buffer page-container h-dvh-header">
       <PageTitle className="flex gap-4 items-center">
         <Button
           variant="icon-white"
@@ -81,7 +82,7 @@ const Garden = () => {
       <PlantSelectionProvider
         plantList={gardenPlants?.results ?? []}
         plantListLoading={gardenPlantsQuery.loading}
-        totalItems={gardenPlantsCount}
+        totalItems={displayCount}
         plantActions={gardenActionList}
         {...{ page, pageSize }}
       >
@@ -96,20 +97,21 @@ const Garden = () => {
           <ItemCountWithLoader
             className="col-start-2"
             label="Plant"
-            count={gardenPlantsCount}
+            count={displayCount}
           />
 
           <PaginationControl
             className="ml-auto"
-            totalItems={gardenPlantsCount}
+            totalItems={displayCount}
             replaceUrl
             {...{ page, pageSize }}
           />
         </FloatingHeader>
 
-        {!gardenPlants?.results?.length && (
+        {gardenPlants && !gardenPlants.count && (
           <PlantAnimation className="my-auto" />
         )}
+
         <PlantList showFadeInAnimation className="pb-10" />
       </PlantSelectionProvider>
     </main>

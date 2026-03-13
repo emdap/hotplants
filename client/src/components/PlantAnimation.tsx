@@ -60,7 +60,6 @@ const getDescription = (
 
 const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
   const { serverReady } = useAppContext();
-  const { queryStatus, hasCurrentResults } = props;
 
   const [lottieAnimation, setLottieAnimation] = useState<"STILL" | "MOVING">(
     "STILL",
@@ -69,19 +68,17 @@ const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
   const Lottie = useLottie({
     name: lottieAnimation,
     animationData: lottieAnimation === "STILL" ? stillPlant : movingPlant,
-    className: classNames("w-[200px] transition-opacity", {
-      "xl:w-[300px]": hasCurrentResults,
-    }),
+    className: "w-[200px] transition-opacity",
   });
 
   useEffect(() => {
-    if (queryStatus === "CHECKING_STATUS") {
+    if (props.queryStatus === "CHECKING_STATUS") {
       Lottie.setSpeed(0.1);
       Lottie.setDirection(-1);
     } else {
       Lottie.setDirection(1);
 
-      if (queryStatus === "SCRAPING_AND_POLLING") {
+      if (props.queryStatus === "SCRAPING_AND_POLLING") {
         setLottieAnimation("MOVING");
         Lottie.setSpeed(1);
       } else {
@@ -89,20 +86,21 @@ const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
         Lottie.setSpeed(0.25);
       }
     }
-  }, [queryStatus, Lottie]);
+  }, [props.queryStatus, Lottie]);
 
   const { key, text, showLoader } = getDescription(serverReady, props);
 
   return (
-    <motion.div
-      {...MOTION_FADE_IN}
+    <div
+      key="plant-animation"
       className={classNames(
         "grow flex flex-col gap-4 items-center justify-center transition-opacity",
-        !hasCurrentResults && "lg:sticky lg:bottom-0",
         className,
       )}
     >
-      {Lottie.View}
+      <motion.div key="plant-animation" {...MOTION_FADE_IN}>
+        {Lottie.View}
+      </motion.div>
       <motion.h4
         key={key}
         {...MOTION_FADE_IN}
@@ -114,7 +112,7 @@ const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
         {showLoader && <LoadingIcon />}
         {text}
       </motion.h4>
-    </motion.div>
+    </div>
   );
 };
 
