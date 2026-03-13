@@ -1,9 +1,11 @@
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
-import { Marker } from "react-leaflet";
+import { Marker, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import { swapLatLng } from "util/locationUtil";
 import { MarkerClusterIcon, OccurrenceMarkerIcon } from "./MarkerIcons";
 
 const PlantOccurrenceMarkers = () => {
+  const map = useMap();
   const { activePlantMedia, activeMediaUrl, setActiveMediaUrl } =
     usePlantSelectionContext();
 
@@ -17,16 +19,24 @@ const PlantOccurrenceMarkers = () => {
       }
       maxClusterRadius={80}
     >
-      {activePlantMedia.map(({ occurrenceCoords, url }, index) => (
-        <Marker
-          key={index}
-          position={[occurrenceCoords[1], occurrenceCoords[0]]}
-          icon={OccurrenceMarkerIcon(url, url === activeMediaUrl)}
-          eventHandlers={{
-            click: () => setActiveMediaUrl(url),
-          }}
-        />
-      ))}
+      {activePlantMedia.map(({ occurrenceCoords, url }, index) => {
+        const isActive = url === activeMediaUrl;
+        isActive &&
+          map.fitBounds(swapLatLng([occurrenceCoords]), {
+            maxZoom: map.getZoom(),
+          });
+
+        return (
+          <Marker
+            key={index}
+            position={[occurrenceCoords[1], occurrenceCoords[0]]}
+            icon={OccurrenceMarkerIcon(url, isActive)}
+            eventHandlers={{
+              click: () => setActiveMediaUrl(url),
+            }}
+          />
+        );
+      })}
     </MarkerClusterGroup>
   );
 };
