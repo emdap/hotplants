@@ -1,5 +1,6 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
+import GardenPlantNotes from "components/garden/GardenPlantNotes";
 import PlantAnimation from "components/PlantAnimation";
 import ActivePlantPane from "components/plantResults/ActivePlantPane";
 import PlantList from "components/plantResults/PlantList";
@@ -120,7 +121,14 @@ const Garden = () => {
         )}
 
         <PlantList showFadeInAnimation className="pb-10" />
-        <ActivePlantPane>hey girl</ActivePlantPane>
+        <ActivePlantPane>
+          {userGarden && (
+            <GardenPlantNotes
+              gardenId={userGarden._id}
+              refetchPlants={gardenPlantsQuery.refetch}
+            />
+          )}
+        </ActivePlantPane>
       </PlantSelectionProvider>
     </main>
   );

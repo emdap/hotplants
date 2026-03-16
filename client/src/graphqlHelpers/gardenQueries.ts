@@ -100,7 +100,6 @@ export const UPDATE_GARDEN_PLANT = graphql(`
       notes: $notes
     ) {
       _id
-      ...GardenPlantFields
     }
   }
 `);

@@ -18,6 +18,9 @@
   h4 {
     @apply font-medium text-lg;
   }
+  h5 {
+    @apply font-semibold;
+  }
   h6 {
     @apply font-medium;
   }
@@ -26,6 +29,7 @@
   h2,
   h3,
   h4,
+  h5,
   h6 {
     @apply text-default-text;
   }

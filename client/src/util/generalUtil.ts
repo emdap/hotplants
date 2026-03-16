@@ -68,7 +68,7 @@ export const handleGraphQlError = (
       if (error.message) {
         customErrorHandler
           ? customErrorHandler(error)
-          : toast.error(error.message);
+          : toast.error(error.message, toastProps);
       } else {
         defaultErrorToast(toastProps);
       }

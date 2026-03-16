@@ -196,13 +196,14 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
               />
             </div>
 
-            {children}
+            <div className="big-screen:overflow-auto flex-grow space-y-4">
+              {children}
 
-            <PlantInfoCard
-              plant={activePlant}
-              className="big-screen:overflow-auto flex-grow"
-              onTouchEndCapture={(e) => e.stopPropagation()}
-            />
+              <PlantInfoCard
+                plant={activePlant}
+                onTouchEndCapture={(e) => e.stopPropagation()}
+              />
+            </div>
           </div>
         </Card>
       )}

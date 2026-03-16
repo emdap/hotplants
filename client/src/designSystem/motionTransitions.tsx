@@ -19,6 +19,12 @@ export const MOTION_FADE_IN: MotionProps = {
   exit: { opacity: 0 },
 };
 
+export const MOTION_HEIGHT_EXPAND: MotionProps = {
+  initial: { height: 0, overflow: "hidden" },
+  animate: { height: "auto" },
+  exit: { height: 0, overflow: "hidden" },
+};
+
 export const mergeMotionProps = (
   baseProps: MotionProps,
   addProps: MotionProps,

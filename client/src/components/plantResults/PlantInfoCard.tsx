@@ -18,27 +18,30 @@ const PlantInfoCard = ({
   plant,
   ...props
 }: { plant: PlantResult } & CardProps) => (
-  <Card {...props}>
-    <table className="border-separate border-spacing-4 [&_th,td]:p-2 w-full">
-      <tbody>
-        {(Object.entries(plant) as Entries<PlantResult>).map(
-          ([key, value], index) =>
-            PLANT_FIELD_LABEL[key] && (
-              <tr key={index} className="grid grid-cols-[2fr_3fr]">
-                <th className="text-left">{PLANT_FIELD_LABEL[key]}</th>
-                <td className="text-right break-all">
-                  {Array.isArray(value)
-                    ? value.join(", ")
-                    : typeof value === "string"
-                      ? value
-                      : JSON.stringify(value)}
-                </td>
-              </tr>
-            ),
-        )}
-      </tbody>
-    </table>
-  </Card>
+  <div className="flex flex-col gap-2 overflow-hidden">
+    <h5>Plant Info</h5>
+    <Card {...props}>
+      <table className="border-separate border-spacing-4 [&_th,td]:p-2 w-full">
+        <tbody>
+          {(Object.entries(plant) as Entries<PlantResult>).map(
+            ([key, value], index) =>
+              PLANT_FIELD_LABEL[key] && (
+                <tr key={index} className="grid grid-cols-[2fr_3fr]">
+                  <th className="text-left">{PLANT_FIELD_LABEL[key]}</th>
+                  <td className="text-right break-all">
+                    {Array.isArray(value)
+                      ? value.join(", ")
+                      : typeof value === "string"
+                        ? value
+                        : JSON.stringify(value)}
+                  </td>
+                </tr>
+              ),
+          )}
+        </tbody>
+      </table>
+    </Card>
+  </div>
 );
 
 export default PlantInfoCard;

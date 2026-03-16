@@ -15,8 +15,7 @@
   @apply border-transparent outline-none ring-primary/50 ring-offset-1 ring-offset-primary;
   @apply autofill:shadow-[inset_0_0_0px_1000px_#e8f0fe];
 
-  @apply bg-white/60 dark:bg-white/10 focus:bg-white/70 dark:focus:bg-white/15;
-  @apply not-dark:bg-secondary/20 not-dark:focus:bg-secondary/20;
+  @apply bg-secondary/20 dark:bg-white/10 focus:bg-secondary/10 dark:focus:bg-white/15;
 
   field-sizing: fixed;
 

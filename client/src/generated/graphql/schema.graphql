@@ -46,7 +46,7 @@ type Mutation {
   createGarden(gardenName: String): UserGarden
   removeFromGarden(gardenId: String!, plantId: String!): UserGarden
   replaceWithProxyUrl(occurrenceId: Float!, plantId: String!, replaceUrl: String!): String
-  updateGardenPlant(customThumbnailUrl: String, gardenId: String!, notes: String, plantId: String!): GardenPlantData
+  updateGardenPlant(customThumbnailUrl: String, gardenId: String!, notes: String, plantId: String!): UserGarden
 }
 
 scalar ObjectId
