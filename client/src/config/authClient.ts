@@ -3,6 +3,9 @@ import { createAuthClient } from "better-auth/react";
 export const authClient = createAuthClient({
   baseURL: import.meta.env.VITE_PROXY_SERVER_URL,
   basePath: "/auth",
+  sessionOptions: {
+    refetchOnWindowFocus: false,
+  },
 });
 
 export type SignupParams = Pick<
@@ -14,7 +17,7 @@ export type LoginParams = Pick<
   "email" | "password"
 >;
 
-export const useAuthSession = authClient.useSession;
+export const useAuthSession = () => authClient.useSession();
 export const useIsSignedIn = () => {
   const session = useAuthSession();
   return Boolean(session.data);
