@@ -8,7 +8,6 @@ import { FaHeartBroken } from "react-icons/fa";
 import { toast } from "sonner";
 import { handleGraphQlError } from "util/generalUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
-import { defaultWarningToast } from "util/toastUtil";
 
 export const useGardenActionList = ({
   gardenId,
@@ -26,16 +25,15 @@ export const useGardenActionList = ({
 
   const removeFromGarden = async (plant: PlantResult) => {
     try {
-      const data = await removeFromGardenMutation({
+      await removeFromGardenMutation({
         variables: { plantId: plant._id },
+        onCompleted: () => {
+          toast.success(
+            `Removed "${getPlantDisplayNames(plant).title}" from garden`,
+          );
+          refetchGarden();
+        },
       });
-      if (!data.error) {
-        toast.success(
-          `Removed "${getPlantDisplayNames(plant).title}" from garden"`,
-        );
-      } else {
-        defaultWarningToast();
-      }
     } catch (error) {
       handleGraphQlError(error);
     }

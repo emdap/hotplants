@@ -21,7 +21,10 @@ export type PaginationData = {
   totalItems: number;
 };
 
-export type PlantAction = MenuItemData<PlantResult, Promise<void> | void>;
+export type PlantAction<R = unknown> = MenuItemData<
+  PlantResult,
+  Promise<R> | R
+>;
 
 export type PlantSelectionContextType = {
   plantList: PlantResult[];

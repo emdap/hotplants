@@ -14,32 +14,31 @@ import { TbPlant2 } from "react-icons/tb";
 import { toast } from "sonner";
 import { handleGraphQlError } from "util/generalUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
-import { defaultWarningToast, needsAuthenticationToast } from "util/toastUtil";
+import { needsAuthenticationToast } from "util/toastUtil";
 
 export const usePlantSearchActionList = (): PlantAction[] => {
   const isSignedIn = useIsSignedIn();
+
+  const customGraphQlErrorHandler = (error: GraphQLFormattedError) => {
+    if (error.extensions?.code === 400) {
+      toast.warning(error.message);
+    } else {
+      toast.error(error.message);
+    }
+  };
+
   const [addToGardenMutation] = useApolloMutation(ADD_PLANT_TO_GARDEN);
 
   const addToGarden = async (plant: PlantResult, garden?: UserGarden) => {
-    const customGraphQlErrorHandler = (error: GraphQLFormattedError) => {
-      if (error.extensions?.code === 400) {
-        toast.warning(error.message);
-      } else {
-        toast.error(error.message);
-      }
-    };
-
     try {
-      const { data } = await addToGardenMutation({
+      await addToGardenMutation({
         variables: { plantId: plant._id, gardenId: garden?._id },
+        onCompleted: (data) => {
+          toast.success(
+            `Added "${getPlantDisplayNames(plant).title}" to "${data.addToGarden?.gardenName}".`,
+          );
+        },
       });
-      if (data?.addToGarden) {
-        toast.success(
-          `Added "${getPlantDisplayNames(plant).title}" to "${data.addToGarden.gardenName}".`,
-        );
-      } else if (data) {
-        defaultWarningToast();
-      }
     } catch (error) {
       handleGraphQlError(error, {
         customErrorHandler: customGraphQlErrorHandler,
@@ -70,9 +69,8 @@ export const usePlantSearchActionList = (): PlantAction[] => {
     ) : (
       <TbPlant2 />
     ),
-    onClick: (plant: PlantResult) => {
-      isSignedIn ? addToGarden(plant, garden) : needsAuthenticationToast();
-    },
+    onClick: (plant: PlantResult) =>
+      isSignedIn ? addToGarden(plant, garden) : needsAuthenticationToast(),
   });
 
   const gardenActions = userGardensQuery.data?.allUserGardens?.length
