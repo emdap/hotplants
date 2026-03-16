@@ -1,6 +1,6 @@
 import Button, { ButtonProps } from "designSystem/Button";
 
-const PROP_KEYS = ["submitButtonProps", "clearButtonProps"] as const;
+const PROP_KEYS = ["clearButtonProps", "submitButtonProps"] as const;
 
 const PlantSearchFormFooter = (props: {
   [key in (typeof PROP_KEYS)[number]]?: ButtonProps;
