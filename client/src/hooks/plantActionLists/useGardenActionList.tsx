@@ -27,13 +27,12 @@ export const useGardenActionList = ({
     try {
       await removeFromGardenMutation({
         variables: { plantId: plant._id },
-        onCompleted: () => {
-          toast.success(
-            `Removed "${getPlantDisplayNames(plant).title}" from garden`,
-          );
-          refetchGarden();
-        },
       });
+
+      toast.success(
+        `Removed "${getPlantDisplayNames(plant).title}" from garden`,
+      );
+      refetchGarden();
     } catch (error) {
       handleGraphQlError(error);
     }

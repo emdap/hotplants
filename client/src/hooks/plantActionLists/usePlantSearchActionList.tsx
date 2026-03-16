@@ -31,14 +31,13 @@ export const usePlantSearchActionList = (): PlantAction[] => {
 
   const addToGarden = async (plant: PlantResult, garden?: UserGarden) => {
     try {
-      await addToGardenMutation({
+      const { data } = await addToGardenMutation({
         variables: { plantId: plant._id, gardenId: garden?._id },
-        onCompleted: (data) => {
-          toast.success(
-            `Added "${getPlantDisplayNames(plant).title}" to "${data.addToGarden?.gardenName}".`,
-          );
-        },
       });
+
+      toast.success(
+        `Added "${getPlantDisplayNames(plant).title}" to "${data?.addToGarden ? data.addToGarden?.gardenName : "garden"}".`,
+      );
     } catch (error) {
       handleGraphQlError(error, {
         customErrorHandler: customGraphQlErrorHandler,
