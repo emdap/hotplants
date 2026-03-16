@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import ActivePlantPane from "components/plantResults/ActivePlantPane";
 import { useAppContext } from "contexts/AppContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
@@ -38,33 +37,29 @@ const PlantList = ({
   }, [scrollContainerElement, parentSidebarExpanded, sidebarExpanded]);
 
   return (
-    <>
-      <motion.div
-        key={showFadeInAnimation ? totalItems + page : undefined}
-        {...MOTION_FADE_IN}
-        className={classNames(
-          "gap-4 items-stretch grid",
-          {
-            "justify-around": plantList.length > 3,
-            "sm:grid-cols-3 max-w-page": plantList.length <= 3,
-          },
-          className,
-        )}
-        style={
-          plantList.length > 3
-            ? {
-                gridTemplateColumns: `repeat(auto-fit, ${shrinkCols ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
-              }
-            : undefined
-        }
-      >
-        {plantList.map((plant) => (
-          <PlantCard key={`${plant._id}`} plant={plant} />
-        ))}
-      </motion.div>
-
-      <ActivePlantPane />
-    </>
+    <motion.div
+      key={showFadeInAnimation ? totalItems + page : undefined}
+      {...MOTION_FADE_IN}
+      className={classNames(
+        "gap-4 items-stretch grid",
+        {
+          "justify-around": plantList.length > 3,
+          "sm:grid-cols-3 max-w-page": plantList.length <= 3,
+        },
+        className,
+      )}
+      style={
+        plantList.length > 3
+          ? {
+              gridTemplateColumns: `repeat(auto-fit, ${shrinkCols ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
+            }
+          : undefined
+      }
+    >
+      {plantList.map((plant) => (
+        <PlantCard key={`${plant._id}`} plant={plant} />
+      ))}
+    </motion.div>
   );
 };
 

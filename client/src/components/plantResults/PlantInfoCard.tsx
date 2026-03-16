@@ -1,5 +1,5 @@
+import { PlantResult } from "contexts/plantSelection/PlantSelectionContext";
 import Card, { CardProps } from "designSystem/Card";
-import { PlantResult } from "graphqlHelpers/plantQueries";
 import { Entries } from "type-fest";
 
 const PLANT_FIELD_LABEL: { [key in keyof PlantResult]?: string } = {

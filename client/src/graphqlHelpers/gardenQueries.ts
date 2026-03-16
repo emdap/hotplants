@@ -1,13 +1,15 @@
 import { graphql } from "generated/graphql";
-import { GetAllGardensQuery, GetGardenQuery } from "generated/graphql/graphql";
+import {
+  GetAllGardensQuery,
+  GetGardenPlantsQuery,
+  GetGardenQuery,
+} from "generated/graphql/graphql";
 
 const _GARDEN_PLANT_FIELDS = graphql(`
   fragment GardenPlantFields on GardenPlantData {
     _id
-    addedTimestamp
-    customThumbnailUrl
-    ...PlantFields
     notes
+    ...PlantFields
   }
 `);
 
@@ -84,6 +86,25 @@ export const ADD_PLANT_TO_GARDEN = graphql(`
   }
 `);
 
+export const UPDATE_GARDEN_PLANT = graphql(`
+  mutation updateGardenPlant(
+    $gardenId: String!
+    $plantId: String!
+    $customThumbnailUrl: String
+    $notes: String
+  ) {
+    updateGardenPlant(
+      gardenId: $gardenId
+      plantId: $plantId
+      customThumbnailUrl: $customThumbnailUrl
+      notes: $notes
+    ) {
+      _id
+      ...GardenPlantFields
+    }
+  }
+`);
+
 export const REMOVE_PLANT_FROM_GARDEN = graphql(`
   mutation removePlant($gardenId: String!, $plantId: String!) {
     removeFromGarden(gardenId: $gardenId, plantId: $plantId) {
@@ -96,3 +117,8 @@ export type UserGarden = Omit<
   GetAllGardensQuery["allUserGardens"][number] & GetGardenQuery["userGarden"],
   "_id" | "plantRefs"
 > & { _id: string; plantRefs?: GetGardenQuery["userGarden"] };
+
+export type GardenPlantResult = Omit<
+  NonNullable<GetGardenPlantsQuery["userGardenPlants"]>["results"][number],
+  "_id"
+> & { _id: string };

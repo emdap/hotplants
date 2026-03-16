@@ -1,15 +1,18 @@
 import { MenuItemData } from "designSystem/StyledMenu";
 import {
-  PlantMediaObject,
+  GardenPlantData,
+  PlantData,
+  PlantMedia,
   PlantOccurrence,
-  PlantQueryResults,
-  PlantResult,
-} from "graphqlHelpers/plantQueries";
+} from "generated/graphql/graphql";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
+export type PlantResult = Omit<GardenPlantData, "addedToGardenTimestamp"> &
+  PlantData & { addedToGardenTimestamp?: number };
+
 export type FlattenedPlantMedia = (Omit<PlantOccurrence, "media"> &
-  PlantMediaObject)[];
+  PlantMedia)[];
 
 export type PaginationData = {
   page: number;
@@ -21,7 +24,7 @@ export type PaginationData = {
 export type PlantAction = MenuItemData<PlantResult, Promise<void> | void>;
 
 export type PlantSelectionContextType = {
-  plantList: PlantQueryResults;
+  plantList: PlantResult[];
   plantListLoading?: boolean;
   plantActions?: PlantAction[];
 

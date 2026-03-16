@@ -12,7 +12,14 @@ import {
 import { useCloseOnEscape } from "hooks/useCloseOnEscape";
 import { useDisableHtmlScroll } from "hooks/useDisableHtmlScroll";
 import { AnimatePresence } from "motion/react";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 import { useClickAway } from "react-use";
@@ -29,7 +36,7 @@ const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
   exit: { right: "-100%" },
 });
 
-const ActivePlantPane = () => {
+const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
   const navigate = useNavigate();
   const { searchParams } = usePlantSearchContext();
   const {
@@ -176,7 +183,7 @@ const ActivePlantPane = () => {
               )}
             </div>
 
-            <div className="flex max-lg:flex-col-reverse gap-4 justify-between px-2">
+            <div className="flex max-lg:flex-col gap-4 justify-between px-2">
               <PlantImageViewer
                 isModalOpen={imageModalOpen}
                 setIsModalOpen={setImageModalOpen}
@@ -188,6 +195,9 @@ const ActivePlantPane = () => {
                 {...(mapCenter && { center: mapCenter })}
               />
             </div>
+
+            {children}
+
             <PlantInfoCard
               plant={activePlant}
               className="big-screen:overflow-auto flex-grow"

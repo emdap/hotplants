@@ -1,10 +1,11 @@
 import { useLazyQuery } from "@apollo/client/react";
 import { PlantDataInput } from "generated/graphql/graphql";
-import { GET_PLANT, PlantQueryResults } from "graphqlHelpers/plantQueries";
+import { GET_PLANT } from "graphqlHelpers/plantQueries";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getLastPage } from "util/generalUtil";
 import {
   PaginationData,
+  PlantResult,
   PlantSelectionContext,
   PlantSelectionContextType,
 } from "./PlantSelectionContext";
@@ -24,7 +25,7 @@ const PlantSelectionProvider = ({
 
   children,
 }: {
-  plantList: PlantQueryResults;
+  plantList: PlantResult[];
   plantListLoading?: boolean;
   boundingPolygon?: PlantDataInput["boundingPolyCoords"];
 

@@ -1,11 +1,11 @@
 import {
   PlantAction,
+  PlantResult,
   usePlantSelectionContext,
 } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import LoadingIcon from "designSystem/LoadingIcon";
 import StyledMenu, { MenuItemData } from "designSystem/StyledMenu";
-import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useCallback, useMemo, useState } from "react";
 import { FaLeaf } from "react-icons/fa";
 import { MdOutlineMoreVert } from "react-icons/md";

@@ -1,4 +1,4 @@
-import { PlantResult } from "graphqlHelpers/plantQueries";
+import { PlantResult } from "contexts/plantSelection/PlantSelectionContext";
 import { capitalize } from "lodash";
 
 export const getPlantDisplayNames = (plant: PlantResult) => {

@@ -3,6 +3,9 @@ import { SearchPlantsQuery } from "generated/graphql/graphql";
 
 const _PLANT_FIELDS_FRAGMENT = graphql(`
   fragment PlantFields on PlantDataInterface {
+    addedTimestamp
+    updatedTimestamp
+
     scientificName
     commonNames
     bloomColors
@@ -75,11 +78,9 @@ export const REPLACE_WITH_PROXY_URL = graphql(`
   }
 `);
 
-export type PlantQueryData = SearchPlantsQuery["plantSearch"];
-export type PlantQueryResults = PlantQueryData["results"];
-export type PlantResult = Omit<PlantQueryResults[number], "_id"> & {
+export type PlantSearchResult = Omit<
+  SearchPlantsQuery["plantSearch"]["results"][number],
+  "_id"
+> & {
   _id: string;
 };
-
-export type PlantOccurrence = PlantResult["occurrences"][number];
-export type PlantMediaObject = PlantOccurrence["media"][number];

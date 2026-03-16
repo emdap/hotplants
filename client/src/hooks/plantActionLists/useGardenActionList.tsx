@@ -1,6 +1,8 @@
-import { PlantAction } from "contexts/plantSelection/PlantSelectionContext";
+import {
+  PlantAction,
+  PlantResult,
+} from "contexts/plantSelection/PlantSelectionContext";
 import { REMOVE_PLANT_FROM_GARDEN } from "graphqlHelpers/gardenQueries";
-import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { FaHeartBroken } from "react-icons/fa";
 import { toast } from "sonner";

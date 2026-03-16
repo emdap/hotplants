@@ -1,6 +1,7 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import PlantAnimation from "components/PlantAnimation";
+import ActivePlantPane from "components/plantResults/ActivePlantPane";
 import PlantList from "components/plantResults/PlantList";
 import PlantFilterForm from "components/plantSearch/plantFilters/PlantFilterForm";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
@@ -119,6 +120,7 @@ const Garden = () => {
         )}
 
         <PlantList showFadeInAnimation className="pb-10" />
+        <ActivePlantPane>hey girl</ActivePlantPane>
       </PlantSelectionProvider>
     </main>
   );

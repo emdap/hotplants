@@ -1,12 +1,14 @@
 import { useIsSignedIn } from "config/authClient";
-import { PlantAction } from "contexts/plantSelection/PlantSelectionContext";
+import {
+  PlantAction,
+  PlantResult,
+} from "contexts/plantSelection/PlantSelectionContext";
 import { GraphQLFormattedError } from "graphql";
 import {
   ADD_PLANT_TO_GARDEN,
   GET_ALL_GARDENS,
   UserGarden,
 } from "graphqlHelpers/gardenQueries";
-import { PlantResult } from "graphqlHelpers/plantQueries";
 import { useApolloMutation, useApolloQuery } from "hooks/useQuery";
 import { TbPlant2 } from "react-icons/tb";
 import { toast } from "sonner";

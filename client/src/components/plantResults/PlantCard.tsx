@@ -1,7 +1,9 @@
 import classNames from "classnames";
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import {
+  PlantResult,
+  usePlantSelectionContext,
+} from "contexts/plantSelection/PlantSelectionContext";
 import Card from "designSystem/Card";
-import { PlantResult } from "graphqlHelpers/plantQueries";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import { useEffect, useRef } from "react";
 import { getPlantDisplayNames } from "util/plantUtil";
