@@ -1,3 +1,4 @@
+import { useSearch } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useAppContext } from "contexts/AppContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
@@ -16,10 +17,11 @@ const PlantList = ({
   parentSidebarExpanded?: boolean;
   className?: string;
 }) => {
+  const { pageSize: _pageSize, ...searchParams } = useSearch({ strict: false });
   const { sidebarExpanded } = useAppContext();
   const { scrollContainerElement } = useGetScrollContainer();
 
-  const { page, plantList, totalItems } = usePlantSelectionContext();
+  const { plantList } = usePlantSelectionContext();
 
   const [shrinkCols, setShrinkCols] = useState(false);
 
@@ -38,7 +40,7 @@ const PlantList = ({
 
   return (
     <motion.div
-      key={showFadeInAnimation ? totalItems + page : undefined}
+      key={showFadeInAnimation ? JSON.stringify(searchParams) : undefined}
       {...MOTION_FADE_IN}
       className={classNames(
         "gap-4 items-stretch grid",
