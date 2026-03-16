@@ -7,8 +7,8 @@ import { apolloClient, setApolloReady } from "config/apolloConfig";
 import { authClient } from "config/authClient";
 import { AppContext } from "contexts/AppContext";
 import { useDarkMode } from "designSystem/darkMode/DarkModeContext";
-import { useGetServerReadiness } from "hooks/useGetServerReadiness";
-import { useEffect, useMemo, useState } from "react";
+import { useWakeUpServers } from "hooks/useWakeUpServers";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
 
@@ -20,25 +20,13 @@ const App = () => {
   const { isDarkMode } = useDarkMode();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
-  const serverReadiness = useGetServerReadiness();
-  const serverReady = useMemo(() => {
-    if (
-      serverReadiness.proxyServer === "error" ||
-      serverReadiness.hotplants === "error"
-    ) {
-      return "error";
-    }
-    return serverReadiness.proxyServer && serverReadiness.hotplants;
-  }, [serverReadiness.proxyServer, serverReadiness.hotplants]);
+  const serverReady = useWakeUpServers();
 
   useEffect(() => {
-    if (serverReadiness.proxyServer) {
+    if (serverReady === true) {
+      setApolloReady();
       authClient.getSession();
     }
-  }, [serverReadiness.proxyServer]);
-
-  useEffect(() => {
-    serverReady === true && setApolloReady();
   }, [serverReady]);
 
   return (
