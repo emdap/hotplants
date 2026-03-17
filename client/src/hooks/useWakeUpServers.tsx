@@ -24,7 +24,9 @@ export const useWakeUpServers = () => {
 
   const checkHealth = async (serverKey: ServerKey) => {
     try {
-      const response = await fetch(`${BASE_URLS[serverKey]}/health`);
+      const response = await fetch(`${BASE_URLS[serverKey]}/health`, {
+        cache: "no-store",
+      });
       return response.ok;
     } catch {
       console.warn(`${serverKey} not ready.`);
