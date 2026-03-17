@@ -5,7 +5,7 @@ const BASE_URLS: Record<ServerKey, string> = {
   proxyServer: import.meta.env.VITE_PROXY_SERVER_URL,
   hotplants: import.meta.env.VITE_HOTPLANTS_URL,
 };
-const WAKE_UP_INTERVAL_MS = 500;
+const WAKE_UP_INTERVAL_MS = 1000;
 const KEEP_ALIVE_INTERVAL_MS = 180 * 1000; // 3 minutes
 const MAX_CHECKS = 19;
 
