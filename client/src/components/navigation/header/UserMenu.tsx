@@ -1,6 +1,8 @@
 import { useAuthSession } from "config/authClient";
+import { useAppContext } from "contexts/AppContext";
 import Button from "designSystem/Button";
 import StyledMenu, { MenuItemData } from "designSystem/StyledMenu";
+import { useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { MdLogin, MdLogout } from "react-icons/md";
 
@@ -12,7 +14,12 @@ const ANON_LINKS: MenuItemData[] = [
 ];
 
 const UserMenu = () => {
-  const { data: authData } = useAuthSession();
+  const { serverReady } = useAppContext();
+  const { data: authData, refetch } = useAuthSession();
+
+  useEffect(() => {
+    serverReady && refetch();
+  }, [serverReady, refetch]);
 
   return (
     <StyledMenu
