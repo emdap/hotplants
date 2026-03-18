@@ -119,7 +119,18 @@ const PopoverContent = <T extends SearchRecordQueryInput>({
           />
         ))}
       </div>
-
+      <Button
+        className="grow"
+        disabled={!localParams?.length}
+        variant="accent"
+        size="small"
+        onClick={() => {
+          clearParams();
+          close();
+        }}
+      >
+        Clear
+      </Button>
       <div className="flex gap-2">
         <Button
           className="grow"
@@ -131,18 +142,6 @@ const PopoverContent = <T extends SearchRecordQueryInput>({
           }}
         >
           Apply
-        </Button>
-        <Button
-          className="grow"
-          disabled={!localParams?.length}
-          variant="secondary"
-          size="small"
-          onClick={() => {
-            clearParams();
-            close();
-          }}
-        >
-          Clear
         </Button>
       </div>
     </>
