@@ -7,7 +7,7 @@ const BASE_URLS: Record<ServerKey, string> = {
 };
 const WAKE_UP_INTERVAL_MS = 1000;
 const KEEP_ALIVE_INTERVAL_MS = 180 * 1000; // 3 minutes
-const MAX_CHECKS = 19;
+const MAX_CHECKS = 20;
 
 export const useWakeUpServers = () => {
   const [serverReady, setServerReady] = useState<boolean | "error">(false);
@@ -40,13 +40,13 @@ export const useWakeUpServers = () => {
         "Pinging services, check:",
         `${MAX_CHECKS + 1 - healthCheckCount.current}/${MAX_CHECKS + 1}`,
       );
+      healthCheckCount.current = healthCheckCount.current - 1;
 
       const [proxyServer, hotplants] = await Promise.all([
         serverReadyRef.current.proxyServer || checkHealth("proxyServer"),
         serverReadyRef.current.hotplants || checkHealth("hotplants"),
       ]);
 
-      healthCheckCount.current = healthCheckCount.current - 1;
       serverReadyRef.current = { proxyServer, hotplants };
 
       if (proxyServer && hotplants) {
