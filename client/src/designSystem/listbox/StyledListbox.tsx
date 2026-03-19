@@ -106,7 +106,9 @@ const StyledListbox = ({
               {...{ listboxValue, removeValue, optionLabelDict }}
             />
           ) : (
-            <span className={!listboxValue ? "text-placeholder" : undefined}>
+            <span
+              className={listboxValue === null ? "text-placeholder" : undefined}
+            >
               {optionLabelDict[String(listboxValue)]}
             </span>
           );

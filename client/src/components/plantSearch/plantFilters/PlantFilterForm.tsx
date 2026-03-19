@@ -2,11 +2,11 @@ import { useNavigate, useSearch } from "@tanstack/react-router";
 import classNames from "classnames";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Card from "designSystem/Card";
-import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import Modal from "designSystem/Modal";
 import StyledPopover from "designSystem/StyledPopover";
 import { hotplantsClient } from "hooks/usePlantSearchQueries";
 import { useReactQuery } from "hooks/useQuery";
+import pluralize from "pluralize";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { toast } from "sonner";
@@ -107,16 +107,10 @@ const PlantFilterForm = ({
         renderMode === "modal"
           ? {
               onClick: onClose,
-              className: "basis-1/2",
+              isLoading: plantListLoading,
               children: (
-                <span className="flex gap-1 relative">
-                  View
-                  <ItemCountWithLoader
-                    label="plant"
-                    count={totalItems}
-                    isLoading={plantListLoading}
-                    className="text-white! [&_svg]:absolute [&_svg]:-right-6"
-                  />
+                <span className="flex gap-1 relative ">
+                  View {pluralize("plant", totalItems, true)}
                 </span>
               ),
             }
@@ -125,7 +119,7 @@ const PlantFilterForm = ({
       clearButtonProps={{
         disabled: !plantFilter,
         onClick: clearFilter,
-        children: "Reset filters",
+        children: "Reset",
       }}
     />
   );
