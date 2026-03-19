@@ -4,12 +4,11 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import { MdClose } from "react-icons/md";
-import { ComplexListboxOption, ListboxValueType } from "./listboxUtil";
+import { ListboxValueType } from "./listboxUtil";
 
 const SelectedOptionDisplay = ({ children }: { children: ReactNode }) => (
   <div className="rounded-md text-white bg-primary/80 shadow-sm shadow-black/20 text-xs pl-1.5 pr-1 py-0.5 min-w-max flex gap-1 items-center max-w-3/4 overflow-hidden overflow-ellipsis z-10">
@@ -18,11 +17,11 @@ const SelectedOptionDisplay = ({ children }: { children: ReactNode }) => (
 );
 
 const SelectedOptions = ({
-  options,
+  optionLabelDict,
   listboxValue,
   removeValue,
 }: {
-  options: (string | ComplexListboxOption)[];
+  optionLabelDict: Record<string, string>;
   listboxValue: ListboxValueType[];
   removeValue: (value: ListboxValueType) => void;
 }) => {
@@ -30,19 +29,6 @@ const SelectedOptions = ({
   const [maxVisible, setMaxVisible] = useState<number | undefined>();
 
   const hiddenValues = maxVisible ? listboxValue.length - maxVisible : 0;
-
-  const optionLabelDict = useMemo(
-    () =>
-      options.reduce<Record<string, string>>((prev, cur) => {
-        if (typeof cur === "string") {
-          prev[cur] = cur;
-        } else {
-          prev[String(cur.value)] = cur.label;
-        }
-        return prev;
-      }, {}),
-    [options],
-  );
 
   useEffect(() => {
     if (maxVisible !== undefined && listboxValue.length <= maxVisible) {

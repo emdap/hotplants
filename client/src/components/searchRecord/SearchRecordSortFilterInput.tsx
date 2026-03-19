@@ -2,9 +2,9 @@ import { Listbox } from "@headlessui/react";
 import classNames from "classnames";
 import { BOOLEAN_OPTIONS } from "components/plantSearch/plantFilters/plantFilterUtil";
 import Button from "designSystem/Button";
+import StyledListbox from "designSystem/listbox/StyledListbox";
 import StyledListboxButton from "designSystem/listbox/StyledListboxButton";
 import StyledListboxOptions from "designSystem/listbox/StyledListboxOptions";
-import StyledMultipleListbox from "designSystem/listbox/StyledMultipleListbox";
 import { SearchRecordStringFilterField } from "generated/graphql/graphql";
 import { useMemo } from "react";
 import { MdArrowDownward, MdArrowUpward, MdDragHandle } from "react-icons/md";
@@ -82,7 +82,8 @@ const SearchRecordSortFilterInput = <T extends SearchRecordQueryInput>({
           <StyledListboxOptions options={BOOLEAN_OPTIONS} />
         </Listbox>
       ) : (
-        <StyledMultipleListbox
+        <StyledListbox
+          multiple
           className="min-w-50 max-w-50 text-sm"
           placeholder="Select"
           defaultOptions={

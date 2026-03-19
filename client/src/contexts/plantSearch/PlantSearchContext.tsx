@@ -27,7 +27,7 @@ export type PlantSearchContextType = {
   searchParamsDraft: Partial<PlantSearchParams> | null;
 
   updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
-  applySearchParams: (params?: Partial<PlantSearchParams>) => void;
+  applySearchParams: (params: Partial<PlantSearchParams>) => void;
 
   searchStatus: PlantSearchQueryStatus;
   fetchMorePlants: () => Promise<unknown>;

@@ -46,17 +46,12 @@ const PlantList = ({
         "gap-4 items-stretch grid",
         {
           "justify-around": plantList.length > 3,
-          "sm:grid-cols-3 max-w-page": plantList.length <= 3,
         },
         className,
       )}
-      style={
-        plantList.length > 3
-          ? {
-              gridTemplateColumns: `repeat(auto-fit, ${shrinkCols ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
-            }
-          : undefined
-      }
+      style={{
+        gridTemplateColumns: `repeat(auto-fit, ${shrinkCols || plantList.length <= 3 ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
+      }}
     >
       {plantList.map((plant) => (
         <PlantCard key={`${plant._id}`} plant={plant} />

@@ -1,9 +1,7 @@
 import { ChangeEvent } from "react";
 import { FilterInputComponentProps, FilterInputType } from "./plantFilterUtil";
 import RangeFilterInput, { NumberFilterInputProps } from "./RangeFilterInput";
-import SelectFilterInputField, {
-  SelectFilterInputFieldProps,
-} from "./SelectFilterInputField";
+import SelectFilterInput, { SelectFilterInputProps } from "./SelectFilterInput";
 
 const FilterInputField = <T extends FilterInputType = FilterInputType>(
   props: FilterInputComponentProps<T>,
@@ -25,7 +23,7 @@ const FilterInputField = <T extends FilterInputType = FilterInputType>(
   };
 
   return inputType.includes("select") ? (
-    <SelectFilterInputField {...(props as SelectFilterInputFieldProps)} />
+    <SelectFilterInput {...(props as SelectFilterInputProps)} />
   ) : inputType === "range" ? (
     <RangeFilterInput {...(props as NumberFilterInputProps)} />
   ) : (

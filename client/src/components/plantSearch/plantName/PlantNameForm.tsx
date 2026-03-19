@@ -16,7 +16,8 @@ import StyledPlantForm from "../StyledPlantForm";
 
 const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   const {
-    searchParams: { plantName },
+    searchParams,
+    searchParamsDraft,
     updateSearchParamsDraft,
     applySearchParams,
   } = usePlantSearchContext();
@@ -24,7 +25,7 @@ const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   const { commonName, scientificName } = {
     scientificName: undefined,
     commonName: undefined,
-    ...plantName,
+    ...searchParamsDraft?.plantName,
   };
 
   const [plantNameSearch, setPlantNameSearch] = useState({
@@ -56,14 +57,17 @@ const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   };
 
   const submitPlantName = () => {
-    applySearchParams();
+    applySearchParams({ plantName: searchParamsDraft?.plantName });
     renderMode === "modal" && onClose();
   };
 
   const plantNameFooter = (
     <PlantSearchFormFooter
       submitButtonProps={{
-        disabled: isEqual({ commonName, scientificName }, plantNameSearch),
+        disabled: isEqual(
+          { commonName, scientificName },
+          searchParams.plantName,
+        ),
         onClick: submitPlantName,
       }}
       clearButtonProps={{

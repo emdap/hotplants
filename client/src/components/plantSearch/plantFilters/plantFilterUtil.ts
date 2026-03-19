@@ -188,7 +188,7 @@ export type FilterInputComponentProps<
 > = {
   filterInput: FilterInput<T, K>;
   value: PlantDataInput[K];
-  onChange: (value?: PlantDataInput[K]) => void;
+  onChange: <V = PlantDataInput[K]>(value?: V) => void;
 };
 
 export type PlantArrayFilterInput =

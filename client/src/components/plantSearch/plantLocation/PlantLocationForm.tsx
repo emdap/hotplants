@@ -9,7 +9,7 @@ import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
 import { useReactQuery } from "hooks/useQuery";
 import { isEqual } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import {
   customLocationDisplay,
@@ -20,7 +20,7 @@ import StyledPlantForm from "../StyledPlantForm";
 
 const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   const {
-    searchParams: { location: locationParams },
+    searchParams: { location: appliedLocation },
     searchParamsDraft,
 
     updateSearchParamsDraft,
@@ -29,39 +29,29 @@ const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   } = usePlantSearchContext();
 
   const [locationPending, setLocationPending] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
-  const [debouncedInput, setDebouncedInput] = useState<string | null>(null);
+  const [searchInput, setSearchInput] = useState(
+    searchParamsDraft?.location?.locationName || "",
+  );
+  const [debouncedInput, setDebouncedInput] = useState(searchInput);
   const [locationInvalid, setLocationInvalid] = useState(false);
 
-  useDebounce(
-    () =>
-      (debouncedInput !== null || searchInput) &&
-      setDebouncedInput(searchInput),
-    1000,
-    [searchInput],
-  );
+  useDebounce(() => setDebouncedInput(searchInput), 1000, [searchInput]);
 
-  const syncWithParams = useCallback(() => {
-    if (locationParams?.locationSource === "custom") {
-      setLocationInvalid(false);
-      setSearchInput("");
-      setDebouncedInput("");
-    } else {
-      setSearchInput(locationParams?.locationName ?? "");
-      setDebouncedInput(locationParams?.locationName ?? "");
-    }
-  }, [locationParams?.locationSource, locationParams?.locationName]);
+  const resetFormData = () => {
+    setLocationInvalid(false);
+    setSearchInput("");
+    setDebouncedInput("");
+  };
 
   useEffect(() => {
-    syncWithParams();
-  }, [syncWithParams]);
+    appliedLocation?.locationSource === "custom" && resetFormData();
+  }, [appliedLocation?.locationSource]);
 
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
-    enabled:
-      debouncedInput !== null &&
-      locationParams?.locationName !== null &&
-      locationParams?.locationName !== debouncedInput,
+    enabled: Boolean(
+      debouncedInput && appliedLocation?.locationName !== debouncedInput,
+    ),
     retry: false,
     queryFn: async () => {
       setLocationInvalid(false);
@@ -101,13 +91,13 @@ const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   };
 
   const submitSearchLocation = () => {
-    applySearchParams();
+    applySearchParams({ location: searchParamsDraft?.location });
     getResultsContainer()?.scrollIntoView();
 
     renderMode === "modal" && onClose();
   };
 
-  const draftIsApplied = isEqual(searchParamsDraft?.location, locationParams);
+  const draftIsApplied = isEqual(searchParamsDraft?.location, appliedLocation);
 
   const plantLocationFooter = (
     <PlantSearchFormFooter
@@ -117,11 +107,11 @@ const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
         onClick: submitSearchLocation,
       }}
       clearButtonProps={{
-        disabled: !searchParamsDraft?.location || draftIsApplied,
+        disabled: !searchParamsDraft?.location,
         onClick: () => {
           updateSearchParamsDraft({ location: undefined });
           applySearchParams({ location: undefined });
-          syncWithParams();
+          resetFormData();
         },
       }}
     />
@@ -171,9 +161,10 @@ const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
           locationCustomizeable
           isLoading={locationQuery.isLoading || locationQuery.isFetching}
           locationParams={searchParamsDraft?.location}
-          setLocationParams={(location) =>
-            updateSearchParamsDraft({ location })
-          }
+          setLocationParams={(location) => {
+            resetFormData();
+            updateSearchParamsDraft({ location });
+          }}
           className="h-[45vh] big-screen:h-80 grow"
         />
       </div>

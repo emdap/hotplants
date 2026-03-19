@@ -14,15 +14,15 @@ const PlantNameOpenButton = ({ onClick }: { onClick?: () => void }) => {
   const { plantName: plantNameParam } = useSearch({ strict: false });
 
   const plantNameDraft = getPlantName(searchParamsDraft?.plantName);
-  const plantName = getPlantName(plantNameParam);
-  const isActive = Boolean(plantName);
+  const appliedPlantName = getPlantName(plantNameParam);
+  const isActive = Boolean(appliedPlantName);
 
   return (
     <IconButton
       size="small"
       active={isActive}
       className={
-        plantNameDraft?.toLowerCase() !== plantName?.toLowerCase()
+        plantNameDraft?.toLowerCase() !== appliedPlantName?.toLowerCase()
           ? "bg-accent/30!"
           : undefined
       }
@@ -30,7 +30,11 @@ const PlantNameOpenButton = ({ onClick }: { onClick?: () => void }) => {
       icon={isActive ? <RiPlantFill /> : <RiPlantLine />}
     >
       <span className="max-lg:hidden">
-        {isActive ? capitalize(plantName!) : PLANT_FORM_TITLES["plant-name"]}
+        {plantNameDraft
+          ? capitalize(plantNameDraft)
+          : appliedPlantName
+            ? "None"
+            : PLANT_FORM_TITLES["plant-name"]}
       </span>
     </IconButton>
   );

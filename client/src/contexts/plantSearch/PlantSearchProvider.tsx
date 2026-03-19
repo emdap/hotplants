@@ -27,39 +27,37 @@ const PlantSearchProvider = () => {
     ...searchParams
   } = route.useSearch();
 
-  const [searchParamsDraft, setSearchParamsDraft] =
-    useState<Partial<PlantSearchParams> | null>(searchParams);
   const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
   const [searchFormState, setSearchFormState] = useState(
     DEFAULT_SEARCH_FORM_STATE(),
   );
 
-  useEffect(() => {
-    setSearchParamsDraft(searchParams);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams.location, searchParams.plantName]);
-
-  const applySearchParams = useCallback(
-    (params?: Partial<PlantSearchParams>) => {
-      setIsPrefilledSearch(false);
-
-      navigate({
-        to: ".",
-        search: ({ pageSize, plantFilter }) => ({
-          pageSize,
-          ...searchParamsDraft,
-          ...params,
-          plantFilter,
-        }),
-      });
-    },
-
-    [navigate, searchParamsDraft],
-  );
+  const [searchParamsDraft, setSearchParamsDraft] =
+    useState<Partial<PlantSearchParams> | null>(searchParams);
 
   const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =
     (searchParams) =>
       setSearchParamsDraft((prev) => ({ ...prev, ...searchParams }));
+
+  useEffect(() => {
+    updateSearchParamsDraft({ plantName: searchParams.plantName });
+  }, [searchParams.plantName]);
+
+  useEffect(() => {
+    updateSearchParamsDraft({ location: searchParams.location });
+  }, [searchParams.location]);
+
+  const applySearchParams = (params: Partial<PlantSearchParams>) => {
+    setIsPrefilledSearch(false);
+
+    navigate({
+      to: ".",
+      search: ({ page: _page, ...rest }) => ({
+        ...rest,
+        ...params,
+      }),
+    });
+  };
 
   const { searchStatus, plantSearchQuery, searchRecordQuery, scrapeMoreData } =
     usePlantSearchQueries(searchParams, plantFilter, {

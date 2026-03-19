@@ -146,7 +146,7 @@ const PlantFilterForm = ({
 
       <div
         className={classNames("space-y-4 pb-3", {
-          "overflow-auto pr-4": renderMode !== "card",
+          "overflow-y-auto overflow-x-hidden pr-4": renderMode !== "card",
           "-mt-2": renderMode === "popover",
           "pt-4": renderMode === "modal",
         })}

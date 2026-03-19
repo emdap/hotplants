@@ -7,11 +7,12 @@ import StyledListboxButton from "./StyledListboxButton";
 import StyledListboxOptions from "./StyledListboxOptions";
 import {
   ComplexListboxOption,
+  getOptionLabelDict,
   getOptionValuesArray,
   ListboxValueType,
 } from "./listboxUtil";
 
-const StyledMultipleListbox = ({
+const StyledListbox = ({
   defaultOptions = [],
   value: listboxValue = [],
   allowCustomOption,
@@ -23,7 +24,7 @@ const StyledMultipleListbox = ({
   placeholder?: string;
   defaultOptions?: string[] | ComplexListboxOption[];
   allowCustomOption?: boolean;
-} & ListboxProps<"select", ListboxValueType[]>) => {
+} & ListboxProps<"select", ListboxValueType[] | ListboxValueType>) => {
   const [customOptions, setCustomOptions] = useState<string[]>([]);
   const [customOptionInput, setCustomOptionInput] = useState("");
   const customInputRef = useRef<HTMLInputElement>(null);
@@ -38,6 +39,8 @@ const StyledMultipleListbox = ({
     [defaultOptions, customOptions],
   );
 
+  const optionLabelDict = useMemo(() => getOptionLabelDict(options), [options]);
+
   const saveCustomOption = () => {
     if (customOptionInput) {
       if (
@@ -47,8 +50,16 @@ const StyledMultipleListbox = ({
         setCustomOptions(customOptions.concat(customOptionInput));
       }
 
-      if (!listboxValue.includes(customOptionInput)) {
+      if (
+        Array.isArray(listboxValue) &&
+        !listboxValue.includes(customOptionInput)
+      ) {
         handleChange(listboxValue.concat(customOptionInput), true);
+      } else if (
+        !Array.isArray(listboxValue) &&
+        listboxValue !== customOptionInput
+      ) {
+        handleChange(customOptionInput);
       }
 
       setCustomOptionInput("");
@@ -56,29 +67,31 @@ const StyledMultipleListbox = ({
   };
 
   const removeValue = (value: ListboxValueType) =>
+    Array.isArray(listboxValue) &&
     handleChange(listboxValue.filter((val) => val !== value) ?? []);
 
   const handleChange = (
-    value: ListboxValueType[],
+    value: ListboxValueType | ListboxValueType[],
     skipCustomOptionCheck?: boolean,
   ) => {
     if (!skipCustomOptionCheck && customOptions.length) {
-      setCustomOptions(
-        value.length
-          ? customOptions.filter((option) => value.includes(option))
-          : [],
-      );
+      if (Array.isArray(value)) {
+        setCustomOptions(
+          value.length
+            ? customOptions.filter((option) => value.includes(option))
+            : [],
+        );
+      } else {
+        setCustomOptions(
+          value ? customOptions.filter((option) => value === option) : [],
+        );
+      }
     }
     onChange && onChange(value);
   };
 
   return (
-    <Listbox
-      multiple
-      {...listboxProps}
-      value={listboxValue}
-      onChange={handleChange}
-    >
+    <Listbox {...listboxProps} value={listboxValue} onChange={handleChange}>
       <StyledListboxButton
         id={listboxProps.name}
         onMouseEnter={(e) => e.stopPropagation()}
@@ -88,8 +101,14 @@ const StyledMultipleListbox = ({
       >
         {({ open }) => {
           open && customInputRef.current?.focus({ preventScroll: true });
-          return (
-            <SelectedOptions {...{ listboxValue, removeValue, options }} />
+          return Array.isArray(listboxValue) ? (
+            <SelectedOptions
+              {...{ listboxValue, removeValue, optionLabelDict }}
+            />
+          ) : (
+            <span className={!listboxValue ? "text-placeholder" : undefined}>
+              {optionLabelDict[String(listboxValue)]}
+            </span>
           );
         }}
       </StyledListboxButton>
@@ -132,4 +151,4 @@ const StyledMultipleListbox = ({
   );
 };
 
-export default StyledMultipleListbox;
+export default StyledListbox;
