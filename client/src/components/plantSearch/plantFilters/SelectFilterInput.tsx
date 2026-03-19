@@ -79,7 +79,7 @@ const SelectFilterInput = ({
   const checkboxInputId = `${plantDataKey}-checkbox`;
 
   return (
-    <fieldset className="styled-fieldset form-item">
+    <fieldset className="styled-fieldset form-item min-w-[unset]">
       <legend>
         <label htmlFor={plantDataKey}>{label}</label>
       </legend>
