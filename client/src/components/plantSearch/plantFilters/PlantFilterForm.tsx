@@ -7,7 +7,7 @@ import Modal from "designSystem/Modal";
 import StyledPopover from "designSystem/StyledPopover";
 import { hotplantsClient } from "hooks/usePlantSearchQueries";
 import { useReactQuery } from "hooks/useQuery";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { toast } from "sonner";
 import { isSmallScreen } from "util/generalUtil";
@@ -39,6 +39,10 @@ const PlantFilterForm = ({
   const { plantListLoading, totalItems } = usePlantSelectionContext();
   const { plantFilter } = useSearch({ strict: false });
   const [filterDraft, setFilterDraft] = useState(plantFilter);
+
+  useEffect(() => {
+    setFilterDraft(plantFilter);
+  }, [plantFilter]);
 
   const submitFilter = useCallback(() => {
     {
