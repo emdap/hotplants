@@ -94,7 +94,7 @@ const GardenPlantNotes = ({
         <textarea
           ref={textAreaRef}
           className={classNames(
-            "mx-1 styled-input h-[unset] bg-white/80 focus:bg-white/90 field-sizing-content max-h-40",
+            "mx-1 styled-input h-[unset] bg-default-background/80 focus:bg-default-background/90 field-sizing-content max-h-40",
             {
               "ring-accent/20 ring-offset-transparent": !isEditable,
             },
