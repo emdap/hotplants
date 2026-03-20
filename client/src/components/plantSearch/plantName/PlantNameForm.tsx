@@ -16,7 +16,7 @@ import StyledPlantForm from "../StyledPlantForm";
 
 const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   const {
-    searchParams,
+    searchParams: { plantName: appliedPlantName },
     searchParamsDraft,
     updateSearchParamsDraft,
     applySearchParams,
@@ -51,11 +51,6 @@ const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
     }
   };
 
-  const clearPlantNameSearch = () => {
-    setPlantNameSearch(DEFAULT_PLANT_NAME_FIELDS);
-    applySearchParams({ plantName: undefined });
-  };
-
   const submitPlantName = () => {
     applySearchParams({ plantName: searchParamsDraft?.plantName });
     renderMode === "modal" && onClose();
@@ -64,10 +59,10 @@ const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   const plantNameFooter = (
     <PlantSearchFormFooter
       submitButtonProps={{
-        disabled: isEqual(
-          { commonName, scientificName },
-          searchParams.plantName,
-        ),
+        disabled:
+          (!commonName && !scientificName && !appliedPlantName) ||
+          isEqual({ commonName }, appliedPlantName) ||
+          isEqual({ scientificName }, appliedPlantName),
         onClick: submitPlantName,
       }}
       clearButtonProps={{
@@ -75,7 +70,10 @@ const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
           { scientificName, commonName },
           DEFAULT_PLANT_NAME_FIELDS,
         ),
-        onClick: clearPlantNameSearch,
+        onClick: () => {
+          updateSearchParamsDraft({ plantName: undefined });
+          setPlantNameSearch(DEFAULT_PLANT_NAME_FIELDS);
+        },
       }}
     />
   );

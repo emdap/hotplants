@@ -102,15 +102,13 @@ const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   const plantLocationFooter = (
     <PlantSearchFormFooter
       submitButtonProps={{
-        disabled:
-          locationPending || !searchParamsDraft?.location || draftIsApplied,
+        disabled: locationPending || draftIsApplied,
         onClick: submitSearchLocation,
       }}
       clearButtonProps={{
         disabled: !searchParamsDraft?.location,
         onClick: () => {
           updateSearchParamsDraft({ location: undefined });
-          applySearchParams({ location: undefined });
           resetFormData();
         },
       }}
