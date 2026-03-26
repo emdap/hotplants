@@ -20,8 +20,8 @@ const SIDEBAR_ITEMS: SidebarNavItem[] = [
     Icon: MdOutlineSearch,
   },
   {
-    label: "Search Archive",
-    linkProps: { to: "/search-archive" },
+    label: "Search History",
+    linkProps: { to: "/search-history" },
     Icon: MdOutlineYoutubeSearchedFor,
   },
   {

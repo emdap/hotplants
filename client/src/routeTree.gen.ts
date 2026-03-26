@@ -9,7 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchArchiveRouteImport } from './routes/search-archive'
+import { Route as SearchHistoryRouteImport } from './routes/search-history'
 import { Route as PlantSearchRouteImport } from './routes/plant-search'
 import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as AuthRouteImport } from './routes/_auth'
@@ -19,9 +19,9 @@ import { Route as AuthLogoutRouteImport } from './routes/_auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as PrivateGardensGardenNameRouteImport } from './routes/_private/gardens.$gardenName'
 
-const SearchArchiveRoute = SearchArchiveRouteImport.update({
-  id: '/search-archive',
-  path: '/search-archive',
+const SearchHistoryRoute = SearchHistoryRouteImport.update({
+  id: '/search-history',
+  path: '/search-history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlantSearchRoute = PlantSearchRouteImport.update({
@@ -66,7 +66,7 @@ const PrivateGardensGardenNameRoute =
 
 export interface FileRoutesByFullPath {
   '/plant-search': typeof PlantSearchRoute
-  '/search-archive': typeof SearchArchiveRoute
+  '/search-history': typeof SearchHistoryRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
@@ -75,7 +75,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/plant-search': typeof PlantSearchRoute
-  '/search-archive': typeof SearchArchiveRoute
+  '/search-history': typeof SearchHistoryRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
   '/signup': typeof AuthSignupRoute
@@ -87,7 +87,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/_private': typeof PrivateRouteWithChildren
   '/plant-search': typeof PlantSearchRoute
-  '/search-archive': typeof SearchArchiveRoute
+  '/search-history': typeof SearchHistoryRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/logout': typeof AuthLogoutRoute
   '/_auth/signup': typeof AuthSignupRoute
@@ -98,7 +98,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/plant-search'
-    | '/search-archive'
+    | '/search-history'
     | '/login'
     | '/logout'
     | '/signup'
@@ -107,7 +107,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/plant-search'
-    | '/search-archive'
+    | '/search-history'
     | '/login'
     | '/logout'
     | '/signup'
@@ -118,7 +118,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_private'
     | '/plant-search'
-    | '/search-archive'
+    | '/search-history'
     | '/_auth/login'
     | '/_auth/logout'
     | '/_auth/signup'
@@ -130,16 +130,16 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   PrivateRoute: typeof PrivateRouteWithChildren
   PlantSearchRoute: typeof PlantSearchRoute
-  SearchArchiveRoute: typeof SearchArchiveRoute
+  SearchHistoryRoute: typeof SearchHistoryRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search-archive': {
-      id: '/search-archive'
-      path: '/search-archive'
-      fullPath: '/search-archive'
-      preLoaderRoute: typeof SearchArchiveRouteImport
+    '/search-history': {
+      id: '/search-history'
+      path: '/search-history'
+      fullPath: '/search-history'
+      preLoaderRoute: typeof SearchHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plant-search': {
@@ -232,7 +232,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PrivateRoute: PrivateRouteWithChildren,
   PlantSearchRoute: PlantSearchRoute,
-  SearchArchiveRoute: SearchArchiveRoute,
+  SearchHistoryRoute: SearchHistoryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

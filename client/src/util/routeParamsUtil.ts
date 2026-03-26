@@ -140,7 +140,7 @@ export const validatePlantSearchParams = (
 
 export type SearchRecordFilter = { [key in keyof SearchRecord]?: FilterValue };
 
-export type SearchArchiveParams = PaginationParams & {
+export type SearchHistoryParams = PaginationParams & {
   filter?: SearchRecordFilter;
   sort?: SearchRecordSortInput[];
   lastOpened?: string;
@@ -156,9 +156,9 @@ const validateSearchRecordFilter = (
   return null;
 };
 
-export const validateSearchArchiveParams = (
+export const validateSearchHistoryParams = (
   params: Record<string, string>,
-): SearchArchiveParams => {
+): SearchHistoryParams => {
   if (typeof params.lastOpened === "string") {
     return { lastOpened: params.lastOpened };
   }

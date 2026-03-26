@@ -17,7 +17,7 @@ import { Entries } from "type-fest";
 import { SearchRecordFilterInput } from "util/customSchemaTypes";
 import { SearchRecordFilter } from "util/routeParamsUtil";
 
-export type SearchArchiveParamType = "sort" | "filter";
+export type SearchHistoryParamType = "sort" | "filter";
 
 export const SEARCH_RECORD_SORT_LIST: {
   field: SearchRecordSortField;

@@ -4,12 +4,12 @@ import StyledPopover from "designSystem/StyledPopover";
 import FilterButton from "designSystem/iconButtons/FilterButton";
 import SortButton from "designSystem/iconButtons/SortButton";
 import { ReactNode } from "react";
-import { SearchArchiveParams, SearchRecordFilter } from "util/routeParamsUtil";
+import { SearchHistoryParams, SearchRecordFilter } from "util/routeParamsUtil";
 import {
   ORDERED_SEARCH_RECORD_FILTERS,
   SEARCH_RECORD_SORT_LIST,
-  SearchArchiveParamType,
-} from "./searchRecordParamUtil";
+  SearchHistoryParamType,
+} from "./searchHistoryParamUtil";
 
 const POPOVER_BUTTON = {
   filter: FilterButton,
@@ -21,24 +21,24 @@ const POPOVER_LABELS = {
   sort: "Sort",
 };
 
-type ApplyParamsFn<T extends SearchArchiveParamType> = (
-  params?: SearchArchiveParams[T],
+type ApplyParamsFn<T extends SearchHistoryParamType> = (
+  params?: SearchHistoryParams[T],
 ) => void;
 
-type SearchArchivePopoverProps<T extends SearchArchiveParamType> = {
+type SearchHistoryPopoverProps<T extends SearchHistoryParamType> = {
   paramKey: T;
-  currentParams?: SearchArchiveParams[T];
+  currentParams?: SearchHistoryParams[T];
   applyParams: ApplyParamsFn<T>;
   resetButton: (props: { disabled: boolean; close: () => void }) => ReactNode;
 };
 
-const SearchArchivePopover = <T extends SearchArchiveParamType>({
+const SearchHistoryPopover = <T extends SearchHistoryParamType>({
   paramKey,
   currentParams,
   applyParams,
   resetButton,
-}: SearchArchivePopoverProps<T>) => {
-  const PopoverButton = POPOVER_BUTTON[paramKey as SearchArchiveParamType];
+}: SearchHistoryPopoverProps<T>) => {
+  const PopoverButton = POPOVER_BUTTON[paramKey as SearchHistoryParamType];
   const hasData = Boolean(
     Array.isArray(currentParams) ? currentParams.length : currentParams,
   );
@@ -62,7 +62,7 @@ const SearchArchivePopover = <T extends SearchArchiveParamType>({
             {paramKey === "sort" ? (
               <SortInputFields
                 sortFields={SEARCH_RECORD_SORT_LIST}
-                currentSort={currentParams as SearchArchiveParams["sort"]}
+                currentSort={currentParams as SearchHistoryParams["sort"]}
                 className="grid grid-cols-[1fr_auto] items-center"
                 applySort={applyParams}
               />
@@ -100,4 +100,4 @@ const SearchArchivePopover = <T extends SearchArchiveParamType>({
   );
 };
 
-export default SearchArchivePopover;
+export default SearchHistoryPopover;

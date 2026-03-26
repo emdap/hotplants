@@ -1,11 +1,11 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
-import SearchArchivePopover from "components/searchArchive/SearchArchivePopover";
-import SearchRecordCard from "components/searchArchive/SearchRecordCard";
+import SearchHistoryPopover from "components/searchHistory/SearchHistoryPopover";
+import SearchRecordCard from "components/searchHistory/SearchRecordCard";
 import {
   parseFilterParams,
-  SearchArchiveParamType,
-} from "components/searchArchive/searchRecordParamUtil";
+  SearchHistoryParamType,
+} from "components/searchHistory/searchHistoryParamUtil";
 import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
@@ -16,17 +16,17 @@ import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
 import { useLayoutEffect } from "react";
-import { SearchArchiveParams } from "util/routeParamsUtil";
+import { SearchHistoryParams } from "util/routeParamsUtil";
 
-const route = getRouteApi("/search-archive");
+const route = getRouteApi("/search-history");
 
-const ARCHIVE_PAGE_SIZE_OPTIONS = [5, 10, 25, 50];
+const SEARCH_HISTORY_PAGE_SIZE_OPTIONS = [5, 10, 25, 50];
 
-const SearchArchive = () => {
+const SearchHistory = () => {
   const navigate = useNavigate();
   const {
     page = 1,
-    pageSize = ARCHIVE_PAGE_SIZE_OPTIONS[1],
+    pageSize = SEARCH_HISTORY_PAGE_SIZE_OPTIONS[1],
     lastOpened,
     ...queryParams
   } = route.useSearch();
@@ -54,9 +54,9 @@ const SearchArchive = () => {
     }
   }, [lastOpened, allSearchRecords]);
 
-  const applyParams = <T extends SearchArchiveParamType>(
+  const applyParams = <T extends SearchHistoryParamType>(
     paramKey: T,
-    params?: SearchArchiveParams[T],
+    params?: SearchHistoryParams[T],
   ) =>
     navigate({
       to: ".",
@@ -69,12 +69,12 @@ const SearchArchive = () => {
 
   return (
     <main className="page-buffer page-container">
-      <PageTitle>Search Archive</PageTitle>
+      <PageTitle>Search History</PageTitle>
       <ScrollAnchor className="scroll-m-header -mb-4" />
       <FloatingHeader>
         <div className="flex items-center gap-2">
           {(["filter", "sort"] as const).map((paramKey) => (
-            <SearchArchivePopover
+            <SearchHistoryPopover
               key={paramKey}
               paramKey={paramKey}
               currentParams={queryParams[paramKey]}
@@ -105,7 +105,7 @@ const SearchArchive = () => {
 
         <PaginationControl
           className="ml-auto"
-          pageSizeOptions={ARCHIVE_PAGE_SIZE_OPTIONS}
+          pageSizeOptions={SEARCH_HISTORY_PAGE_SIZE_OPTIONS}
           totalItems={searchRecordCount}
           replaceUrl
           {...{ page, pageSize }}
@@ -132,4 +132,4 @@ const SearchArchive = () => {
   );
 };
 
-export default SearchArchive;
+export default SearchHistory;
