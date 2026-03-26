@@ -1,51 +1,38 @@
+import classNames from "classnames";
+import {
+  createComplexFilterValue,
+  FilterInputComponentProps,
+  SelectInputType,
+} from "components/dataControls/filterUtil";
 import { ListboxValueType } from "designSystem/listbox/listboxUtil";
 import StyledListbox from "designSystem/listbox/StyledListbox";
-import { useMemo, useState } from "react";
-import { PlantArrayValues } from "util/customSchemaTypes";
-import {
-  FilterInputComponentProps,
-  PlantArrayFilterInput,
-  SelectInputType,
-} from "./plantFilterUtil";
+import { PlantSizeRangeInput } from "generated/graphql/graphql";
+import { useState } from "react";
+import { FilterValue } from "util/customSchemaTypes";
 
 export type SelectFilterInputProps = FilterInputComponentProps<
   SelectInputType,
-  keyof PlantArrayValues | "isPerennial"
+  Exclude<FilterValue, PlantSizeRangeInput>
 >;
 
 const SelectFilterInput = ({
   filterInput: {
-    plantDataKey,
+    dataKey,
     inputType,
     label,
     options,
     matchAllCheckbox,
+    asFieldset,
     multiselect,
   },
   value: filterValue,
+  className,
   onChange,
 }: SelectFilterInputProps) => {
-  const { isObjectValue, currentValue, currentMatchAll } = useMemo(() => {
-    if (plantDataKey === "isPerennial") {
-      return {
-        isObjectValue: false,
-        currentValue: filterValue as ListboxValueType,
-        matchAll: undefined,
-      };
-    } else {
-      const objectFilterValue = filterValue as
-        | PlantArrayFilterInput
-        | undefined;
+  const isComplexFilter = matchAllCheckbox !== undefined;
+  const complexFilterValue = createComplexFilterValue(filterValue);
 
-      return {
-        isObjectValue: true,
-        currentValue: objectFilterValue?.value,
-        currentMatchAll: objectFilterValue?.matchAll ?? undefined,
-      };
-    }
-  }, [filterValue, plantDataKey]);
-
-  const [matchAll, setMatchAll] = useState(currentMatchAll);
+  const [matchAll, setMatchAll] = useState(complexFilterValue?.matchAll);
 
   const handleOnValueChange = (
     newValue: ListboxValueType | ListboxValueType[],
@@ -55,9 +42,13 @@ const SelectFilterInput = ({
       (Array.isArray(newValue) ? !newValue.length : newValue === null)
     ) {
       onChange(undefined);
-    } else if (isObjectValue) {
+    } else if (
+      isComplexFilter &&
+      (!filterValue || typeof filterValue === "object") &&
+      Array.isArray(newValue)
+    ) {
       onChange({
-        ...filterValue,
+        ...(typeof filterValue === "object" && filterValue),
         value: newValue,
         matchAll,
       });
@@ -68,7 +59,7 @@ const SelectFilterInput = ({
 
   const handleOnMatchAllChange = (newValue: boolean) => {
     setMatchAll(newValue);
-    if (isObjectValue) {
+    if (typeof filterValue === "object") {
       onChange({
         ...filterValue,
         matchAll: newValue || undefined,
@@ -76,19 +67,16 @@ const SelectFilterInput = ({
     }
   };
 
-  const checkboxInputId = `${plantDataKey}-checkbox`;
+  const checkboxInputId = `${dataKey}-checkbox`;
 
-  return (
-    <fieldset className="styled-fieldset form-item min-w-[unset]">
-      <legend>
-        <label htmlFor={plantDataKey}>{label}</label>
-      </legend>
-
+  const inputLabel = <label htmlFor={dataKey}>{label}</label>;
+  const inputContent = (
+    <>
       <StyledListbox
         multiple={multiselect}
         placeholder="Select"
-        name={plantDataKey}
-        value={currentValue ?? (multiselect ? [] : null)}
+        name={dataKey}
+        value={complexFilterValue.value ?? (multiselect ? [] : null)}
         onChange={handleOnValueChange}
         defaultOptions={options}
       />
@@ -106,7 +94,25 @@ const SelectFilterInput = ({
           <label htmlFor={checkboxInputId}>Data includes all</label>
         </div>
       )}
+    </>
+  );
+
+  return asFieldset ? (
+    <fieldset
+      className={classNames(
+        "styled-fieldset form-item min-w-[unset]",
+        className,
+      )}
+    >
+      <legend>{inputLabel}</legend>
+
+      {inputContent}
     </fieldset>
+  ) : (
+    <div className={classNames("form-item", className)}>
+      {inputLabel}
+      {inputContent}
+    </div>
   );
 };
 

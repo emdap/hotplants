@@ -81,7 +81,7 @@ export const useWakeUpServers = () => {
       }
     };
 
-    if (serverReady && import.meta.env.PROD) {
+    if (serverReady && !import.meta.env.DEV) {
       intervalRef.current = setInterval(
         keepServersAwake,
         KEEP_ALIVE_INTERVAL_MS,

@@ -1,4 +1,4 @@
-import { FilterInput } from "components/plantSearch/plantFilters/plantFilterUtil";
+import { FilterInput } from "components/dataControls/filterUtil";
 import { SearchFormTab } from "contexts/plantSearch/PlantSearchContext";
 import { OptionalSearchParamKey } from "util/customSchemaTypes";
 
@@ -10,12 +10,12 @@ export type PlantSearchFormProps = {
 export const PLANT_NAME_FIELDS: FilterInput<"text", OptionalSearchParamKey>[] =
   [
     {
-      plantDataKey: "commonName",
+      dataKey: "commonName",
       label: "Common name",
       inputType: "text",
     },
     {
-      plantDataKey: "scientificName",
+      dataKey: "scientificName",
       label: "Scientific name",
       inputType: "text",
     },

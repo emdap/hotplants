@@ -135,12 +135,12 @@ const SearchRecordCard = ({
               }
             />
 
-            {PLANT_NAME_FIELDS.map(({ plantDataKey, label }) => (
+            {PLANT_NAME_FIELDS.map(({ dataKey, label }) => (
               <InfoRow
-                key={plantDataKey}
+                key={dataKey}
                 title={label}
                 value={
-                  searchParams[plantDataKey] ?? (
+                  searchParams[dataKey] ?? (
                     <span className="italic font-normal">N/A</span>
                   )
                 }

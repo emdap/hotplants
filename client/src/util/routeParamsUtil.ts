@@ -1,11 +1,11 @@
 import { polygon } from "@turf/turf";
 import {
   LocationSource,
-  SearchRecordBooleanFilterInput,
+  SearchRecord,
   SearchRecordSortInput,
-  SearchRecordStringFilterInput,
 } from "generated/graphql/graphql";
 import {
+  FilterValue,
   PlantDataFilter,
   PlantLocationParams,
   PlantNameParam,
@@ -111,8 +111,8 @@ const validatePlantName = (
 const validatePlantFilter = (
   params: Record<string, unknown>,
 ): { plantFilter: PlantDataFilter } | null => {
-  if ("filter" in params && typeof params.filter === "object") {
-    return { plantFilter: params.filter as PlantDataFilter };
+  if ("plantFilter" in params && typeof params.plantFilter === "object") {
+    return { plantFilter: params.plantFilter as PlantDataFilter };
   }
   return null;
 };
@@ -138,14 +138,22 @@ export const validatePlantSearchParams = (
   ...validatePlantName(params),
 });
 
-export type SearchRecordFilterInput =
-  | SearchRecordStringFilterInput
-  | SearchRecordBooleanFilterInput;
+export type SearchRecordFilter = { [key in keyof SearchRecord]?: FilterValue };
 
-type SearchArchiveParams = PaginationParams & {
-  filter?: SearchRecordFilterInput[];
+export type SearchArchiveParams = PaginationParams & {
+  filter?: SearchRecordFilter;
   sort?: SearchRecordSortInput[];
   lastOpened?: string;
+};
+
+// TODO: actually validate the filter types
+const validateSearchRecordFilter = (
+  params: Record<string, unknown>,
+): { filter: SearchRecordFilter } | null => {
+  if ("filter" in params && typeof params.filter === "object") {
+    return { filter: params.filter as SearchRecordFilter };
+  }
+  return null;
 };
 
 export const validateSearchArchiveParams = (
@@ -156,6 +164,7 @@ export const validateSearchArchiveParams = (
   }
   return {
     lastOpened: validateString(params.lastOpened),
+    ...validateSearchRecordFilter(params),
     ...validatePaginationParams(params),
   };
 };

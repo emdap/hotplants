@@ -1,46 +1,32 @@
 import { Listbox } from "@headlessui/react";
+import classNames from "classnames";
+import {
+  FilterInputComponentProps,
+  PLANT_UNIT_OPTIONS,
+  PLANT_UNIT_SHORT_LABELS,
+  VALUE_PREFIXES,
+  ValueNumberKey,
+  ValuePrefix,
+} from "components/dataControls/filterUtil";
 import StyledListboxButton from "designSystem/listbox/StyledListboxButton";
 import StyledListboxOptions from "designSystem/listbox/StyledListboxOptions";
 import { PlantSizeRangeInput, PlantSizeUnit } from "generated/graphql/graphql";
 import { capitalize } from "lodash";
 import { useState } from "react";
-import { FilterInputComponentProps } from "./plantFilterUtil";
 
-export type NumberFilterInputProps = FilterInputComponentProps<
+export type RangeFilterInputProps = FilterInputComponentProps<
   "range",
-  "height" | "spread"
+  PlantSizeRangeInput
 >;
-
-const UNIT_VALUES: PlantSizeUnit[] = [
-  "centimeters",
-  "meters",
-  "inches",
-  "feet",
-];
-const UNIT_OPTIONS = UNIT_VALUES.map((unit) => ({
-  label: capitalize(unit),
-  value: unit,
-}));
-
-const UNIT_SHORT_LABELS: Record<PlantSizeUnit, string> = {
-  centimeters: "cm",
-  meters: "m",
-  inches: "in",
-  feet: "ft",
-};
-
-const VALUE_PREFIXES = ["min", "max"] as const;
-
-type ValueNumberKey = keyof Omit<PlantSizeRangeInput, "unit">;
-type ValuePrefix = (typeof VALUE_PREFIXES)[number];
 
 const RangeFilterInput = ({
   filterInput,
   value,
+  className,
   onChange,
-}: NumberFilterInputProps) => {
+}: RangeFilterInputProps) => {
   const [localUnit, setLocalUnit] = useState<PlantSizeUnit>(
-    UNIT_OPTIONS[0].value,
+    PLANT_UNIT_OPTIONS[0].value,
   );
 
   const handleUnitChange = (unit: PlantSizeUnit) => {
@@ -84,14 +70,14 @@ const RangeFilterInput = ({
     onChange(newValue && { ...value, ...newValue, unit: localUnit });
   };
 
-  const unitInputId = `${filterInput.plantDataKey}-unit`;
+  const unitInputId = `${filterInput.dataKey}-unit`;
 
   return (
-    <fieldset className="styled-fieldset">
+    <fieldset className={classNames("styled-fieldset", className)}>
       <legend>{filterInput.label}</legend>
       <div className="grid grid-cols-[1fr_1fr_auto] gap-4">
         {VALUE_PREFIXES.map((valuePrefix) => {
-          const elementId = `${filterInput.plantDataKey}-${valuePrefix}`;
+          const elementId = `${filterInput.dataKey}-${valuePrefix}`;
           const oppositePrefix = getOppositeValuePrefix(valuePrefix);
 
           return (
@@ -100,7 +86,7 @@ const RangeFilterInput = ({
                 className="whitespace-nowrap min-w-fit"
                 htmlFor={elementId}
               >
-                {capitalize(valuePrefix)} ({UNIT_SHORT_LABELS[localUnit]})
+                {capitalize(valuePrefix)} ({PLANT_UNIT_SHORT_LABELS[localUnit]})
               </label>
               <input
                 id={elementId}
@@ -126,12 +112,15 @@ const RangeFilterInput = ({
             <StyledListboxButton
               id={unitInputId}
               value={localUnit}
-              options={UNIT_OPTIONS}
+              options={PLANT_UNIT_OPTIONS}
               className="min-w-15"
             >
-              {UNIT_SHORT_LABELS[localUnit]}
+              {PLANT_UNIT_SHORT_LABELS[localUnit]}
             </StyledListboxButton>
-            <StyledListboxOptions className="min-w-40" options={UNIT_OPTIONS} />
+            <StyledListboxOptions
+              className="min-w-40"
+              options={PLANT_UNIT_OPTIONS}
+            />
           </Listbox>
         </div>
       </div>

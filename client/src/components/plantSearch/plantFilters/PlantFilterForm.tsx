@@ -1,5 +1,9 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import classNames from "classnames";
+import FilterInputField from "components/dataControls/FilterInputField";
+import { getOrderedFilterEntries } from "components/dataControls/filterUtil";
+import PlantSearchFormFooter from "components/plantSearch/PlantSearchFormFooter";
+import StyledPlantForm from "components/plantSearch/StyledPlantForm";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Card from "designSystem/Card";
 import Modal from "designSystem/Modal";
@@ -11,19 +15,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { toast } from "sonner";
 import { isSmallScreen } from "util/generalUtil";
-import PlantSearchFormFooter from "../PlantSearchFormFooter";
 import {
   PLANT_FORM_TITLES,
   PlantSearchFormProps,
 } from "../plantSearchFormUtil";
-import StyledPlantForm from "../StyledPlantForm";
-import FilterInputField from "./FilterInputField";
 import PlantFilterOpenButton from "./PlantFilterOpenButton";
-import {
-  constructDynamicFilters,
-  getSortedFilterEntries,
-  STATIC_FILTER_DICT,
-} from "./plantFilterUtil";
+import { constructDynamicFilters, STATIC_FILTER_DICT } from "./plantFilterUtil";
 
 const PlantFilterForm = ({
   renderMode: renderModeProp,
@@ -89,13 +86,16 @@ const PlantFilterForm = ({
     },
   });
 
-  const sortedFilters = useMemo(() => {
+  const orderedFilters = useMemo(() => {
     const dynamicFilters =
       (filterValuesQuery.data &&
         constructDynamicFilters(filterValuesQuery.data)) ??
       {};
 
-    return getSortedFilterEntries({ ...dynamicFilters, ...STATIC_FILTER_DICT });
+    return getOrderedFilterEntries({
+      ...dynamicFilters,
+      ...STATIC_FILTER_DICT,
+    });
   }, [filterValuesQuery.data]);
 
   const renderMode =
@@ -145,15 +145,15 @@ const PlantFilterForm = ({
           "pt-4": renderMode === "modal",
         })}
       >
-        {sortedFilters.map(
-          ([plantDataKey, filterInput]) =>
+        {orderedFilters.map(
+          ([dataKey, filterInput]) =>
             filterInput && (
               <FilterInputField
-                key={plantDataKey}
+                key={dataKey}
                 filterInput={filterInput}
-                value={filterDraft?.[plantDataKey]}
+                value={filterDraft?.[dataKey]}
                 onChange={(value) =>
-                  setFilterDraft({ ...filterDraft, [plantDataKey]: value })
+                  setFilterDraft({ ...filterDraft, [dataKey]: value })
                 }
               />
             ),

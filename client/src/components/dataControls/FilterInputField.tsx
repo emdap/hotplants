@@ -1,14 +1,20 @@
+import classNames from "classnames";
 import { ChangeEvent } from "react";
-import { FilterInputComponentProps, FilterInputType } from "./plantFilterUtil";
-import RangeFilterInput, { NumberFilterInputProps } from "./RangeFilterInput";
+import { FilterValue } from "util/customSchemaTypes";
+import { FilterInputComponentProps, FilterInputType } from "./filterUtil";
+import RangeFilterInput, { RangeFilterInputProps } from "./RangeFilterInput";
 import SelectFilterInput, { SelectFilterInputProps } from "./SelectFilterInput";
 
-const FilterInputField = <T extends FilterInputType = FilterInputType>(
-  props: FilterInputComponentProps<T>,
+const FilterInputField = <
+  T extends FilterInputType = FilterInputType,
+  V extends FilterValue = FilterValue,
+>(
+  props: FilterInputComponentProps<T, V>,
 ) => {
   const {
-    filterInput: { inputType, plantDataKey, label },
+    filterInput: { inputType, dataKey, label },
     value,
+    className,
     onChange,
   } = props;
 
@@ -18,19 +24,19 @@ const FilterInputField = <T extends FilterInputType = FilterInputType>(
     if (!value) {
       onChange(undefined);
     } else {
-      onChange(value);
+      onChange(value as V);
     }
   };
 
   return inputType.includes("select") ? (
     <SelectFilterInput {...(props as SelectFilterInputProps)} />
   ) : inputType === "range" ? (
-    <RangeFilterInput {...(props as NumberFilterInputProps)} />
+    <RangeFilterInput {...(props as RangeFilterInputProps)} />
   ) : (
-    <div className="form-item">
-      <label htmlFor={plantDataKey}>{label}</label>
+    <div className={classNames("form-item", className)}>
+      <label htmlFor={dataKey}>{label}</label>
       <input
-        id={plantDataKey}
+        id={dataKey}
         value={value ? String(value) : ""}
         type={inputType}
         placeholder={`Enter ${inputType}`}

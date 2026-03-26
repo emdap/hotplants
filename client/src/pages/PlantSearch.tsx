@@ -4,7 +4,7 @@ import ActivePlantPane from "components/plantResults/ActivePlantPane";
 import PlantList from "components/plantResults/PlantList";
 import PlantSearchForm from "components/plantSearch/PlantSearchForm";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
-import SearchRecordProgressBar from "components/searchRecord/SearchRecordProgressBar";
+import SearchRecordProgressBar from "components/searchArchive/SearchRecordProgressBar";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";

@@ -1,11 +1,12 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
-import SearchRecordCard from "components/searchRecord/SearchRecordCard";
-import SearchRecordSortFilterPopover from "components/searchRecord/SearchRecordSortFilterPopover";
+import SearchArchivePopover from "components/searchArchive/SearchArchivePopover";
+import SearchRecordCard from "components/searchArchive/SearchRecordCard";
 import {
   parseFilterParams,
-  SearchRecordQueryInput,
-} from "components/searchRecord/searchRecordParamUtil";
+  SearchArchiveParamType,
+} from "components/searchArchive/searchRecordParamUtil";
+import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import LoadingOverlay from "designSystem/LoadingOverlay";
@@ -14,7 +15,8 @@ import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
-import { useLayoutEffect, useMemo } from "react";
+import { useLayoutEffect } from "react";
+import { SearchArchiveParams } from "util/routeParamsUtil";
 
 const route = getRouteApi("/search-archive");
 
@@ -30,11 +32,6 @@ const SearchArchive = () => {
   } = route.useSearch();
   const ScrollAnchor = useScrollAnchor();
 
-  const filterParams = useMemo(
-    () => parseFilterParams(queryParams.filter),
-    [queryParams.filter],
-  );
-
   const {
     data: { allSearchRecords } = {},
     previousData,
@@ -44,7 +41,7 @@ const SearchArchive = () => {
       offset: (page - 1) * pageSize,
       limit: pageSize,
       sort: queryParams.sort,
-      ...filterParams,
+      ...(queryParams.filter && parseFilterParams(queryParams.filter)),
     },
     fetchPolicy: "cache-and-network",
   });
@@ -57,6 +54,16 @@ const SearchArchive = () => {
     }
   }, [lastOpened, allSearchRecords]);
 
+  const applyParams = <T extends SearchArchiveParamType>(
+    paramKey: T,
+    params?: SearchArchiveParams[T],
+  ) =>
+    navigate({
+      to: ".",
+      search: (prev) => ({ ...prev, page: 1, [paramKey]: params }),
+      replace: true,
+    });
+
   const searchRecordCount =
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;
 
@@ -66,25 +73,25 @@ const SearchArchive = () => {
       <ScrollAnchor className="scroll-m-header -mb-4" />
       <FloatingHeader>
         <div className="flex items-center gap-2">
-          {(["filter", "sort"] as const).map((param) => (
-            <SearchRecordSortFilterPopover
-              key={param}
-              paramType={param}
-              currentParams={queryParams[param] as SearchRecordQueryInput[]}
-              applyParams={(data) =>
-                navigate({
-                  to: ".",
-                  search: (prev) => ({ ...prev, page: 1, [param]: data }),
-                  replace: true,
-                })
-              }
-              clearParams={() =>
-                navigate({
-                  to: ".",
-                  search: (prev) => ({ ...prev, page: 1, [param]: undefined }),
-                  replace: true,
-                })
-              }
+          {(["filter", "sort"] as const).map((paramKey) => (
+            <SearchArchivePopover
+              key={paramKey}
+              paramKey={paramKey}
+              currentParams={queryParams[paramKey]}
+              applyParams={(params) => applyParams(paramKey, params)}
+              resetButton={({ disabled, close }) => (
+                <Button
+                  disabled={disabled}
+                  variant="accent"
+                  size="small"
+                  onClick={() => {
+                    applyParams(paramKey);
+                    close();
+                  }}
+                >
+                  Reset
+                </Button>
+              )}
             />
           ))}
         </div>
