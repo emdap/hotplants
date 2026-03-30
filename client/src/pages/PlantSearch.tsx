@@ -122,7 +122,6 @@ const PlantSearch = ({
                   // isInitialSearch={!searchRecordQuery}
                   hasCurrentResults={hasCurrentResults}
                 />
-
                 {searchRecordQuery.data && (
                   <Card
                     className={classNames(

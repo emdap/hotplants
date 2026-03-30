@@ -5,7 +5,7 @@ import SearchRecordCard from "components/searchHistory/SearchRecordCard";
 import {
   parseFilterParams,
   SearchHistoryParamType,
-} from "components/searchHistory/searchHistoryParamUtil";
+} from "components/searchHistory/searchHistoryDataUtil";
 import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";

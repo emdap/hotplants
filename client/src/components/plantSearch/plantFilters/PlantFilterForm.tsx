@@ -1,6 +1,6 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import classNames from "classnames";
-import FilterInputField from "components/dataControls/FilterInputField";
+import FilterInput from "components/dataControls/FilterInputField";
 import { getOrderedFilterEntries } from "components/dataControls/filterUtil";
 import PlantSearchFormFooter from "components/plantSearch/PlantSearchFormFooter";
 import StyledPlantForm from "components/plantSearch/StyledPlantForm";
@@ -148,7 +148,7 @@ const PlantFilterForm = ({
         {orderedFilters.map(
           ([dataKey, filterInput]) =>
             filterInput && (
-              <FilterInputField
+              <FilterInput
                 key={dataKey}
                 filterInput={filterInput}
                 value={filterDraft?.[dataKey]}

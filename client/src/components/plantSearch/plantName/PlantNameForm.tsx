@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import FilterInputField from "components/dataControls/FilterInputField";
+import FilterInput from "components/dataControls/FilterInputField";
 import PlantSearchFormFooter from "components/plantSearch/PlantSearchFormFooter";
 import {
   DEFAULT_PLANT_NAME_FIELDS,
@@ -89,7 +89,7 @@ const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
       <div className="my-4 min-h-min w-full max-w-[400px]">
         {PLANT_NAME_FIELDS.map((field, index) => (
           <Fragment key={index}>
-            <FilterInputField<"text">
+            <FilterInput<"text">
               filterInput={field}
               value={plantNameSearch[field.dataKey] ?? ""}
               onChange={(value) =>

@@ -1,15 +1,18 @@
-import FilterInputField from "components/dataControls/FilterInputField";
+import FilterInput from "components/dataControls/FilterInputField";
 import SortInputFields from "components/dataControls/SortInputFields";
+import { getOrderedFilterEntries } from "components/dataControls/filterUtil";
+import { useIsSignedIn } from "config/authClient";
 import StyledPopover from "designSystem/StyledPopover";
 import FilterButton from "designSystem/iconButtons/FilterButton";
 import SortButton from "designSystem/iconButtons/SortButton";
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { SearchHistoryParams, SearchRecordFilter } from "util/routeParamsUtil";
 import {
-  ORDERED_SEARCH_RECORD_FILTERS,
+  SEARCH_HISTORY_FILTER_DICT,
   SEARCH_RECORD_SORT_LIST,
   SearchHistoryParamType,
-} from "./searchHistoryParamUtil";
+  USER_SEARCH_HISTORY_FILTER,
+} from "./searchHistoryDataUtil";
 
 const POPOVER_BUTTON = {
   filter: FilterButton,
@@ -38,9 +41,20 @@ const SearchHistoryPopover = <T extends SearchHistoryParamType>({
   applyParams,
   resetButton,
 }: SearchHistoryPopoverProps<T>) => {
+  const isSignedIn = useIsSignedIn();
+
   const PopoverButton = POPOVER_BUTTON[paramKey as SearchHistoryParamType];
   const hasData = Boolean(
     Array.isArray(currentParams) ? currentParams.length : currentParams,
+  );
+
+  const searchHistoryFilters = useMemo(
+    () =>
+      getOrderedFilterEntries({
+        ...SEARCH_HISTORY_FILTER_DICT,
+        ...(isSignedIn && { userSearch: USER_SEARCH_HISTORY_FILTER }),
+      }),
+    [isSignedIn],
   );
 
   return (
@@ -67,7 +81,7 @@ const SearchHistoryPopover = <T extends SearchHistoryParamType>({
                 applySort={applyParams}
               />
             ) : (
-              ORDERED_SEARCH_RECORD_FILTERS.map(([field, filterInput]) => {
+              searchHistoryFilters.map(([field, filterInput]) => {
                 if (filterInput) {
                   // Typesafe castings
                   const filterParamValue = (
@@ -77,7 +91,7 @@ const SearchHistoryPopover = <T extends SearchHistoryParamType>({
                   const applyFilter = applyParams as ApplyParamsFn<"filter">;
 
                   return (
-                    <FilterInputField
+                    <FilterInput
                       key={field}
                       className="grid grid-cols-[1fr_1.5fr] items-center"
                       filterInput={filterInput}

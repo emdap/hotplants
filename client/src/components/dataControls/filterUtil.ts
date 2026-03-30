@@ -7,7 +7,7 @@ import { FilterValue, PrimitiveValue } from "util/customSchemaTypes";
 type SelectValueType = "string" | "color" | "boolean" | "number";
 export type SelectInputType = `select-${SelectValueType}`;
 
-export type FilterInputType = SelectInputType | "text" | "range";
+export type FilterInputType = SelectInputType | "text" | "range" | "checkbox";
 
 type FilterBase<
   T extends FilterInputType = FilterInputType,
@@ -19,7 +19,7 @@ type FilterBase<
   order?: number;
 };
 
-export type FilterInput<
+export type FilterInputConfig<
   T extends FilterInputType = FilterInputType,
   K extends string = string,
 > = FilterBase<T, K> &
@@ -46,14 +46,14 @@ type FilterNumberInput = {
 };
 
 export type FilterDict<T extends string = string> = {
-  [key in T]?: FilterInput<FilterInputType, key>;
+  [key in T]?: FilterInputConfig<FilterInputType, key>;
 };
 
 export type FilterInputComponentProps<
   T extends FilterInputType = FilterInputType,
   V extends FilterValue = FilterValue,
 > = {
-  filterInput: FilterInput<T>;
+  filterInput: FilterInputConfig<T>;
   value?: V;
   className?: string;
   onChange: (value?: V) => void;

@@ -1,6 +1,6 @@
 import {
   FilterDict,
-  FilterInput,
+  FilterInputConfig,
   NON_SPECIFIED_OPTION,
 } from "components/dataControls/filterUtil";
 import { ComplexListboxOption } from "designSystem/listbox/listboxUtil";
@@ -124,7 +124,7 @@ export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
 
       options.push(NON_SPECIFIED_OPTION);
 
-      (prev[key] as FilterInput) = {
+      (prev[key] as FilterInputConfig) = {
         ...DYNAMIC_FILTER_DICT[key],
         options,
         order: 1,

@@ -2,6 +2,7 @@ import {
   PlantDataInput,
   PlantSizeRangeInput,
   SearchRecord,
+  SearchRecordBooleanFilterField,
 } from "generated/graphql/graphql";
 import type * as Hotplants from "../generated/schemas/hotplants";
 import type * as Nominatim from "../generated/schemas/nominatim";
@@ -41,6 +42,6 @@ export type ComplexFilterValue = {
 };
 
 export type SearchRecordFilterInput = {
-  field: keyof SearchRecord;
+  field: keyof SearchRecord | SearchRecordBooleanFilterField;
   value: FilterValue;
 };

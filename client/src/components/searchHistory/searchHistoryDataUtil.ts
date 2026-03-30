@@ -1,8 +1,7 @@
 import {
   BOOLEAN_OPTIONS,
   FilterDict,
-  FilterInput,
-  getOrderedFilterEntries,
+  FilterInputConfig,
 } from "components/dataControls/filterUtil";
 import {
   QueryAllSearchRecordsArgs,
@@ -41,7 +40,17 @@ export const getFilterParamKey = (
     ? "stringFilter"
     : "booleanFilter";
 
-const SEARCH_RECORD_FILTER_DICT: FilterDict<keyof SearchRecord> = {
+export const USER_SEARCH_HISTORY_FILTER: FilterInputConfig<
+  "checkbox",
+  SearchRecordBooleanFilterField
+> = {
+  dataKey: "userSearch",
+  inputType: "checkbox",
+  label: "Only my searches",
+  order: -1,
+};
+
+export const SEARCH_HISTORY_FILTER_DICT: FilterDict<keyof SearchRecord> = {
   locationSource: {
     dataKey: "locationSource",
     label: "Location source",
@@ -81,17 +90,14 @@ const SEARCH_RECORD_FILTER_DICT: FilterDict<keyof SearchRecord> = {
   },
 };
 
-export const ORDERED_SEARCH_RECORD_FILTERS = getOrderedFilterEntries(
-  SEARCH_RECORD_FILTER_DICT,
-);
-
 const getFilterParamType = ({
   inputType,
-}: FilterInput): Exclude<
+}: FilterInputConfig): Exclude<
   keyof QueryAllSearchRecordsArgs,
   "sort" | "limit" | "offset"
 > | null => {
   switch (inputType) {
+    case "checkbox":
     case "select-boolean":
       return "booleanFilter";
     case "select-string":
@@ -110,7 +116,10 @@ export const parseFilterParams = (filter: SearchRecordFilter) =>
   (
     Object.entries(filter) as Entries<SearchRecordFilter>
   )?.reduce<SearchRecordFilterArgs>((prev, [dataKey, filterValue]) => {
-    const filterConfig = SEARCH_RECORD_FILTER_DICT[dataKey];
+    const filterConfig =
+      dataKey === "userSearch"
+        ? USER_SEARCH_HISTORY_FILTER
+        : SEARCH_HISTORY_FILTER_DICT[dataKey];
     const filterParamType = filterConfig && getFilterParamType(filterConfig);
 
     if (!filterParamType || !filterValue) {

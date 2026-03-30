@@ -2,6 +2,7 @@ import { polygon } from "@turf/turf";
 import {
   LocationSource,
   SearchRecord,
+  SearchRecordBooleanFilterField,
   SearchRecordSortInput,
 } from "generated/graphql/graphql";
 import {
@@ -138,7 +139,9 @@ export const validatePlantSearchParams = (
   ...validatePlantName(params),
 });
 
-export type SearchRecordFilter = { [key in keyof SearchRecord]?: FilterValue };
+export type SearchRecordFilter = {
+  [key in keyof SearchRecord]?: FilterValue;
+} & { [key in SearchRecordBooleanFilterField]?: boolean };
 
 export type SearchHistoryParams = PaginationParams & {
   filter?: SearchRecordFilter;
