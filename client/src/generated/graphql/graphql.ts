@@ -314,11 +314,13 @@ export type SearchRecord = {
   status: SearchRecordStatus;
   taxonKeys?: Maybe<Array<Scalars['Int']['output']>>;
   totalOccurrences: Scalars['Int']['output'];
+  userIds?: Maybe<Array<Scalars['ObjectId']['output']>>;
 };
 
 export type SearchRecordBooleanFilterField =
   | 'commonName'
-  | 'scientificName';
+  | 'scientificName'
+  | 'userSearch';
 
 export type SearchRecordBooleanFilterInput = {
   field: SearchRecordBooleanFilterField;

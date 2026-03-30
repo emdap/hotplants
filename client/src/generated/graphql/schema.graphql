@@ -212,11 +212,13 @@ type SearchRecord {
   status: SearchRecordStatus!
   taxonKeys: [Int!]
   totalOccurrences: Int!
+  userIds: [ObjectId!]
 }
 
 enum SearchRecordBooleanFilterField {
   commonName
   scientificName
+  userSearch
 }
 
 input SearchRecordBooleanFilterInput {
