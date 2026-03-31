@@ -34,7 +34,7 @@ const StyledPopover = ({
         anchor="bottom end"
         modal={false}
         className={classNames(
-          "z-30 p-4 mt-3 text-sm card card-solid data-closed:scale-95",
+          "z-30 p-4 mt-3 text-sm card card-solid dark:border-accent/20 data-closed:scale-95",
           className,
         )}
         {...panelProps}
