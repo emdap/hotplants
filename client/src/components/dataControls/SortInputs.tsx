@@ -95,6 +95,7 @@ const SortInputs = <SortInputConfig extends SortInputType>({
       {completeSortFields.map((sortConfig) => (
         <motion.div
           layout
+          layoutDependency={completeSortFields}
           key={sortConfig.field}
           className="form-item grid grid-cols-[1fr_auto] items-center"
           style={{ order: sortConfig.order }}
