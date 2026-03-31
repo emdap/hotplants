@@ -12,7 +12,7 @@ import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
-import { useCallback, useLayoutEffect } from "react";
+import { useLayoutEffect } from "react";
 import { SearchHistoryParams } from "util/routeParamsUtil";
 
 const route = getRouteApi("/search-history");
@@ -56,15 +56,12 @@ const SearchHistory = () => {
     }
   }, [lastOpened, allSearchRecords]);
 
-  const applyParams = useCallback(
-    (params: SearchHistoryParams) =>
-      navigate({
-        to: ".",
-        search: (prev) => ({ ...prev, page: 1, ...params }),
-        replace: true,
-      }),
-    [navigate],
-  );
+  const applyParams = (params: SearchHistoryParams) =>
+    navigate({
+      to: ".",
+      search: (prev) => ({ ...prev, page: 1, ...params }),
+      replace: true,
+    });
 
   const searchRecordCount =
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;

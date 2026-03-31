@@ -3,7 +3,8 @@ import { getOrderedFilterEntries } from "components/dataControls/filterUtil";
 import { useIsSignedIn } from "config/authClient";
 import FilterButton from "designSystem/iconButtons/FilterButton";
 import StyledPopover from "designSystem/StyledPopover";
-import { useCallback, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { isSmallScreen } from "util/generalUtil";
 import { SearchHistoryParams } from "util/routeParamsUtil";
 import {
   POPOVER_LABELS,
@@ -19,14 +20,19 @@ const SearchHistoryFilterPopover = ({
 }: SearchHistoryPopoverProps) => {
   const isSignedIn = useIsSignedIn();
 
-  const applyFilter = useCallback(
-    (params: SearchHistoryParams["filter"]) => applyParams({ filter: params }),
-    [applyParams],
-  );
+  const currentFilter = currentParams?.filter;
+  const hasData = Boolean(currentFilter);
 
-  useEffect(() => {
-    isSignedIn && applyFilter({ userSearch: true });
-  }, [applyFilter, isSignedIn]);
+  const applyFilter = (params: SearchHistoryParams["filter"]) =>
+    applyParams({ filter: { ...currentFilter, ...params } });
+
+  useEffect(
+    () => {
+      isSignedIn && applyFilter({ userSearch: true });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isSignedIn],
+  );
 
   const searchHistoryFilters = useMemo(
     () =>
@@ -36,9 +42,6 @@ const SearchHistoryFilterPopover = ({
       }),
     [isSignedIn],
   );
-
-  const currentFilter = currentParams?.filter;
-  const hasData = Boolean(currentFilter);
 
   return (
     <StyledPopover
@@ -59,8 +62,8 @@ const SearchHistoryFilterPopover = ({
               filterInput && (
                 <FilterInput
                   key={field}
-                  className="grid grid-cols-[1fr_1.5fr] items-center"
-                  filterInput={filterInput}
+                  className="big-screen:grid big-screen:grid-cols-[1fr_200px] big-screen:items-center"
+                  filterInput={{ ...filterInput, asFieldset: isSmallScreen() }}
                   value={currentFilter?.[field] ?? null}
                   onChange={(nextValue) =>
                     applyFilter({

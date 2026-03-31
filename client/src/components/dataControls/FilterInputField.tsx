@@ -21,7 +21,13 @@ const FilterInput = <
   ) : filterInput.inputType === "range" ? (
     <RangeFilterInput {...(props as RangeFilterInputProps)} />
   ) : (
-    <div className={classNames("form-item", props.className)}>
+    <div
+      className={classNames(
+        "form-item",
+        { "flex-row items-center": filterInput.inputType === "checkbox" },
+        props.className,
+      )}
+    >
       <label htmlFor={filterInput.dataKey}>{filterInput.label}</label>
       {filterInput.inputType === "text" ? (
         <TextFilterInput {...(props as TextFilterInputProps)} />
