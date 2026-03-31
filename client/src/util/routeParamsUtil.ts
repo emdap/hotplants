@@ -149,6 +149,11 @@ export type SearchHistoryParams = PaginationParams & {
   lastOpened?: string;
 };
 
+export const DEFAULT_SEARCH_HISTORY_ROUTE_PARAMS: SearchHistoryParams = {
+  filter: {},
+  sort: [{ field: "lastRanTimestamp", value: -1 }],
+};
+
 // TODO: actually validate the filter types
 const validateSearchRecordFilter = (
   params: Record<string, unknown>,
@@ -159,18 +164,23 @@ const validateSearchRecordFilter = (
   return null;
 };
 
+const validateSearchRecordSort = (
+  params: Record<string, unknown>,
+): { sort?: SearchRecordSortInput[] } | null => ({
+  sort:
+    params.sort && Array.isArray(params.sort)
+      ? (params.sort as SearchRecordSortInput[])
+      : DEFAULT_SEARCH_HISTORY_ROUTE_PARAMS.sort,
+});
+
 export const validateSearchHistoryParams = (
   params: Record<string, string>,
-): SearchHistoryParams => {
-  if (typeof params.lastOpened === "string") {
-    return { lastOpened: params.lastOpened };
-  }
-  return {
-    lastOpened: validateString(params.lastOpened),
-    ...validateSearchRecordFilter(params),
-    ...validatePaginationParams(params),
-  };
-};
+): SearchHistoryParams => ({
+  lastOpened: validateString(params.lastOpened),
+  ...validateSearchRecordFilter(params),
+  ...validateSearchRecordSort(params),
+  ...validatePaginationParams(params),
+});
 
 type GardenParams = Pick<PlantSearchRouteParams, "plantFilter"> &
   PaginationParams;

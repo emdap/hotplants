@@ -1,12 +1,17 @@
 import FilterInput from "components/dataControls/FilterInputField";
-import SortInputFields from "components/dataControls/SortInputFields";
+import SortInputs from "components/dataControls/SortInputs";
 import { getOrderedFilterEntries } from "components/dataControls/filterUtil";
 import { useIsSignedIn } from "config/authClient";
 import StyledPopover from "designSystem/StyledPopover";
 import FilterButton from "designSystem/iconButtons/FilterButton";
 import SortButton from "designSystem/iconButtons/SortButton";
+import { isEqual } from "lodash";
 import { ReactNode, useMemo } from "react";
-import { SearchHistoryParams, SearchRecordFilter } from "util/routeParamsUtil";
+import {
+  DEFAULT_SEARCH_HISTORY_ROUTE_PARAMS,
+  SearchHistoryParams,
+  SearchRecordFilter,
+} from "util/routeParamsUtil";
 import {
   SEARCH_HISTORY_FILTER_DICT,
   SEARCH_RECORD_SORT_LIST,
@@ -43,10 +48,7 @@ const SearchHistoryPopover = <T extends SearchHistoryParamType>({
 }: SearchHistoryPopoverProps<T>) => {
   const isSignedIn = useIsSignedIn();
 
-  const PopoverButton = POPOVER_BUTTON[paramKey as SearchHistoryParamType];
-  const hasData = Boolean(
-    Array.isArray(currentParams) ? currentParams.length : currentParams,
-  );
+  // Typesafe castings
 
   const searchHistoryFilters = useMemo(
     () =>
@@ -56,6 +58,27 @@ const SearchHistoryPopover = <T extends SearchHistoryParamType>({
       }),
     [isSignedIn],
   );
+
+  const { hasData, currentFilterParams, applyFilter } = useMemo(
+    () =>
+      paramKey === "sort"
+        ? {
+            hasData: !isEqual(
+              currentParams,
+              DEFAULT_SEARCH_HISTORY_ROUTE_PARAMS.sort,
+            ),
+            currentFilterParams: undefined,
+            applyFilter: undefined,
+          }
+        : {
+            hasData: Boolean(currentParams),
+            currentFilterParams: currentParams as SearchRecordFilter,
+            applyFilter: applyParams as ApplyParamsFn<"filter">,
+          },
+    [paramKey, currentParams, applyParams],
+  );
+
+  const PopoverButton = POPOVER_BUTTON[paramKey as SearchHistoryParamType];
 
   return (
     <StyledPopover
@@ -74,29 +97,23 @@ const SearchHistoryPopover = <T extends SearchHistoryParamType>({
           <h4 className="font-semibold">{POPOVER_LABELS[paramKey]} results</h4>
           <div className="grow space-y-2 overflow-auto">
             {paramKey === "sort" ? (
-              <SortInputFields
+              <SortInputs
                 sortFields={SEARCH_RECORD_SORT_LIST}
                 currentSort={currentParams as SearchHistoryParams["sort"]}
-                className="grid grid-cols-[1fr_auto] items-center"
+                multiSort
                 applySort={applyParams}
               />
             ) : (
               searchHistoryFilters.map(([field, filterInput]) => {
                 if (filterInput) {
-                  // Typesafe castings
-                  const filterParamValue = (
-                    currentParams as SearchRecordFilter | undefined
-                  )?.[field];
-
-                  const applyFilter = applyParams as ApplyParamsFn<"filter">;
-
                   return (
                     <FilterInput
                       key={field}
                       className="grid grid-cols-[1fr_1.5fr] items-center"
                       filterInput={filterInput}
-                      value={filterParamValue ?? null}
+                      value={currentFilterParams?.[field] ?? null}
                       onChange={(nextValue) =>
+                        applyFilter &&
                         applyFilter({
                           [field]: nextValue,
                         })

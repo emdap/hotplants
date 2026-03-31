@@ -150,12 +150,12 @@ const SearchRecordCard = ({
 
           <div className="mt-auto">
             <InfoRow
-              title="Search created"
-              value={formatDate(searchParams.createdTimestamp)}
-            />
-            <InfoRow
               title="Search last ran"
               value={formatDate(searchParams.lastRanTimestamp)}
+            />
+            <InfoRow
+              title="Search created"
+              value={formatDate(searchParams.createdTimestamp)}
             />
             <InfoRow title="Status" value={status} />
           </div>

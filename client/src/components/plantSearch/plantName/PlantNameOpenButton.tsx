@@ -29,7 +29,7 @@ const PlantNameOpenButton = ({ onClick }: { onClick?: () => void }) => {
       onClick={onClick}
       icon={isActive ? <RiPlantFill /> : <RiPlantLine />}
     >
-      <span className="max-lg:hidden">
+      <span>
         {plantNameDraft
           ? capitalize(plantNameDraft)
           : appliedPlantName

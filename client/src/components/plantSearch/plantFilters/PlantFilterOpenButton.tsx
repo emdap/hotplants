@@ -17,7 +17,7 @@ const PlantFilterOpenButton = ({
       onClick={onClick}
       className="w-fit"
     >
-      <span className="max-lg:hidden">
+      <span>
         {isActive ? `${pluralize("filter", appliedFilters, true)}` : "Filter"}
       </span>
     </FilterButton>

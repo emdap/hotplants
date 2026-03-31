@@ -8,6 +8,7 @@ const IconButton = ({ active, className, ...buttonProps }: IconButtonProps) => (
   <Button
     variant="icon-white"
     className={classNames(
+      "[&_span]:max-lg:hidden",
       active &&
         "bg-primary-dark/80 hover:bg-primary-dark! shadow-sm outline-primary-dark! text-white!",
       className,

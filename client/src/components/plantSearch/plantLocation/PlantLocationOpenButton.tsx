@@ -26,9 +26,7 @@ const PlantLocationOpenButton = ({ onClick }: { onClick?: () => void }) => {
           : "bg-accent/30!"
       }
     >
-      <span className="max-lg:hidden">
-        {isActive ? locationName : PLANT_FORM_TITLES.location}
-      </span>
+      <span>{isActive ? locationName : PLANT_FORM_TITLES.location}</span>
     </IconButton>
   );
 };

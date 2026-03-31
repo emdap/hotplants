@@ -13,7 +13,7 @@ const CheckboxFilterInput = ({
   <input
     id={dataKey}
     type={inputType}
-    checked={value}
+    checked={value ?? false}
     onChange={({ target }) => onChange(target.checked || undefined)}
     className="styled-checkbox"
   />

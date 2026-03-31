@@ -14,7 +14,7 @@ import {
 } from "generated/graphql/graphql";
 import { Entries } from "type-fest";
 import { SearchRecordFilterInput } from "util/customSchemaTypes";
-import { SearchRecordFilter } from "util/routeParamsUtil";
+import { SearchHistoryParams, SearchRecordFilter } from "util/routeParamsUtil";
 
 export type SearchHistoryParamType = "sort" | "filter";
 
@@ -22,10 +22,10 @@ export const SEARCH_RECORD_SORT_LIST: {
   field: SearchRecordSortField;
   label: string;
 }[] = [
+  { field: "lastRanTimestamp", label: "Search last ran" },
+  { field: "createdTimestamp", label: "Search created" },
   { field: "locationName", label: "Location name" },
   { field: "totalOccurrences", label: "Total occurrences" },
-  { field: "createdTimestamp", label: "Search created" },
-  { field: "lastRanTimestamp", label: "Search last ran" },
 ];
 
 type FilterQueryVars = {
@@ -134,3 +134,13 @@ export const parseFilterParams = (filter: SearchRecordFilter) =>
 
     return prev;
   }, {}) as FilterQueryVars;
+
+export type SearchHistoryPopoverProps = {
+  currentParams?: Pick<SearchHistoryParams, "filter" | "sort">;
+  applyParams: (params: SearchHistoryParams) => void;
+};
+
+export const POPOVER_LABELS = {
+  filter: "Filter",
+  sort: "Sort",
+};

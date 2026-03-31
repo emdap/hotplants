@@ -1,12 +1,9 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
-import SearchHistoryPopover from "components/searchHistory/SearchHistoryPopover";
 import SearchRecordCard from "components/searchHistory/SearchRecordCard";
-import {
-  parseFilterParams,
-  SearchHistoryParamType,
-} from "components/searchHistory/searchHistoryDataUtil";
-import Button from "designSystem/Button";
+import SearchHistoryFilterPopover from "components/searchHistory/dataControlsPopover/SearchHistoryFilterPopover";
+import SearchHistorySortPopover from "components/searchHistory/dataControlsPopover/SearchHistorySortPopover";
+import { parseFilterParams } from "components/searchHistory/searchHistoryDataUtil";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import LoadingOverlay from "designSystem/LoadingOverlay";
@@ -15,12 +12,17 @@ import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
-import { useLayoutEffect } from "react";
+import { useCallback, useLayoutEffect } from "react";
 import { SearchHistoryParams } from "util/routeParamsUtil";
 
 const route = getRouteApi("/search-history");
 
 const SEARCH_HISTORY_PAGE_SIZE_OPTIONS = [5, 10, 25, 50];
+
+const SEARCH_HISTORY_POPOVER = {
+  filter: SearchHistoryFilterPopover,
+  sort: SearchHistorySortPopover,
+};
 
 const SearchHistory = () => {
   const navigate = useNavigate();
@@ -54,15 +56,15 @@ const SearchHistory = () => {
     }
   }, [lastOpened, allSearchRecords]);
 
-  const applyParams = <T extends SearchHistoryParamType>(
-    paramKey: T,
-    params?: SearchHistoryParams[T],
-  ) =>
-    navigate({
-      to: ".",
-      search: (prev) => ({ ...prev, page: 1, [paramKey]: params }),
-      replace: true,
-    });
+  const applyParams = useCallback(
+    (params: SearchHistoryParams) =>
+      navigate({
+        to: ".",
+        search: (prev) => ({ ...prev, page: 1, ...params }),
+        replace: true,
+      }),
+    [navigate],
+  );
 
   const searchRecordCount =
     allSearchRecords?.count ?? previousData?.allSearchRecords.count ?? 0;
@@ -73,27 +75,16 @@ const SearchHistory = () => {
       <ScrollAnchor className="scroll-m-header -mb-4" />
       <FloatingHeader>
         <div className="flex items-center gap-2">
-          {(["filter", "sort"] as const).map((paramKey) => (
-            <SearchHistoryPopover
-              key={paramKey}
-              paramKey={paramKey}
-              currentParams={queryParams[paramKey]}
-              applyParams={(params) => applyParams(paramKey, params)}
-              resetButton={({ disabled, close }) => (
-                <Button
-                  disabled={disabled}
-                  variant="accent"
-                  size="small"
-                  onClick={() => {
-                    applyParams(paramKey);
-                    close();
-                  }}
-                >
-                  Reset
-                </Button>
-              )}
-            />
-          ))}
+          {(["filter", "sort"] as const).map((paramType) => {
+            const Component = SEARCH_HISTORY_POPOVER[paramType];
+            return (
+              <Component
+                key={paramType}
+                currentParams={queryParams}
+                applyParams={applyParams}
+              />
+            );
+          })}
         </div>
 
         <ItemCountWithLoader
