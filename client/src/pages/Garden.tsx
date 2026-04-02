@@ -1,4 +1,4 @@
-import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import GardenPlantNotes from "components/garden/GardenPlantNotes";
 import PlantAnimation from "components/PlantAnimation";
@@ -106,6 +106,8 @@ const Garden = () => {
             className="col-start-2"
             label="Plant"
             count={displayCount}
+            replaceCountWithLoader
+            isLoading={gardenPlantsQuery.loading && !displayCount}
           />
 
           <PaginationControl
@@ -117,7 +119,17 @@ const Garden = () => {
         </FloatingHeader>
 
         {hasNoResults && (
-          <PlantAnimation isInitialSearch={!plantFilter} className="my-auto" />
+          <div className="flex flex-col items-center gap-4">
+            <PlantAnimation
+              customMessage={
+                plantFilter ? undefined : "No plants added to garden."
+              }
+              className="my-auto"
+            />
+            <Link to="/plant-search" search={{ plantFilter }}>
+              <Button>Find more plants</Button>
+            </Link>
+          </div>
         )}
 
         <PlantList showFadeInAnimation className="pb-10" />

@@ -117,7 +117,6 @@ const PlantSearch = ({
             <div className="flex flex-col gap-8 my-auto overflow-hidden">
               <PlantAnimation
                 queryStatus={searchStatus}
-                // isInitialSearch={!searchRecordQuery}
                 hasCurrentResults={hasCurrentResults}
               />
               {searchRecordQuery.data && (

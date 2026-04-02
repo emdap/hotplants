@@ -10,9 +10,9 @@ import stillPlant from "placeholderImages/stillPlant.json";
 import { ReactNode, useEffect, useState } from "react";
 
 type PlantAnimationProps = {
+  customMessage?: string;
   queryStatus?: PlantSearchQueryStatus;
   dataType?: string;
-  isInitialSearch?: boolean;
   hasCurrentResults?: boolean;
   className?: string;
 };
@@ -20,10 +20,10 @@ type PlantAnimationProps = {
 const getDescription = (
   serverReady: boolean | "error",
   {
+    customMessage,
     queryStatus,
     dataType = "plants",
     hasCurrentResults,
-    isInitialSearch,
   }: Partial<PlantAnimationProps>,
 ): { key: number; text: ReactNode; showLoader?: boolean } => {
   if (serverReady === "error") {
@@ -46,15 +46,14 @@ const getDescription = (
       key: 1,
       text: `Searching for ${hasCurrentResults ? "more " : ""}${dataType}`,
     };
-  } else if (!hasCurrentResults && isInitialSearch) {
-    return { key: 2, text: "Set a location to get started!" };
   } else if (!hasCurrentResults) {
     return {
-      key: 3,
-      text: `No ${dataType} found, try adjusting your filters.`,
+      key: 2,
+      text:
+        customMessage ?? `No ${dataType} found, try adjusting your filters.`,
     };
   } else {
-    return { key: 4, text: "End of results" };
+    return { key: 3, text: "End of results" };
   }
 };
 
