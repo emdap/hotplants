@@ -65,7 +65,7 @@ const Sidebar = ({
         ref={refPassthrough}
         className={classNames(
           "border-header bg-gradient-to-t from-default-background/30 to-90%",
-          "flex flex-col transition-all duration-300 z-40",
+          "flex flex-col transition-all duration-300 z-40 small-screen:z-50",
           "small-screen:gap-2 small-screen:fixed small-screen:top-0 small-screen:h-dvh small-screen:pl-safe-4 small-screen:pr-4",
           {
             "small-screen:translate-x-0": isExpanded,
