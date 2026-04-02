@@ -8,5 +8,6 @@
 @import "./tailwind-utils.css";
 
 @import "./form-elements.css";
+@import "./sonner-toast-overrides.css";
 @import "./leaflet-overrides.css";
 @import "./old-safari-overrides.css";

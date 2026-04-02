@@ -1,0 +1,6 @@
+[data-sonner-toast][data-styled="true"] {
+  [data-icon] {
+    @apply h-5;
+  }
+  @apply items-start gap-4;
+}
