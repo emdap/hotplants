@@ -2,7 +2,7 @@ import { ComplexListboxOption } from "designSystem/listbox/listboxUtil";
 import { PlantSizeRangeInput, PlantSizeUnit } from "generated/graphql/graphql";
 import { capitalize } from "lodash";
 import { Entries } from "type-fest";
-import { FilterValue, PrimitiveValue } from "util/customSchemaTypes";
+import { FilterValue, PrimitiveValue } from "util/graphqlTypes";
 
 type SelectValueType = "string" | "color" | "boolean" | "number";
 export type SelectInputType = `select-${SelectValueType}`;

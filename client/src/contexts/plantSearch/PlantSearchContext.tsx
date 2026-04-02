@@ -1,9 +1,9 @@
+import { PlantSearchParams } from "config/hotplantsConfig";
 import {
   PlantSearchQueriesReturnType,
   PlantSearchQueryStatus,
 } from "hooks/usePlantSearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { PlantSearchParams } from "util/customSchemaTypes";
 import {
   isSmallScreen,
   VOID_FUNCTION,

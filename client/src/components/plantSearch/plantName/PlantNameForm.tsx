@@ -7,11 +7,11 @@ import {
   PLANT_NAME_FIELDS,
   PlantSearchFormProps,
 } from "components/plantSearch/plantSearchFormUtil";
+import { OptionalSearchParamKey, PlantNameParam } from "config/hotplantsConfig";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
 import { isEqual } from "lodash";
 import { Fragment, useEffect, useState } from "react";
-import { OptionalSearchParamKey, PlantNameParam } from "util/customSchemaTypes";
 import StyledPlantForm from "../StyledPlantForm";
 
 const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {

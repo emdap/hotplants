@@ -13,7 +13,7 @@ import {
   SearchRecordStringFilterInput,
 } from "generated/graphql/graphql";
 import { Entries } from "type-fest";
-import { SearchRecordFilterInput } from "util/customSchemaTypes";
+import { SearchRecordFilterInput } from "util/graphqlTypes";
 import { SearchHistoryParams, SearchRecordFilter } from "util/routeParamsUtil";
 
 export type SearchHistoryParamType = "sort" | "filter";

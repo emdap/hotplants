@@ -8,7 +8,7 @@ import { ListboxValueType } from "designSystem/listbox/listboxUtil";
 import StyledListbox from "designSystem/listbox/StyledListbox";
 import { PlantSizeRangeInput } from "generated/graphql/graphql";
 import { useState } from "react";
-import { FilterValue } from "util/customSchemaTypes";
+import { FilterValue } from "util/graphqlTypes";
 
 export type SelectFilterInputProps = FilterInputComponentProps<
   SelectInputType,

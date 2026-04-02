@@ -3,10 +3,11 @@ import {
   FilterInputConfig,
   NON_SPECIFIED_OPTION,
 } from "components/dataControls/filterUtil";
+import { PlantArrayValues } from "config/hotplantsConfig";
 import { ComplexListboxOption } from "designSystem/listbox/listboxUtil";
 import { capitalize, sortBy } from "lodash";
 import { Entries } from "type-fest";
-import { PlantArrayValues, PlantDataFilter } from "util/customSchemaTypes";
+import { PlantDataFilter } from "util/graphqlTypes";
 
 export type PlantFilterKey = keyof PlantDataFilter;
 

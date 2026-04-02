@@ -6,12 +6,13 @@ import {
   rhumbDistance,
   transformTranslate,
 } from "@turf/turf";
+import { PlantLocationParams } from "config/hotplantsConfig";
 import { Feature, Polygon as PolygonType } from "geojson";
 import { LeafletEvent, Marker as MarkerType } from "leaflet";
 import { useEffect, useMemo, useState } from "react";
 import { Marker, Polygon, useMap } from "react-leaflet";
 import { useMount } from "react-use";
-import { LocationCoord, PlantLocationParams } from "util/customSchemaTypes";
+import { LocationCoord } from "util/locationUtil";
 import CrossingMeridianTooltip from "./CrossingMeridianTooltip";
 import { PolygonCenterIcon, PolygonCornerIcon } from "./MarkerIcons";
 import { SetCustomPolygonFn } from "./PolygonDrawing";

@@ -1,10 +1,10 @@
-import { hotplantsClient } from "config/hotplantsConfig";
+import { hotplantsClient, PlantSearchParams } from "config/hotplantsConfig";
 import { QueryPlantSearchArgs } from "generated/graphql/graphql";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { PlantDataFilter, PlantSearchParams } from "util/customSchemaTypes";
+import { PlantDataFilter } from "util/graphqlTypes";
 import { PaginationParams } from "util/routeParamsUtil";
 
 export type PlantSearchQueryStatus =

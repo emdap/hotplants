@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { FilterValue } from "util/customSchemaTypes";
+import { FilterValue } from "util/graphqlTypes";
 import CheckboxFilterInput, {
   CheckboxFilterInputProps,
 } from "./CheckboxFilterInput";

@@ -1,4 +1,6 @@
 import { bboxPolygon, coordAll, simplify } from "@turf/turf";
+import { PlantLocationParams } from "config/hotplantsConfig";
+import type * as Nominatim from "generated/schemas/nominatim";
 import type { paths } from "generated/schemas/nominatim";
 import {
   BBox,
@@ -8,12 +10,13 @@ import {
   Position,
 } from "geojson";
 import createClient from "openapi-fetch";
-import { LocationCoord, PlantLocationParams } from "util/customSchemaTypes";
-import { LocationData } from "./customSchemaTypes";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
 });
+
+type LocationData = Nominatim.components["schemas"]["OSMGeocodeJson"][number];
+export type LocationCoord = [number, number];
 
 export const lookupLocationInput = (input: string) =>
   locationClient.GET("/search", {

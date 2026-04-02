@@ -1,6 +1,7 @@
 import { NetworkStatus } from "@apollo/client";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
+import { PlantSearchParams } from "config/hotplantsConfig";
 import {
   DEFAULT_SEARCH_FORM_STATE,
   PlantSearchContext,
@@ -13,7 +14,6 @@ import usePlantSearchQueries, {
 } from "hooks/usePlantSearchQueries";
 import PlantSearch from "pages/PlantSearch";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { PlantSearchParams } from "util/customSchemaTypes";
 
 const route = getRouteApi("/plant-search");
 

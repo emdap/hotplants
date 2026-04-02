@@ -1,17 +1,16 @@
 import { polygon } from "@turf/turf";
 import {
+  PlantLocationParams,
+  PlantNameParam,
+  PlantSearchParams,
+} from "config/hotplantsConfig";
+import {
   LocationSource,
   SearchRecord,
   SearchRecordBooleanFilterField,
   SearchRecordSortInput,
 } from "generated/graphql/graphql";
-import {
-  FilterValue,
-  PlantDataFilter,
-  PlantLocationParams,
-  PlantNameParam,
-  PlantSearchParams,
-} from "./customSchemaTypes";
+import { FilterValue, PlantDataFilter } from "./graphqlTypes";
 
 export type PaginationParams = {
   page?: number;

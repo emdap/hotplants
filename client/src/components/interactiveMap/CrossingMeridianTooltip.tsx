@@ -1,7 +1,7 @@
+import { PlantLocationParams } from "config/hotplantsConfig";
 import { tooltip, Tooltip as TooltipType } from "leaflet";
 import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
-import { PlantLocationParams } from "util/customSchemaTypes";
 import { crossesMeridian } from "util/locationUtil";
 
 const CrossingMeridianTooltip = ({

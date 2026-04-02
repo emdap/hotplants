@@ -1,6 +1,6 @@
 import { FilterInputConfig } from "components/dataControls/filterUtil";
+import { OptionalSearchParamKey } from "config/hotplantsConfig";
 import { SearchFormTab } from "contexts/plantSearch/PlantSearchContext";
-import { OptionalSearchParamKey } from "util/customSchemaTypes";
 
 export type PlantSearchFormProps = {
   renderMode: "card" | "modal" | "popover";

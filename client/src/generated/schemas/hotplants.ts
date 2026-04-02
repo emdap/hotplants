@@ -57,6 +57,8 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @description A class representation of the BSON ObjectId type. */
+        ObjectId: string;
         "Maybe_number-Array-Array-Array_": number[][][] | null;
         Maybe_string_: string | null;
         /** Format: double */
@@ -68,6 +70,7 @@ export interface components {
         SearchRecordStatus: "COMPLETE" | "READY" | "SCRAPING";
         /** @description From T, pick a set of properties whose keys are in the union K */
         "Pick_SearchRecordDocument.Exclude_keyofSearchRecordDocument._id__": {
+            userIds?: components["schemas"]["ObjectId"][];
             taxonKeys?: number[];
             /** @enum {string} */
             __typename?: "SearchRecord";
