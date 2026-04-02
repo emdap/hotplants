@@ -8,6 +8,8 @@ import RangeFilterInput, { RangeFilterInputProps } from "./RangeFilterInput";
 import SelectFilterInput, { SelectFilterInputProps } from "./SelectFilterInput";
 import TextFilterInput, { TextFilterInputProps } from "./TextFilterInput";
 
+// TODO: Some duplicate code with 'InputField' -- could make this component more generic instead,
+// to be used outside of plant filtering, and for any inputs in app?
 const FilterInput = <
   T extends FilterInputType = FilterInputType,
   V extends FilterValue = FilterValue,

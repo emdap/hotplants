@@ -7,6 +7,7 @@ import {
 } from "components/plantDataControls/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
+import InputField from "designSystem/InputField";
 import { useReactQuery } from "hooks/useQuery";
 import { isEqual } from "lodash";
 import { useEffect, useState } from "react";
@@ -124,34 +125,29 @@ const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
     >
       {renderMode === "card" && <h2>{PLANT_FORM_TITLES.location}</h2>}
 
-      <div className="form-item">
-        <label htmlFor="search-location" className="max-w-fit">
-          Location name
-        </label>
-        <input
-          id="search-location"
-          value={searchInput}
-          className={classNames(
-            "styled-input flex-grow min-w-20",
-            (locationQuery.isError || locationInvalid) &&
-              "dark:!border-red-700 ring-offset-red-500/70 !border-red-500",
-          )}
-          onBlur={() => setDebouncedInput(searchInput)}
-          onKeyDown={handleKeyDown}
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder={
-            searchParamsDraft?.location?.locationSource === "custom"
-              ? customLocationDisplay(searchParamsDraft.location)
-              : "Enter Location"
-          }
-        />
-
-        <div className="px-1 text-xs font-medium text-default-text/70">
-          {locationQuery.isError
+      <InputField
+        id="search-location"
+        label="Location name"
+        value={searchInput}
+        className="flex-grow min-w-20"
+        onBlur={() => setDebouncedInput(searchInput)}
+        onKeyDown={handleKeyDown}
+        type="text"
+        onChange={(e) => setSearchInput(e.target.value)}
+        placeholder={
+          searchParamsDraft?.location?.locationSource === "custom"
+            ? customLocationDisplay(searchParamsDraft.location)
+            : "Enter Location"
+        }
+        isError={locationQuery.isError || locationInvalid}
+        errorText={
+          locationQuery.isError
             ? "Error loading location"
-            : locationInvalid && "Cannot find location"}
-        </div>
-      </div>
+            : locationInvalid
+              ? "Cannot find location"
+              : undefined
+        }
+      />
 
       <div className="form-item grow">
         <label>Map view</label>
