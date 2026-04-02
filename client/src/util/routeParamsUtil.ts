@@ -108,7 +108,6 @@ const validatePlantName = (
   return null;
 };
 
-// TODO: actually validate the filter types
 const validatePlantFilterParam = (
   params: Record<string, unknown>,
 ): { plantFilter?: PlantDataFilter } => {
