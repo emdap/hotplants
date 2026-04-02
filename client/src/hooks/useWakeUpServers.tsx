@@ -6,7 +6,7 @@ const BASE_URLS: Record<ServerKey, string> = {
   hotplants: import.meta.env.VITE_HOTPLANTS_URL,
 };
 const WAKE_UP_INTERVAL_MS = 1000;
-const KEEP_ALIVE_INTERVAL_MS = 180 * 1000; // 3 minutes
+const KEEP_ALIVE_INTERVAL_MS = 180 * 2000; // 2 minutes
 const MAX_CHECKS = 20;
 
 export const useWakeUpServers = () => {
