@@ -2,7 +2,7 @@ import classNames from "classnames";
 import PlantAnimation from "components/PlantAnimation";
 import ActivePlantPane from "components/plantResults/ActivePlantPane";
 import PlantList from "components/plantResults/PlantList";
-import PlantSearchForm from "components/plantSearch/PlantSearchForm";
+import PlantSearchForm from "components/plantSearch/PlantSearchFormSidebar";
 import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
 import SearchRecordProgressBar from "components/searchHistory/SearchRecordProgressBar";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
