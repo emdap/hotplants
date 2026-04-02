@@ -119,7 +119,7 @@ const PlantFilterForm = ({
       clearButtonProps={{
         disabled: !plantFilter,
         onClick: clearFilter,
-        children: "Reset",
+        children: "Clear",
       }}
     />
   );

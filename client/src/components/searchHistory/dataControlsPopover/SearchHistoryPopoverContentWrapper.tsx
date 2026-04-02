@@ -30,7 +30,7 @@ const SearchHistoryPopoverContentWrapper = ({
         disabled={!hasData}
         onClick={() => applyParams({ [paramType]: undefined })}
       >
-        Reset
+        Clear
       </Button>
       <Button variant="secondary" size="small" onClick={close}>
         Close
