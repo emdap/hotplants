@@ -1,4 +1,3 @@
-import { NetworkStatus } from "@apollo/client";
 import { hotplantsClient } from "config/hotplantsConfig";
 import { QueryPlantSearchArgs } from "generated/graphql/graphql";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
@@ -72,12 +71,6 @@ const usePlantSearchQueries = (
     setSearchStatus((prev) =>
       prev === "SCRAPING_AND_POLLING" ? prev : "CHECKING_STATUS",
     );
-
-  useEffect(() => {
-    plantSearchQuery.loading &&
-      plantSearchQuery.networkStatus !== NetworkStatus.fetchMore &&
-      setStatusFromRunningQuery();
-  }, [plantSearchQuery.loading, plantSearchQuery.networkStatus]);
 
   const searchRecordQuery = useReactQuery({
     queryKey: ["search-record", location, plantName],
