@@ -28,7 +28,6 @@ export type ButtonProps = {
   size?: Exclude<keyof typeof BUTTON_SIZES, "icon">;
   isLoading?: boolean;
   disableOnLoading?: boolean;
-  linkAddress?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const getClasses = (props: ButtonProps) => {
@@ -83,7 +82,6 @@ const Button = ({
   variant = "primary",
   size = "default",
   isLoading,
-  linkAddress,
   className,
   children,
   icon,
@@ -99,7 +97,6 @@ const Button = ({
       className={getClasses({
         variant,
         size,
-        linkAddress,
         className,
         isLoading,
         disabled: isDisabled,
