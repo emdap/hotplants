@@ -1,39 +1,22 @@
 import { useNavigate } from "@tanstack/react-router";
+import CreateGardenModal from "components/garden/CreateGardenModal";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
-import { CREATE_GARDEN, GET_ALL_GARDENS } from "graphqlHelpers/gardenQueries";
-import { useApolloMutation, useApolloQuery } from "hooks/useQuery";
+import { GET_ALL_GARDENS } from "graphqlHelpers/gardenQueries";
+import { useApolloQuery } from "hooks/useQuery";
 import pluralize from "pluralize";
-import { toast } from "sonner";
-import { handleGraphQlError } from "util/generalUtil";
-import { defaultErrorToast } from "util/toastUtil";
+import { useState } from "react";
 
 const UserGardens = () => {
   const navigate = useNavigate();
+  const [showCreateGardenModal, setShowCreateGardenModal] = useState(false);
 
   const userGardensQuery = useApolloQuery(GET_ALL_GARDENS, {
     fetchPolicy: "cache-and-network",
   });
   const allUserGardens = userGardensQuery.data?.allUserGardens;
-
-  const [createGarden, { loading: createGardenLoading }] =
-    useApolloMutation(CREATE_GARDEN);
-
-  const createGardenAndRefetch = async () => {
-    try {
-      const { data } = await createGarden();
-      if (data?.createGarden) {
-        toast.success(`Created new garden "${data.createGarden.gardenName}"`);
-        userGardensQuery.refetch();
-      } else {
-        defaultErrorToast();
-      }
-    } catch (error) {
-      handleGraphQlError(error);
-    }
-  };
 
   return (
     <main className="page-buffer page-container">
@@ -63,13 +46,16 @@ const UserGardens = () => {
           </Card>
         ))}
       </div>
-      <Button
-        className="w-fit"
-        isLoading={createGardenLoading}
-        onClick={createGardenAndRefetch}
-      >
+      <Button className="w-fit" onClick={() => setShowCreateGardenModal(true)}>
         Create a garden
       </Button>
+      <CreateGardenModal
+        isOpen={showCreateGardenModal}
+        onClose={(gardenCreated) => {
+          setShowCreateGardenModal(false);
+          gardenCreated && userGardensQuery.refetch();
+        }}
+      />
     </main>
   );
 };
