@@ -15,13 +15,24 @@ import { toast } from "sonner";
 import { handleGraphQlError } from "util/generalUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
 import { needsAuthenticationToast } from "util/toastUtil";
+import GoToGardenLink from "./GoToGardenLink";
 
-export const usePlantSearchActionList = (): PlantAction[] => {
+export const useAddToGardenActionList = (
+  excludeIds?: string[],
+): PlantAction[] => {
   const isSignedIn = useIsSignedIn();
 
-  const customGraphQlErrorHandler = (error: GraphQLFormattedError) => {
+  const customGraphQlErrorHandler = (
+    error: GraphQLFormattedError,
+    garden?: UserGarden,
+  ) => {
     if (error.extensions?.code === 400) {
-      toast.warning(error.message);
+      toast.warning(
+        <>
+          {error.message}
+          <GoToGardenLink gardenName={garden?.gardenName} />
+        </>,
+      );
     } else {
       toast.error(error.message);
     }
@@ -34,13 +45,18 @@ export const usePlantSearchActionList = (): PlantAction[] => {
       const { data } = await addToGardenMutation({
         variables: { plantId: plant._id, gardenId: garden?._id },
       });
+      const gardenName = data?.addToGarden?.gardenName;
 
       toast.success(
-        `Added "${getPlantDisplayNames(plant).title}" to "${data?.addToGarden ? data.addToGarden?.gardenName : "garden"}".`,
+        <>
+          Added "{getPlantDisplayNames(plant).title}" to "
+          {gardenName ?? "garden"}".`,
+          <GoToGardenLink gardenName={gardenName} />
+        </>,
       );
     } catch (error) {
       handleGraphQlError(error, {
-        customErrorHandler: customGraphQlErrorHandler,
+        customErrorHandler: (data) => customGraphQlErrorHandler(data, garden),
       });
     }
   };
@@ -73,10 +89,19 @@ export const usePlantSearchActionList = (): PlantAction[] => {
   });
 
   const gardenActions = userGardensQuery.data?.allUserGardens?.length
-    ? userGardensQuery.data.allUserGardens.map(addToGardenAction)
+    ? userGardensQuery.data.allUserGardens.reduce<PlantAction[]>(
+        (prev, cur) => {
+          if (excludeIds?.includes(cur._id)) {
+            return prev;
+          }
+          prev.push(addToGardenAction(cur));
+          return prev;
+        },
+        [],
+      )
     : [addToGardenAction()];
 
   return gardenActions;
 };
 
-export default usePlantSearchActionList;
+export default useAddToGardenActionList;

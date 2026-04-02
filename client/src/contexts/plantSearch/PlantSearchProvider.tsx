@@ -8,7 +8,7 @@ import {
   PlantSearchContextType,
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
-import usePlantSearchActionList from "hooks/plantActionLists/usePlantSearchActionList";
+import useAddToGardenActionList from "hooks/plantActionLists/useAddToGardenActionList";
 import usePlantSearchQueries, {
   DEFAULT_PAGE_SIZE,
 } from "hooks/usePlantSearchQueries";
@@ -112,7 +112,7 @@ const PlantSearchProvider = () => {
     }
   };
 
-  const plantSearchActionList = usePlantSearchActionList();
+  const plantSearchActionList = useAddToGardenActionList();
 
   return (
     <PlantSearchContext.Provider

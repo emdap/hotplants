@@ -8,6 +8,7 @@ import { FaHeartBroken } from "react-icons/fa";
 import { toast } from "sonner";
 import { handleGraphQlError } from "util/generalUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
+import useAddToGardenActionList from "./useAddToGardenActionList";
 
 export const useGardenActionList = ({
   gardenId,
@@ -16,6 +17,8 @@ export const useGardenActionList = ({
   gardenId: string;
   refetchGarden: () => void;
 }): PlantAction[] => {
+  const addToGardenActions = useAddToGardenActionList([gardenId]);
+
   const [removeFromGardenMutation] = useApolloMutation(
     REMOVE_PLANT_FROM_GARDEN,
     {
@@ -46,6 +49,7 @@ export const useGardenActionList = ({
       Icon: FaHeartBroken,
       onClick: removeFromGarden,
     },
+    ...addToGardenActions,
   ];
 };
 
