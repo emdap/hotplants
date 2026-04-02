@@ -20,6 +20,7 @@ type Documents = {
     "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n      plantRefs {\n        _id\n      }\n    }\n  }\n": typeof types.GetGardenDocument,
     "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n    $where: PlantDataInput\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n      where: $where\n    ) {\n      count\n      results {\n        _id\n        ...GardenPlantFields\n      }\n    }\n  }\n": typeof types.GetGardenPlantsDocument,
     "\n  mutation createGarden($gardenName: String) {\n    createGarden(gardenName: $gardenName) {\n      gardenName\n    }\n  }\n": typeof types.CreateGardenDocument,
+    "\n  mutation deleteGarden($gardenId: String!) {\n    deleteGarden(gardenId: $gardenId)\n  }\n": typeof types.DeleteGardenDocument,
     "\n  mutation addPlant($plantId: String!, $gardenId: String) {\n    addToGarden(plantId: $plantId, gardenId: $gardenId) {\n      ...GardenFields\n    }\n  }\n": typeof types.AddPlantDocument,
     "\n  mutation updateGardenPlant(\n    $gardenId: String!\n    $plantId: String!\n    $customThumbnailUrl: String\n    $notes: String\n  ) {\n    updateGardenPlant(\n      gardenId: $gardenId\n      plantId: $plantId\n      customThumbnailUrl: $customThumbnailUrl\n      notes: $notes\n    ) {\n      _id\n    }\n  }\n": typeof types.UpdateGardenPlantDocument,
     "\n  mutation removePlant($gardenId: String!, $plantId: String!) {\n    removeFromGarden(gardenId: $gardenId, plantId: $plantId) {\n      ...GardenFields\n    }\n  }\n": typeof types.RemovePlantDocument,
@@ -37,6 +38,7 @@ const documents: Documents = {
     "\n  query getGarden($gardenId: String, $gardenName: String) {\n    userGarden(gardenId: $gardenId, gardenName: $gardenName) {\n      _id\n      gardenName\n      plantCount\n      gardenThumbnailUrl\n      plantRefs {\n        _id\n      }\n    }\n  }\n": types.GetGardenDocument,
     "\n  query getGardenPlants(\n    $gardenId: String!\n    $limit: Int\n    $offset: Int\n    $sort: [PlantSortInput!]\n    $where: PlantDataInput\n  ) {\n    userGardenPlants(\n      gardenId: $gardenId\n      limit: $limit\n      offset: $offset\n      sort: $sort\n      where: $where\n    ) {\n      count\n      results {\n        _id\n        ...GardenPlantFields\n      }\n    }\n  }\n": types.GetGardenPlantsDocument,
     "\n  mutation createGarden($gardenName: String) {\n    createGarden(gardenName: $gardenName) {\n      gardenName\n    }\n  }\n": types.CreateGardenDocument,
+    "\n  mutation deleteGarden($gardenId: String!) {\n    deleteGarden(gardenId: $gardenId)\n  }\n": types.DeleteGardenDocument,
     "\n  mutation addPlant($plantId: String!, $gardenId: String) {\n    addToGarden(plantId: $plantId, gardenId: $gardenId) {\n      ...GardenFields\n    }\n  }\n": types.AddPlantDocument,
     "\n  mutation updateGardenPlant(\n    $gardenId: String!\n    $plantId: String!\n    $customThumbnailUrl: String\n    $notes: String\n  ) {\n    updateGardenPlant(\n      gardenId: $gardenId\n      plantId: $plantId\n      customThumbnailUrl: $customThumbnailUrl\n      notes: $notes\n    ) {\n      _id\n    }\n  }\n": types.UpdateGardenPlantDocument,
     "\n  mutation removePlant($gardenId: String!, $plantId: String!) {\n    removeFromGarden(gardenId: $gardenId, plantId: $plantId) {\n      ...GardenFields\n    }\n  }\n": types.RemovePlantDocument,
@@ -86,6 +88,10 @@ export function graphql(source: "\n  query getGardenPlants(\n    $gardenId: Stri
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation createGarden($gardenName: String) {\n    createGarden(gardenName: $gardenName) {\n      gardenName\n    }\n  }\n"): (typeof documents)["\n  mutation createGarden($gardenName: String) {\n    createGarden(gardenName: $gardenName) {\n      gardenName\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation deleteGarden($gardenId: String!) {\n    deleteGarden(gardenId: $gardenId)\n  }\n"): (typeof documents)["\n  mutation deleteGarden($gardenId: String!) {\n    deleteGarden(gardenId: $gardenId)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -78,6 +78,12 @@ export const CREATE_GARDEN = graphql(`
   }
 `);
 
+export const DELETE_GARDEN = graphql(`
+  mutation deleteGarden($gardenId: String!) {
+    deleteGarden(gardenId: $gardenId)
+  }
+`);
+
 export const ADD_PLANT_TO_GARDEN = graphql(`
   mutation addPlant($plantId: String!, $gardenId: String) {
     addToGarden(plantId: $plantId, gardenId: $gardenId) {

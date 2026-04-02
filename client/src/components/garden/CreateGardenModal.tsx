@@ -37,12 +37,14 @@ const CreateGardenModal = ({
     }
   };
 
+  const disableSubmit = !gardenName || loading;
+
   return (
     <Modal title="Create new garden" isOpen={isOpen} onClose={() => onClose()}>
       <Form
         className="space-y-8 mt-4"
         onSubmit={createGardenAndRefetch}
-        disabled={!gardenName || loading}
+        disabled={disableSubmit}
       >
         <InputField
           id="garden-name"
@@ -53,7 +55,7 @@ const CreateGardenModal = ({
           isError={!!error}
           errorText={error?.message}
         />
-        <Button isLoading={loading} type="submit">
+        <Button isLoading={loading} type="submit" disabled={disableSubmit}>
           Submit
         </Button>
       </Form>

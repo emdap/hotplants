@@ -6,6 +6,7 @@ export type ButtonVariant =
   | "primary"
   | "accent"
   | "secondary"
+  | "danger"
   | "text"
   | "text-primary"
   | "icon-primary"
@@ -52,6 +53,8 @@ const getClasses = (props: ButtonProps) => {
         props.variant === "accent",
       "bg-secondary/80 enabled:hover:bg-secondary outline-secondary":
         props.variant === "secondary",
+      "bg-red-700/80 enabled:hover:bg-red-700 outline-red-700":
+        props.variant === "danger",
 
       "bg-primary enabled:hover:bg-primary-faded text-white outline-primary/50":
         props.variant === "icon-primary",

@@ -44,6 +44,7 @@ enum LocationSource {
 type Mutation {
   addToGarden(gardenId: String, plantId: String!): UserGarden
   createGarden(gardenName: String): UserGarden
+  deleteGarden(gardenId: String!): Boolean!
   removeFromGarden(gardenId: String!, plantId: String!): UserGarden
   replaceWithProxyUrl(occurrenceId: Float!, plantId: String!, replaceUrl: String!): String
   updateGardenPlant(customThumbnailUrl: String, gardenId: String!, notes: String, plantId: String!): UserGarden
