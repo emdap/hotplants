@@ -112,7 +112,6 @@ const validatePlantFilterParam = (
   params: Record<string, unknown>,
 ): { plantFilter?: PlantDataFilter } => {
   if ("plantFilter" in params && typeof params.plantFilter === "object") {
-    console.log("validate", params);
     const validatedFilters = validatePlantFilters(
       params.plantFilter as PlantDataFilter,
     );

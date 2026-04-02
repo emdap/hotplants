@@ -145,7 +145,6 @@ const validateSelectFilterValue = (
     if (inputType === "select-boolean") {
       return typeof value === "boolean";
     } else if (["select-color", "select-string"].includes(inputType)) {
-      console.log(value);
       return typeof value === "string";
     } else if (inputType === "select-number") {
       const numberValue = Number(value);
