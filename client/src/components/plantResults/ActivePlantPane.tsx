@@ -127,7 +127,7 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
         <Card
           key="plant-pane"
           className={classNames(
-            "rounded-r-none py-2 px-safe-2 h-full fixed top-0 z-30",
+            "rounded-r-none py-2 px-safe-2 h-full fixed top-0 z-40",
             "backdrop-blur-2xl small-screen:rounded-l-none small-screen:w-full",
             "small-screen:w-full big-screen:w-4/7 big-screen:max-w-5xl",
             "flex flex-col overflow-hidden",
