@@ -1,9 +1,9 @@
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
 import SearchRecordCard from "components/searchHistory/SearchRecordCard";
-import SearchHistoryFilterPopover from "components/searchHistory/dataControlsPopover/SearchHistoryFilterPopover";
-import SearchHistorySortPopover from "components/searchHistory/dataControlsPopover/SearchHistorySortPopover";
-import { parseFilterParams } from "components/searchHistory/searchHistoryDataUtil";
+import SearchHistoryFilterPopover from "components/searchHistory/searchHistoryDataControls/SearchHistoryFilterPopover";
+import SearchHistorySortPopover from "components/searchHistory/searchHistoryDataControls/SearchHistorySortPopover";
+import { parseFilterParams } from "components/searchHistory/searchHistoryDataControls/searchHistoryDataUtil";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import LoadingOverlay from "designSystem/LoadingOverlay";

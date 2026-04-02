@@ -4,7 +4,7 @@ import {
   POPOVER_LABELS,
   SearchHistoryParamType,
   SearchHistoryPopoverProps,
-} from "../searchHistoryDataUtil";
+} from "./searchHistoryDataUtil";
 
 export type SearchHistoryPopoverContentWrapperProps = {
   paramType: SearchHistoryParamType;

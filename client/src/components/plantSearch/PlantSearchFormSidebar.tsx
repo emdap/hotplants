@@ -1,4 +1,6 @@
 import classNames from "classnames";
+import PlantLocationForm from "components/plantDataControls/plantLocation/PlantLocationForm";
+import PlantNameForm from "components/plantDataControls/plantName/PlantNameForm";
 import {
   SearchFormTab,
   usePlantSearchContext,
@@ -16,10 +18,11 @@ import {
 import { useMount } from "react-use";
 import { Entries } from "type-fest";
 import { isSmallScreen } from "util/generalUtil";
-import PlantFilterForm from "./plantFilters/PlantFilterForm";
-import PlantLocationForm from "./plantLocation/PlantLocationForm";
-import PlantNameForm from "./plantName/PlantNameForm";
-import { PLANT_FORM_TITLES, PlantSearchFormProps } from "./plantSearchFormUtil";
+import PlantFilterForm from "../plantDataControls/plantFilters/PlantFilterForm";
+import {
+  PLANT_FORM_TITLES,
+  PlantSearchFormProps,
+} from "../plantDataControls/plantSearchFormUtil";
 
 const PLANT_FORM_COMPONENTS: Record<
   SearchFormTab,

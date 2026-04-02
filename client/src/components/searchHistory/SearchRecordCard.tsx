@@ -1,8 +1,8 @@
 import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
+import { PLANT_NAME_FIELDS } from "components/plantDataControls/plantSearchFormUtil";
 import PlantOccurrenceImage from "components/plantResults/PlantOccurrenceImage";
-import { PLANT_NAME_FIELDS } from "components/plantSearch/plantSearchFormUtil";
 import { format } from "date-fns";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";

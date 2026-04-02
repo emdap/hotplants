@@ -1,12 +1,12 @@
 import classNames from "classnames";
 import FilterInput from "components/dataControls/FilterInputField";
-import PlantSearchFormFooter from "components/plantSearch/PlantSearchFormFooter";
+import PlantSearchFormFooter from "components/plantDataControls/PlantDataFormFooter";
 import {
   DEFAULT_PLANT_NAME_FIELDS,
   PLANT_FORM_TITLES,
   PLANT_NAME_FIELDS,
   PlantSearchFormProps,
-} from "components/plantSearch/plantSearchFormUtil";
+} from "components/plantDataControls/plantSearchFormUtil";
 import { OptionalSearchParamKey, PlantNameParam } from "config/hotplantsConfig";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";

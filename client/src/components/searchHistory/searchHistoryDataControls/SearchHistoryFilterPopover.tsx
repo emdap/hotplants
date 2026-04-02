@@ -11,7 +11,7 @@ import {
   SEARCH_HISTORY_FILTER_DICT,
   SearchHistoryPopoverProps,
   USER_SEARCH_HISTORY_FILTER,
-} from "../searchHistoryDataUtil";
+} from "./searchHistoryDataUtil";
 import SearchHistoryPopoverContentWrapper from "./SearchHistoryPopoverContentWrapper";
 
 const SearchHistoryFilterPopover = ({

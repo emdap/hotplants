@@ -1,6 +1,6 @@
 import SortInputs from "components/dataControls/SortInputs";
-import StyledPopover from "designSystem/StyledPopover";
 import SortButton from "designSystem/iconButtons/SortButton";
+import StyledPopover from "designSystem/StyledPopover";
 import { isEqual } from "lodash";
 import {
   DEFAULT_SEARCH_HISTORY_ROUTE_PARAMS,
@@ -10,7 +10,7 @@ import {
   POPOVER_LABELS,
   SEARCH_RECORD_SORT_LIST,
   SearchHistoryPopoverProps,
-} from "../searchHistoryDataUtil";
+} from "./searchHistoryDataUtil";
 import SearchHistoryPopoverContentWrapper from "./SearchHistoryPopoverContentWrapper";
 
 const SearchHistorySortPopover = ({

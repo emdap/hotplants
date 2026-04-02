@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
-import PlantLocationOpenButton from "components/plantSearch/plantLocation/PlantLocationOpenButton";
-import PlantNameOpenButton from "components/plantSearch/plantName/PlantNameOpenButton";
+import PlantLocationOpenButton from "components/plantDataControls/plantLocation/PlantLocationOpenButton";
+import PlantNameOpenButton from "components/plantDataControls/plantName/PlantNameOpenButton";
 import {
   SearchFormTab,
   usePlantSearchContext,
@@ -9,7 +9,7 @@ import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelection
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
-import PlantFilterOpenButton from "./plantFilters/PlantFilterOpenButton";
+import PlantFilterOpenButton from "../plantDataControls/plantFilters/PlantFilterOpenButton";
 
 const PlantSearchHeader = () => {
   const navigate = useNavigate();

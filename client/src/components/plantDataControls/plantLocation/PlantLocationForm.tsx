@@ -1,10 +1,10 @@
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
-import PlantSearchFormFooter from "components/plantSearch/PlantSearchFormFooter";
+import PlantSearchFormFooter from "components/plantDataControls/PlantDataFormFooter";
 import {
   PLANT_FORM_TITLES,
   PlantSearchFormProps,
-} from "components/plantSearch/plantSearchFormUtil";
+} from "components/plantDataControls/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import Card from "designSystem/Card";
 import { useReactQuery } from "hooks/useQuery";

@@ -1,5 +1,5 @@
 import { useSearch } from "@tanstack/react-router";
-import { PLANT_FORM_TITLES } from "components/plantSearch/plantSearchFormUtil";
+import { PLANT_FORM_TITLES } from "components/plantDataControls/plantSearchFormUtil";
 import { PlantNameParam } from "config/hotplantsConfig";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import IconButton from "designSystem/iconButtons/IconButton";
