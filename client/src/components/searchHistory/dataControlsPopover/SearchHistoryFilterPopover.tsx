@@ -1,6 +1,6 @@
 import FilterInput from "components/dataControls/FilterInputField";
 import { getOrderedFilterEntries } from "components/dataControls/filterUtil";
-import { useIsSignedIn } from "config/authClient";
+import { useIsSignedIn } from "config/authConfig";
 import FilterButton from "designSystem/iconButtons/FilterButton";
 import StyledPopover from "designSystem/StyledPopover";
 import { useEffect, useMemo } from "react";

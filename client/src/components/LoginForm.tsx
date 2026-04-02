@@ -4,7 +4,7 @@ import {
   LoginParams,
   SignupParams,
   useAuthSession,
-} from "config/authClient";
+} from "config/authConfig";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import { capitalize } from "lodash";

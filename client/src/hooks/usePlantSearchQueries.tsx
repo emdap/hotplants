@@ -1,9 +1,8 @@
 import { NetworkStatus } from "@apollo/client";
+import { hotplantsClient } from "config/hotplantsConfig";
 import { QueryPlantSearchArgs } from "generated/graphql/graphql";
-import { paths } from "generated/schemas/hotplants";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
-import createClient from "openapi-fetch";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { PlantDataFilter, PlantSearchParams } from "util/customSchemaTypes";
@@ -26,11 +25,6 @@ const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
     { field: "scientificName", value: 1 },
   ],
 };
-
-export const hotplantsClient = createClient<paths>({
-  baseUrl: `${import.meta.env.VITE_PROXY_SERVER_URL}/api`,
-  credentials: "include",
-});
 
 const usePlantSearchQueries = (
   { location, plantName }: PlantSearchParams,

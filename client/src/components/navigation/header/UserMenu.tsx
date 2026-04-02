@@ -1,4 +1,4 @@
-import { useAuthSession } from "config/authClient";
+import { useAuthSession } from "config/authConfig";
 import { useAppContext } from "contexts/AppContext";
 import Button from "designSystem/Button";
 import StyledMenu, { MenuItemData } from "designSystem/StyledMenu";

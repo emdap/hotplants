@@ -3,7 +3,7 @@ import {
   Link,
   retainSearchParams,
 } from "@tanstack/react-router";
-import { authClient, useAuthSession } from "config/authClient";
+import { authClient, useAuthSession } from "config/authConfig";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";

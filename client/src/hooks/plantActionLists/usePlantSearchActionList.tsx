@@ -1,4 +1,4 @@
-import { useIsSignedIn } from "config/authClient";
+import { useIsSignedIn } from "config/authConfig";
 import {
   PlantAction,
   PlantResult,

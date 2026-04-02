@@ -4,7 +4,7 @@ import { Outlet } from "@tanstack/react-router";
 import AppSidebar from "components/navigation/AppSidebar";
 import AppHeader from "components/navigation/header/AppHeader";
 import { apolloClient, setApolloReady } from "config/apolloConfig";
-import { authClient } from "config/authClient";
+import { authClient } from "config/authConfig";
 import { AppContext } from "contexts/AppContext";
 import { useDarkMode } from "designSystem/darkMode/DarkModeContext";
 import { useWakeUpServers } from "hooks/useWakeUpServers";
