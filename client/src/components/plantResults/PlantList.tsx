@@ -50,7 +50,8 @@ const PlantList = ({
         className,
       )}
       style={{
-        gridTemplateColumns: `repeat(auto-fit, ${shrinkCols || plantList.length <= 3 ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
+        gridTemplateColumns: `repeat(auto-fit, ${shrinkCols ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
+        maxWidth: plantList.length < 4 ? plantList.length * 400 : undefined,
       }}
     >
       {plantList.map((plant) => (
