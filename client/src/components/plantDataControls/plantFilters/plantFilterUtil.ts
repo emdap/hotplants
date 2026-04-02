@@ -2,6 +2,7 @@ import {
   FilterDict,
   FilterInputConfig,
   NON_SPECIFIED_OPTION,
+  validateFilterValue,
 } from "components/dataControls/filterUtil";
 import { PlantArrayValues } from "config/hotplantsConfig";
 import { ComplexListboxOption } from "designSystem/listbox/listboxUtil";
@@ -62,7 +63,7 @@ export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
     },
   };
 
-export const STATIC_FILTER_DICT: FilterDict = {
+export const STATIC_FILTER_DICT: FilterDict<PlantFilterKey> = {
   scientificName: {
     dataKey: "scientificName",
     label: "Scientific name contains",
@@ -109,6 +110,31 @@ export const STATIC_FILTER_DICT: FilterDict = {
     minValue: 0,
     order: 3,
   },
+};
+
+const COMPLETE_FILTER_DICT = { ...DYNAMIC_FILTER_DICT, ...STATIC_FILTER_DICT };
+
+export const validatePlantFilters = (rawFilters: Record<string, unknown>) => {
+  const validatedFilters = Object.entries(rawFilters).reduce<PlantDataFilter>(
+    (prev, [key, value]) => {
+      if (key in COMPLETE_FILTER_DICT) {
+        const typesafeKey = key as PlantFilterKey;
+        const filterConfig = COMPLETE_FILTER_DICT[typesafeKey];
+
+        if (
+          filterConfig &&
+          validateFilterValue(filterConfig.inputType, value)
+        ) {
+          return { ...prev, [typesafeKey]: value };
+        }
+      }
+
+      return prev;
+    },
+    {},
+  );
+
+  return Object.keys(validatedFilters).length ? validatedFilters : undefined;
 };
 
 export const constructDynamicFilters = (filterValues: PlantArrayValues) =>

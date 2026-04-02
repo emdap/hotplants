@@ -125,3 +125,63 @@ export type ValueNumberKey = keyof Pick<
   PlantSizeRangeInput,
   `${ValuePrefix}Amount`
 >;
+
+const validateSelectFilterValue = (
+  inputType: SelectInputType,
+  value: FilterValue | unknown,
+): boolean => {
+  if (value && typeof value === "object" && "value" in value) {
+    if (
+      "matchAll" in value &&
+      value.matchAll !== undefined &&
+      typeof value.matchAll !== "boolean"
+    ) {
+      return false;
+    } else if (Array.isArray(value.value)) {
+      return validateFilterValue(inputType, value.value);
+    }
+    return false;
+  } else if (!Array.isArray(value)) {
+    if (inputType === "select-boolean") {
+      return typeof value === "boolean";
+    } else if (["select-color", "select-string"].includes(inputType)) {
+      console.log(value);
+      return typeof value === "string";
+    } else if (inputType === "select-number") {
+      const numberValue = Number(value);
+      return !isNaN(numberValue);
+    }
+    return false;
+  } else if (Array.isArray(value)) {
+    return value.every((val) => validateFilterValue(inputType, val));
+  }
+
+  return false;
+};
+
+export const validateFilterValue = (
+  inputType: FilterInputType,
+  value: FilterValue | unknown,
+) => {
+  if (inputType === "checkbox") {
+    return typeof value === "boolean";
+  } else if (inputType === "text") {
+    return typeof value === "string";
+  } else if (inputType.includes("select")) {
+    return validateSelectFilterValue(inputType as SelectInputType, value);
+  } else if (inputType === "range" && value && typeof value === "object") {
+    const amount =
+      "minAmount" in value
+        ? value.minAmount
+        : "maxAmount" in value
+          ? value.maxAmount
+          : null;
+    return (
+      "unit" in value &&
+      (PLANT_SIZE_UNITS as unknown[]).includes(value.unit) &&
+      amount !== null
+    );
+  }
+
+  return false;
+};

@@ -1,4 +1,5 @@
 import { polygon } from "@turf/turf";
+import { validatePlantFilters } from "components/plantDataControls/plantFilters/plantFilterUtil";
 import {
   PlantLocationParams,
   PlantNameParam,
@@ -108,13 +109,17 @@ const validatePlantName = (
 };
 
 // TODO: actually validate the filter types
-const validatePlantFilter = (
+const validatePlantFilterParam = (
   params: Record<string, unknown>,
-): { plantFilter: PlantDataFilter } | null => {
+): { plantFilter?: PlantDataFilter } => {
   if ("plantFilter" in params && typeof params.plantFilter === "object") {
-    return { plantFilter: params.plantFilter as PlantDataFilter };
+    console.log("validate", params);
+    const validatedFilters = validatePlantFilters(
+      params.plantFilter as PlantDataFilter,
+    );
+    return { plantFilter: validatedFilters };
   }
-  return null;
+  return { plantFilter: undefined };
 };
 
 const getNumParamValue = (param?: unknown) => {
@@ -124,16 +129,21 @@ const getNumParamValue = (param?: unknown) => {
 
 export const validatePaginationParams = (
   params: Record<string, unknown>,
-): PaginationParams => ({
-  page: getNumParamValue(params.page),
-  pageSize: getNumParamValue(params.pageSize),
-});
+): PaginationParams => {
+  const page = getNumParamValue(params.page);
+  const pageSize = getNumParamValue(params.pageSize);
+
+  return {
+    ...(page && { page }),
+    ...(pageSize && { pageSize }),
+  };
+};
 
 export const validatePlantSearchParams = (
   params: Record<string, unknown>,
 ): PlantSearchRouteParams => ({
   ...validatePaginationParams(params),
-  ...validatePlantFilter(params),
+  ...validatePlantFilterParam(params),
   ...validateLocation(params),
   ...validatePlantName(params),
 });
@@ -174,12 +184,16 @@ const validateSearchRecordSort = (
 
 export const validateSearchHistoryParams = (
   params: Record<string, string>,
-): SearchHistoryParams => ({
-  lastOpened: validateString(params.lastOpened),
-  ...validateSearchRecordFilter(params),
-  ...validateSearchRecordSort(params),
-  ...validatePaginationParams(params),
-});
+): SearchHistoryParams => {
+  const lastOpened = validateString(params.lastOpened);
+
+  return {
+    ...(lastOpened && { lastOpened }),
+    ...validateSearchRecordFilter(params),
+    ...validateSearchRecordSort(params),
+    ...validatePaginationParams(params),
+  };
+};
 
 type GardenParams = Pick<PlantSearchRouteParams, "plantFilter"> &
   PaginationParams;
@@ -187,5 +201,5 @@ export const validateGardenParams = (
   params: Record<string, unknown>,
 ): GardenParams => ({
   ...validatePaginationParams(params),
-  ...validatePlantFilter(params),
+  ...validatePlantFilterParam(params),
 });
