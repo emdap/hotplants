@@ -9,7 +9,6 @@ import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
-import LoadingIcon from "designSystem/LoadingIcon";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
@@ -69,6 +68,11 @@ const PlantSearch = ({
     scrollContainerElement,
   ]);
 
+  const showLoader =
+    (loading || (isInfiniteScroll && hasNextPage)) && searchStatus === "READY";
+  const showPlantAnimation =
+    searchStatus !== "READY" || (!loading && !hasNextPage);
+
   return (
     <main className="w-full h-full">
       {!page && <ScrollAnchor id="plant" className="absolute top-0" />}
@@ -95,57 +99,50 @@ const PlantSearch = ({
             })}
           />
 
-          <LoadingOverlay
-            transparent
-            show={
-              !isInfiniteScroll &&
-              searchStatus !== "SCRAPING_AND_POLLING" &&
-              page > 1 &&
-              loading
-            }
-          />
-
           <ActivePlantPane />
 
-          {hasNextPage &&
-          searchStatus !== "CHECKING_STATUS" &&
-          isInfiniteScroll ? (
-            // Show loading icon when next results are loading in infinite scroll
-            <div className="pb-4 mx-auto -mt-10 mb-10">
-              <LoadingIcon size={25} className="text-white" />
-            </div>
-          ) : (
-            (isInfiniteScroll || !hasNextPage) && (
-              <div className="flex flex-col gap-8 my-auto overflow-hidden">
-                <PlantAnimation
-                  queryStatus={searchStatus}
-                  // isInitialSearch={!searchRecordQuery}
-                  hasCurrentResults={hasCurrentResults}
-                />
-                {searchRecordQuery.data && (
-                  <Card
-                    className={classNames(
-                      "mx-auto flex flex-col items-center gap-6 transition-opacity",
-                      searchStatus === "READY"
-                        ? "opacity-100"
-                        : "opacity-0 pointer-events-none",
-                    )}
-                  >
-                    <SearchRecordProgressBar
-                      hideTitle
-                      {...searchRecordQuery.data}
-                      totalGraphQlResults={totalItems}
-                    />
+          <LoadingOverlay
+            className={classNames(
+              "grow h-full min-h-[unset]! small-screen:h-dvh-header-2",
+              {
+                "-mt-10 pb-10": isInfiniteScroll,
+              },
+            )}
+            iconSize={isInfiniteScroll ? 25 : undefined}
+            transparent
+            show={showLoader}
+          />
 
-                    {searchRecordQuery.data.status === "READY" && (
-                      <Button className="w-full" onClick={fetchMorePlants}>
-                        Gather more data
-                      </Button>
-                    )}
-                  </Card>
-                )}
-              </div>
-            )
+          {showPlantAnimation && (
+            <div className="flex flex-col gap-8 my-auto overflow-hidden">
+              <PlantAnimation
+                queryStatus={searchStatus}
+                // isInitialSearch={!searchRecordQuery}
+                hasCurrentResults={hasCurrentResults}
+              />
+              {searchRecordQuery.data && (
+                <Card
+                  className={classNames(
+                    "mx-auto flex flex-col items-center gap-6 transition-opacity",
+                    searchStatus === "READY"
+                      ? "opacity-100"
+                      : "opacity-0 pointer-events-none",
+                  )}
+                >
+                  <SearchRecordProgressBar
+                    hideTitle
+                    {...searchRecordQuery.data}
+                    totalGraphQlResults={totalItems}
+                  />
+
+                  {searchRecordQuery.data.status === "READY" && (
+                    <Button className="w-full" onClick={fetchMorePlants}>
+                      Gather more data
+                    </Button>
+                  )}
+                </Card>
+              )}
+            </div>
           )}
         </div>
       </div>
