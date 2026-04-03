@@ -24,6 +24,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reverse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Generate an address from a coordinate given as latitude and longitude
+         * @description The reverse geocoding API returns exactly one result or an error when the coordinate is in an area with no OSM data coverage. It does not exactly compute the address for the coordinate it receives. It works by finding the closest suitable OSM object and returning its address information. This may occasionally lead to unexpected results. First of all, Nominatim only includes OSM objects in its index that are suitable for searching. Small, unnamed paths for example are missing from the database and can therefore not be used for reverse geocoding either. The other issue to be aware of is that the closest OSM object may not always have a similar enough address to the coordinate you were requesting. For example, in dense city areas it may belong to a completely different street.
+         */
+        get: operations["reverse"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -454,6 +474,61 @@ export interface operations {
                 /** @description Sometimes you have several objects in OSM identifying the same place or object in reality. The simplest case is a street being split into many different OSM ways due to different characteristics. Nominatim will attempt to detect such duplicates and only return one match unless this parameter is set to 0. If not specified, it is equal to `0`. */
                 dedupe?: number;
                 /** @description Output assorted developer debug information. Data on internals of Nominatim's Search Loop logic, and SQL queries. The output is (rough) HTML format. This overrides the specified machine readable format. If not specified, it is equal to `0`. */
+                debug?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OSMGeocodeJson"];
+                };
+            };
+        };
+    };
+    reverse: {
+        parameters: {
+            query?: {
+                /** @description Latitude of a coordinate in WGS84 projection. */
+                lat?: number;
+                /** @description Longitude of a coordinate in WGS84 projection. */
+                lon?: number;
+                /** @description Format of response. See [Place Output Formats](https://nominatim.org/release-docs/develop/api/Output/) for details on each format. If not specified, it is equal to `xml`. */
+                format?: "xml" | "json" | "jsonv2" | "geojson" | "geocodejson";
+                /** @description Wrap JSON output in a callback function (JSONP) i.e. <string>(<json>). Only has an effect for JSON output formats. */
+                json_callback?: string;
+                /** @description Include a breakdown of the address into elements. If not specified, it is equal to `1`. */
+                addressdetails?: number;
+                /** @description Include additional information in the result if available, e.g. wikipedia link, opening hours. If not specified, it is equal to `0`. */
+                extratags?: number;
+                /** @description Include a full list of names for the result. These may include language variants, older names, references and brand. If not specified, it is equal to `0`. */
+                namedetails?: number;
+                /** @description Preferred language order for showing search results. This may either be a simple comma-separated list of language codes or have the same format as the [Accept-Language HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language). If not specified, it is equal to the content of Accept-Language HTTP header (browsers send the currently chosen browser language, command-line tools usually don't send any Accept-Language header). */
+                "accept-language"?: string;
+                /** @description Level of detail required for the address. This is a number that corresponds roughly to the zoom level used in XYZ tile sources in frameworks like Leaflet.js, Openlayers etc. In terms of address details the zoom levels are as follows: 3) country, 5) state, 8) county, 10) city, 12) town / borough, 13) village / suburb, 14) neighbourhood, 15) any settlement, 16) major streets, 17) major and minor streets, 18) building. */
+                zoom?: number;
+                /** @description The layer filter allows to select places by themes, a comma-separated list of `address` (all places that make up an address: address points with house numbers, streets, inhabited places like suburbs, villages, cities, states, and administrative boundaries), `poi` (all points of interest like restaurants, shops, hotels but also less obvious features like recycling bins, guideposts or benches), `railway` (infrastructures like tracks), `natural` (feautures like rivers, lakes and mountains), `manmade` (catch-all for features not covered by the other layers). */
+                layer?: string;
+                /** @description Output geometry of results as a GeoJSON. */
+                polygon_geojson?: number;
+                /** @description Output geometry of results as a KML. */
+                polygon_kml?: number;
+                /** @description Output geometry of results as a SVG. */
+                polygon_svg?: number;
+                /** @description Output geometry of results as a WKT. */
+                polygon_text?: number;
+                /** @description When one of the polygon_* outputs is chosen, return a simplified version of the output geometry. The parameter is the tolerance in degrees with which the geometry may differ from the original geometry. Topology is preserved in the result. */
+                polygon_threshold?: number;
+                /** @description If you are making large numbers of request please include an appropriate email address to identify your requests. See Nominatim's [Usage Policy](https://operations.osmfoundation.org/policies/nominatim/) for more details. */
+                email?: string;
+                /** @description Output assorted developer debug information. Data on internals of Nominatim's Search Loop logic, and SQL queries. The output is (rough) HTML format. This overrides the specified machine readable format. */
                 debug?: number;
             };
             header?: never;

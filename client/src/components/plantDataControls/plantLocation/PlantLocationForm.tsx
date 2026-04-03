@@ -13,9 +13,11 @@ import { useReactQuery } from "hooks/useQuery";
 import { isEqual } from "lodash";
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
+import { toast } from "sonner";
 import {
   customLocationDisplay,
   lookupLocationInput,
+  reverseLookupLocation,
   validateNominatimLocation,
 } from "util/locationUtil";
 import StyledPlantForm from "../StyledPlantForm";
@@ -42,6 +44,8 @@ const PlantLocationForm = ({
   );
   const [debouncedInput, setDebouncedInput] = useState(searchInput);
   const [locationInvalid, setLocationInvalid] = useState(false);
+  const [useCurrentLocation, setUseCurrentLocation] =
+    useState<GeolocationCoordinates | null>(null);
 
   useDebounce(() => setDebouncedInput(searchInput), 1000, [searchInput]);
 
@@ -49,16 +53,60 @@ const PlantLocationForm = ({
     setLocationInvalid(false);
     setSearchInput("");
     setDebouncedInput("");
+    setUseCurrentLocation(null);
   };
 
   useEffect(() => {
     appliedLocation?.locationSource === "custom" && resetFormData();
   }, [appliedLocation?.locationSource]);
 
+  const toggleCurrentLocation = (enabled: boolean) => {
+    if (enabled) {
+      try {
+        navigator.geolocation.getCurrentPosition(
+          ({ coords }) => setUseCurrentLocation(coords),
+          () => setUseCurrentLocation(null),
+        );
+      } catch {
+        toast.warning(
+          "Getting current location is not supported by this browser.",
+        );
+      }
+    } else {
+      setUseCurrentLocation(null);
+    }
+  };
+
+  const reverseLookupQuery = useReactQuery({
+    queryKey: ["reverse-lookup", useCurrentLocation],
+    enabled: Boolean(useCurrentLocation),
+    retry: false,
+    queryFn: async () => {
+      setLocationInvalid(false);
+
+      if (useCurrentLocation) {
+        const validReverseLocation =
+          await reverseLookupLocation(useCurrentLocation);
+        if (validReverseLocation) {
+          updateSearchParamsDraft({ location: validReverseLocation });
+          setSearchInput(validReverseLocation.locationName);
+          setDebouncedInput(validReverseLocation.locationName);
+          return validReverseLocation;
+        } else {
+          setUseCurrentLocation(null);
+        }
+      }
+
+      return null;
+    },
+  });
+
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
     enabled: Boolean(
-      debouncedInput && appliedLocation?.locationName !== debouncedInput,
+      !useCurrentLocation &&
+      debouncedInput &&
+      searchParamsDraft?.location?.locationName !== debouncedInput,
     ),
     retry: false,
     queryFn: async () => {
@@ -82,12 +130,14 @@ const PlantLocationForm = ({
   useEffect(() => {
     setLocationPending(
       (searchInput && searchInput !== debouncedInput) ||
-        locationQuery.isLoading,
+        locationQuery.isLoading ||
+        reverseLookupQuery.isLoading,
     );
   }, [
     searchInput,
     debouncedInput,
     locationQuery.isLoading,
+    reverseLookupQuery.isLoading,
     setLocationPending,
   ]);
 
@@ -140,34 +190,44 @@ const PlantLocationForm = ({
       )}
 
       <InputField
-        id="search-location"
-        label="Location name"
-        value={searchInput}
-        className="flex-grow min-w-20"
-        onBlur={() => setDebouncedInput(searchInput)}
-        onKeyDown={handleKeyDown}
-        type="text"
-        onChange={(e) => setSearchInput(e.target.value)}
-        placeholder={
-          searchParamsDraft?.location?.locationSource === "custom"
-            ? customLocationDisplay(searchParamsDraft.location)
-            : "Enter Location"
-        }
-        isError={locationQuery.isError || locationInvalid}
-        errorText={
-          locationQuery.isError
-            ? "Error loading location"
-            : locationInvalid
-              ? "Cannot find location"
-              : undefined
-        }
+        id="use-current-location"
+        label="Use current location"
+        type="checkbox"
+        checked={Boolean(useCurrentLocation)}
+        onChange={({ target }) => toggleCurrentLocation(target.checked)}
       />
+
+      {!useCurrentLocation && (
+        <InputField
+          id="search-location"
+          label="Location name"
+          value={searchInput}
+          className="flex-grow min-w-20"
+          onBlur={() => setDebouncedInput(searchInput)}
+          onKeyDown={handleKeyDown}
+          type="text"
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder={
+            searchParamsDraft?.location?.locationSource === "custom"
+              ? customLocationDisplay(searchParamsDraft.location)
+              : "Enter Location"
+          }
+          isError={locationQuery.isError || locationInvalid}
+          errorText={
+            locationQuery.isError
+              ? "Error loading location"
+              : locationInvalid
+                ? "Cannot find location"
+                : undefined
+          }
+        />
+      )}
 
       <div className="form-item grow">
         <label>Map view</label>
         <MapProvider
           locationCustomizeable
-          isLoading={locationQuery.isLoading || locationQuery.isFetching}
+          isLoading={locationPending}
           locationParams={searchParamsDraft?.location}
           setLocationParams={(location) => {
             resetFormData();

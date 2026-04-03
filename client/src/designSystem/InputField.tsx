@@ -18,14 +18,18 @@ const InputField = ({
   isError?: boolean;
   errorText?: string;
 }) => (
-  <div className="form-item">
+  <div
+    className={classNames("form-item", {
+      "flex-row items-center": props.type === "checkbox",
+    })}
+  >
     <label htmlFor={id} className="max-w-fit">
       {label}
     </label>
     <input
       id={id}
       className={classNames(
-        "styled-input",
+        props.type === "checkbox" ? "styled-checkbox" : "styled-input",
         isError &&
           "dark:!border-red-700 ring-offset-red-500/70 !border-red-500",
         className,

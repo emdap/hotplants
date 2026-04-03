@@ -10,6 +10,7 @@ import {
   Position,
 } from "geojson";
 import createClient from "openapi-fetch";
+import { toast } from "sonner";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
@@ -18,14 +19,52 @@ const locationClient = createClient<paths>({
 type LocationData = Nominatim.components["schemas"]["OSMGeocodeJson"][number];
 export type LocationCoord = [number, number];
 
+const DEFAULT_QUERY_PARAMS = {
+  format: "json" as const,
+  polygon_geojson: 1,
+  polygon_threshold: 0.5,
+};
+
+export const reverseLookupLocation = async (coords: GeolocationCoordinates) => {
+  try {
+    const { data, error } = await locationClient.GET("/reverse", {
+      params: {
+        query: {
+          lat: coords.latitude,
+          lon: coords.longitude,
+          zoom: 5,
+          ...DEFAULT_QUERY_PARAMS,
+        },
+      },
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    const location = Array.isArray(data) ? data[0] : (data ?? {});
+    const validatedLocation = validateNominatimLocation(location);
+
+    if (!validatedLocation) {
+      throw { message: "Unable to use current location." };
+    }
+
+    return validatedLocation;
+  } catch (error) {
+    toast.error(
+      error && typeof error === "object" && "message" in error
+        ? String(error.message)
+        : `Unknown error occurred: ${String(error)}`,
+    );
+  }
+};
+
 export const lookupLocationInput = (input: string) =>
   locationClient.GET("/search", {
     params: {
       query: {
-        format: "json",
-        polygon_geojson: 1,
-        polygon_threshold: 0.5,
         q: input,
+        ...DEFAULT_QUERY_PARAMS,
       },
     },
   });
