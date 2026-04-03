@@ -12,10 +12,10 @@
 
 @utility styled-input {
   @apply px-2 h-8 text-base rounded-md;
-  @apply border-transparent outline-none ring-primary/50 ring-offset-1 ring-offset-primary;
+  @apply border-transparent outline-none ring-primary/50 focus:ring-offset-1 focus:ring-offset-primary;
   @apply autofill:shadow-[inset_0_0_0px_1000px_#e8f0fe];
 
-  @apply bg-secondary/20 dark:bg-white/10 focus:bg-secondary/10 dark:focus:bg-white/15;
+  @apply bg-secondary/20 focus:bg-secondary/10  dark:bg-white/10 not-focus:shadow-sm dark:focus:bg-white/15;
 
   field-sizing: fixed;
 

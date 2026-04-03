@@ -65,7 +65,12 @@ const PlantLocationForm = ({
       try {
         navigator.geolocation.getCurrentPosition(
           ({ coords }) => setUseCurrentLocation(coords),
-          () => setUseCurrentLocation(null),
+          () => {
+            toast.warning(
+              "Unable to get current location. Please check your location sharing settings.",
+            );
+            setUseCurrentLocation(null);
+          },
         );
       } catch {
         toast.warning(
@@ -189,40 +194,41 @@ const PlantLocationForm = ({
         <h2 className="text-center">{PLANT_FORM_TITLES.location}</h2>
       )}
 
-      <InputField
-        id="use-current-location"
-        label="Use current location"
-        type="checkbox"
-        checked={Boolean(useCurrentLocation)}
-        onChange={({ target }) => toggleCurrentLocation(target.checked)}
-      />
-
-      {!useCurrentLocation && (
+      <div className="space-y-4">
         <InputField
-          id="search-location"
-          label="Location name"
-          value={searchInput}
-          className="flex-grow min-w-20"
-          onBlur={() => setDebouncedInput(searchInput)}
-          onKeyDown={handleKeyDown}
-          type="text"
-          onChange={(e) => setSearchInput(e.target.value)}
-          placeholder={
-            searchParamsDraft?.location?.locationSource === "custom"
-              ? customLocationDisplay(searchParamsDraft.location)
-              : "Enter Location"
-          }
-          isError={locationQuery.isError || locationInvalid}
-          errorText={
-            locationQuery.isError
-              ? "Error loading location"
-              : locationInvalid
-                ? "Cannot find location"
-                : undefined
-          }
+          id="use-current-location"
+          label="Use current location"
+          type="checkbox"
+          checked={Boolean(useCurrentLocation)}
+          onChange={({ target }) => toggleCurrentLocation(target.checked)}
         />
-      )}
 
+        {!useCurrentLocation && (
+          <InputField
+            id="search-location"
+            label="Location name"
+            value={searchInput}
+            className="flex-grow min-w-20"
+            onBlur={() => setDebouncedInput(searchInput)}
+            onKeyDown={handleKeyDown}
+            type="text"
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder={
+              searchParamsDraft?.location?.locationSource === "custom"
+                ? customLocationDisplay(searchParamsDraft.location)
+                : "Enter Location"
+            }
+            isError={locationQuery.isError || locationInvalid}
+            errorText={
+              locationQuery.isError
+                ? "Error loading location"
+                : locationInvalid
+                  ? "Cannot find location"
+                  : undefined
+            }
+          />
+        )}
+      </div>
       <div className="form-item grow">
         <label>Map view</label>
         <MapProvider
