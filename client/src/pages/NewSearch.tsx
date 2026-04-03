@@ -5,10 +5,23 @@ import PlantNameForm from "components/plantDataControls/plantName/PlantNameForm"
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Button from "designSystem/Button";
 import PageTitle from "designSystem/PageTitle";
+import { motion, useAnimation } from "motion/react";
+import { useEffect } from "react";
 
 const NewSearch = () => {
   const navigate = useNavigate();
+  const animation = useAnimation();
   const { searchParamsDraft, applySearchParams } = useSearchParamsContext();
+
+  const paramValues = JSON.stringify(searchParamsDraft);
+
+  useEffect(() => {
+    paramValues !== "{}" &&
+      animation.start({
+        x: ["-100%", "200%"],
+        opacity: [0, 1, 1, 0],
+      });
+  }, [animation, paramValues]);
 
   const submitParams = () => {
     searchParamsDraft
@@ -30,7 +43,17 @@ const NewSearch = () => {
               customMessage="All fields are optional"
               className="max-h-fit"
             />
-            <Button className="w-full" onClick={submitParams}>
+            <Button
+              className="w-full relative overflow-hidden"
+              onClick={submitParams}
+            >
+              <motion.span
+                animate={animation}
+                initial={{ opacity: 0 }}
+                transition={{ duration: 1, ease: "easeInOut" }}
+                className="absolute h-full w-2/5 left-0 pointer-events-none
+               bg-linear-115 from-transparent from-20% via-pink-200/60 via-50% to-transparent to-80%"
+              />
               Search
             </Button>
           </div>
