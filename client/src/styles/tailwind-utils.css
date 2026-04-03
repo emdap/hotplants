@@ -123,7 +123,7 @@
   @apply border-gray-200 dark:border-default-background/20;
   @apply bg-default-background/80 not-dark:scrollbar-thumb-accent [&_*]:not-dark:scrollbar-thumb-accent;
 
-  & :not(.card-solid) .styled-input {
+  &:not(.card-solid) .styled-input {
     @apply not-dark:bg-white/40 not-dark:focus:bg-white/60;
   }
 }
