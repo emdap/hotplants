@@ -3,9 +3,12 @@ import { OptionalSearchParamKey } from "config/hotplantsConfig";
 import { SearchFormTab } from "contexts/plantSearch/PlantSearchContext";
 
 export type PlantSearchFormProps = {
-  renderMode: "card" | "modal" | "popover";
-  onClose: () => void;
-};
+  onSubmit?: () => void;
+  hideFooter?: boolean;
+} & (
+  | { renderMode: "card"; onClose?: () => void }
+  | { renderMode: "modal" | "popover"; onClose: () => void }
+);
 
 export const PLANT_NAME_FIELDS: FilterInputConfig<
   "text",

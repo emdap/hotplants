@@ -6,6 +6,7 @@ import {
   PlantSearchFormProps,
 } from "components/plantDataControls/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Card from "designSystem/Card";
 import InputField from "designSystem/InputField";
 import { useReactQuery } from "hooks/useQuery";
@@ -19,15 +20,21 @@ import {
 } from "util/locationUtil";
 import StyledPlantForm from "../StyledPlantForm";
 
-const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
+const PlantLocationForm = ({
+  renderMode,
+  hideFooter,
+  onClose,
+  onSubmit,
+}: PlantSearchFormProps) => {
   const {
     searchParams: { location: appliedLocation },
     searchParamsDraft,
 
     updateSearchParamsDraft,
     applySearchParams,
-    getResultsContainer,
-  } = usePlantSearchContext();
+  } = useSearchParamsContext();
+
+  const { getResultsContainer } = usePlantSearchContext();
 
   const [locationPending, setLocationPending] = useState(false);
   const [searchInput, setSearchInput] = useState(
@@ -92,6 +99,11 @@ const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   };
 
   const submitSearchLocation = () => {
+    if (onSubmit) {
+      onSubmit();
+      return;
+    }
+
     applySearchParams({ location: searchParamsDraft?.location });
     getResultsContainer()?.scrollIntoView();
 
@@ -100,7 +112,7 @@ const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
 
   const draftIsApplied = isEqual(searchParamsDraft?.location, appliedLocation);
 
-  const plantLocationFooter = (
+  const plantLocationFooter = hideFooter ? null : (
     <PlantSearchFormFooter
       submitButtonProps={{
         disabled: locationPending || draftIsApplied,
@@ -123,7 +135,9 @@ const PlantLocationForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
           renderMode === "modal",
       })}
     >
-      {renderMode === "card" && <h2>{PLANT_FORM_TITLES.location}</h2>}
+      {renderMode === "card" && (
+        <h2 className="text-center">{PLANT_FORM_TITLES.location}</h2>
+      )}
 
       <InputField
         id="search-location"

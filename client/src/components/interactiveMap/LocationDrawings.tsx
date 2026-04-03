@@ -1,5 +1,5 @@
 import { centroid } from "@turf/turf";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import LocationPolygon from "./LocationPolygon";
 import PolygonDrawing, { SetCustomPolygonFn } from "./PolygonDrawing";
 
@@ -8,7 +8,7 @@ const LocationDrawings = ({
 }: {
   locationCustomizeable?: boolean;
 }) => {
-  const { searchParams, updateSearchParamsDraft } = usePlantSearchContext();
+  const { searchParams, updateSearchParamsDraft } = useSearchParamsContext();
 
   const setCustomPolygon: SetCustomPolygonFn = (boundingPolygon) => {
     const center = centroid(boundingPolygon).geometry.coordinates;

@@ -47,7 +47,7 @@ const Logout = () => {
           </p>
           <div className="w-full flex gap-4 justify-center">
             <Link
-              to="/plant-search"
+              to="/browse-plants"
               search={(prev) => prev}
               replace
               className="flex flex-grow"

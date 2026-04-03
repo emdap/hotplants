@@ -29,7 +29,7 @@ const PlantActions = ({
               label: "Find more occurrences",
               Icon: FaLeaf,
               linkProps: {
-                to: "/plant-search",
+                to: "/browse-plants",
                 search: { plantName: { scientificName: plant.scientificName } },
               },
             },

@@ -67,7 +67,7 @@ const LoginForm = () => {
         toast.error(error.message);
       } else {
         const nextPath = location.pathname.includes("login")
-          ? "/plant-search"
+          ? "/browse-plants"
           : ".";
         navigate({ to: nextPath, search: (prev) => prev, replace: true });
       }

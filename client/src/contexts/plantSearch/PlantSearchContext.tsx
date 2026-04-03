@@ -1,4 +1,3 @@
-import { PlantSearchParams } from "config/hotplantsConfig";
 import {
   PlantSearchQueriesReturnType,
   PlantSearchQueryStatus,
@@ -23,12 +22,6 @@ export type PlantSearchContextType = {
   isInfiniteScroll: boolean;
   setIsInfiniteScroll: (enabled: boolean) => void;
 
-  searchParams: PlantSearchParams;
-  searchParamsDraft: Partial<PlantSearchParams> | null;
-
-  updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
-  applySearchParams: (params: Partial<PlantSearchParams>) => void;
-
   searchStatus: PlantSearchQueryStatus;
   fetchMorePlants: () => Promise<unknown>;
 
@@ -46,12 +39,6 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
 
   isInfiniteScroll: !isSmallScreen(),
   setIsInfiniteScroll: VOID_FUNCTION,
-
-  searchParams: {},
-  searchParamsDraft: null,
-
-  updateSearchParamsDraft: VOID_FUNCTION,
-  applySearchParams: VOID_FUNCTION,
 
   searchStatus: "READY",
   searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],

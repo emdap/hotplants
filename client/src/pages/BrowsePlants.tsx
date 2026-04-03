@@ -76,7 +76,7 @@ const PlantSearch = ({
   return (
     <main className="w-full h-full">
       {!page && <ScrollAnchor id="plant" className="absolute top-0" />}
-      <PageTitle className="page-buffer">Plant Search</PageTitle>
+      <PageTitle className="page-buffer">Browse Plants</PageTitle>
       <PlantSearchHeader />
 
       <div className="flex grow small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full">

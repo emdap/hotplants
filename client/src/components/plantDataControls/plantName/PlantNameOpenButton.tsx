@@ -1,7 +1,7 @@
 import { useSearch } from "@tanstack/react-router";
 import { PLANT_FORM_TITLES } from "components/plantDataControls/plantSearchFormUtil";
 import { PlantNameParam } from "config/hotplantsConfig";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import IconButton from "designSystem/iconButtons/IconButton";
 import { capitalize } from "lodash";
 import { RiPlantFill, RiPlantLine } from "react-icons/ri";
@@ -10,7 +10,7 @@ const getPlantName = (param?: PlantNameParam) =>
   param && ("commonName" in param ? param.commonName : param.scientificName);
 
 const PlantNameOpenButton = ({ onClick }: { onClick?: () => void }) => {
-  const { searchParamsDraft } = usePlantSearchContext();
+  const { searchParamsDraft } = useSearchParamsContext();
   const { plantName: plantNameParam } = useSearch({ strict: false });
 
   const plantNameDraft = getPlantName(searchParamsDraft?.plantName);

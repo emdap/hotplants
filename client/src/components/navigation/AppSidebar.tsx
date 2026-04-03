@@ -4,7 +4,8 @@ import { useAppContext } from "contexts/AppContext";
 import Button from "designSystem/Button";
 import Sidebar from "designSystem/Sidebar";
 import { MenuItemData } from "designSystem/StyledMenu";
-import { MdOutlineSearch, MdOutlineYoutubeSearchedFor } from "react-icons/md";
+import { CgReadme } from "react-icons/cg";
+import { MdHistory, MdOutlineSearch } from "react-icons/md";
 import { TbPlant2 } from "react-icons/tb";
 import { isSmallScreen } from "util/generalUtil";
 
@@ -15,15 +16,21 @@ type SidebarNavItem = PickRequired<
 
 const SIDEBAR_ITEMS: SidebarNavItem[] = [
   {
-    label: "Plant Search",
-    linkProps: { to: "/plant-search" },
+    label: "Browse Plants",
+    linkProps: { to: "/browse-plants" },
+    Icon: CgReadme,
+  },
+  {
+    label: "New Search",
+    linkProps: { to: "/new-search" },
     Icon: MdOutlineSearch,
   },
   {
     label: "Search History",
     linkProps: { to: "/search-history" },
-    Icon: MdOutlineYoutubeSearchedFor,
+    Icon: MdHistory,
   },
+
   {
     label: "Gardens",
     linkProps: { to: "/user-gardens" },

@@ -126,7 +126,7 @@ const Garden = () => {
               }
               className="my-auto"
             />
-            <Link to="/plant-search" search={{ plantFilter }}>
+            <Link to="/browse-plants" search={{ plantFilter }}>
               <Button>Find more plants</Button>
             </Link>
           </div>

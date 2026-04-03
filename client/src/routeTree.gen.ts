@@ -10,7 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchHistoryRouteImport } from './routes/search-history'
-import { Route as PlantSearchRouteImport } from './routes/plant-search'
+import { Route as NewSearchRouteImport } from './routes/new-search'
+import { Route as BrowsePlantsRouteImport } from './routes/browse-plants'
 import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as PrivateUserGardensRouteImport } from './routes/_private/user-gardens'
@@ -24,9 +25,14 @@ const SearchHistoryRoute = SearchHistoryRouteImport.update({
   path: '/search-history',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PlantSearchRoute = PlantSearchRouteImport.update({
-  id: '/plant-search',
-  path: '/plant-search',
+const NewSearchRoute = NewSearchRouteImport.update({
+  id: '/new-search',
+  path: '/new-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrowsePlantsRoute = BrowsePlantsRouteImport.update({
+  id: '/browse-plants',
+  path: '/browse-plants',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivateRoute = PrivateRouteImport.update({
@@ -65,7 +71,8 @@ const PrivateGardensGardenNameRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/plant-search': typeof PlantSearchRoute
+  '/browse-plants': typeof BrowsePlantsRoute
+  '/new-search': typeof NewSearchRoute
   '/search-history': typeof SearchHistoryRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
@@ -74,7 +81,8 @@ export interface FileRoutesByFullPath {
   '/gardens/$gardenName': typeof PrivateGardensGardenNameRoute
 }
 export interface FileRoutesByTo {
-  '/plant-search': typeof PlantSearchRoute
+  '/browse-plants': typeof BrowsePlantsRoute
+  '/new-search': typeof NewSearchRoute
   '/search-history': typeof SearchHistoryRoute
   '/login': typeof AuthLoginRoute
   '/logout': typeof AuthLogoutRoute
@@ -86,7 +94,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/_private': typeof PrivateRouteWithChildren
-  '/plant-search': typeof PlantSearchRoute
+  '/browse-plants': typeof BrowsePlantsRoute
+  '/new-search': typeof NewSearchRoute
   '/search-history': typeof SearchHistoryRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/logout': typeof AuthLogoutRoute
@@ -97,7 +106,8 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/plant-search'
+    | '/browse-plants'
+    | '/new-search'
     | '/search-history'
     | '/login'
     | '/logout'
@@ -106,7 +116,8 @@ export interface FileRouteTypes {
     | '/gardens/$gardenName'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/plant-search'
+    | '/browse-plants'
+    | '/new-search'
     | '/search-history'
     | '/login'
     | '/logout'
@@ -117,7 +128,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_auth'
     | '/_private'
-    | '/plant-search'
+    | '/browse-plants'
+    | '/new-search'
     | '/search-history'
     | '/_auth/login'
     | '/_auth/logout'
@@ -129,7 +141,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   PrivateRoute: typeof PrivateRouteWithChildren
-  PlantSearchRoute: typeof PlantSearchRoute
+  BrowsePlantsRoute: typeof BrowsePlantsRoute
+  NewSearchRoute: typeof NewSearchRoute
   SearchHistoryRoute: typeof SearchHistoryRoute
 }
 
@@ -142,11 +155,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchHistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/plant-search': {
-      id: '/plant-search'
-      path: '/plant-search'
-      fullPath: '/plant-search'
-      preLoaderRoute: typeof PlantSearchRouteImport
+    '/new-search': {
+      id: '/new-search'
+      path: '/new-search'
+      fullPath: '/new-search'
+      preLoaderRoute: typeof NewSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/browse-plants': {
+      id: '/browse-plants'
+      path: '/browse-plants'
+      fullPath: '/browse-plants'
+      preLoaderRoute: typeof BrowsePlantsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_private': {
@@ -231,7 +251,8 @@ const PrivateRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PrivateRoute: PrivateRouteWithChildren,
-  PlantSearchRoute: PlantSearchRoute,
+  BrowsePlantsRoute: BrowsePlantsRoute,
+  NewSearchRoute: NewSearchRoute,
   SearchHistoryRoute: SearchHistoryRoute,
 }
 export const routeTree = rootRouteImport

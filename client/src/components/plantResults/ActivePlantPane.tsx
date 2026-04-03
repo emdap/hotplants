@@ -1,8 +1,8 @@
 import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import {
@@ -38,7 +38,7 @@ const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
 
 const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
   const navigate = useNavigate();
-  const { searchParams } = usePlantSearchContext();
+  const { searchParams } = useSearchParamsContext();
   const {
     plantList,
     page,

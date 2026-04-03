@@ -131,7 +131,7 @@ const PlantFilterForm = ({
       })}
     >
       {renderMode === "card" ? (
-        <h2>{PLANT_FORM_TITLES.filters}</h2>
+        <h2 className="text-center">{PLANT_FORM_TITLES.filters}</h2>
       ) : (
         renderMode === "popover" && (
           <h4 className="font-semibold">{PLANT_FORM_TITLES.filters}</h4>

@@ -8,19 +8,24 @@ import {
   PlantSearchFormProps,
 } from "components/plantDataControls/plantSearchFormUtil";
 import { OptionalSearchParamKey, PlantNameParam } from "config/hotplantsConfig";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Card from "designSystem/Card";
 import { isEqual } from "lodash";
 import { Fragment, useEffect, useState } from "react";
 import StyledPlantForm from "../StyledPlantForm";
 
-const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
+const PlantNameForm = ({
+  renderMode,
+  hideFooter,
+  onClose,
+  onSubmit,
+}: PlantSearchFormProps) => {
   const {
     searchParams: { plantName: appliedPlantName },
     searchParamsDraft,
     updateSearchParamsDraft,
     applySearchParams,
-  } = usePlantSearchContext();
+  } = useSearchParamsContext();
 
   const { commonName, scientificName } = {
     scientificName: undefined,
@@ -52,11 +57,16 @@ const PlantNameForm = ({ renderMode, onClose }: PlantSearchFormProps) => {
   };
 
   const submitPlantName = () => {
+    if (onSubmit) {
+      onSubmit();
+      return;
+    }
+
     applySearchParams({ plantName: searchParamsDraft?.plantName });
     renderMode === "modal" && onClose();
   };
 
-  const plantNameFooter = (
+  const plantNameFooter = hideFooter ? null : (
     <PlantSearchFormFooter
       submitButtonProps={{
         disabled:

@@ -64,7 +64,7 @@ const SearchRecordCard = ({
         : undefined;
 
     navigate({
-      to: "/plant-search",
+      to: "/browse-plants",
       search: { location: locationParams, plantName, page: 1 },
     });
   };

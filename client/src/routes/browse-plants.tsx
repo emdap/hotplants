@@ -4,13 +4,20 @@ import {
   stripSearchParams,
 } from "@tanstack/react-router";
 import PlantSearchProvider from "contexts/plantSearch/PlantSearchProvider";
+import SearchParamsProvider from "contexts/searchParams/SearchParamsProvider";
 import {
   DEFAULT_PLANT_SEARCH_ROUTE_PARAMS,
   validatePlantSearchParams,
 } from "util/routeParamsUtil";
 
-export const Route = createFileRoute("/plant-search")({
-  component: PlantSearchProvider,
+const BrowsePlantsRoute = () => (
+  <SearchParamsProvider>
+    <PlantSearchProvider />
+  </SearchParamsProvider>
+);
+
+export const Route = createFileRoute("/browse-plants")({
+  component: BrowsePlantsRoute,
   search: {
     middlewares: [
       retainSearchParams(["lastOpened"]),

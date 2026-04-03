@@ -1,6 +1,6 @@
 import { useSearch } from "@tanstack/react-router";
 import { PLANT_FORM_TITLES } from "components/plantDataControls/plantSearchFormUtil";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import IconButton from "designSystem/iconButtons/IconButton";
 import { isEqual } from "lodash";
 import { CiGlobe } from "react-icons/ci";
@@ -8,7 +8,7 @@ import { FaGlobe } from "react-icons/fa";
 import { locationDisplay } from "util/locationUtil";
 
 const PlantLocationOpenButton = ({ onClick }: { onClick?: () => void }) => {
-  const { searchParamsDraft } = usePlantSearchContext();
+  const { searchParamsDraft } = useSearchParamsContext();
   const { location } = useSearch({ strict: false });
 
   const locationName = location ? locationDisplay(location, true).title : null;

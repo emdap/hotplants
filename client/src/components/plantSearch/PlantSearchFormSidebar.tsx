@@ -5,6 +5,7 @@ import {
   SearchFormTab,
   usePlantSearchContext,
 } from "contexts/plantSearch/PlantSearchContext";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Modal from "designSystem/Modal";
 import Sidebar from "designSystem/Sidebar";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
@@ -34,10 +35,8 @@ const PLANT_FORM_COMPONENTS: Record<
 };
 
 const PlantSearchForm = () => {
+  const { searchParams, updateSearchParamsDraft } = useSearchParamsContext();
   const {
-    searchParams,
-    updateSearchParamsDraft,
-
     searchFormState: { tab, isOpen },
     setSearchFormState,
   } = usePlantSearchContext();
