@@ -4,7 +4,7 @@ import { VOID_FUNCTION } from "util/generalUtil";
 
 export type SearchParamsContextType = {
   searchParams: PlantSearchParams;
-  searchParamsDraft: Partial<PlantSearchParams> | null;
+  searchParamsDraft: Partial<PlantSearchParams>;
   updateSearchParamsDraft: (partialParams: Partial<PlantSearchParams>) => void;
   applySearchParams: (params: Partial<PlantSearchParams>) => void;
 
@@ -14,7 +14,7 @@ export type SearchParamsContextType = {
 
 const DEFAULT_SEARCH_PARAMS_CONTEXT: SearchParamsContextType = {
   searchParams: {},
-  searchParamsDraft: null,
+  searchParamsDraft: {},
   updateSearchParamsDraft: VOID_FUNCTION,
   applySearchParams: VOID_FUNCTION,
 

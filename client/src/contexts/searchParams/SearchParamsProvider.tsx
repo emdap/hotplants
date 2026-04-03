@@ -16,7 +16,7 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const [searchParamsDraft, setSearchParamsDraft] =
-    useState<Partial<PlantSearchParams> | null>(searchParams);
+    useState<Partial<PlantSearchParams>>(searchParams);
 
   const updateSearchParamsDraft: SearchParamsContextType["updateSearchParamsDraft"] =
     (partialParams) =>
