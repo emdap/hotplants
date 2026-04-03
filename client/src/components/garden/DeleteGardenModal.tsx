@@ -56,7 +56,8 @@ const DeleteGardenModal = ({
       >
         <div className="flex flex-col gap-2">
           <strong>
-            This action is irreversible. <br /> There are{" "}
+            This action is irreversible. <br /> There{" "}
+            {pluralize("is", garden?.plantCount)}{" "}
             {pluralize("plant", garden?.plantCount, true)} in this garden.
           </strong>
           Confirm the garden name "{garden?.gardenName}" to proceed.
