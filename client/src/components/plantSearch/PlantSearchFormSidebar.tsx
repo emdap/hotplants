@@ -47,30 +47,29 @@ const PlantSearchForm = () => {
   >(undefined);
   const sidebarRef = useRef<HTMLElement>(null);
 
-  const resizeSidbarContent = useCallback(() => {
+  const resizeSidebarContent = useCallback(() => {
     if (sidebarRef.current) {
-      const { height, top } = sidebarRef.current.getBoundingClientRect();
-      const availableHeight = window.innerHeight - top;
-      availableHeight !== height && setSidebarContentHeight(availableHeight);
+      const { top } = sidebarRef.current.getBoundingClientRect();
+      setSidebarContentHeight(window.innerHeight - top);
     } else {
       setSidebarContentHeight(undefined);
     }
   }, []);
 
-  useMount(() => resizeSidbarContent());
+  useMount(() => resizeSidebarContent());
 
   useEffect(() => {
-    window.addEventListener("resize", resizeSidbarContent);
-    scrollContainerElement?.addEventListener("scroll", resizeSidbarContent);
+    window.addEventListener("resize", resizeSidebarContent);
+    scrollContainerElement?.addEventListener("scroll", resizeSidebarContent);
 
     return () => {
-      window.removeEventListener("resize", resizeSidbarContent);
+      window.removeEventListener("resize", resizeSidebarContent);
       scrollContainerElement?.removeEventListener(
         "scroll",
-        resizeSidbarContent,
+        resizeSidebarContent,
       );
     };
-  }, [resizeSidbarContent, scrollContainerElement]);
+  }, [resizeSidebarContent, scrollContainerElement]);
 
   const toggleIsOpen = (isOpen: boolean = false) =>
     setSearchFormState((prev) => ({ ...prev, isOpen }));
@@ -120,7 +119,7 @@ const PlantSearchForm = () => {
 
         return (
           <div
-            className={classNames("w-md h-full flex flex-col gap-4 p-4 pr-5", {
+            className={classNames("flex flex-col gap-4 p-4 pr-5", {
               "opacity-100 w-md": isExpanded,
               "opacity-0 w-0! pointer-events-none": !isExpanded,
             })}
