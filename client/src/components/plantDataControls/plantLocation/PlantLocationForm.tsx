@@ -225,7 +225,7 @@ const PlantLocationForm = ({
             type="checkbox"
             checked={Boolean(useCurrentLocation)}
             onChange={({ target }) => toggleCurrentLocation(target.checked)}
-            className="flex-row-reverse justify-end text-sm"
+            className="flex-row-reverse justify-end text-sm ml-1"
           />
         </div>
       </div>

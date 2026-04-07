@@ -15,7 +15,6 @@ const PlantFormOpenButton = ({
   CustomIconButton?: FunctionComponent<IconButtonVariantProps>;
 } & Omit<IconButtonProps, "className" | "size">) => {
   const Component = CustomIconButton ?? IconButton;
-  console.log();
 
   return (
     <Component
