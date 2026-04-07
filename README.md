@@ -1,1 +1,2 @@
 # Hot plants
+Plant website to find local plant occurrences. Frontend and proxy server for visualizing data from [GBIF](https://www.gbif.org/what-is-gbif) and [Permapeople](https://permapeople.org/). Proxy server adds an auth layer using [better-auth](https://better-auth.com/) and forwards API/GraphQL requests to [Hot plants server](https://github.com/emdap/hotplants-server). Hosted on fly.io [hotplants.fly.dev](https://hotplants.fly.dev/).
