@@ -1,35 +1,47 @@
 import { graphql } from "generated/graphql";
 import { SearchPlantsQuery } from "generated/graphql/graphql";
 
-const _PLANT_FIELDS_FRAGMENT = graphql(
-  `
-    fragment PlantFields on PlantDataInterface {
-      _id
-      scientificName
-      commonNames
-      bloomColors
-      bloomTimes
-      isPerennial
-      thumbnailUrl
-      physicalCharactersticsDump
-      scrapeSources
+const _PLANT_FIELDS_FRAGMENT = graphql(`
+  fragment PlantFields on PlantDataInterface {
+    addedTimestamp
+    updatedTimestamp
 
-      fullOccurrencesCount
-      occurrences {
-        occurrenceId
-        occurrenceCoords
-        media {
-          url
-          isProxyUrl
-        }
+    scientificName
+    commonNames
+    bloomColors
+    bloomTimes
+    isPerennial
+    thumbnailUrl
+    physicalCharactersticsDump
+    scrapeSources
+
+    hardiness
+
+    height {
+      amount
+      unit
+    }
+    spread {
+      amount
+      unit
+    }
+
+    fullOccurrencesCount
+    occurrences {
+      occurrenceId
+      occurrenceCoords
+      media {
+        url
+        isProxyUrl
       }
     }
-  `
-);
+  }
+`);
 
 export const GET_PLANT = graphql(`
   query getPlant($id: String!, $boundingPolyCoords: [[[Float!]!]!]) {
     plant(id: $id, boundingPolyCoords: $boundingPolyCoords) {
+      _id
       ...PlantFields
     }
   }
@@ -45,6 +57,7 @@ export const SEARCH_PLANTS = graphql(`
     plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {
       count
       results {
+        _id
         ...PlantFields
       }
     }
@@ -65,6 +78,9 @@ export const REPLACE_WITH_PROXY_URL = graphql(`
   }
 `);
 
-export type PlantQueryData = SearchPlantsQuery["plantSearch"];
-export type PlantQueryResults = PlantQueryData["results"];
-export type PlantResult = PlantQueryResults[number];
+export type PlantSearchResult = Omit<
+  SearchPlantsQuery["plantSearch"]["results"][number],
+  "_id"
+> & {
+  _id: string;
+};

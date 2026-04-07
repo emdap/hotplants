@@ -1,0 +1,46 @@
+@utility styled-button {
+  @apply rounded-md flex items-center justify-center font-medium;
+
+  &:not(.button-text) {
+    @apply focus-ring;
+
+    &:not(:disabled) {
+      @apply hover:shadow-sm;
+    }
+  }
+
+  &:not(:disabled) {
+    @apply cursor-pointer;
+  }
+  &:disabled {
+    @apply opacity-50;
+  }
+}
+
+@utility button-primary {
+  @apply bg-primary enabled:hover:bg-primary-faded outline-primary/80 text-white;
+}
+
+@utility button-accent {
+  @apply bg-accent/90 dark:bg-accent/80 enabled:hover:bg-accent outline-accent text-white;
+}
+
+@utility button-secondary {
+  @apply bg-secondary/80 enabled:hover:bg-secondary outline-secondary;
+}
+
+@utility button-danger {
+  @apply bg-red-700/80 enabled:hover:bg-red-700 outline-red-700;
+}
+
+@utility button-icon-primary {
+  @apply bg-primary enabled:hover:bg-primary-faded text-white outline-primary/50;
+}
+
+@utility button-icon-white {
+  @apply enabled:hover:bg-white/20 outline-primary/50;
+}
+
+@utility button-text {
+  @apply text-inherit outline-primary;
+}

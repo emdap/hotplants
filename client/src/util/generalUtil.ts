@@ -1,7 +1,9 @@
-import { PlantResult } from "graphqlHelpers/plantQueries";
-import { capitalize } from "lodash";
+import { CombinedGraphQLErrors } from "@apollo/client";
+import { GraphQLFormattedError } from "graphql";
 import { HTMLMotionProps } from "motion/react";
 import { HTMLProps } from "react";
+import { ExternalToast, toast } from "sonner";
+import { defaultErrorToast } from "./toastUtil";
 
 export type CommonMotionDivProps = Omit<HTMLMotionProps<"div">, "children"> &
   Pick<HTMLProps<HTMLDivElement>, "children">;
@@ -30,11 +32,6 @@ export const elementInViewport = (
   );
 };
 
-export const getPlantDisplayName = (plant: PlantResult) => {
-  const commonName = plant.commonNames?.[0];
-  return commonName ? capitalize(commonName) : plant.scientificName;
-};
-
 export const DEFAULT_DATE_TIME_FORMAT = "LLL d, yyyy 'at' HH:mm";
 
 export const BACKGROUND_ANIMATION_ID = "background-animation";
@@ -50,6 +47,39 @@ export const findAnimation = (
         animation.effect instanceof KeyframeEffect &&
         animation.animationName === animationName,
     );
+
+export const getLastPage = (pageSize: number, resultsCount?: number) =>
+  resultsCount && pageSize ? Math.ceil(resultsCount / pageSize) : 0;
+
+export const isLeafletEvent = (event?: Pick<Event, "target">) =>
+  event?.target && "_leaflet_id" in event.target;
+
+export const handleGraphQlError = (
+  error: unknown,
+  {
+    customErrorHandler,
+    ...toastProps
+  }: {
+    customErrorHandler?: (error: GraphQLFormattedError) => void;
+  } & ExternalToast = {},
+) => {
+  if (error instanceof CombinedGraphQLErrors) {
+    error.errors.map((error) => {
+      if (error.message) {
+        customErrorHandler
+          ? customErrorHandler(error)
+          : toast.error(error.message, toastProps);
+      } else {
+        defaultErrorToast(toastProps);
+      }
+    });
+  } else {
+    defaultErrorToast(toastProps);
+  }
+};
+
+export const VOID_FUNCTION = () => {};
+export const VOID_PROMISE_FUNCTION = async () => {};
 
 // Seeing issues with scroll functionalities in Safari
 export const isSafari = /^((?!chrome|android).)*safari/i.test(

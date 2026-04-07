@@ -1,25 +1,25 @@
-import { Link } from "@tanstack/react-router";
 import classNames from "classnames";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import LoadingIcon from "./LoadingIcon";
 
-type ButtonVariant =
+export type ButtonVariant =
   | "primary"
   | "accent"
   | "secondary"
+  | "danger"
   | "text"
   | "text-primary"
   | "icon-primary"
   | "icon-white";
 
 const BUTTON_SIZES = {
-  default: "py-2 px-3",
-  small: "py-1 px-1.5 text-sm",
-  flush: "p-0",
+  default: "py-2 px-3 gap-3",
+  small: "py-1 px-1.5 text-sm gap-2",
+  flush: "p-0 gap-2",
   icon: {
-    default: "p-2",
-    small: "p-1 text-sm",
-    flush: "p-0",
+    default: "p-2 gap-3",
+    small: "max-lg:p-1 p-1 text-sm gap-2",
+    flush: "p-0 gap-2",
   },
 };
 
@@ -29,13 +29,11 @@ export type ButtonProps = {
   size?: Exclude<keyof typeof BUTTON_SIZES, "icon">;
   isLoading?: boolean;
   disableOnLoading?: boolean;
-  linkAddress?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const getClasses = (props: ButtonProps) => {
   const hasChildren = Boolean(props.children);
   const loadingWithText = hasChildren && props.isLoading !== undefined;
-  const iconWithText = Boolean(hasChildren && props.icon);
 
   const isTextVariant = props.variant?.includes("text");
   const isIconVariant = props.variant?.includes("icon");
@@ -46,37 +44,28 @@ const getClasses = (props: ButtonProps) => {
     : BUTTON_SIZES[buttonSizeKey];
 
   return classNames(
-    "rounded-md flex gap-3 items-center justify-center font-medium",
+    "styled-button",
     props.className,
     {
-      "bg-primary/90 dark:bg-primary/80 enabled:hover:bg-primary outline-primary text-white":
-        props.variant === "primary",
-      "bg-accent/90 dark:bg-accent/80 enabled:hover:bg-accent outline-accent text-white":
-        props.variant === "accent",
-      "bg-secondary/80 enabled:hover:bg-secondary outline-secondary":
-        props.variant === "secondary",
+      "button-primary": props.variant === "primary",
+      "button-accent": props.variant === "accent",
+      "button-secondary": props.variant === "secondary",
+      "button-danger": props.variant === "danger",
 
-      "bg-primary/80 enabled:hover:bg-primary text-white":
-        props.variant === "icon-primary",
-      "enabled:hover:bg-white/20 outline-primary":
-        props.variant === "icon-white",
+      "button-icon-primary": props.variant === "icon-primary",
+      "button-icon-white": props.variant === "icon-white",
 
-      "enabled:hover:underline underline-offset-3 outline-none focus-visible:underline":
-        isTextVariant && hasChildren,
-      "text-inherit": props.variant === "text",
+      "button-text": isTextVariant,
       "text-primary": props.variant === "text-primary",
+      "enabled:hover:underline underline-offset-3 focus-visible:underline":
+        isTextVariant && hasChildren,
 
-      "opacity-50":
-        props.disabled || (props.isLoading && props.disableOnLoading),
-      "cursor-pointer": !props.disabled,
-      "pl-10 [&_.icon-wrapper]:-ml-7": loadingWithText || iconWithText,
-      "pr-10": loadingWithText,
+      "opacity-50": props.isLoading && props.disableOnLoading,
+      "[&_.icon-wrapper]:-ml-7 px-10": loadingWithText,
 
-      "focus-ring": !isTextVariant,
-      "hover:shadow-sm": !isTextVariant && !props.disabled,
+      "py-0.5 px-2": isIconVariant && buttonSizeKey === "small" && hasChildren,
     },
 
-    loadingWithText ? "pr-10" : iconWithText && "pr-3",
     buttonSize,
   );
 };
@@ -85,26 +74,30 @@ const Button = ({
   variant = "primary",
   size = "default",
   isLoading,
-  linkAddress,
   className,
+  children,
+  icon,
   disabled,
-  disableOnLoading,
+  disableOnLoading = true,
   ...directButtonProps
 }: ButtonProps) => {
-  const isDisabled = isLoading || disabled;
-  const classes = getClasses({
-    variant,
-    size,
-    linkAddress,
-    className,
-    disabled: isDisabled,
-    isLoading,
-    disableOnLoading,
-    ...directButtonProps,
-  });
+  const isDisabled = (disableOnLoading && isLoading) || disabled;
 
-  const renderButton = ({ children, icon, ...props }: Partial<ButtonProps>) => (
-    <button {...props}>
+  return (
+    <button
+      disabled={isDisabled}
+      className={getClasses({
+        variant,
+        size,
+        className,
+        isLoading,
+        disabled: isDisabled,
+        disableOnLoading,
+        children,
+        ...directButtonProps,
+      })}
+      {...directButtonProps}
+    >
       {(isLoading || icon) && (
         <div className="icon-wrapper">
           {isLoading ? <LoadingIcon size={16} /> : icon}
@@ -112,18 +105,6 @@ const Button = ({
       )}
       {children}
     </button>
-  );
-
-  return linkAddress && !isDisabled ? (
-    <Link className="block w-fit" to={linkAddress}>
-      {renderButton({ className: classes, ...directButtonProps })}
-    </Link>
-  ) : (
-    renderButton({
-      disabled: isDisabled,
-      className: classes,
-      ...directButtonProps,
-    })
   );
 };
 

@@ -1,88 +1,48 @@
 import { NetworkStatus } from "@apollo/client";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import PlantAnimation from "components/PlantAnimation";
 import {
+  DEFAULT_SEARCH_FORM_STATE,
   PlantSearchContext,
-  PlantSearchContextType,
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
+import useAddToGardenActionList from "hooks/plantActionLists/useAddToGardenActionList";
 import usePlantSearchQueries, {
   DEFAULT_PAGE_SIZE,
 } from "hooks/usePlantSearchQueries";
-import PlantSearch from "pages/PlantSearch";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
-import { isSmallScreen } from "util/generalUtil";
+import PlantSearch from "pages/BrowsePlants";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-const route = getRouteApi("/plant-search");
+const route = getRouteApi("/browse-plants");
 
 const PlantSearchProvider = () => {
-  const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
-
   const navigate = useNavigate();
-
+  const { searchParams, isPrefilledSearch, setIsPrefilledSearch } =
+    useSearchParamsContext();
   const {
+    plantFilter,
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
-    search: searchParams = null,
-    filter: plantFilters = {},
+    lastOpened: _lastOpened,
   } = route.useSearch();
 
-  const [searchParamsDraft, setSearchParamsDraft] =
-    useState<Partial<PlantSearchParams> | null>(searchParams);
-
-  useEffect(() => {
-    setSearchParamsDraft(searchParams);
-  }, [searchParams]);
-
-  const validateSearchParams = (
-    params?: Partial<PlantSearchParams> | null,
-  ): PlantSearchParams | null =>
-    params?.boundingPolyCoords && params.locationName && params.locationSource
-      ? (params as PlantSearchParams)
-      : null;
-
-  const validatedSearchParamsDraft = useMemo(
-    () => validateSearchParams(searchParamsDraft),
-    [searchParamsDraft],
+  const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
+  const [searchFormState, setSearchFormState] = useState(
+    DEFAULT_SEARCH_FORM_STATE(),
   );
 
-  const applySearchParams = useCallback(
-    (params?: Partial<PlantSearchParams>) => {
-      const applyParams = validateSearchParams({
-        ...searchParamsDraft,
-        ...params,
-      });
-      if (applyParams) {
-        navigate({
-          to: ".",
-          search: { search: applyParams, filter: {}, page: 1 },
-        });
-        isSmallScreen() && setSidebarExpanded(false);
-      }
-    },
-    [navigate, searchParamsDraft],
-  );
-
-  const applyPlantFilter = useCallback(
-    (filter?: PlantSearchFilter) =>
-      searchParams &&
-      navigate({
-        to: ".",
-        search: { search: searchParams, filter },
-      }),
-    [navigate, searchParams],
-  );
-
-  const updateSearchParamsDraft: PlantSearchContextType["updateSearchParamsDraft"] =
-    (searchParams) =>
-      setSearchParamsDraft((prev) => ({ ...prev, ...searchParams }));
-
-  const { searchStatus, plantSearchQuery, searchRecordQuery } =
-    usePlantSearchQueries(searchParams, plantFilters, {
+  const { searchStatus, plantSearchQuery, searchRecordQuery, scrapeMoreData } =
+    usePlantSearchQueries(searchParams, plantFilter, {
       page,
       pageSize,
       paginationEnabled: !isInfiniteScroll,
     });
+
+  useEffect(() => {
+    !plantSearchQuery.loading && setIsPrefilledSearch(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plantSearchQuery.loading]);
 
   const plantSearchData = plantSearchQuery.data
     ? plantSearchQuery.data.plantSearch
@@ -90,79 +50,58 @@ const PlantSearchProvider = () => {
       ? plantSearchQuery.previousData?.plantSearch
       : null;
 
-  const { hasCurrentResults, totalResultsCount } = useMemo(
+  const { totalItems, hasCurrentResults } = useMemo(
     () => ({
+      totalItems: plantSearchData?.count ?? 0,
       hasCurrentResults: Boolean(plantSearchData?.count),
-      totalResultsCount: plantSearchData?.count ?? 0,
     }),
     [plantSearchData?.count],
   );
 
-  const unfetchedPlants = plantSearchData
-    ? plantSearchData.count - plantSearchData.results.length
-    : 0;
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
+  const getResultsContainer = useCallback(
+    () => resultsContainerRef.current,
+    [],
+  );
 
   const fetchMorePlants = async () => {
     if (
-      !isInfiniteScroll ||
+      searchStatus !== "READY" ||
       !plantSearchData?.results ||
       plantSearchQuery.networkStatus === NetworkStatus.fetchMore
     ) {
       return;
     }
 
-    if (
-      (searchStatus === "READY" && unfetchedPlants) ||
-      unfetchedPlants >= (pageSize ?? DEFAULT_PAGE_SIZE)
-    ) {
+    if (!isInfiniteScroll) {
+      return scrapeMoreData();
+    } else if (plantSearchData.results.length < totalItems) {
       plantSearchQuery.fetchMore({
         variables: { offset: plantSearchData.results.length },
       });
+      navigate({ to: ".", search: (prev) => ({ ...prev, page: page + 1 }) });
     }
   };
 
-  const [sidebarExpanded, setSidebarExpanded] = useState(!isSmallScreen());
-  useEffect(() => {
-    const toggleSidebar = () => setSidebarExpanded(!isSmallScreen());
-
-    window.addEventListener("resize", toggleSidebar);
-    return () => window.removeEventListener("resize", toggleSidebar);
-  }, []);
+  const plantSearchActionList = useAddToGardenActionList();
 
   return (
     <PlantSearchContext.Provider
       value={{
         hasCurrentResults,
-        totalResultsCount,
 
         isInfiniteScroll,
         setIsInfiniteScroll,
 
-        searchParams,
-        page,
-        pageSize,
-
-        searchParamsDraft,
-        validatedSearchParamsDraft,
-
-        updateSearchParamsDraft,
-        applySearchParams,
-
-        plantFilter: plantFilters,
-        applyPlantFilter,
-
         searchStatus,
-        hasMoreData: Boolean(
-          isInfiniteScroll
-            ? unfetchedPlants
-            : plantSearchData && plantSearchData?.count / pageSize > page,
-        ),
         searchRecordQuery,
         plantSearchQuery,
         fetchMorePlants,
 
-        sidebarExpanded,
-        setSidebarExpanded,
+        searchFormState,
+        setSearchFormState,
+
+        getResultsContainer,
       }}
     >
       <PlantSelectionProvider
@@ -171,9 +110,23 @@ const PlantSearchProvider = () => {
             ? plantSearchData?.results
             : plantSearchQuery.data?.plantSearch.results) ?? []
         }
-        boundingPolygon={searchParams?.boundingPolyCoords}
+        plantListLoading={plantSearchQuery.loading}
+        plantActions={plantSearchActionList}
+        boundingPolygon={searchParams.location?.boundingPolyCoords}
+        {...{
+          page,
+          pageSize,
+          totalItems,
+        }}
       >
-        <PlantSearch />
+        {isPrefilledSearch ? (
+          <PlantAnimation
+            className="h-dvh-header"
+            queryStatus="CHECKING_STATUS"
+          />
+        ) : (
+          <PlantSearch resultsContainerRef={resultsContainerRef} />
+        )}
       </PlantSelectionProvider>
     </PlantSearchContext.Provider>
   );

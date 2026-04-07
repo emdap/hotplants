@@ -1,0 +1,214 @@
+import { useNavigate } from "@tanstack/react-router";
+import classNames from "classnames";
+import MapProvider from "components/interactiveMap/MapProvider";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
+import Button from "designSystem/Button";
+import Card from "designSystem/Card";
+import {
+  mergeMotionProps,
+  MOTION_FADE_IN,
+} from "designSystem/motionTransitions";
+import { useCloseOnEscape } from "hooks/useCloseOnEscape";
+import { useDisableHtmlScroll } from "hooks/useDisableHtmlScroll";
+import { AnimatePresence } from "motion/react";
+import {
+  Fragment,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
+import { useSwipeable } from "react-swipeable";
+import { useClickAway } from "react-use";
+import { isLeafletEvent, ITERATE_DIRECTION } from "util/generalUtil";
+import { swapLatLng } from "util/locationUtil";
+import { getPlantDisplayNames } from "util/plantUtil";
+import PlantActions from "./PlantActions";
+import PlantImageViewer from "./PlantImageViewer";
+import PlantInfoCard from "./PlantInfoCard";
+
+const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
+  initial: { right: "-100%" },
+  animate: { right: 0 },
+  exit: { right: "-100%" },
+});
+
+const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
+  const navigate = useNavigate();
+  const { searchParams } = useSearchParamsContext();
+  const {
+    plantList,
+    page,
+    pageSize,
+    totalItems,
+    activePlant,
+    activePlantMedia,
+    setActivePlantId,
+    setActiveMediaUrl,
+  } = usePlantSelectionContext();
+
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+
+  const [overallIndex, setOverallIndex] = useState(0);
+  const pageIndexOffset = (page - 1) * pageSize;
+
+  const mapCenter = useMemo(() => {
+    if (searchParams.location || !activePlantMedia.length) {
+      return undefined;
+    }
+
+    return swapLatLng([activePlantMedia[0].occurrenceCoords])[0];
+  }, [searchParams, activePlantMedia]);
+
+  useEffect(() => {
+    setOverallIndex(
+      Math.max(
+        0,
+        plantList.findIndex(({ _id }) => _id === activePlant?._id),
+      ) + pageIndexOffset,
+    );
+  }, [pageIndexOffset, plantList, activePlant?._id]);
+
+  const resetActivePlant = () => {
+    setActivePlantId(null);
+    setActiveMediaUrl(null);
+  };
+
+  useCloseOnEscape(resetActivePlant, !!activePlant && !imageModalOpen);
+  useDisableHtmlScroll(Boolean(activePlant));
+  const swipeHandlers = useSwipeable({
+    onSwipedRight: ({ event }) => !isLeafletEvent(event) && resetActivePlant(),
+  });
+
+  const paneRef = useRef<HTMLDivElement>(null);
+
+  const refPassthrough = (el: HTMLDivElement) => {
+    swipeHandlers.ref(el);
+    paneRef.current = el;
+  };
+
+  useClickAway(paneRef, () => !imageModalOpen && resetActivePlant());
+
+  const disableIterate = useMemo(
+    () => ({
+      next: overallIndex === totalItems - 1,
+      prev: overallIndex === 0,
+    }),
+    [overallIndex, totalItems],
+  );
+
+  const iteratePlant = (direction: "prev" | "next") => {
+    const iterateDirection = (direction === "prev" ? -1 : 1) * 1;
+    const nextPlantIndex = overallIndex - pageIndexOffset + iterateDirection;
+
+    const nextPlant = plantList[nextPlantIndex];
+    setActiveMediaUrl(null);
+    if (!nextPlant) {
+      setActivePlantId(null);
+      navigate({
+        to: ".",
+        search: (prev) => ({ ...prev, page: page + iterateDirection }),
+      });
+    } else {
+      setActivePlantId(nextPlant._id);
+    }
+  };
+
+  const plantDisplayNames = activePlant
+    ? getPlantDisplayNames(activePlant)
+    : null;
+
+  return (
+    <AnimatePresence>
+      {activePlant && (
+        <Card
+          key="plant-pane"
+          className={classNames(
+            "rounded-r-none py-2 px-safe-2 h-full fixed top-0 z-40",
+            "backdrop-blur-2xl small-screen:rounded-l-none small-screen:w-full",
+            "small-screen:w-full big-screen:w-4/7 big-screen:max-w-5xl",
+            "flex flex-col overflow-hidden",
+          )}
+          {...CARD_SLIDE_IN}
+          {...swipeHandlers}
+          ref={refPassthrough}
+        >
+          <header className="flex w-full items-center justify-between gap-8">
+            <Button
+              variant="icon-white"
+              className="sticky top-0"
+              onClick={resetActivePlant}
+              icon={<MdClose />}
+            />
+
+            <div className="ml-auto flex items-center gap-1 sticky top-0 text-primary dark:text-default-text">
+              {ITERATE_DIRECTION.map((direction) => (
+                <Fragment key={direction}>
+                  <Button
+                    key={direction}
+                    size="small"
+                    disabled={disableIterate[direction]}
+                    variant="icon-white"
+                    onClick={() => iteratePlant(direction)}
+                    icon={
+                      direction === "prev" ? (
+                        <MdChevronLeft />
+                      ) : (
+                        <MdChevronRight />
+                      )
+                    }
+                  />
+                  {direction === "prev" && (
+                    <span className="font-mono text-xs text-primary-dark dark:text-white/60">
+                      {overallIndex + 1} / {totalItems}
+                    </span>
+                  )}
+                </Fragment>
+              ))}
+              <PlantActions plant={activePlant} />
+            </div>
+          </header>
+
+          <div
+            key={activePlant.scientificName}
+            className="flex flex-col small-screen:overflow-auto big-screen:overflow-hidden gap-4 pb-6 px-2"
+          >
+            <div className="flex flex-col items-center p-2">
+              <h2>{plantDisplayNames?.title}</h2>
+              {plantDisplayNames?.subTitle && (
+                <h6 className="italic"> {plantDisplayNames.subTitle}</h6>
+              )}
+            </div>
+
+            <div className="flex max-lg:flex-col gap-4 justify-between px-2">
+              <PlantImageViewer
+                isModalOpen={imageModalOpen}
+                setIsModalOpen={setImageModalOpen}
+              />
+              <MapProvider
+                showMarkers
+                className="min-h-60 w-full"
+                locationParams={searchParams.location}
+                {...(mapCenter && { center: mapCenter })}
+              />
+            </div>
+
+            <div className="big-screen:overflow-auto flex-grow space-y-4">
+              {children}
+
+              <PlantInfoCard
+                plant={activePlant}
+                onTouchEndCapture={(e) => e.stopPropagation()}
+              />
+            </div>
+          </div>
+        </Card>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default ActivePlantPane;

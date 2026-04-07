@@ -1,5 +1,5 @@
-import { VOID_FUNCTION } from "contexts/plantSearch/PlantSearchContext";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { VOID_FUNCTION } from "util/generalUtil";
 
 export const deviceDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
 

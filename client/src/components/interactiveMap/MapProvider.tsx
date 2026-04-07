@@ -1,5 +1,6 @@
 import { centroid } from "@turf/turf";
 import classNames from "classnames";
+import { PlantLocationParams, PlantSearchParams } from "config/hotplantsConfig";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import "leaflet-draw/dist/leaflet.draw.css";
@@ -7,7 +8,6 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
-import { PlantSearchParams } from "util/customSchemaTypes";
 import LocationPolygon from "./LocationPolygon";
 import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
 import PolygonDrawing, { SetCustomPolygonFn } from "./PolygonDrawing";
@@ -22,13 +22,13 @@ type MapProviderProps = {
   isLoading?: boolean;
   showMarkers?: boolean;
   locationCustomizeable?: boolean;
-  searchParams: PlantSearchParams | null;
-  setSearchParams?: (newParams: PlantSearchParams) => void;
+  locationParams: PlantSearchParams["location"];
+  setLocationParams?: (newParams: PlantLocationParams) => void;
 } & MapContainerProps;
 
 const MapProvider = ({
-  searchParams,
-  setSearchParams,
+  locationParams: searchParams,
+  setLocationParams: setSearchParams,
 
   isLoading,
   showMarkers,
@@ -60,8 +60,9 @@ const MapProvider = ({
     >
       <LoadingOverlay
         show={isLoading}
-        size={40}
-        className="absolute h-full w-full"
+        iconSize={30}
+        className="z-20 absolute"
+        disableAnimationFallback
       />
 
       <MapContainer

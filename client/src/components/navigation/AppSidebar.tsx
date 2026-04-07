@@ -1,38 +1,46 @@
 import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import classNames from "classnames";
-import { useSidebarContext } from "contexts/sidebar/SidebarContext";
+import { useAppContext } from "contexts/AppContext";
 import Button from "designSystem/Button";
-import Sidebar from "designSystem/sidebar/Sidebar";
-import { IconType } from "react-icons/lib";
-import { MdOutlineSearch, MdOutlineYoutubeSearchedFor } from "react-icons/md";
+import Sidebar from "designSystem/Sidebar";
+import { MenuItemData } from "designSystem/StyledMenu";
+import { CgReadme } from "react-icons/cg";
+import { MdHistory, MdOutlineSearch } from "react-icons/md";
 import { TbPlant2 } from "react-icons/tb";
 import { isSmallScreen } from "util/generalUtil";
 
-type SidebarNavItem = { icon: IconType; text: string } & LinkProps;
+type SidebarNavItem = PickRequired<
+  MenuItemData,
+  "Icon" | "label" | "linkProps"
+>;
 
 const SIDEBAR_ITEMS: SidebarNavItem[] = [
   {
-    icon: MdOutlineSearch,
-    text: "Plant Search",
-    to: "/plant-search",
-    search: { search: null },
+    label: "Browse Plants",
+    linkProps: { to: "/browse-plants" },
+    Icon: CgReadme,
   },
   {
-    icon: MdOutlineYoutubeSearchedFor,
-    text: "Search Archive",
-    to: "/search-archive",
+    label: "New Search",
+    linkProps: { to: "/new-search" },
+    Icon: MdOutlineSearch,
   },
   {
-    icon: TbPlant2,
-    text: "Gardens",
-    to: "/gardens/{-$gardenName}",
-    params: { gardenName: undefined },
+    label: "Search History",
+    linkProps: { to: "/search-history" },
+    Icon: MdHistory,
+  },
+
+  {
+    label: "Gardens",
+    linkProps: { to: "/user-gardens" },
+    Icon: TbPlant2,
   },
 ];
 
 const AppSidebar = () => {
   const location = useLocation();
-  const { sidebarExpanded, setSidebarExpanded } = useSidebarContext();
+  const { sidebarExpanded, setSidebarExpanded } = useAppContext();
 
   const isActiveLink = (link: LinkProps) =>
     link.params
@@ -58,10 +66,10 @@ const AppSidebar = () => {
     >
       {({ isExpanded, setIsExpanded }) => (
         <>
-          {SIDEBAR_ITEMS.map(({ icon, ...item }, index) => (
+          {SIDEBAR_ITEMS.map(({ Icon, ...item }, index) => (
             <Link
               key={index}
-              {...item}
+              {...item.linkProps}
               onClick={() => isSmallScreen() && setIsExpanded(false)}
             >
               <Button
@@ -73,12 +81,10 @@ const AppSidebar = () => {
                       isExpanded,
                     "big-screen:p-2! big-screen:pl-2! big-screen:rounded-none big-screen:mx-0! big-screen:w-full":
                       !isExpanded,
-                    "bg-white/10": isActiveLink(item),
+                    "bg-white/10": isActiveLink(item.linkProps),
                   },
                 )}
-                icon={icon({
-                  size: 24,
-                })}
+                icon={<Icon size={24} />}
               >
                 <span
                   key="nav-item-text"
@@ -89,7 +95,7 @@ const AppSidebar = () => {
                       : "big-screen:opacity-0 big-screen:w-0",
                   )}
                 >
-                  {item.text}
+                  {item.label}
                 </span>
               </Button>
             </Link>

@@ -1,103 +1,89 @@
-import { getRouteApi, useNavigate } from "@tanstack/react-router";
-import PlantList from "components/plantResults/PlantList";
-import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
+import { useNavigate } from "@tanstack/react-router";
+import CreateGardenModal from "components/garden/CreateGardenModal";
+import DeleteGardenModal from "components/garden/DeleteGardenModal";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
-import {
-  CREATE_GARDEN,
-  GET_ALL_GARDEN_NAMES,
-  GET_GARDEN,
-} from "graphqlHelpers/gardenQueries";
-import { useApolloMutation, useApolloQuery } from "hooks/useQuery";
-import { useEffect } from "react";
-import { MdArrowBack } from "react-icons/md";
-
-const route = getRouteApi("/_private/gardens/{-$gardenName}");
+import { GET_ALL_GARDENS, UserGarden } from "graphqlHelpers/gardenQueries";
+import { useApolloQuery } from "hooks/useQuery";
+import pluralize from "pluralize";
+import { useState } from "react";
+import { MdOutlineDeleteForever } from "react-icons/md";
 
 const UserGardens = () => {
   const navigate = useNavigate();
-  const { gardenName } = route.useParams();
-  const userGardensQuery = useApolloQuery(GET_ALL_GARDEN_NAMES, {
-    skip: Boolean(gardenName),
+  const [showCreateGardenModal, setShowCreateGardenModal] = useState(false);
+  const [showDeleteGardenModal, setShowDeleteGardenModal] =
+    useState<null | UserGarden>(null);
+
+  const userGardensQuery = useApolloQuery(GET_ALL_GARDENS, {
+    fetchPolicy: "cache-and-network",
   });
   const allUserGardens = userGardensQuery.data?.allUserGardens;
 
-  const getGardenQuery = useApolloQuery(GET_GARDEN, {
-    variables: { gardenName: gardenName! },
-    skip: !gardenName,
-  });
-  const [createGarden, { loading: createGardenLoading }] =
-    useApolloMutation(CREATE_GARDEN);
-
-  const createGardenAndRefetch = async () => {
-    await createGarden();
-    userGardensQuery.refetch();
-  };
-
-  useEffect(() => {
-    userGardensQuery.refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
-    <main className="page-buffer relative">
-      <PageTitle key={gardenName}>
-        {gardenName ? (
-          <span className="flex gap-4 items-center">
-            <MdArrowBack
-              className="cursor-pointer"
-              onClick={() =>
-                navigate({
-                  to: ".",
-                  params: { gardenName: undefined },
-                })
-              }
-            />
-            {gardenName}
-          </span>
-        ) : (
-          "Gardens"
-        )}
-      </PageTitle>
+    <main className="page-buffer page-container">
+      <PageTitle>Gardens</PageTitle>
 
       <LoadingOverlay
-        debounceShow
-        show={getGardenQuery.loading || createGardenLoading}
-        size={30}
-        className="absolute w-full h-80 animate-pulse"
+        debounceShow={Boolean(userGardensQuery.previousData)}
+        transparent
+        show={
+          userGardensQuery.loading && userGardensQuery.dataState !== "complete"
+        }
+        className="absolute top-0 left-0"
       />
 
-      {gardenName ? (
-        <PlantSelectionProvider
-          plantList={getGardenQuery.data?.userGarden?.plants ?? []}
-        >
-          <PlantList />
-        </PlantSelectionProvider>
-      ) : allUserGardens?.length ? (
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
-          {allUserGardens.map(({ gardenName, totalPlants }, index) => (
-            <Card
-              key={index}
-              className="space-y-2 cursor-pointer min-w-xs"
-              solidOnHover
-              onClick={() => navigate({ to: gardenName })}
-            >
-              <h2 className="border-b border-secondary pb-2">{gardenName}</h2>
-              <h4>{totalPlants} plants</h4>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <Button
-          isLoading={createGardenLoading}
-          variant="accent"
-          onClick={createGardenAndRefetch}
-        >
-          Create a garden
-        </Button>
-      )}
+      <div className="grid grid-cols-[repeat(auto-fit,_minmax(min-content,400px))] gap-4">
+        {allUserGardens?.map((garden, index) => (
+          <Card
+            key={index}
+            className="space-y-2 cursor-pointer min-w-xs"
+            solidOnHover
+            onClick={() =>
+              navigate({
+                to: "/gardens/$gardenName",
+                params: { gardenName: garden.gardenName },
+              })
+            }
+          >
+            <h2 className="border-b border-secondary pb-2 flex justify-between items-center">
+              {garden.gardenName}
+              <Button
+                variant="icon-white"
+                size="flush"
+                className="opacity-40"
+                icon={<MdOutlineDeleteForever size={20} />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteGardenModal(garden);
+                }}
+              />
+            </h2>
+            <h4>{pluralize("plant", garden.plantCount, true)}</h4>
+          </Card>
+        ))}
+      </div>
+      <Button className="w-fit" onClick={() => setShowCreateGardenModal(true)}>
+        Create a garden
+      </Button>
+
+      <DeleteGardenModal
+        garden={showDeleteGardenModal}
+        isOpen={Boolean(showDeleteGardenModal)}
+        onClose={(gardenDeleted) => {
+          setShowDeleteGardenModal(null);
+          gardenDeleted && userGardensQuery.refetch();
+        }}
+      />
+      <CreateGardenModal
+        isOpen={showCreateGardenModal}
+        onClose={(gardenCreated) => {
+          setShowCreateGardenModal(false);
+          gardenCreated && userGardensQuery.refetch();
+        }}
+      />
     </main>
   );
 };

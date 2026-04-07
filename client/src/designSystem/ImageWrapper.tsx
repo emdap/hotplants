@@ -1,12 +1,6 @@
 import classNames from "classnames";
-import {
-  HTMLProps,
-  ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import imageNotAvailable from "placeholderImages/imageNotAvailable.png";
+import { HTMLProps, ReactNode, useEffect, useRef, useState } from "react";
 import LoadingIcon from "./LoadingIcon";
 
 export type ImageWrapperProps = {
@@ -30,27 +24,21 @@ const ImageWrapper = ({
 }: ImageWrapperProps) => {
   const imgRef = useRef<HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = useState(true);
-  const [imageNotAvailable, setImageNotAvailable] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const handleLoadError = () => {
     setIsLoaded(false);
-    setImageNotAvailable(true);
+    setIsError(true);
 
     onError && onError();
   };
 
   useEffect(() => {
-    setIsLoaded(false);
-    imageUrl && setImageNotAvailable(false);
-  }, [imageUrl]);
-
-  useLayoutEffect(() => {
     setIsLoaded(Boolean(imgRef.current?.complete));
+    imageUrl && setIsError(false);
   }, [imageUrl]);
 
-  return imageNotAvailable ? (
-    children({ isLoaded, isError: true })
-  ) : (
+  return (
     <div
       className={classNames(showSpinner && "relative", containerClass)}
       {...containerProps}
@@ -58,7 +46,7 @@ const ImageWrapper = ({
       <img
         ref={imgRef}
         loading="lazy"
-        src={imageUrl}
+        src={isError ? imageNotAvailable : imageUrl}
         className={classNames(imageClass, [
           "transition-opacity duration-300",
           isLoaded ? "opacity-100" : "opacity-0",
@@ -76,7 +64,7 @@ const ImageWrapper = ({
           <LoadingIcon />
         </div>
       )}
-      {children({ isLoaded })}
+      {children({ isLoaded, isError })}
     </div>
   );
 };

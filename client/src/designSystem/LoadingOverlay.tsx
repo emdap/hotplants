@@ -1,4 +1,6 @@
 import classNames from "classnames";
+import PlantAnimation from "components/PlantAnimation";
+import { useAppContext } from "contexts/AppContext";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { useDebounce } from "react-use";
@@ -8,19 +10,22 @@ import { MOTION_FADE_IN } from "./motionTransitions";
 type LoadingOverlayProps = {
   show?: boolean;
   debounceShow?: boolean;
-  size?: number;
+  iconSize?: number;
   transparent?: boolean;
   className?: string;
+  disableAnimationFallback?: boolean;
 };
 
 const LoadingOverlay = ({
   show,
   debounceShow,
-  size = 50,
+  iconSize = 50,
   transparent,
   className,
+  disableAnimationFallback,
 }: LoadingOverlayProps) => {
   const [debouncedShow, setDebouncedShow] = useState(false);
+  const { serverReady } = useAppContext();
   useDebounce(() => setDebouncedShow(Boolean(show)), 1000, [show]);
 
   const showLoader = debounceShow ? debouncedShow : show;
@@ -32,12 +37,19 @@ const LoadingOverlay = ({
           key="loading-overlay"
           {...MOTION_FADE_IN}
           className={classNames(
-            "z-20 rounded-sm flex justify-center items-center",
-            { "bg-gray-500/80 dark:bg-black/70": !transparent },
+            "rounded-sm flex justify-center items-center min-h-full w-full",
+            {
+              "opacity-50": transparent,
+              "bg-gray-500/80 dark:bg-black/70": !transparent,
+            },
             className,
           )}
         >
-          <LoadingIcon size={size} className="text-white" />
+          {serverReady === true || disableAnimationFallback ? (
+            <LoadingIcon size={iconSize} className="text-white" />
+          ) : (
+            <PlantAnimation />
+          )}
         </motion.div>
       )}
     </AnimatePresence>

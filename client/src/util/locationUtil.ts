@@ -1,26 +1,70 @@
 import { bboxPolygon, coordAll, simplify } from "@turf/turf";
+import { PlantLocationParams } from "config/hotplantsConfig";
+import type * as Nominatim from "generated/schemas/nominatim";
 import type { paths } from "generated/schemas/nominatim";
-import { BBox, Polygon, Position } from "geojson";
+import {
+  BBox,
+  Feature,
+  Polygon,
+  Polygon as PolygonType,
+  Position,
+} from "geojson";
 import createClient from "openapi-fetch";
-import { LocationData, PlantSearchParams } from "./customSchemaTypes";
-
-export type LocationSearchParams = Pick<
-  PlantSearchParams,
-  "locationName" | "locationSource" | "boundingPolyCoords"
->;
+import { toast } from "sonner";
 
 const locationClient = createClient<paths>({
   baseUrl: "https://nominatim.openstreetmap.org",
 });
 
+type LocationData = Nominatim.components["schemas"]["OSMGeocodeJson"][number];
+export type LocationCoord = [number, number];
+
+const DEFAULT_QUERY_PARAMS = {
+  format: "json" as const,
+  polygon_geojson: 1,
+  polygon_threshold: 0.5,
+};
+
+export const reverseLookupLocation = async (coords: GeolocationCoordinates) => {
+  try {
+    const { data, error } = await locationClient.GET("/reverse", {
+      params: {
+        query: {
+          lat: coords.latitude,
+          lon: coords.longitude,
+          zoom: 8,
+          ...DEFAULT_QUERY_PARAMS,
+        },
+      },
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    const location = Array.isArray(data) ? data[0] : (data ?? {});
+    const validatedLocation = validateNominatimLocation(location);
+
+    if (!validatedLocation) {
+      throw { message: "Unable to use current location." };
+    }
+
+    return validatedLocation;
+  } catch (error) {
+    toast.error(
+      error && typeof error === "object" && "message" in error
+        ? String(error.message)
+        : `Unknown error occurred: ${String(error)}`,
+    );
+  }
+};
+
 export const lookupLocationInput = (input: string) =>
   locationClient.GET("/search", {
     params: {
       query: {
-        format: "json",
-        polygon_geojson: 1,
-        polygon_threshold: 0.5,
         q: input,
+        ...DEFAULT_QUERY_PARAMS,
       },
     },
   });
@@ -72,7 +116,7 @@ const convertNominatimGeojson = (location: LocationData) => {
 
 export const validateNominatimLocation = (
   location?: LocationData,
-): null | LocationSearchParams => {
+): null | PlantLocationParams => {
   if (!location?.display_name) {
     return null;
   }
@@ -88,8 +132,25 @@ export const validateNominatimLocation = (
   );
 };
 
+export const locationDisplay = (
+  location: Omit<PlantLocationParams, "boundingPolyCoords">,
+  shortenCustom?: boolean,
+) => {
+  if (location.locationSource === "custom") {
+    return {
+      title: shortenCustom ? "Custom" : customLocationDisplay(location),
+    };
+  }
+
+  const splitName = location.locationName.split(", ");
+  return {
+    title: splitName[0],
+    subTitle: splitName.slice(1).join(", "),
+  };
+};
+
 export const customLocationDisplay = (
-  location: Partial<LocationSearchParams>,
+  location: Omit<PlantLocationParams, "boundingPolyCoords">,
 ) => `Custom Location: (${location.locationName ?? "N/A"})`;
 
 export const crossesMeridian = (coordinates: Position[]) => {
@@ -106,4 +167,28 @@ export const crossesMeridian = (coordinates: Position[]) => {
       }
     }
   });
+};
+
+// GeoJSON spec dictates lng, lat
+// Leaflet uses lat, lng
+export const swapLatLng = (
+  coords: number[][] | LocationCoord[],
+): LocationCoord[] => coords.map(([first, second]) => [second, first]);
+
+export const getOuterCoordinates = (feature: Feature<PolygonType>) =>
+  feature.geometry.coordinates[0];
+
+export const validateLocationParams = ({
+  locationName,
+  locationSource,
+  boundingPolyCoords,
+}: {
+  [key in keyof PlantLocationParams]?:
+    | PlantLocationParams[key]
+    | null
+    | undefined;
+}): PlantLocationParams | undefined => {
+  if (locationName && locationSource && boundingPolyCoords) {
+    return { locationName, locationSource, boundingPolyCoords };
+  }
 };

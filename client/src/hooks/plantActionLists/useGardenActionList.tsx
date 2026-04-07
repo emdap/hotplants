@@ -1,0 +1,56 @@
+import {
+  PlantAction,
+  PlantResult,
+} from "contexts/plantSelection/PlantSelectionContext";
+import { REMOVE_PLANT_FROM_GARDEN } from "graphqlHelpers/gardenQueries";
+import { useApolloMutation } from "hooks/useQuery";
+import { FaHeartBroken } from "react-icons/fa";
+import { toast } from "sonner";
+import { handleGraphQlError } from "util/generalUtil";
+import { getPlantDisplayNames } from "util/plantUtil";
+import useAddToGardenActionList from "./useAddToGardenActionList";
+
+export const useGardenActionList = ({
+  gardenId,
+  refetchGarden,
+}: {
+  gardenId: string;
+  refetchGarden: () => void;
+}): PlantAction[] => {
+  const addToGardenActions = useAddToGardenActionList([gardenId]);
+
+  const [removeFromGardenMutation] = useApolloMutation(
+    REMOVE_PLANT_FROM_GARDEN,
+    {
+      variables: { gardenId },
+    },
+  );
+
+  const removeFromGarden = async (plant: PlantResult) => {
+    try {
+      await removeFromGardenMutation({
+        variables: { plantId: plant._id },
+      });
+
+      toast.success(
+        `Removed "${getPlantDisplayNames(plant).title}" from garden`,
+      );
+      refetchGarden();
+    } catch (error) {
+      handleGraphQlError(error);
+    }
+
+    refetchGarden();
+  };
+
+  return [
+    {
+      label: "Remove from garden",
+      Icon: FaHeartBroken,
+      onClick: removeFromGarden,
+    },
+    ...addToGardenActions,
+  ];
+};
+
+export default useGardenActionList;

@@ -3,7 +3,7 @@ import { routeTree } from "./routeTree.gen";
 
 export const router = createRouter({
   routeTree,
-  defaultNotFoundComponent: () => <Navigate to="/plant-search" replace />,
+  defaultNotFoundComponent: () => <Navigate to="/browse-plants" replace />,
 });
 
 declare module "@tanstack/react-router" {

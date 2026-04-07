@@ -1,20 +1,40 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import AuthFormCard from "components/auth/AuthFormCard";
-import AuthLoadingSubmitButton from "components/auth/AuthLoadingSubmitButton";
-import { authClient, useAuthSession } from "config/authClient";
+import {
+  createFileRoute,
+  Link,
+  retainSearchParams,
+} from "@tanstack/react-router";
+import { authClient, useAuthSession } from "config/authConfig";
 import Button from "designSystem/Button";
+import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { defaultErrorToast } from "util/toastUtil";
 
 const Logout = () => {
   const session = useAuthSession();
+  const [loading, setLoading] = useState(false);
+
+  const onLogout = async () => {
+    setLoading(true);
+    try {
+      const { error } = await authClient.signOut();
+      if (error) {
+        toast.error(error.message ?? "Unexpected error occurred.");
+      }
+    } catch (error) {
+      console.error(error);
+      defaultErrorToast();
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    authClient.signOut();
+    onLogout();
   }, []);
 
   return (
-    <AuthFormCard>
+    <Card className="mt-10 space-y-10">
       {session.isPending ? (
         <div className="flex gap-4 items-center">
           <LoadingIcon />
@@ -26,14 +46,19 @@ const Logout = () => {
             You've been successfully signed out.
           </p>
           <div className="w-full flex gap-4 justify-center">
-            <Link to={".."} replace className="flex flex-grow">
+            <Link
+              to="/browse-plants"
+              search={(prev) => prev}
+              replace
+              className="flex flex-grow"
+            >
               <Button variant="primary" className="max-w-full w-full">
-                Back
+                Go to Plant search
               </Button>
             </Link>
             <Link to={"/login"} className="flex-grow" replace>
               <Button variant="secondary" className="max-w-full w-full">
-                Go to Log In page
+                Go to Log In
               </Button>
             </Link>
           </div>
@@ -41,18 +66,18 @@ const Logout = () => {
       ) : (
         <>
           <div className="font-medium">Sign out was not successful.</div>
-          <AuthLoadingSubmitButton
-            variant="primary"
-            onClick={() => authClient.signOut()}
-          >
+          <Button variant="primary" onClick={onLogout} isLoading={loading}>
             Try Again
-          </AuthLoadingSubmitButton>
+          </Button>
         </>
       )}
-    </AuthFormCard>
+    </Card>
   );
 };
 
 export const Route = createFileRoute("/_auth/logout")({
   component: Logout,
+  search: {
+    middlewares: [retainSearchParams(true)],
+  },
 });

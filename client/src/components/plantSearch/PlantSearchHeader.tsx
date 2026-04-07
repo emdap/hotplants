@@ -1,45 +1,63 @@
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { useNavigate } from "@tanstack/react-router";
+import PlantLocationOpenButton from "components/plantDataControls/plantLocation/PlantLocationOpenButton";
+import PlantNameOpenButton from "components/plantDataControls/plantName/PlantNameOpenButton";
+import { OpenPlantFormProps } from "components/plantDataControls/plantSearchFormUtil";
+import {
+  SearchFormTab,
+  usePlantSearchContext,
+} from "contexts/plantSearch/PlantSearchContext";
+import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import FloatingHeader from "designSystem/FloatingHeader";
-import LoadingIcon from "designSystem/LoadingIcon";
+import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
-import OpenSidebarButton from "designSystem/sidebar/OpenSidebarButton";
-import pluralize from "pluralize";
-import { FaGlobe } from "react-icons/fa";
+import PlantFilterOpenButton from "../plantDataControls/plantFilters/PlantFilterOpenButton";
 
 const PlantSearchHeader = () => {
+  const navigate = useNavigate();
   const {
-    page,
-    pageSize,
     searchStatus,
-    totalResultsCount,
     isInfiniteScroll,
     setIsInfiniteScroll,
-    setSidebarExpanded,
+    searchFormState,
+    setSearchFormState,
   } = usePlantSearchContext();
+  const { page, pageSize, totalItems } = usePlantSelectionContext();
+
+  const toggleInfiniteScroll = (enable: boolean) => {
+    enable && navigate({ to: ".", search: (prev) => ({ ...prev, page: 1 }) });
+    setIsInfiniteScroll(enable);
+  };
+
+  const searchTabButtonProps = (
+    tabName: SearchFormTab,
+  ): OpenPlantFormProps => ({
+    onClick: () => setSearchFormState({ tab: tabName, isOpen: true }),
+    isOpen: searchFormState.isOpen && searchFormState.tab === tabName,
+  });
 
   return (
-    <FloatingHeader className="grid-centered gap-4 items-center justify-center small-screen:mx-safe-2">
-      <OpenSidebarButton
-        openSidebar={() => setSidebarExpanded(true)}
-        className="text-accent/80! hover:text-accent! big-screen:hidden dark:text-white/80! dark:hover:text-white! mr-auto"
-        icon={<FaGlobe size={16} />}
-      />
-
-      <div className="small-screen:text-default-text flex items-center gap-1 col-start-2">
-        {pluralize("Plant", totalResultsCount, true)}
-        {searchStatus === "SCRAPING_AND_POLLING" && <LoadingIcon />}
+    <FloatingHeader className="small-screen:mx-safe-3 big-screen:px-4 overflow-auto">
+      <div className="flex lg:gap-4 items-center">
+        <PlantLocationOpenButton {...searchTabButtonProps("location")} />
+        <PlantNameOpenButton {...searchTabButtonProps("plant-name")} />
+        <PlantFilterOpenButton {...searchTabButtonProps("filters")} />
       </div>
+
+      <ItemCountWithLoader
+        label="Plant"
+        className="col-start-2 whitespace-nowrap"
+        count={totalItems}
+        isLoading={searchStatus === "SCRAPING_AND_POLLING"}
+      />
 
       <PaginationControl
         className="ml-auto"
-        page={page}
-        totalResults={totalResultsCount}
-        pageSize={pageSize}
         replaceUrl
         infiniteScroll={{
           enabled: isInfiniteScroll,
-          setEnabled: setIsInfiniteScroll,
+          setEnabled: toggleInfiniteScroll,
         }}
+        {...{ page, pageSize, totalItems }}
       />
     </FloatingHeader>
   );

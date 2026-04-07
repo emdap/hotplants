@@ -1,31 +1,67 @@
-import { VOID_FUNCTION } from "contexts/plantSearch/PlantSearchContext";
-import { PlantQueryResults } from "graphqlHelpers/plantQueries";
+import { MenuItemData } from "designSystem/StyledMenu";
+import {
+  GardenPlantData,
+  PlantData,
+  PlantMedia,
+  PlantOccurrence,
+} from "generated/graphql/graphql";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { VOID_FUNCTION } from "util/generalUtil";
 
-type PlantSelectionContextType = {
-  plantList: PlantQueryResults;
+export type PlantResult = Omit<GardenPlantData, "addedToGardenTimestamp"> &
+  PlantData & { addedToGardenTimestamp?: number };
 
-  activePlantIndex: number | null;
-  activeMediaIndex: number | null;
-  setActivePlantIndex: Dispatch<SetStateAction<number | null>>;
-  setActiveMediaIndex: Dispatch<SetStateAction<number>>;
+export type FlattenedPlantMedia = (Omit<PlantOccurrence, "media"> &
+  PlantMedia)[];
+
+export type PaginationData = {
+  page: number;
+  lastPage: number;
+  pageSize: number;
+  totalItems: number;
+};
+
+export type PlantAction<R = unknown> = MenuItemData<
+  PlantResult,
+  Promise<R> | R
+>;
+
+export type PlantSelectionContextType = {
+  plantList: PlantResult[];
+  plantListLoading?: boolean;
+  plantActions?: PlantAction[];
+
+  activePlantId: string | null;
+  activePlant?: PlantResult;
+  activePlantMedia: FlattenedPlantMedia | [];
+  activeMediaUrl: string | null;
+
+  setActivePlantId: Dispatch<SetStateAction<string | null>>;
+  setActiveMediaUrl: Dispatch<SetStateAction<string | null>>;
 
   syncPlant: (plantId: string) => void;
-};
+} & PaginationData;
 
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSelectionContextType = {
   plantList: [],
 
-  activePlantIndex: null,
-  activeMediaIndex: 0,
-  setActivePlantIndex: VOID_FUNCTION,
-  setActiveMediaIndex: VOID_FUNCTION,
+  page: 0,
+  lastPage: 0,
+  pageSize: 0,
+  totalItems: 0,
+
+  activePlantId: null,
+  activePlantMedia: [],
+  activeMediaUrl: null,
+
+  setActivePlantId: VOID_FUNCTION,
+  setActiveMediaUrl: VOID_FUNCTION,
 
   syncPlant: VOID_FUNCTION,
 };
 
 export const PlantSelectionContext = createContext<PlantSelectionContextType>(
-  DEFAULT_PLANT_SEARCH_CONTEXT
+  DEFAULT_PLANT_SEARCH_CONTEXT,
 );
 
 export const usePlantSelectionContext = () => useContext(PlantSelectionContext);

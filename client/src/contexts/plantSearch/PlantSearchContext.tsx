@@ -3,40 +3,32 @@ import {
   PlantSearchQueryStatus,
 } from "hooks/usePlantSearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { PlantSearchFilter, PlantSearchParams } from "util/customSchemaTypes";
-import { isSmallScreen } from "util/generalUtil";
+import {
+  isSmallScreen,
+  VOID_FUNCTION,
+  VOID_PROMISE_FUNCTION,
+} from "util/generalUtil";
 
-export const RESULTS_PANE_ID = "results-pane";
-
-export const VOID_FUNCTION = () => {};
-const VOID_PROMISE_FUNCTION = async () => {};
+export type SearchFormTab = "location" | "plant-name" | "filters";
+type SearchFormState = { tab: SearchFormTab; isOpen: boolean };
+export const DEFAULT_SEARCH_FORM_STATE = (): SearchFormState => ({
+  tab: "location",
+  isOpen: !isSmallScreen(),
+});
 
 export type PlantSearchContextType = {
   hasCurrentResults: boolean;
-  totalResultsCount: number;
 
   isInfiniteScroll: boolean;
   setIsInfiniteScroll: (enabled: boolean) => void;
 
-  searchParams: PlantSearchParams | null;
-  page: number;
-  pageSize: number;
-
-  searchParamsDraft: Partial<PlantSearchParams> | null;
-  validatedSearchParamsDraft: PlantSearchParams | null;
-
-  updateSearchParamsDraft: (locationParams: Partial<PlantSearchParams>) => void;
-  applySearchParams: (params?: Partial<PlantSearchParams>) => void;
-
-  plantFilter: PlantSearchFilter;
-  applyPlantFilter: (filter?: PlantSearchFilter) => void;
-
-  hasMoreData: boolean;
   searchStatus: PlantSearchQueryStatus;
-  fetchMorePlants: () => Promise<void>;
+  fetchMorePlants: () => Promise<unknown>;
 
-  sidebarExpanded: boolean;
-  setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
+  searchFormState: SearchFormState;
+  setSearchFormState: Dispatch<SetStateAction<SearchFormState>>;
+
+  getResultsContainer: () => HTMLDivElement | null | void;
 } & Pick<
   PlantSearchQueriesReturnType,
   "searchRecordQuery" | "plantSearchQuery"
@@ -44,32 +36,19 @@ export type PlantSearchContextType = {
 
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   hasCurrentResults: false,
-  totalResultsCount: 0,
 
   isInfiniteScroll: !isSmallScreen(),
   setIsInfiniteScroll: VOID_FUNCTION,
 
-  searchParams: null,
-  page: 0,
-  pageSize: 20,
-
-  searchParamsDraft: null,
-  validatedSearchParamsDraft: null,
-
-  updateSearchParamsDraft: VOID_FUNCTION,
-  applySearchParams: VOID_FUNCTION,
-
-  plantFilter: {},
-  applyPlantFilter: VOID_FUNCTION,
-
   searchStatus: "READY",
-  hasMoreData: false,
   searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
   plantSearchQuery: {} as PlantSearchQueriesReturnType["plantSearchQuery"],
   fetchMorePlants: VOID_PROMISE_FUNCTION,
 
-  sidebarExpanded: !isSmallScreen(),
-  setSidebarExpanded: VOID_FUNCTION,
+  searchFormState: DEFAULT_SEARCH_FORM_STATE(),
+  setSearchFormState: VOID_FUNCTION,
+
+  getResultsContainer: VOID_FUNCTION,
 };
 
 export const PlantSearchContext = createContext<PlantSearchContextType>(

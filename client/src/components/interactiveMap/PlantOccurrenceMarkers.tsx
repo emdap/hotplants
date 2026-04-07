@@ -1,106 +1,49 @@
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
-import { PlantOccurrence } from "generated/graphql/graphql";
-import { PlantResult } from "graphqlHelpers/plantQueries";
-import { useMemo } from "react";
-import { Marker } from "react-leaflet";
+import { Marker, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import { swapLatLng } from "util/locationUtil";
 import { MarkerClusterIcon, OccurrenceMarkerIcon } from "./MarkerIcons";
 
-type FlatOccurrenceMedia = Omit<PlantOccurrence, "media"> & {
-  plantIndex: number;
-  mediaIndex: number;
-  media: PlantOccurrence["media"][number];
-};
+const PlantOccurrenceMarkers = () => {
+  const map = useMap();
+  const { activePlantMedia, activeMediaUrl, setActiveMediaUrl } =
+    usePlantSelectionContext();
 
-const occurrenceMediaFlat = (plant: PlantResult, plantIndex: number) => {
-  let overallIndex = plant.thumbnailUrl ? 1 : 0;
-  return plant.occurrences.reduce<FlatOccurrenceMedia[]>((prev, occurrence) => {
-    const mappedMedia = occurrence.media.map((media, index) => ({
-      ...occurrence,
-      plantIndex,
-      mediaIndex: overallIndex + index,
-      media,
-    }));
-
-    overallIndex += mappedMedia.length;
-    return prev.concat(mappedMedia);
-  }, []);
-};
-
-const PlantOccurrenceMarkers = ({
-  showAllPlants,
-}: {
-  showAllPlants?: boolean;
-}) => {
-  const {
-    plantList,
-    activePlantIndex,
-    activeMediaIndex,
-    setActivePlantIndex,
-    setActiveMediaIndex,
-  } = usePlantSelectionContext();
-
-  const { isViewingAllPlants, plantOccurrences } = useMemo(() => {
-    if (
-      showAllPlants ||
-      activePlantIndex === null ||
-      !plantList[activePlantIndex]
-    ) {
-      return {
-        isViewingAllPlants: true,
-        plantOccurrences: [], // TODO: TEMP
-      };
-    } else {
-      return {
-        isViewingAllPlants: false,
-        plantOccurrences: [
-          occurrenceMediaFlat(plantList[activePlantIndex], activePlantIndex),
-        ],
-      };
-    }
-  }, [showAllPlants, plantList, activePlantIndex]);
-
-  const isActiveOccurrenceMedia = (
-    isViewingAllPlants: boolean,
-    plantIndex: number,
-    mediaIndex: number,
-  ) =>
-    isViewingAllPlants
-      ? false
-      : plantIndex === activePlantIndex && mediaIndex === activeMediaIndex;
-
-  return plantOccurrences.map((occurrences, index) => (
+  return (
     <MarkerClusterGroup
-      key={isViewingAllPlants ? index : activeMediaIndex}
+      key={activeMediaUrl}
       zoomToBoundsOnClick={false}
       spiderfyOnEveryZoom
-      iconCreateFunction={isViewingAllPlants ? undefined : MarkerClusterIcon}
-      maxClusterRadius={isViewingAllPlants ? 200 : 80}
+      iconCreateFunction={(data) =>
+        MarkerClusterIcon(data, activePlantMedia[0]?.url)
+      }
+      maxClusterRadius={80}
     >
-      {occurrences.map(
-        ({ occurrenceCoords, media, plantIndex, mediaIndex }, index) => (
+      {activePlantMedia.map(({ occurrenceCoords, url }, index) => {
+        // Encountered case of missing coordinates
+        if (occurrenceCoords.length !== 2) {
+          return null;
+        }
+
+        const isActive = url === activeMediaUrl;
+        isActive &&
+          map.fitBounds(swapLatLng([occurrenceCoords]), {
+            maxZoom: map.getZoom(),
+          });
+
+        return (
           <Marker
             key={index}
             position={[occurrenceCoords[1], occurrenceCoords[0]]}
-            icon={OccurrenceMarkerIcon(
-              media.url,
-              isActiveOccurrenceMedia(
-                isViewingAllPlants,
-                plantIndex,
-                mediaIndex,
-              ),
-            )}
+            icon={OccurrenceMarkerIcon(url, isActive)}
             eventHandlers={{
-              click: () => {
-                setActivePlantIndex(plantIndex);
-                setActiveMediaIndex(mediaIndex);
-              },
+              click: () => setActiveMediaUrl(url),
             }}
           />
-        ),
-      )}
+        );
+      })}
     </MarkerClusterGroup>
-  ));
+  );
 };
 
 export default PlantOccurrenceMarkers;
