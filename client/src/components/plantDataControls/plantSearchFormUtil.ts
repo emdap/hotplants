@@ -13,7 +13,7 @@ export type PlantSearchFormProps = {
 export type OpenPlantFormProps = {
   isOpen?: boolean;
   hasChanges?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export const PLANT_NAME_FIELDS: FilterInputConfig<
