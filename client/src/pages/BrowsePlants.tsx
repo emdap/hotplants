@@ -119,15 +119,8 @@ const PlantSearch = ({
                 queryStatus={searchStatus}
                 hasCurrentResults={hasCurrentResults}
               />
-              {searchRecordQuery.data && (
-                <Card
-                  className={classNames(
-                    "mx-auto flex flex-col items-center gap-6 transition-opacity",
-                    searchStatus === "READY"
-                      ? "opacity-100"
-                      : "opacity-0 pointer-events-none",
-                  )}
-                >
+              {searchRecordQuery.data && searchStatus === "READY" && (
+                <Card className="mx-auto flex flex-col items-center gap-6 transition-opacity">
                   <SearchRecordProgressBar
                     hideTitle
                     {...searchRecordQuery.data}
