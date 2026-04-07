@@ -1,15 +1,18 @@
 import { useSearch } from "@tanstack/react-router";
-import { PLANT_FORM_TITLES } from "components/plantDataControls/plantSearchFormUtil";
+import {
+  OpenPlantFormProps,
+  PLANT_FORM_TITLES,
+} from "components/plantDataControls/plantSearchFormUtil";
 import { PlantNameParam } from "config/hotplantsConfig";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
-import IconButton from "designSystem/iconButtons/IconButton";
 import { capitalize } from "lodash";
 import { RiPlantFill, RiPlantLine } from "react-icons/ri";
+import PlantFormOpenButton from "../PlantFormOpenButton";
 
 const getPlantName = (param?: PlantNameParam) =>
   param && ("commonName" in param ? param.commonName : param.scientificName);
 
-const PlantNameOpenButton = ({ onClick }: { onClick?: () => void }) => {
+const PlantNameOpenButton = (props: OpenPlantFormProps) => {
   const { searchParamsDraft } = useSearchParamsContext();
   const { plantName: plantNameParam } = useSearch({ strict: false });
 
@@ -18,16 +21,13 @@ const PlantNameOpenButton = ({ onClick }: { onClick?: () => void }) => {
   const isActive = Boolean(appliedPlantName);
 
   return (
-    <IconButton
-      size="small"
+    <PlantFormOpenButton
       active={isActive}
-      className={
+      hasChanges={
         plantNameDraft?.toLowerCase() !== appliedPlantName?.toLowerCase()
-          ? "bg-accent/30!"
-          : undefined
       }
-      onClick={onClick}
       icon={isActive ? <RiPlantFill /> : <RiPlantLine />}
+      {...props}
     >
       <span>
         {plantNameDraft
@@ -36,7 +36,7 @@ const PlantNameOpenButton = ({ onClick }: { onClick?: () => void }) => {
             ? "None"
             : PLANT_FORM_TITLES["plant-name"]}
       </span>
-    </IconButton>
+    </PlantFormOpenButton>
   );
 };
 

@@ -10,6 +10,12 @@ export type PlantSearchFormProps = {
   | { renderMode: "modal" | "popover"; onClose: () => void }
 );
 
+export type OpenPlantFormProps = {
+  isOpen?: boolean;
+  hasChanges?: boolean;
+  onClick: () => void;
+};
+
 export const PLANT_NAME_FIELDS: FilterInputConfig<
   "text",
   OptionalSearchParamKey

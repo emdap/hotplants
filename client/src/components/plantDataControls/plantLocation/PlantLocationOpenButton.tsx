@@ -1,13 +1,16 @@
 import { useSearch } from "@tanstack/react-router";
-import { PLANT_FORM_TITLES } from "components/plantDataControls/plantSearchFormUtil";
+import {
+  OpenPlantFormProps,
+  PLANT_FORM_TITLES,
+} from "components/plantDataControls/plantSearchFormUtil";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
-import IconButton from "designSystem/iconButtons/IconButton";
 import { isEqual } from "lodash";
 import { CiGlobe } from "react-icons/ci";
 import { FaGlobe } from "react-icons/fa";
 import { locationDisplay } from "util/locationUtil";
+import PlantFormOpenButton from "../PlantFormOpenButton";
 
-const PlantLocationOpenButton = ({ onClick }: { onClick?: () => void }) => {
+const PlantLocationOpenButton = (props: OpenPlantFormProps) => {
   const { searchParamsDraft } = useSearchParamsContext();
   const { location } = useSearch({ strict: false });
 
@@ -15,19 +18,14 @@ const PlantLocationOpenButton = ({ onClick }: { onClick?: () => void }) => {
   const isActive = Boolean(locationName);
 
   return (
-    <IconButton
-      size="small"
+    <PlantFormOpenButton
       active={isActive}
-      onClick={onClick}
       icon={isActive ? <FaGlobe /> : <CiGlobe />}
-      className={
-        isEqual(searchParamsDraft?.location, location)
-          ? undefined
-          : "bg-accent/30!"
-      }
+      hasChanges={isEqual(searchParamsDraft?.location, location)}
+      {...props}
     >
       <span>{isActive ? locationName : PLANT_FORM_TITLES.location}</span>
-    </IconButton>
+    </PlantFormOpenButton>
   );
 };
 

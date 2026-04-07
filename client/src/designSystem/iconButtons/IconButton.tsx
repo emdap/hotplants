@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Button, { ButtonProps } from "designSystem/Button";
 
-type IconButtonProps = { active: boolean } & ButtonProps;
+export type IconButtonProps = { active: boolean } & ButtonProps;
 export type IconButtonVariantProps = Omit<IconButtonProps, "icon">;
 
 const IconButton = ({ active, className, ...buttonProps }: IconButtonProps) => (

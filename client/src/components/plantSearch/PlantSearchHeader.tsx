@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import PlantLocationOpenButton from "components/plantDataControls/plantLocation/PlantLocationOpenButton";
 import PlantNameOpenButton from "components/plantDataControls/plantName/PlantNameOpenButton";
+import { OpenPlantFormProps } from "components/plantDataControls/plantSearchFormUtil";
 import {
   SearchFormTab,
   usePlantSearchContext,
@@ -17,6 +18,7 @@ const PlantSearchHeader = () => {
     searchStatus,
     isInfiniteScroll,
     setIsInfiniteScroll,
+    searchFormState,
     setSearchFormState,
   } = usePlantSearchContext();
   const { page, pageSize, totalItems } = usePlantSelectionContext();
@@ -26,8 +28,11 @@ const PlantSearchHeader = () => {
     setIsInfiniteScroll(enable);
   };
 
-  const searchTabButtonProps = (tabName: SearchFormTab) => ({
+  const searchTabButtonProps = (
+    tabName: SearchFormTab,
+  ): OpenPlantFormProps => ({
     onClick: () => setSearchFormState({ tab: tabName, isOpen: true }),
+    isOpen: searchFormState.isOpen && searchFormState.tab === tabName,
   });
 
   return (
