@@ -119,7 +119,7 @@ const Garden = () => {
         </FloatingHeader>
 
         {hasNoResults && (
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-4 py-10">
             <PlantAnimation
               customMessage={
                 plantFilter ? undefined : "No plants added to garden."
