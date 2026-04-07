@@ -44,35 +44,24 @@ const getClasses = (props: ButtonProps) => {
     : BUTTON_SIZES[buttonSizeKey];
 
   return classNames(
-    "rounded-md flex items-center justify-center font-medium",
+    "styled-button",
     props.className,
     {
-      "bg-primary enabled:hover:bg-primary-faded outline-primary/80 text-white":
-        props.variant === "primary",
-      "bg-accent/90 dark:bg-accent/80 enabled:hover:bg-accent outline-accent text-white":
-        props.variant === "accent",
-      "bg-secondary/80 enabled:hover:bg-secondary outline-secondary":
-        props.variant === "secondary",
-      "bg-red-700/80 enabled:hover:bg-red-700 outline-red-700":
-        props.variant === "danger",
+      "button-primary": props.variant === "primary",
+      "button-accent": props.variant === "accent",
+      "button-secondary": props.variant === "secondary",
+      "button-danger": props.variant === "danger",
 
-      "bg-primary enabled:hover:bg-primary-faded text-white outline-primary/50":
-        props.variant === "icon-primary",
-      "enabled:hover:bg-white/20 outline-primary/50":
-        props.variant === "icon-white",
+      "button-icon-primary": props.variant === "icon-primary",
+      "button-icon-white": props.variant === "icon-white",
 
+      "button-text": isTextVariant,
+      "text-primary": props.variant === "text-primary",
       "enabled:hover:underline underline-offset-3 focus-visible:underline":
         isTextVariant && hasChildren,
-      "text-inherit outline-primary": props.variant === "text",
-      "text-primary outline-primary": props.variant === "text-primary",
 
-      "opacity-50":
-        props.disabled || (props.isLoading && props.disableOnLoading),
-      "cursor-pointer": !props.disabled,
+      "opacity-50": props.isLoading && props.disableOnLoading,
       "[&_.icon-wrapper]:-ml-7 px-10": loadingWithText,
-
-      "focus-ring": !isTextVariant,
-      "hover:shadow-sm": !isTextVariant && !props.disabled,
 
       "py-0.5 px-2": isIconVariant && buttonSizeKey === "small" && hasChildren,
     },
