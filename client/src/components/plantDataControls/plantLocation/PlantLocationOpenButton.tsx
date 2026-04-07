@@ -21,7 +21,7 @@ const PlantLocationOpenButton = (props: OpenPlantFormProps) => {
     <PlantFormOpenButton
       active={isActive}
       icon={isActive ? <FaGlobe /> : <CiGlobe />}
-      hasChanges={isEqual(searchParamsDraft?.location, location)}
+      hasChanges={!isEqual(searchParamsDraft?.location, location)}
       {...props}
     >
       <span>{isActive ? locationName : PLANT_FORM_TITLES.location}</span>
