@@ -82,7 +82,7 @@ const SortInputs = <SortInputConfig extends SortInputType>({
         index === appliedIndex ? nextSortInput : item,
       );
     } else if (nextSortInput) {
-      nextParams = sortParams.concat(nextSortInput);
+      nextParams = [nextSortInput, ...sortParams];
     } else {
       nextParams = sortParams.filter((_, index) => index !== appliedIndex);
     }
