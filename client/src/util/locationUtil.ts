@@ -32,7 +32,7 @@ export const reverseLookupLocation = async (coords: GeolocationCoordinates) => {
         query: {
           lat: coords.latitude,
           lon: coords.longitude,
-          zoom: 5,
+          zoom: 8,
           ...DEFAULT_QUERY_PARAMS,
         },
       },

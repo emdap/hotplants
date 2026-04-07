@@ -195,15 +195,7 @@ const PlantLocationForm = ({
       )}
 
       <div className="space-y-4">
-        <InputField
-          id="use-current-location"
-          label="Use current location"
-          type="checkbox"
-          checked={Boolean(useCurrentLocation)}
-          onChange={({ target }) => toggleCurrentLocation(target.checked)}
-        />
-
-        {!useCurrentLocation && (
+        <div className="space-y-2">
           <InputField
             id="search-location"
             label="Location name"
@@ -227,7 +219,15 @@ const PlantLocationForm = ({
                   : undefined
             }
           />
-        )}
+          <InputField
+            id="use-current-location"
+            label="Use current location"
+            type="checkbox"
+            checked={Boolean(useCurrentLocation)}
+            onChange={({ target }) => toggleCurrentLocation(target.checked)}
+            className="flex-row-reverse justify-end text-sm"
+          />
+        </div>
       </div>
       <div className="form-item grow">
         <label>Map view</label>
