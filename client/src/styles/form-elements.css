@@ -4,6 +4,10 @@
   label {
     @apply font-medium;
   }
+
+  .disabled {
+    @apply text-secondary;
+  }
 }
 
 @utility text-placeholder {
@@ -34,4 +38,8 @@
 
 @utility styled-checkbox {
   @apply bg-primary rounded outline-primary ring-primary border-transparent;
+
+  &:disabled {
+    @apply bg-secondary;
+  }
 }
