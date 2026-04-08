@@ -6,7 +6,7 @@
   }
 
   .disabled {
-    @apply text-secondary;
+    @apply text-default-text/50;
   }
 }
 
@@ -40,6 +40,6 @@
   @apply bg-primary rounded outline-primary ring-primary border-transparent;
 
   &:disabled {
-    @apply bg-secondary;
+    @apply bg-default-text/20;
   }
 }
