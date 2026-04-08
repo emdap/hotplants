@@ -1,20 +1,26 @@
-import { PLANT_UNIT_SHORT_LABELS } from "components/dataControls/filterUtil";
+import {
+  getOrderedFilterEntries,
+  PLANT_UNIT_SHORT_LABELS,
+} from "components/dataControls/filterUtil";
+import { COMPLETE_FILTER_DICT } from "components/plantDataControls/plantFilters/plantFilterUtil";
 import { PlantResult } from "contexts/plantSelection/PlantSelectionContext";
 import { format } from "date-fns";
 import Card, { CardProps } from "designSystem/Card";
 import { ReactNode } from "react";
 import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
 
-const ORDERED_PLANT_FIELDS: [keyof PlantResult, string][] = [
-  ["scientificName", "Scientific name"],
-  ["commonNames", "Common names"],
-  ["bloomColors", "Bloom colors"],
-  ["isPerennial", "Perennial?"],
-  ["height", "Plant height"],
-  ["spread", "Plant spread"],
-  ["fullOccurrencesCount", "Occurrences found"],
-  ["updatedTimestamp", "Data last updated"],
-];
+const { physicalCharactersticsDump: _dump, ...plantFilterLabels } =
+  COMPLETE_FILTER_DICT;
+
+const ORDERED_PLANT_FIELDS = getOrderedFilterEntries({
+  ...plantFilterLabels,
+  scientificName: { label: "Scientific name", order: -1 },
+  commonNames: { label: "Common name", order: -1 },
+  fullOccurrencesCount: { label: "Occurrences found" },
+  updatedTimestamp: { label: "Data last updated" },
+}).map(([key, filterValue]) =>
+  filterValue?.label ? [key, filterValue.label] : [],
+) as [keyof PlantResult, string][];
 
 const PlantInfo = ({
   plant,

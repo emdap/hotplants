@@ -79,9 +79,17 @@ export const BOOLEAN_OPTIONS: ComplexListboxOption<boolean | null>[] = [
   },
 ];
 
-export const getOrderedFilterEntries = <T extends FilterDict>(filterDict: T) =>
-  (Object.entries(filterDict) as Entries<typeof filterDict>).sort(
-    ([_a, dataA], [_b, dataB]) => (dataA?.order ?? 0) - (dataB?.order ?? 0),
+export const getOrderedFilterEntries = <
+  T extends { [key: string]: { label: string; order?: number } },
+>(
+  filterDict: T,
+) =>
+  (Object.entries(filterDict) as Entries<T>).sort(([_a, dataA], [_b, dataB]) =>
+    dataA.order === undefined
+      ? 1
+      : dataB.order === undefined
+        ? -1
+        : dataA.order - dataB.order,
   );
 
 export const createComplexFilterValue = (

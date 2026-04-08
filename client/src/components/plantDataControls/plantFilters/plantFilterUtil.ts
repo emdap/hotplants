@@ -10,13 +10,11 @@ import { capitalize, sortBy } from "lodash";
 import { Entries } from "type-fest";
 import { PlantDataFilter } from "util/graphqlTypes";
 
-export type PlantFilterKey = keyof PlantDataFilter;
-
 export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
   {
     bloomColors: {
       dataKey: "bloomColors",
-      label: "Bloom colors",
+      label: "Bloom color",
       inputType: "select-color",
       multiselect: true,
       matchAllCheckbox: true,
@@ -63,36 +61,48 @@ export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
     },
   };
 
-export const STATIC_FILTER_DICT: FilterDict<PlantFilterKey> = {
+type PlantFilterKey = keyof Omit<
+  PlantDataFilter,
+  | "addedTimestamp"
+  | "updatedTimestamp"
+  | "maturityTime"
+  | "scrapeSources"
+  | "uses"
+  | "habitats"
+>;
+
+export const STATIC_FILTER_DICT: FilterDict<
+  Exclude<PlantFilterKey, keyof PlantArrayValues>
+> = {
   scientificName: {
     dataKey: "scientificName",
     label: "Scientific name contains",
     inputType: "text",
-    order: -3,
+    order: 1,
   },
   commonName: {
     dataKey: "commonName",
     label: "Common name contains",
     inputType: "text",
-    order: -2,
+    order: 2,
+  },
+  physicalCharactersticsDump: {
+    dataKey: "physicalCharactersticsDump",
+    label: "Description keyword search",
+    inputType: "text",
+    order: 3,
   },
   isPerennial: {
     dataKey: "isPerennial",
     label: "Perennial",
     inputType: "select-boolean",
-    order: 0,
+    order: 4,
     options: [
       { label: "Perennials only", value: true },
       { label: "Annuals only", value: false },
       { label: "Show all", value: null },
     ],
     asFieldset: true,
-  },
-  physicalCharactersticsDump: {
-    dataKey: "physicalCharactersticsDump",
-    label: "Description keyword search",
-    inputType: "text",
-    order: -1,
   },
 
   // TODO: BE to support selecting unit
@@ -101,18 +111,19 @@ export const STATIC_FILTER_DICT: FilterDict<PlantFilterKey> = {
     label: "Plant height",
     inputType: "range",
     minValue: 0,
-    order: 2,
   },
   spread: {
     dataKey: "spread",
     label: "Plant spread",
     inputType: "range",
     minValue: 0,
-    order: 3,
   },
 };
 
-const COMPLETE_FILTER_DICT = { ...DYNAMIC_FILTER_DICT, ...STATIC_FILTER_DICT };
+export const COMPLETE_FILTER_DICT = {
+  ...DYNAMIC_FILTER_DICT,
+  ...STATIC_FILTER_DICT,
+};
 
 export const validatePlantFilters = (rawFilters: Record<string, unknown>) => {
   const validatedFilters = Object.entries(rawFilters).reduce<PlantDataFilter>(
@@ -138,25 +149,27 @@ export const validatePlantFilters = (rawFilters: Record<string, unknown>) => {
 };
 
 export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
-  (Object.entries(filterValues) as Entries<PlantArrayValues>).reduce<
-    FilterDict<PlantFilterKey>
-  >((prev, [key, values]) => {
-    if (values && key in DYNAMIC_FILTER_DICT) {
-      const options = sortBy([...values]).map((value): ComplexListboxOption => {
-        if (typeof value === "string") {
-          return { label: capitalize(value), value };
-        }
-        return { label: String(value), value };
-      });
+  (Object.entries(filterValues) as Entries<PlantArrayValues>).reduce(
+    (prev, [key, values]) => {
+      if (values && key in DYNAMIC_FILTER_DICT) {
+        const options = sortBy([...values]).map(
+          (value): ComplexListboxOption => {
+            if (typeof value === "string") {
+              return { label: capitalize(value), value };
+            }
+            return { label: String(value), value };
+          },
+        );
 
-      options.push(NON_SPECIFIED_OPTION);
+        options.push(NON_SPECIFIED_OPTION);
 
-      (prev[key] as FilterInputConfig) = {
-        ...DYNAMIC_FILTER_DICT[key],
-        options,
-        order: 1,
-      };
-    }
+        (prev[key] as FilterInputConfig) = {
+          ...DYNAMIC_FILTER_DICT[key],
+          options,
+        };
+      }
 
-    return prev;
-  }, {});
+      return prev;
+    },
+    {} as FilterDict<PlantFilterKey>,
+  );
