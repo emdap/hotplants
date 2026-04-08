@@ -7,7 +7,6 @@ import {
 import { ListboxValueType } from "designSystem/listbox/listboxUtil";
 import StyledListbox from "designSystem/listbox/StyledListbox";
 import { PlantSizeRangeInput } from "generated/graphql/graphql";
-import { useState } from "react";
 import { FilterValue } from "util/graphqlTypes";
 
 export type SelectFilterInputProps = FilterInputComponentProps<
@@ -25,47 +24,34 @@ const SelectFilterInput = ({
     asFieldset,
     multiselect,
   },
-  value: filterValue,
+  value,
   className,
   onChange,
 }: SelectFilterInputProps) => {
-  const isComplexFilter = matchAllCheckbox !== undefined;
-  const complexFilterValue = createComplexFilterValue(filterValue);
-
-  const [matchAll, setMatchAll] = useState(complexFilterValue?.matchAll);
+  const hasMatchAllOption = matchAllCheckbox !== undefined;
+  const filterValue = createComplexFilterValue(value);
 
   const handleOnValueChange = (
     newValue: ListboxValueType | ListboxValueType[],
   ) => {
-    if (
-      matchAll === undefined &&
-      (Array.isArray(newValue) ? !newValue.length : newValue === null)
-    ) {
+    if (Array.isArray(newValue) ? !newValue.length : newValue === null) {
       onChange(undefined);
-    } else if (
-      isComplexFilter &&
-      (!filterValue || typeof filterValue === "object") &&
-      Array.isArray(newValue)
-    ) {
+    } else if (hasMatchAllOption && Array.isArray(newValue)) {
       onChange({
-        ...(typeof filterValue === "object" && filterValue),
+        ...filterValue,
         value: newValue,
-        matchAll,
       });
     } else {
       onChange(newValue);
     }
   };
 
-  const handleOnMatchAllChange = (newValue: boolean) => {
-    setMatchAll(newValue);
-    if (typeof filterValue === "object") {
-      onChange({
-        ...filterValue,
-        matchAll: newValue || undefined,
-      });
-    }
-  };
+  const handleOnMatchAllChange = (newValue: boolean) =>
+    Array.isArray(filterValue.value) &&
+    onChange({
+      value: filterValue.value,
+      matchAll: newValue || undefined,
+    });
 
   const checkboxInputId = `${dataKey}-checkbox`;
 
@@ -76,17 +62,22 @@ const SelectFilterInput = ({
         multiple={multiselect}
         placeholder="Select"
         name={dataKey}
-        value={complexFilterValue.value ?? (multiselect ? [] : null)}
+        value={filterValue.value ?? (multiselect ? [] : null)}
         onChange={handleOnValueChange}
         defaultOptions={options}
       />
 
-      {matchAllCheckbox && (
-        <div className="form-item flex-row items-center gap-2">
+      {hasMatchAllOption && (
+        <div
+          className={classNames("form-item flex-row items-center gap-2", {
+            disabled: !filterValue.value,
+          })}
+        >
           <input
+            disabled={!filterValue.value}
             id={checkboxInputId}
             type="checkbox"
-            checked={matchAll ?? false}
+            checked={filterValue.matchAll ?? false}
             placeholder={`Enter ${inputType}`}
             onChange={({ target }) => handleOnMatchAllChange(target.checked)}
             className="styled-checkbox"
