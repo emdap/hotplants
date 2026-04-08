@@ -28,7 +28,7 @@ import { swapLatLng } from "util/locationUtil";
 import { getPlantDisplayNames } from "util/plantUtil";
 import PlantActions from "./PlantActions";
 import PlantImageViewer from "./PlantImageViewer";
-import PlantInfoCard from "./PlantInfoCard";
+import PlantInfo from "./PlantInfo";
 
 const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
   initial: { right: "-100%" },
@@ -196,10 +196,10 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
               />
             </div>
 
-            <div className="big-screen:overflow-auto flex-grow space-y-4">
+            <div className="big-screen:overflow-auto big-screen:pb-8 flex-grow space-y-4 mt-4">
               {children}
 
-              <PlantInfoCard
+              <PlantInfo
                 plant={activePlant}
                 onTouchEndCapture={(e) => e.stopPropagation()}
               />

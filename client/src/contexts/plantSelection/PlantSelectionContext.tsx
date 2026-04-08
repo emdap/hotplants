@@ -8,8 +8,11 @@ import {
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
-export type PlantResult = Omit<GardenPlantData, "addedToGardenTimestamp"> &
-  PlantData & { addedToGardenTimestamp?: number };
+export type PlantResult = Omit<
+  GardenPlantData,
+  "addedToGardenTimestamp" | "_id"
+> &
+  Omit<PlantData, "_id"> & { _id: string; addedToGardenTimestamp?: number };
 
 export type FlattenedPlantMedia = (Omit<PlantOccurrence, "media"> &
   PlantMedia)[];
