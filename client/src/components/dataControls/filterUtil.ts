@@ -138,6 +138,11 @@ const validateSelectFilterValue = (
   inputType: SelectInputType,
   value: FilterValue | unknown,
 ): boolean => {
+  if (value === null) {
+    // Null value inside list is acceptable
+    return true;
+  }
+
   if (value && typeof value === "object" && "value" in value) {
     if (
       "matchAll" in value &&
