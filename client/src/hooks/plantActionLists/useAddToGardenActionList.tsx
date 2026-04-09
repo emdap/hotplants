@@ -50,7 +50,7 @@ export const useAddToGardenActionList = (
       toast.success(
         <>
           Added "{getPlantDisplayNames(plant).title}" to "
-          {gardenName ?? "garden"}".`,
+          {gardenName ?? "garden"}".
           <GoToGardenLink gardenName={gardenName} />
         </>,
       );
