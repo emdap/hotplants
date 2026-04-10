@@ -1,5 +1,6 @@
 import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import classNames from "classnames";
+import { PLANTS_WITH_DATA_FILTER } from "components/plantDataControls/plantFilters/plantFilterUtil";
 import { useAppContext } from "contexts/AppContext";
 import Button from "designSystem/Button";
 import Sidebar from "designSystem/Sidebar";
@@ -17,7 +18,10 @@ type SidebarNavItem = PickRequired<
 const SIDEBAR_ITEMS: SidebarNavItem[] = [
   {
     label: "Browse Plants",
-    linkProps: { to: "/browse-plants" },
+    linkProps: {
+      to: "/browse-plants",
+      search: PLANTS_WITH_DATA_FILTER,
+    },
     Icon: CgReadme,
   },
   {

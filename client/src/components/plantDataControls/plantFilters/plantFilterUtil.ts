@@ -10,6 +10,7 @@ import { ComplexListboxOption } from "designSystem/listbox/listboxUtil";
 import { capitalize, sortBy } from "lodash";
 import { Entries } from "type-fest";
 import { PlantDataFilter } from "util/graphqlTypes";
+import { PlantSearchRouteParams } from "util/routeParamsUtil";
 
 export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
   {
@@ -182,3 +183,7 @@ export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
     },
     {} as FilterDict<PlantFilterKey>,
   );
+
+export const PLANTS_WITH_DATA_FILTER: PlantSearchRouteParams = {
+  plantFilter: { hasScrapedData: true },
+};
