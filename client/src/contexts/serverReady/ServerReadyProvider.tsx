@@ -45,7 +45,7 @@ export const ServerReadyProvider = ({ children }: { children: ReactNode }) => {
     queryKey: ["check-health"],
     ignoreServerReady: true,
     initialData: false,
-    // refetchOnWindowFocus: "always",
+    refetchOnWindowFocus: "always",
     enabled: serverReady !== null || checkHealthCount < MAX_CHECKS,
     refetchInterval: serverReady ? KEEP_ALIVE_INTERVAL_MS : WAKE_UP_INTERVAL_MS,
 
