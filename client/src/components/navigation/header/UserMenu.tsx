@@ -1,5 +1,5 @@
 import { useAuthSession } from "config/authConfig";
-import { useAppContext } from "contexts/AppContext";
+import { useServerReadyContext } from "contexts/serverReady/ServerReadyContext";
 import Button from "designSystem/Button";
 import StyledMenu, { MenuItemData } from "designSystem/StyledMenu";
 import { useEffect } from "react";
@@ -14,7 +14,7 @@ const ANON_LINKS: MenuItemData[] = [
 ];
 
 const UserMenu = () => {
-  const { serverReady } = useAppContext();
+  const { serverReady } = useServerReadyContext();
   const { data: authData, refetch } = useAuthSession();
 
   useEffect(() => {

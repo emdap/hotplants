@@ -118,6 +118,7 @@ const PlantSearch = ({
               <PlantAnimation
                 queryStatus={searchStatus}
                 hasCurrentResults={hasCurrentResults}
+                showServerStatus
               />
               {searchRecordQuery.data && searchStatus === "READY" && (
                 <Card className="mx-auto flex flex-col items-center gap-6 transition-opacity">

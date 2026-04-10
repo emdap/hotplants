@@ -84,6 +84,7 @@ const PlantLocationForm = ({
 
   const reverseLookupQuery = useReactQuery({
     queryKey: ["reverse-lookup", useCurrentLocation],
+    ignoreServerReady: true,
     enabled: Boolean(useCurrentLocation),
     retry: false,
     queryFn: async () => {
@@ -108,6 +109,7 @@ const PlantLocationForm = ({
 
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
+    ignoreServerReady: true,
     enabled: Boolean(
       !useCurrentLocation &&
       debouncedInput &&

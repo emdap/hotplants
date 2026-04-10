@@ -83,6 +83,7 @@ const Garden = () => {
       <LoadingOverlay
         debounceShow
         transparent
+        showServerStatus
         show={gardenPlantsQuery.loading || gardenQuery.loading}
         className="absolute top-0 left-0"
       />
@@ -121,7 +122,7 @@ const Garden = () => {
         {hasNoResults && (
           <div className="flex flex-col items-center gap-4 py-10">
             <PlantAnimation
-              customMessage={
+              customNoDataMessage={
                 plantFilter ? undefined : "No plants added to garden."
               }
               className="my-auto"

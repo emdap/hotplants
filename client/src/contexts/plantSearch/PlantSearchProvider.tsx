@@ -121,6 +121,7 @@ const PlantSearchProvider = () => {
       >
         {isPrefilledSearch ? (
           <PlantAnimation
+            showServerStatus
             className="h-dvh-header"
             queryStatus="CHECKING_STATUS"
           />

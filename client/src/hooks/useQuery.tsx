@@ -1,13 +1,18 @@
 import { DefaultError, useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { useAppContext } from "contexts/AppContext";
+import { useServerReadyContext } from "contexts/serverReady/ServerReadyContext";
 
-export const useReactQuery = <TData, TError = DefaultError>(
-  options: UseQueryOptions<TData, TError>,
-) => {
-  const { serverReady } = useAppContext();
+export const useReactQuery = <TData, TError = DefaultError>({
+  ignoreServerReady,
+  ...options
+}: UseQueryOptions<TData, TError> & {
+  ignoreServerReady?: boolean;
+}) => {
+  const { serverReady } = useServerReadyContext();
   return useQuery({
     ...options,
-    enabled: serverReady && (options.enabled ?? true),
+    enabled: Boolean(
+      (ignoreServerReady || serverReady) && (options.enabled ?? true),
+    ),
   });
 };
 

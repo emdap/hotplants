@@ -33,6 +33,7 @@ const PlantFilterForm = ({
   popoverIsOpen?: boolean;
 }) => {
   const navigate = useNavigate();
+
   const { plantListLoading, totalItems } = usePlantSelectionContext();
   const { plantFilter } = useSearch({ strict: false });
   const [filterDraft, setFilterDraft] = useState(plantFilter);

@@ -27,6 +27,7 @@ const UserGardens = () => {
       <PageTitle>Gardens</PageTitle>
 
       <LoadingOverlay
+        showServerStatus
         debounceShow={Boolean(userGardensQuery.previousData)}
         transparent
         show={

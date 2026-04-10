@@ -1,12 +1,17 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import LoginForm from "components/LoginForm";
 import { useAuthSession } from "config/authConfig";
+import { useServerReadyContext } from "contexts/serverReady/ServerReadyContext";
 import Card from "designSystem/Card";
+import LoadingOverlay from "designSystem/LoadingOverlay";
 
 const PrivateRoute = () => {
   const session = useAuthSession();
+  const { serverReady } = useServerReadyContext();
 
-  return session.isPending ? null : session.data?.session ? (
+  return !serverReady ? (
+    <LoadingOverlay show className="h-dvh-header" transparent />
+  ) : session.isPending ? null : session.data?.session ? (
     <Outlet />
   ) : (
     <div className="w-full flex flex-col items-center gap-10 py-10">

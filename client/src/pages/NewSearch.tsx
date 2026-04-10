@@ -38,7 +38,7 @@ const NewSearch = () => {
       if (!animationContainerRef.current) {
         setAnimationContainerStyle({ position: "static" });
       } else {
-        const availSpace = Math.min(window.innerWidth / 2, 600) / 2;
+        const availSpace = Math.min(window.innerWidth / 2, 600);
         setAnimationContainerStyle({
           left: animationContainerRef.current.clientWidth / 2 + availSpace,
         });
@@ -67,11 +67,11 @@ const NewSearch = () => {
       <div
         ref={animationContainerRef}
         style={animationContainerStyle}
-        className="flex flex-col items-center justify-center small-screen:max-w-[450px] small-screen:my-8 big-screen:fixed big-screen:translate-y-1/2"
+        className="flex flex-col items-center justify-center max-md:w-full! small-screen:w-[450px] small-screen:my-8 big-screen:fixed big-screen:translate-y-1/2"
       >
         <div className="max-w-fit space-y-6">
           <PlantAnimation
-            customMessage="All fields are optional"
+            customNoDataMessage="All fields are optional"
             className="max-h-fit"
           />
           <Button
