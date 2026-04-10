@@ -46,7 +46,7 @@ type FilterNumberInput = {
 };
 
 export type FilterDict<T extends string = string> = {
-  [key in T]: FilterInputConfig<FilterInputType, key>;
+  [key in T]?: FilterInputConfig<FilterInputType, key>;
 };
 
 export type FilterInputComponentProps<

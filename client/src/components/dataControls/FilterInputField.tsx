@@ -13,30 +13,53 @@ import TextFilterInput, { TextFilterInputProps } from "./TextFilterInput";
 const FilterInput = <
   T extends FilterInputType = FilterInputType,
   V extends FilterValue = FilterValue,
->(
-  props: FilterInputComponentProps<T, V>,
-) => {
-  const { filterInput } = props;
+>({
+  highlightFilledFields,
+  ...props
+}: FilterInputComponentProps<T, V> & { highlightFilledFields?: boolean }) => {
+  const { filterInput, value } = props;
 
-  return filterInput.inputType.includes("select") ? (
-    <SelectFilterInput {...(props as SelectFilterInputProps)} />
-  ) : filterInput.inputType === "range" ? (
-    <RangeFilterInput {...(props as RangeFilterInputProps)} />
-  ) : (
+  const shouldHighlight = () => {
+    if (!highlightFilledFields) {
+      return false;
+    }
+
+    if (typeof value === "object" && value && "value" in value) {
+      return Boolean(value.value);
+    }
+    return value !== undefined;
+  };
+
+  return (
     <div
-      className={classNames(
-        "form-item",
-        { "flex-row items-center": filterInput.inputType === "checkbox" },
-        props.className,
-      )}
+      className={classNames({
+        "[&_fieldset]:border-primary [&_.styled-input]:bg-primary-bright/20!":
+          shouldHighlight(),
+      })}
     >
-      <label htmlFor={filterInput.dataKey}>{filterInput.label}</label>
-      {filterInput.inputType === "text" ? (
-        <TextFilterInput {...(props as TextFilterInputProps)} />
+      {filterInput.inputType.includes("select") ? (
+        <SelectFilterInput {...(props as SelectFilterInputProps)} />
+      ) : filterInput.inputType === "range" ? (
+        <RangeFilterInput {...(props as RangeFilterInputProps)} />
       ) : (
-        filterInput.inputType === "checkbox" && (
-          <CheckboxFilterInput {...(props as CheckboxFilterInputProps)} />
-        )
+        <div
+          className={classNames(
+            "form-item",
+            {
+              "flex-row items-center": filterInput.inputType === "checkbox",
+            },
+            props.className,
+          )}
+        >
+          <label htmlFor={filterInput.dataKey}>{filterInput.label}</label>
+          {filterInput.inputType === "text" ? (
+            <TextFilterInput {...(props as TextFilterInputProps)} />
+          ) : (
+            filterInput.inputType === "checkbox" && (
+              <CheckboxFilterInput {...(props as CheckboxFilterInputProps)} />
+            )
+          )}
+        </div>
       )}
     </div>
   );

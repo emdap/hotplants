@@ -153,6 +153,7 @@ const PlantFilterForm = ({
                 key={dataKey}
                 filterInput={filterInput}
                 value={filterDraft?.[dataKey]}
+                highlightFilledFields
                 onChange={(value) =>
                   setFilterDraft({ ...filterDraft, [dataKey]: value })
                 }
