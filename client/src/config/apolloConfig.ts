@@ -101,7 +101,6 @@ export const setApolloReady = (isReady: boolean) => {
 
 export const readinessLink = new ApolloLink((operation, forward) => {
   if (apolloReady()) {
-    console.log("apollo forward");
     return forward(operation);
   }
 
