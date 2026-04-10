@@ -6,14 +6,14 @@ import Button from "designSystem/Button";
 import Sidebar from "designSystem/Sidebar";
 import { MenuItemData } from "designSystem/StyledMenu";
 import { CgReadme } from "react-icons/cg";
-import { MdHistory, MdOutlineSearch } from "react-icons/md";
+import { MdHistory, MdInfoOutline, MdOutlineSearch } from "react-icons/md";
 import { TbPlant2 } from "react-icons/tb";
 import { isSmallScreen } from "util/generalUtil";
 
 type SidebarNavItem = PickRequired<
   MenuItemData,
   "Icon" | "label" | "linkProps"
->;
+> & { className?: string };
 
 const SIDEBAR_ITEMS: SidebarNavItem[] = [
   {
@@ -34,11 +34,17 @@ const SIDEBAR_ITEMS: SidebarNavItem[] = [
     linkProps: { to: "/search-history" },
     Icon: MdHistory,
   },
-
   {
     label: "Gardens",
     linkProps: { to: "/user-gardens" },
     Icon: TbPlant2,
+  },
+  {
+    label: "About",
+    linkProps: { to: "/about" },
+    Icon: MdInfoOutline,
+
+    className: "mt-auto",
   },
 ];
 
@@ -70,20 +76,20 @@ const AppSidebar = () => {
     >
       {({ isExpanded, setIsExpanded }) => (
         <>
-          {SIDEBAR_ITEMS.map(({ Icon, ...item }, index) => (
+          {SIDEBAR_ITEMS.map(({ Icon, className, ...item }, index) => (
             <Link
               key={index}
               {...item.linkProps}
+              className={className}
               onClick={() => isSmallScreen() && setIsExpanded(false)}
             >
               <Button
                 variant="icon-white"
                 className={classNames(
-                  "transition-all! outline-none overflow-hidden focus:bg-white/20 h-12! justify-start big-screen:[&_.icon-wrapper]:m-0! w-[calc(100%-1rem)]",
+                  "transition-all outline-none overflow-hidden focus:bg-white/20 h-12 justify-start w-[calc(100%-1rem)] big-screen:mx-0!",
                   {
-                    "big-screen:ml-0! big-screen:pl-6! big-screen:rounded-l-none":
-                      isExpanded,
-                    "big-screen:p-2! big-screen:pl-2! big-screen:rounded-none big-screen:mx-0! big-screen:w-full":
+                    "pl-6 big-screen:rounded-l-none": isExpanded,
+                    "big-screen:p-2 big-screen:pl-2 big-screen:rounded-none  big-screen:w-full":
                       !isExpanded,
                     "bg-white/10": isActiveLink(item.linkProps),
                   },
