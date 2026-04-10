@@ -1,4 +1,5 @@
 import {
+  BOOLEAN_OPTIONS,
   FilterDict,
   FilterInputConfig,
   NON_SPECIFIED_OPTION,
@@ -74,6 +75,14 @@ type PlantFilterKey = keyof Omit<
 export const STATIC_FILTER_DICT: FilterDict<
   Exclude<PlantFilterKey, keyof PlantArrayValues>
 > = {
+  hasScrapedData: {
+    dataKey: "hasScrapedData",
+    label: "Has scraped data",
+    inputType: "select-boolean",
+    options: BOOLEAN_OPTIONS,
+    asFieldset: true,
+    order: 3.5,
+  },
   scientificName: {
     dataKey: "scientificName",
     label: "Scientific name contains",

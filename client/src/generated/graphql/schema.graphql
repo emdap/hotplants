@@ -102,6 +102,7 @@ input PlantDataInput {
   commonName: String
   habitats: PlantArrayFilterStringInput
   hardiness: PlantArrayFilterIntInput
+  hasScrapedData: Boolean
   height: PlantSizeRangeInput
   isPerennial: [Boolean]
   lightLevels: PlantArrayFilterStringInput
