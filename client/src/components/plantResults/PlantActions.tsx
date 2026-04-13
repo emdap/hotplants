@@ -30,7 +30,9 @@ const PlantActions = ({
               Icon: FaLeaf,
               linkProps: {
                 to: "/browse-plants",
-                search: { plantName: { scientificName: plant.scientificName } },
+                search: {
+                  entityName: { scientificName: plant.scientificName },
+                },
               },
             },
           ],

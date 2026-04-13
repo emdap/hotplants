@@ -26,7 +26,7 @@ const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
 };
 
 const usePlantSearchQueries = (
-  { location, plantName }: PlantSearchParams,
+  { location, entityName }: PlantSearchParams,
   plantFilters: PlantDataFilter | undefined,
   {
     paginationEnabled,
@@ -61,7 +61,7 @@ const usePlantSearchQueries = (
       ...paginationVars,
       where: {
         boundingPolyCoords: location?.boundingPolyCoords,
-        ...plantName,
+        ...entityName,
         ...plantFilters,
       },
     },
@@ -73,15 +73,15 @@ const usePlantSearchQueries = (
     );
 
   const searchRecordQuery = useReactQuery({
-    queryKey: ["search-record", location, plantName],
+    queryKey: ["search-record", location, entityName],
     refetchInterval: pollInterval,
-    enabled: Boolean(location || plantName),
+    enabled: Boolean(location || entityName),
 
     queryFn: async () => {
       setStatusFromRunningQuery();
 
-      const { data } = await hotplantsClient.POST("/plants/searchRecord", {
-        body: { location, plantName },
+      const { data } = await hotplantsClient.POST("/searchRecord", {
+        body: { location, entityName },
       });
 
       if (data?.status !== "SCRAPING" && pollInterval) {
@@ -108,7 +108,7 @@ const usePlantSearchQueries = (
       setStatusFromRunningQuery();
 
       const { data } = await hotplantsClient.GET(
-        "/plants/runSearch/{searchRecordId}",
+        "/runSearch/{searchRecordId}",
         { params: { path: { searchRecordId: searchRecordData!.id } } },
       );
 

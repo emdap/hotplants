@@ -33,7 +33,7 @@ export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
   page: undefined,
   pageSize: undefined,
   location: undefined,
-  plantName: undefined,
+  entityName: undefined,
   plantFilter: undefined,
   lastOpened: undefined,
 };
@@ -45,7 +45,7 @@ export type PlantSearchRouteParams = PaginationParams &
         pageSize?: number;
 
         location?: PlantLocationParams;
-        plantName?: PlantNameParam;
+        entityName?: PlantNameParam;
         plantFilter?: PlantDataFilter;
         lastOpened?: string;
       }
@@ -90,17 +90,17 @@ const validateLocation = (
 const validatePlantName = (
   searchParams: Record<string, unknown>,
 ): PlantSearchParams | null => {
-  if (searchParams.plantName && typeof searchParams.plantName === "object") {
-    const commonName = validateString(searchParams.plantName, "commonName");
+  if (searchParams.entityName && typeof searchParams.entityName === "object") {
+    const commonName = validateString(searchParams.entityName, "commonName");
     if (commonName) {
-      return { plantName: { commonName } };
+      return { entityName: { commonName } };
     } else {
       const scientificName = validateString(
-        searchParams.plantName,
+        searchParams.entityName,
         "scientificName",
       );
       if (scientificName) {
-        return { plantName: { scientificName } };
+        return { entityName: { scientificName } };
       }
     }
   }

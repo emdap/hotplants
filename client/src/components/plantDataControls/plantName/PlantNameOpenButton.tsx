@@ -14,9 +14,9 @@ const getPlantName = (param?: PlantNameParam) =>
 
 const PlantNameOpenButton = (props: OpenPlantFormProps) => {
   const { searchParamsDraft } = useSearchParamsContext();
-  const { plantName: plantNameParam } = useSearch({ strict: false });
+  const { entityName: plantNameParam } = useSearch({ strict: false });
 
-  const plantNameDraft = getPlantName(searchParamsDraft?.plantName);
+  const plantNameDraft = getPlantName(searchParamsDraft?.entityName);
   const appliedPlantName = getPlantName(plantNameParam);
   const isActive = Boolean(appliedPlantName);
 

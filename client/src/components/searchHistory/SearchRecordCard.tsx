@@ -57,7 +57,7 @@ const SearchRecordCard = ({
       replace: true,
     });
 
-    const plantName = searchParams.commonName
+    const entityName = searchParams.commonName
       ? { commonName: searchParams.commonName }
       : searchParams.scientificName
         ? { scientificName: searchParams.scientificName }
@@ -65,7 +65,7 @@ const SearchRecordCard = ({
 
     navigate({
       to: "/browse-plants",
-      search: { location: locationParams, plantName, page: 1 },
+      search: { location: locationParams, entityName, page: 1 },
     });
   };
 

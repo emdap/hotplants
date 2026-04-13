@@ -21,7 +21,7 @@ const PlantNameForm = ({
   onSubmit,
 }: PlantSearchFormProps) => {
   const {
-    searchParams: { plantName: appliedPlantName },
+    searchParams: { entityName: appliedPlantName },
     searchParamsDraft,
     updateSearchParamsDraft,
     applySearchParams,
@@ -30,7 +30,7 @@ const PlantNameForm = ({
   const { commonName, scientificName } = {
     scientificName: undefined,
     commonName: undefined,
-    ...searchParamsDraft?.plantName,
+    ...searchParamsDraft?.entityName,
   };
 
   const [plantNameSearch, setPlantNameSearch] = useState({
@@ -49,10 +49,10 @@ const PlantNameForm = ({
     if (value) {
       const newParam = { [key]: value } as PlantNameParam;
       setPlantNameSearch({ ...DEFAULT_PLANT_NAME_FIELDS, ...newParam });
-      updateSearchParamsDraft({ plantName: newParam });
+      updateSearchParamsDraft({ entityName: newParam });
     } else {
       setPlantNameSearch(DEFAULT_PLANT_NAME_FIELDS);
-      updateSearchParamsDraft({ plantName: undefined });
+      updateSearchParamsDraft({ entityName: undefined });
     }
   };
 
@@ -62,7 +62,7 @@ const PlantNameForm = ({
       return;
     }
 
-    applySearchParams({ plantName: searchParamsDraft?.plantName });
+    applySearchParams({ entityName: searchParamsDraft?.entityName });
     renderMode === "modal" && onClose();
   };
 
@@ -81,7 +81,7 @@ const PlantNameForm = ({
           DEFAULT_PLANT_NAME_FIELDS,
         ),
         onClick: () => {
-          updateSearchParamsDraft({ plantName: undefined });
+          updateSearchParamsDraft({ entityName: undefined });
           setPlantNameSearch(DEFAULT_PLANT_NAME_FIELDS);
         },
       }}

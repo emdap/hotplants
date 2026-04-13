@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/plants/searchRecord": {
+    "/searchRecord": {
         parameters: {
             query?: never;
             header?: never;
@@ -20,7 +20,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/plants/runSearch/{searchRecordId}": {
+    "/runSearch/{searchRecordId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -99,13 +99,13 @@ export interface components {
             locationSource: "search" | "custom";
             locationName: string;
         };
-        PlantSearchNameParams: {
+        EntityNameParams: {
             commonName: string;
         } | {
             scientificName: string;
         };
-        PlantSearchParams: {
-            plantName?: components["schemas"]["PlantSearchNameParams"];
+        EntitySearchParams: {
+            entityName?: components["schemas"]["EntityNameParams"];
             location?: components["schemas"]["PlantSearchLocationParams"];
         };
         "Maybe_string-Array_": string[] | null;
@@ -136,7 +136,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PlantSearchParams"];
+                "application/json": components["schemas"]["EntitySearchParams"];
             };
         };
         responses: {

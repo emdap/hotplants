@@ -8,11 +8,11 @@ import {
 
 const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
-  const { location, plantName } = useSearch({ strict: false });
+  const { location, entityName } = useSearch({ strict: false });
 
-  const searchParams = { location, plantName };
+  const searchParams = { location, entityName };
   const [isPrefilledSearch, setIsPrefilledSearch] = useState(
-    Boolean(location || plantName),
+    Boolean(location || entityName),
   );
 
   const [searchParamsDraft, setSearchParamsDraft] =
@@ -23,8 +23,8 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
       setSearchParamsDraft((prev) => ({ ...prev, ...partialParams }));
 
   useEffect(() => {
-    updateSearchParamsDraft({ plantName: searchParams.plantName });
-  }, [searchParams.plantName]);
+    updateSearchParamsDraft({ entityName: searchParams.entityName });
+  }, [searchParams.entityName]);
 
   useEffect(() => {
     updateSearchParamsDraft({ location: searchParams.location });
