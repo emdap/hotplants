@@ -17,6 +17,10 @@ export type Scalars = {
   ObjectId: { input: any; output: any; }
 };
 
+export type EntityType =
+  | 'animal'
+  | 'plant';
+
 export type GardenPlantData = PlantDataInterface & {
   _id: Scalars['ObjectId']['output'];
   addedTimestamp: Scalars['Float']['output'];
@@ -313,6 +317,7 @@ export type SearchRecord = {
   boundingPolyCoords?: Maybe<Array<Array<Array<Scalars['Float']['output']>>>>;
   commonName?: Maybe<Scalars['String']['output']>;
   createdTimestamp: Scalars['Float']['output'];
+  entityType: EntityType;
   lastRanTimestamp?: Maybe<Scalars['Float']['output']>;
   locationName?: Maybe<Scalars['String']['output']>;
   locationSource?: Maybe<LocationSource>;
@@ -362,6 +367,7 @@ export type SearchRecordStatus =
   | 'SCRAPING';
 
 export type SearchRecordStringFilterField =
+  | 'entityType'
   | 'locationSource'
   | 'status';
 

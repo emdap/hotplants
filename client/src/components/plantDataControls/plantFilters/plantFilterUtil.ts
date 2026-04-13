@@ -3,6 +3,7 @@ import {
   FilterDict,
   FilterInputConfig,
   NON_SPECIFIED_OPTION,
+  SHOW_ALL_OPTION,
   validateFilterValue,
 } from "components/dataControls/filterUtil";
 import { PlantArrayValues } from "config/hotplantsConfig";
@@ -110,7 +111,7 @@ export const STATIC_FILTER_DICT: FilterDict<
     options: [
       { label: "Perennials only", value: true },
       { label: "Annuals only", value: false },
-      { label: "Show all", value: null },
+      SHOW_ALL_OPTION,
     ],
     asFieldset: true,
   },

@@ -1,5 +1,5 @@
 import { hotplantsClient, PlantSearchParams } from "config/hotplantsConfig";
-import { QueryPlantSearchArgs } from "generated/graphql/graphql";
+import { EntityType, QueryPlantSearchArgs } from "generated/graphql/graphql";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -33,6 +33,7 @@ const usePlantSearchQueries = (
     page,
     pageSize,
   }: Required<PaginationParams> & { paginationEnabled: boolean },
+  entityType: EntityType = "plant",
 ) => {
   const [searchStatus, setSearchStatus] =
     useState<PlantSearchQueryStatus>("READY");
@@ -81,7 +82,7 @@ const usePlantSearchQueries = (
       setStatusFromRunningQuery();
 
       const { data } = await hotplantsClient.POST("/searchRecord", {
-        body: { location, entityName },
+        body: { location, entityName, entityType },
       });
 
       if (data?.status !== "SCRAPING" && pollInterval) {

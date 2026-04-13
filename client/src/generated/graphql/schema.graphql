@@ -3,6 +3,11 @@ schema {
   mutation: Mutation
 }
 
+enum EntityType {
+  animal
+  plant
+}
+
 type GardenPlantData implements PlantDataInterface {
   _id: ObjectId!
   addedTimestamp: Float!
@@ -206,6 +211,7 @@ type SearchRecord {
   boundingPolyCoords: [[[Float!]!]!]
   commonName: String
   createdTimestamp: Float!
+  entityType: EntityType!
   lastRanTimestamp: Float
   locationName: String
   locationSource: LocationSource
@@ -258,6 +264,7 @@ enum SearchRecordStatus {
 }
 
 enum SearchRecordStringFilterField {
+  entityType
   locationSource
   status
 }

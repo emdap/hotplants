@@ -2,10 +2,10 @@ import {
   BOOLEAN_OPTIONS,
   FilterDict,
   FilterInputConfig,
+  SHOW_ALL_OPTION,
 } from "components/dataControls/filterUtil";
 import {
   QueryAllSearchRecordsArgs,
-  SearchRecord,
   SearchRecordBooleanFilterField,
   SearchRecordBooleanFilterInput,
   SearchRecordSortField,
@@ -50,7 +50,9 @@ export const USER_SEARCH_HISTORY_FILTER: FilterInputConfig<
   order: -1,
 };
 
-export const SEARCH_HISTORY_FILTER_DICT: FilterDict<keyof SearchRecord> = {
+export const SEARCH_HISTORY_FILTER_DICT: FilterDict<
+  SearchRecordBooleanFilterField | SearchRecordStringFilterField
+> = {
   locationSource: {
     dataKey: "locationSource",
     label: "Location source",
@@ -87,6 +89,20 @@ export const SEARCH_HISTORY_FILTER_DICT: FilterDict<keyof SearchRecord> = {
     inputType: "select-boolean",
     options: BOOLEAN_OPTIONS,
     order: 4,
+  },
+  entityType: {
+    dataKey: "entityType",
+    label: "Search type",
+    inputType: "select-string",
+    options: [
+      {
+        label: "Plant search",
+        value: "plant",
+      },
+      { label: "Animal search (beta)", value: "animal" },
+      SHOW_ALL_OPTION,
+    ],
+    order: 5,
   },
 };
 

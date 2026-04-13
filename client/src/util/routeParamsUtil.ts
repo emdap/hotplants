@@ -7,9 +7,9 @@ import {
 } from "config/hotplantsConfig";
 import {
   LocationSource,
-  SearchRecord,
   SearchRecordBooleanFilterField,
   SearchRecordSortInput,
+  SearchRecordStringFilterField,
 } from "generated/graphql/graphql";
 import { FilterValue, PlantDataFilter } from "./graphqlTypes";
 
@@ -147,7 +147,7 @@ export const validatePlantSearchParams = (
 });
 
 export type SearchRecordFilter = {
-  [key in keyof SearchRecord]?: FilterValue;
+  [key in SearchRecordStringFilterField]?: FilterValue;
 } & { [key in SearchRecordBooleanFilterField]?: boolean };
 
 export type SearchHistoryParams = PaginationParams & {

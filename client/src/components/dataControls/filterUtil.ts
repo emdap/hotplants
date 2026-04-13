@@ -64,6 +64,11 @@ export const NON_SPECIFIED_OPTION: ComplexListboxOption = {
   value: null,
 };
 
+export const SHOW_ALL_OPTION = {
+  label: "Show all",
+  value: null,
+};
+
 export const BOOLEAN_OPTIONS: ComplexListboxOption<boolean | null>[] = [
   {
     label: "Yes",
@@ -73,10 +78,7 @@ export const BOOLEAN_OPTIONS: ComplexListboxOption<boolean | null>[] = [
     label: "No",
     value: false,
   },
-  {
-    label: "Show all",
-    value: null,
-  },
+  SHOW_ALL_OPTION,
 ];
 
 export const getOrderedFilterEntries = <
