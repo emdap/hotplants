@@ -116,8 +116,16 @@
   @apply flex flex-col gap-4 pb-10;
 }
 
+@utility p-card {
+  @apply p-4 md:p-6;
+}
+
+@utility -m-card {
+  @apply -m-4 md:-m-6;
+}
+
 @utility card {
-  @apply rounded border shadow-md p-4 md:p-6;
+  @apply rounded border shadow-md p-card;
   @apply border-gray-200 dark:border-default-background/20;
   @apply bg-default-background/80 not-dark:scrollbar-thumb-accent [&_*]:not-dark:scrollbar-thumb-accent;
 

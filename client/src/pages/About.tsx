@@ -1,26 +1,35 @@
+import AboutSection from "components/about/AboutSection";
+import { ABOUT_SECTIONS } from "components/about/aboutSectionFixtures";
 import FireText from "designSystem/FireText";
-import PageTitle from "designSystem/PageTitle";
+import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { useLottie } from "lottie-react";
+import { motion } from "motion/react";
 import layingPlant from "placeholderImages/layingPlant.json";
 
 const About = () => {
   const Lottie = useLottie({
     animationData: layingPlant,
-    className: "w-[300px]",
+    className: "w-[175px] sm:w-[250px] big-screen:w-[300px]",
   });
   Lottie.setSpeed(0.25);
 
   return (
-    <main className="page-buffer page-container items-center">
-      <PageTitle className="flex flex-col items-center max-w-fit">
-        <FireText className="text-4xl sm:text-6xl big-screen:text-8xl text-black">
-          Hot Plants
-        </FireText>
-        <div className="text-base italic text-right min-w-full">
-          in your area
-        </div>
+    <main className="page-buffer page-container">
+      <motion.div
+        {...MOTION_FADE_IN}
+        className="flex items-center gap-4 mb-8 mt-4 max-sm:justify-center sm:ml-8"
+      >
         {Lottie.View}
-      </PageTitle>
+        <div className="mt-6 flex flex-col items-center max-w-fit font-mono text-left">
+          <FireText className="text-4xl sm:text-6xl big-screen:text-8xl dark:text-red-900 text-orange-700">
+            Hot Plants
+          </FireText>
+          <span className="text-base italic min-w-full">in your area</span>
+        </div>
+      </motion.div>
+      {ABOUT_SECTIONS.map((section, index) => (
+        <AboutSection key={index} {...section} />
+      ))}
     </main>
   );
 };

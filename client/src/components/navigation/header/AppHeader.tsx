@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useAppContext } from "contexts/AppContext";
 import Button from "designSystem/Button";
 import DarkModeToggle from "designSystem/darkMode/DarkModeToggle";
@@ -16,10 +17,10 @@ const AppHeader = () => {
         icon={<MdOutlineMenu size={24} />}
       />
 
-      <div className="h-header py-2 flex gap-2 items-center">
+      <Link to="/about" className="h-header py-2 flex gap-2 items-center">
         <img src="/favicon/apple-icon.png" className="h-full" />
         <h6 className="font-mono text-white/80!">hotplants</h6>
-      </div>
+      </Link>
 
       <div className="flex gap-4 items-center ml-auto h-full">
         <DarkModeToggle />
