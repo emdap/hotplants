@@ -20,12 +20,13 @@ type PlantSearchCachedData = { count: number; results: Reference[] };
 
 const mergePlantSearch: FieldMergeFunction<
   PlantSearchCachedData,
-  PlantSearchCachedData,
-  FieldFunctionOptions<
+  PlantSearchCachedData
+> = (existing, incoming, options) => {
+  const { readField, variables } = options as FieldFunctionOptions<
     SearchPlantsQueryVariables,
     SearchPlantsQueryVariables & { paginated?: boolean }
-  >
-> = (existing, incoming, { readField, variables }) => {
+  >;
+
   if (!existing?.results || !variables?.offset) {
     return incoming;
   }
@@ -48,6 +49,8 @@ const mergeOccurrences: FieldMergeFunction<
   PlantOccurrence[]
 > = (_existing, incoming) => incoming;
 
+const CONSISTENT_KEY_ARGS = ["entityType", "where", "sort"];
+
 const cache = new InMemoryCache({
   possibleTypes: {
     PlantDataInterface: ["PlantData", "GardenPlantData"],
@@ -58,8 +61,8 @@ const cache = new InMemoryCache({
         plantSearch: {
           keyArgs: (_args, { variables }) =>
             variables?.paginated
-              ? ["offset", "limit", "where", "sort"]
-              : ["where", "sort"],
+              ? ["offset", "limit", ...CONSISTENT_KEY_ARGS]
+              : CONSISTENT_KEY_ARGS,
           merge: mergePlantSearch,
         },
       },

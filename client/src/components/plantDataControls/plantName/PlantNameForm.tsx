@@ -3,7 +3,7 @@ import FilterInput from "components/dataControls/FilterInputField";
 import PlantSearchFormFooter from "components/plantDataControls/PlantDataFormFooter";
 import {
   DEFAULT_PLANT_NAME_FIELDS,
-  PLANT_FORM_TITLES,
+  getPlantFormTitle,
   PLANT_NAME_FIELDS,
   PlantSearchFormProps,
 } from "components/plantDataControls/plantSearchFormUtil";
@@ -21,7 +21,7 @@ const PlantNameForm = ({
   onSubmit,
 }: PlantSearchFormProps) => {
   const {
-    searchParams: { entityName: appliedPlantName },
+    searchParams: { entityName: appliedPlantName, entityType },
     searchParamsDraft,
     updateSearchParamsDraft,
     applySearchParams,
@@ -94,7 +94,9 @@ const PlantNameForm = ({
         "px-4 overflow-auto": renderMode === "modal",
       })}
     >
-      {renderMode === "card" && <h2>{PLANT_FORM_TITLES["plant-name"]}</h2>}
+      {renderMode === "card" && (
+        <h2>{getPlantFormTitle("plant-name", entityType)}</h2>
+      )}
 
       <div className="my-4 min-h-min w-full max-w-[400px]">
         {PLANT_NAME_FIELDS.map((field, index) => (

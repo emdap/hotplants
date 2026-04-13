@@ -138,6 +138,11 @@
   @apply bg-default-background;
 }
 
+@utility text-mask {
+  @apply bg-clip-text;
+  -webkit-text-fill-color: transparent;
+}
+
 @utility pretty-background {
   background-size: 800%;
 

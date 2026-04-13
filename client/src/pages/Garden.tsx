@@ -89,6 +89,7 @@ const Garden = () => {
       />
 
       <PlantSelectionProvider
+        entityType="plant"
         plantList={gardenPlants?.results ?? []}
         plantListLoading={gardenPlantsQuery.loading}
         totalItems={displayCount}

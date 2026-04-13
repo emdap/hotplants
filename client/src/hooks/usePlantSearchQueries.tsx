@@ -1,5 +1,5 @@
-import { hotplantsClient, PlantSearchParams } from "config/hotplantsConfig";
-import { EntityType, QueryPlantSearchArgs } from "generated/graphql/graphql";
+import { EntitySearchParams, hotplantsClient } from "config/hotplantsConfig";
+import { QueryPlantSearchArgs } from "generated/graphql/graphql";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -16,24 +16,24 @@ export const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
 
-const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
-  offset: 0,
-  limit: DEFAULT_PAGE_SIZE,
-  sort: [
-    { field: "updatedTimestamp", value: 1 },
-    { field: "scientificName", value: 1 },
-  ],
-};
+const DEFAULT_PLANT_SEARCH_GQL_VARS: Omit<QueryPlantSearchArgs, "entityType"> =
+  {
+    offset: 0,
+    limit: DEFAULT_PAGE_SIZE,
+    sort: [
+      { field: "updatedTimestamp", value: 1 },
+      { field: "scientificName", value: 1 },
+    ],
+  };
 
 const usePlantSearchQueries = (
-  { location, entityName }: PlantSearchParams,
+  { location, entityName, entityType }: EntitySearchParams,
   plantFilters: PlantDataFilter | undefined,
   {
     paginationEnabled,
     page,
     pageSize,
   }: Required<PaginationParams> & { paginationEnabled: boolean },
-  entityType: EntityType = "plant",
 ) => {
   const [searchStatus, setSearchStatus] =
     useState<PlantSearchQueryStatus>("READY");
@@ -60,6 +60,8 @@ const usePlantSearchQueries = (
     variables: {
       ...DEFAULT_PLANT_SEARCH_GQL_VARS,
       ...paginationVars,
+
+      entityType,
       where: {
         boundingPolyCoords: location?.boundingPolyCoords,
         ...entityName,

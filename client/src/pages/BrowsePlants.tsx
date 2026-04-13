@@ -13,6 +13,8 @@ import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { useScrollAnchor } from "hooks/useScrollAnchor";
+import { capitalize } from "lodash";
+import pluralize from "pluralize";
 import { Ref, useLayoutEffect } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
@@ -23,6 +25,7 @@ const PlantSearch = ({
   resultsContainerRef: Ref<HTMLDivElement>;
 }) => {
   const {
+    entityType,
     hasCurrentResults,
 
     isInfiniteScroll,
@@ -76,7 +79,10 @@ const PlantSearch = ({
   return (
     <main className="w-full h-full">
       {!page && <ScrollAnchor id="plant" className="absolute top-0" />}
-      <PageTitle className="page-buffer">Browse Plants</PageTitle>
+      <PageTitle className="page-buffer">
+        Browse {pluralize(capitalize(entityType))}
+      </PageTitle>
+
       <PlantSearchHeader />
 
       <div className="flex grow small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full">
@@ -116,6 +122,7 @@ const PlantSearch = ({
           {showPlantAnimation && (
             <div className="flex flex-col gap-8 my-auto overflow-hidden">
               <PlantAnimation
+                dataType={entityType}
                 queryStatus={searchStatus}
                 hasCurrentResults={hasCurrentResults}
                 showServerStatus

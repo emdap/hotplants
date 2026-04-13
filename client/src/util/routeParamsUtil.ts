@@ -1,17 +1,20 @@
 import { polygon } from "@turf/turf";
 import { validatePlantFilters } from "components/plantDataControls/plantFilters/plantFilterUtil";
 import {
+  EntitySearchParams,
   PlantLocationParams,
   PlantNameParam,
-  PlantSearchParams,
 } from "config/hotplantsConfig";
 import {
+  EntityType,
   LocationSource,
   SearchRecordBooleanFilterField,
   SearchRecordSortInput,
   SearchRecordStringFilterField,
 } from "generated/graphql/graphql";
-import { FilterValue, PlantDataFilter } from "./graphqlTypes";
+import { AnimalDataFilter, FilterValue, PlantDataFilter } from "./graphqlTypes";
+
+// TODO: Split up this file!
 
 export type PaginationParams = {
   page?: number;
@@ -29,32 +32,45 @@ const validateString = (input: unknown, subKey?: string) => {
   return inputObject ? String(inputObject) : undefined;
 };
 
-export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
-  page: undefined,
-  pageSize: undefined,
+const DEFAULT_ENTITY_SEARCH_PARAMS = {
   location: undefined,
   entityName: undefined,
-  plantFilter: undefined,
   lastOpened: undefined,
 };
 
-export type PlantSearchRouteParams = PaginationParams &
-  (
-    | {
-        page?: number;
-        pageSize?: number;
+export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
+  entityType: "plant" as const,
+  plantFilter: undefined,
+  ...DEFAULT_ENTITY_SEARCH_PARAMS,
+};
 
-        location?: PlantLocationParams;
-        entityName?: PlantNameParam;
-        plantFilter?: PlantDataFilter;
-        lastOpened?: string;
-      }
-    | Partial<typeof DEFAULT_PLANT_SEARCH_ROUTE_PARAMS>
-  );
+export const DEFAULT_ANIMAL_SEARCH_ROUTE_PARAMS = {
+  entityType: "animal" as const,
+  animalFilter: undefined,
+  ...DEFAULT_ENTITY_SEARCH_PARAMS,
+};
+
+type EntitySearchRouteParams = PaginationParams & {
+  entityType?: EntityType;
+  page?: number;
+  pageSize?: number;
+
+  location?: PlantLocationParams;
+  entityName?: PlantNameParam;
+  lastOpened?: string;
+};
+
+export type PlantSearchRouteParams = EntitySearchRouteParams & {
+  plantFilter?: PlantDataFilter;
+};
+
+export type AnimalSearchRouteParams = EntitySearchParams & {
+  animalFilter?: AnimalDataFilter;
+};
 
 const validateLocation = (
   searchParams: Record<string, unknown>,
-): PlantSearchParams | null => {
+): Pick<EntitySearchParams, "location"> | null => {
   if (searchParams.location && typeof searchParams.location === "object") {
     const locationParams = searchParams.location;
     if (
@@ -89,7 +105,7 @@ const validateLocation = (
 
 const validatePlantName = (
   searchParams: Record<string, unknown>,
-): PlantSearchParams | null => {
+): Pick<EntitySearchParams, "entityName"> | null => {
   if (searchParams.entityName && typeof searchParams.entityName === "object") {
     const commonName = validateString(searchParams.entityName, "commonName");
     if (commonName) {
@@ -144,6 +160,17 @@ export const validatePlantSearchParams = (
   ...validatePlantFilterParam(params),
   ...validateLocation(params),
   ...validatePlantName(params),
+  entityType: "plant",
+});
+
+export const validateAnimalSearchParams = (
+  params: Record<string, unknown>,
+): PlantSearchRouteParams => ({
+  ...validatePaginationParams(params),
+  ...validatePlantFilterParam(params),
+  ...validateLocation(params),
+  ...validatePlantName(params),
+  entityType: "animal",
 });
 
 export type SearchRecordFilter = {

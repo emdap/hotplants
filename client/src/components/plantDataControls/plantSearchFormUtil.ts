@@ -1,6 +1,9 @@
 import { FilterInputConfig } from "components/dataControls/filterUtil";
 import { OptionalSearchParamKey } from "config/hotplantsConfig";
 import { SearchFormTab } from "contexts/plantSearch/PlantSearchContext";
+import { EntityType } from "generated/graphql/graphql";
+import { capitalize } from "lodash";
+import pluralize from "pluralize";
 
 export type PlantSearchFormProps = {
   onSubmit?: () => void;
@@ -37,8 +40,15 @@ export const DEFAULT_PLANT_NAME_FIELDS = {
   scientificName: undefined,
 };
 
-export const PLANT_FORM_TITLES: Record<SearchFormTab, string> = {
-  location: "Location",
-  "plant-name": "Plant name",
-  filters: "Filter plants",
+export const getPlantFormTitle = (
+  tabName: SearchFormTab,
+  entityType: EntityType,
+) => {
+  if (tabName === "location") {
+    return "Location";
+  }
+  if (tabName === "filters") {
+    return `Filter ${pluralize(entityType)}`;
+  }
+  return `${capitalize(entityType)} name`;
 };

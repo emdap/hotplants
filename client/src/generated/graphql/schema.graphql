@@ -199,7 +199,7 @@ type Query {
   allUserGardens(gardenId: String, gardenName: String): [UserGarden!]!
   plant(boundingPolyCoords: [[[Float!]!]!], id: String!): PlantData
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
-  plantSearch(limit: Int, offset: Int, sort: [PlantSortInput!], where: PlantDataInput): PlantSearchQueryResults!
+  plantSearch(entityType: EntityType!, limit: Int, offset: Int, sort: [PlantSortInput!], where: PlantDataInput): PlantSearchQueryResults!
   searchRecord(id: String!): SearchRecord
   searchRecordDataCounts(id: String!): SearchRecordPlantCountResults!
   userGarden(gardenId: String, gardenName: String): UserGarden

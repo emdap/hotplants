@@ -1,5 +1,5 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
-import { PlantSearchParams } from "config/hotplantsConfig";
+import { EntitySearchParams } from "config/hotplantsConfig";
 import { ReactNode, useEffect, useState } from "react";
 import {
   SearchParamsContext,
@@ -8,15 +8,19 @@ import {
 
 const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
-  const { location, entityName } = useSearch({ strict: false });
+  const {
+    location,
+    entityName,
+    entityType = "plant",
+  } = useSearch({ strict: false });
+  const searchParams = { location, entityName, entityType };
 
-  const searchParams = { location, entityName };
   const [isPrefilledSearch, setIsPrefilledSearch] = useState(
-    Boolean(location || entityName),
+    Boolean(searchParams.location || searchParams.entityName),
   );
 
   const [searchParamsDraft, setSearchParamsDraft] =
-    useState<Partial<PlantSearchParams>>(searchParams);
+    useState<Partial<EntitySearchParams>>(searchParams);
 
   const updateSearchParamsDraft: SearchParamsContextType["updateSearchParamsDraft"] =
     (partialParams) =>
@@ -30,11 +34,11 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
     updateSearchParamsDraft({ location: searchParams.location });
   }, [searchParams.location]);
 
-  const applySearchParams = (params: Partial<PlantSearchParams>) => {
+  const applySearchParams = (params: Partial<EntitySearchParams>) => {
     setIsPrefilledSearch(false);
 
     navigate({
-      to: "/browse-plants",
+      to: ".",
       search: ({ page: _page, ...rest }) => ({
         ...rest,
         ...params,

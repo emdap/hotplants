@@ -7,6 +7,7 @@ import { useLottie } from "lottie-react";
 import { motion } from "motion/react";
 import movingPlant from "placeholderImages/movingPlant.json";
 import stillPlant from "placeholderImages/stillPlant.json";
+import pluralize from "pluralize";
 import { ReactNode, useEffect, useState } from "react";
 
 type PlantAnimationProps = {
@@ -46,14 +47,14 @@ const getDescription = (
   } else if (queryStatus === "SCRAPING_AND_POLLING") {
     return {
       key: 1,
-      text: `Searching for ${hasCurrentResults ? "more " : ""}${dataType}`,
+      text: `Searching for ${hasCurrentResults ? "more " : ""}${pluralize(dataType)}`,
     };
   } else if (!hasCurrentResults) {
     return {
       key: 2,
       text:
         customNoDataMessage ??
-        `No ${dataType} found, try adjusting your filters.`,
+        `No ${pluralize(dataType)} found, try adjusting your filters.`,
     };
   } else {
     return { key: 3, text: "End of results" };

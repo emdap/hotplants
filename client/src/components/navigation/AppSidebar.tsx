@@ -2,10 +2,14 @@ import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import classNames from "classnames";
 import { PLANTS_WITH_DATA_FILTER } from "components/plantDataControls/plantFilters/plantFilterUtil";
 import { useAppContext } from "contexts/AppContext";
+import BetaTag from "designSystem/BetaTag";
 import Button from "designSystem/Button";
+import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import Sidebar from "designSystem/Sidebar";
 import { MenuItemData } from "designSystem/StyledMenu";
+import { AnimatePresence, motion } from "motion/react";
 import { CgReadme } from "react-icons/cg";
+import { GiBearFace } from "react-icons/gi";
 import { MdHistory, MdInfoOutline, MdOutlineSearch } from "react-icons/md";
 import { TbPlant2 } from "react-icons/tb";
 import { isSmallScreen } from "util/generalUtil";
@@ -13,7 +17,7 @@ import { isSmallScreen } from "util/generalUtil";
 type SidebarNavItem = PickRequired<
   MenuItemData,
   "Icon" | "label" | "linkProps"
-> & { className?: string };
+> & { className?: string; isBeta?: boolean };
 
 const SIDEBAR_ITEMS: SidebarNavItem[] = [
   {
@@ -38,6 +42,14 @@ const SIDEBAR_ITEMS: SidebarNavItem[] = [
     label: "Gardens",
     linkProps: { to: "/user-gardens" },
     Icon: TbPlant2,
+  },
+  {
+    label: "Browse Animals",
+    linkProps: {
+      to: "/browse-animals",
+    },
+    Icon: GiBearFace,
+    isBeta: true,
   },
   {
     label: "About",
@@ -65,7 +77,7 @@ const AppSidebar = () => {
       setIsExpanded={setSidebarExpanded}
       className={(sidebarExpanded) =>
         classNames(
-          "[&_*]:text-white! border-r sticky top-header pb-3",
+          "[&_*]:text-white border-r sticky top-header pb-3",
           "small-screen:bg-primary-dark small-screen:w-xs",
           "big-screen:h-dvh-header big-screen:border-r small-screen:border-none",
           {
@@ -75,7 +87,7 @@ const AppSidebar = () => {
       }
     >
       {({ isExpanded, setIsExpanded }) => (
-        <>
+        <AnimatePresence>
           {SIDEBAR_ITEMS.map(({ Icon, className, ...item }, index) => (
             <Link
               key={index}
@@ -96,21 +108,30 @@ const AppSidebar = () => {
                 )}
                 icon={<Icon size={24} />}
               >
+                {item.isBeta && !isExpanded && (
+                  <motion.div {...MOTION_FADE_IN}>
+                    <BetaTag
+                      key={`${index}-beta`}
+                      className="-translate-x-full translate-y-full mt-1"
+                    />
+                  </motion.div>
+                )}
                 <span
                   key="nav-item-text"
                   className={classNames(
-                    "whitespace-nowrap transition-opacity",
+                    "whitespace-nowrap transition-opacity flex items-center gap-2",
                     isExpanded
                       ? "big-screen:opacity-100"
                       : "big-screen:opacity-0 big-screen:w-0",
                   )}
                 >
                   {item.label}
+                  {item.isBeta && <BetaTag />}
                 </span>
               </Button>
             </Link>
           ))}
-        </>
+        </AnimatePresence>
       )}
     </Sidebar>
   );

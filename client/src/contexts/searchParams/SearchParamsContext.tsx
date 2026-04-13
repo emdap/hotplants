@@ -1,19 +1,19 @@
-import { PlantSearchParams } from "config/hotplantsConfig";
+import { EntitySearchParams } from "config/hotplantsConfig";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
 export type SearchParamsContextType = {
-  searchParams: PlantSearchParams;
-  searchParamsDraft: Partial<PlantSearchParams>;
-  updateSearchParamsDraft: (partialParams: Partial<PlantSearchParams>) => void;
-  applySearchParams: (params: Partial<PlantSearchParams>) => void;
+  searchParams: EntitySearchParams;
+  searchParamsDraft: Partial<EntitySearchParams>;
+  updateSearchParamsDraft: (partialParams: Partial<EntitySearchParams>) => void;
+  applySearchParams: (params: Partial<EntitySearchParams>) => void;
 
   isPrefilledSearch: boolean;
   setIsPrefilledSearch: Dispatch<SetStateAction<boolean>>;
 };
 
 const DEFAULT_SEARCH_PARAMS_CONTEXT: SearchParamsContextType = {
-  searchParams: {},
+  searchParams: { entityType: "plant" },
   searchParamsDraft: {},
   updateSearchParamsDraft: VOID_FUNCTION,
   applySearchParams: VOID_FUNCTION,

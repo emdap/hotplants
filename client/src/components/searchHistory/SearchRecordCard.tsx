@@ -13,6 +13,7 @@ import {
 } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
+import pluralize from "pluralize";
 import { ReactNode, useMemo } from "react";
 import { MdDoubleArrow } from "react-icons/md";
 import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
@@ -21,6 +22,7 @@ import SearchRecordProgressBar from "./SearchRecordProgressBar";
 
 const SearchRecordCard = ({
   _id,
+  entityType,
   occurrencesOffset,
   totalOccurrences,
   status,
@@ -125,7 +127,7 @@ const SearchRecordCard = ({
         <div className="flex flex-col gap-4 [&_div]:space-y-0.5 grow">
           <div>
             <InfoRow
-              title="Unique plants found in area"
+              title={`Unique ${pluralize(entityType)} found in area`}
               value={
                 plantCountLoading ? (
                   <LoadingIcon />

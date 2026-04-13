@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchHistoryRouteImport } from './routes/search-history'
 import { Route as NewSearchRouteImport } from './routes/new-search'
 import { Route as BrowsePlantsRouteImport } from './routes/browse-plants'
+import { Route as BrowseAnimalsRouteImport } from './routes/browse-animals'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as AuthRouteImport } from './routes/_auth'
@@ -34,6 +35,11 @@ const NewSearchRoute = NewSearchRouteImport.update({
 const BrowsePlantsRoute = BrowsePlantsRouteImport.update({
   id: '/browse-plants',
   path: '/browse-plants',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrowseAnimalsRoute = BrowseAnimalsRouteImport.update({
+  id: '/browse-animals',
+  path: '/browse-animals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -78,6 +84,7 @@ const PrivateGardensGardenNameRoute =
 
 export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
+  '/browse-animals': typeof BrowseAnimalsRoute
   '/browse-plants': typeof BrowsePlantsRoute
   '/new-search': typeof NewSearchRoute
   '/search-history': typeof SearchHistoryRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/about': typeof AboutRoute
+  '/browse-animals': typeof BrowseAnimalsRoute
   '/browse-plants': typeof BrowsePlantsRoute
   '/new-search': typeof NewSearchRoute
   '/search-history': typeof SearchHistoryRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/_private': typeof PrivateRouteWithChildren
   '/about': typeof AboutRoute
+  '/browse-animals': typeof BrowseAnimalsRoute
   '/browse-plants': typeof BrowsePlantsRoute
   '/new-search': typeof NewSearchRoute
   '/search-history': typeof SearchHistoryRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/about'
+    | '/browse-animals'
     | '/browse-plants'
     | '/new-search'
     | '/search-history'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/about'
+    | '/browse-animals'
     | '/browse-plants'
     | '/new-search'
     | '/search-history'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_private'
     | '/about'
+    | '/browse-animals'
     | '/browse-plants'
     | '/new-search'
     | '/search-history'
@@ -154,6 +166,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   PrivateRoute: typeof PrivateRouteWithChildren
   AboutRoute: typeof AboutRoute
+  BrowseAnimalsRoute: typeof BrowseAnimalsRoute
   BrowsePlantsRoute: typeof BrowsePlantsRoute
   NewSearchRoute: typeof NewSearchRoute
   SearchHistoryRoute: typeof SearchHistoryRoute
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/browse-plants'
       fullPath: '/browse-plants'
       preLoaderRoute: typeof BrowsePlantsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/browse-animals': {
+      id: '/browse-animals'
+      path: '/browse-animals'
+      fullPath: '/browse-animals'
+      preLoaderRoute: typeof BrowseAnimalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -272,6 +292,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PrivateRoute: PrivateRouteWithChildren,
   AboutRoute: AboutRoute,
+  BrowseAnimalsRoute: BrowseAnimalsRoute,
   BrowsePlantsRoute: BrowsePlantsRoute,
   NewSearchRoute: NewSearchRoute,
   SearchHistoryRoute: SearchHistoryRoute,

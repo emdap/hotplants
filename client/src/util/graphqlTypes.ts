@@ -6,6 +6,10 @@ import {
 } from "generated/graphql/graphql";
 
 export type PlantDataFilter = Omit<PlantDataInput, "boundingPolyCoords">;
+export type AnimalDataFilter = Pick<
+  PlantDataFilter,
+  "scientificName" | "commonName"
+>;
 
 // Re-defining ListboxValue, don't want design system to depend on this file, or vice-versa
 export type PrimitiveValue = string | boolean | number | null;

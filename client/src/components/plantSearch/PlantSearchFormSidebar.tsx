@@ -21,7 +21,7 @@ import { Entries } from "type-fest";
 import { isSmallScreen } from "util/generalUtil";
 import PlantFilterForm from "../plantDataControls/plantFilters/PlantFilterForm";
 import {
-  PLANT_FORM_TITLES,
+  getPlantFormTitle,
   PlantSearchFormProps,
 } from "../plantDataControls/plantSearchFormUtil";
 
@@ -90,7 +90,7 @@ const PlantSearchForm = () => {
       return (
         <Modal
           key={tabName}
-          title={PLANT_FORM_TITLES[tabName]}
+          title={getPlantFormTitle(tabName, searchParams.entityType)}
           isOpen={modalIsOpen}
           onClose={() => {
             updateSearchParamsDraft(searchParams);

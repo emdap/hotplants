@@ -1,20 +1,37 @@
-import { useSearch } from "@tanstack/react-router";
 import {
+  getPlantFormTitle,
   OpenPlantFormProps,
-  PLANT_FORM_TITLES,
 } from "components/plantDataControls/plantSearchFormUtil";
 import { PlantNameParam } from "config/hotplantsConfig";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import { capitalize } from "lodash";
-import { RiPlantFill, RiPlantLine } from "react-icons/ri";
+import {
+  RiBearSmileFill,
+  RiBearSmileLine,
+  RiPlantFill,
+  RiPlantLine,
+} from "react-icons/ri";
 import PlantFormOpenButton from "../PlantFormOpenButton";
 
 const getPlantName = (param?: PlantNameParam) =>
   param && ("commonName" in param ? param.commonName : param.scientificName);
 
+const ICON_DICT = {
+  plant: {
+    active: <RiPlantFill />,
+    inactive: <RiPlantLine />,
+  },
+  animal: {
+    active: <RiBearSmileFill />,
+    inactive: <RiBearSmileLine />,
+  },
+};
+
 const PlantNameOpenButton = (props: OpenPlantFormProps) => {
-  const { searchParamsDraft } = useSearchParamsContext();
-  const { entityName: plantNameParam } = useSearch({ strict: false });
+  const {
+    searchParams: { entityName: plantNameParam, entityType },
+    searchParamsDraft,
+  } = useSearchParamsContext();
 
   const plantNameDraft = getPlantName(searchParamsDraft?.entityName);
   const appliedPlantName = getPlantName(plantNameParam);
@@ -26,7 +43,7 @@ const PlantNameOpenButton = (props: OpenPlantFormProps) => {
       hasChanges={
         plantNameDraft?.toLowerCase() !== appliedPlantName?.toLowerCase()
       }
-      icon={isActive ? <RiPlantFill /> : <RiPlantLine />}
+      icon={ICON_DICT[entityType][isActive ? "active" : "inactive"]}
       {...props}
     >
       <span>
@@ -34,7 +51,7 @@ const PlantNameOpenButton = (props: OpenPlantFormProps) => {
           ? capitalize(plantNameDraft)
           : appliedPlantName
             ? "None"
-            : PLANT_FORM_TITLES["plant-name"]}
+            : getPlantFormTitle("plant-name", entityType)}
       </span>
     </PlantFormOpenButton>
   );

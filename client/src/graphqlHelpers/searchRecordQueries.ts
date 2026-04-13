@@ -23,6 +23,8 @@ export const GET_ALL_SEARCH_RECORDS = graphql(`
         status
         lastRanTimestamp
 
+        entityType
+
         locationName
         locationSource
         boundingPolyCoords

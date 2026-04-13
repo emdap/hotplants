@@ -13,6 +13,8 @@ import { Entries } from "type-fest";
 import { PlantDataFilter } from "util/graphqlTypes";
 import { PlantSearchRouteParams } from "util/routeParamsUtil";
 
+// TODO: Split between generic entity filters and plant filters
+
 export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
   {
     bloomColors: {
@@ -74,17 +76,9 @@ type PlantFilterKey = keyof Omit<
   | "habitats"
 >;
 
-export const STATIC_FILTER_DICT: FilterDict<
-  Exclude<PlantFilterKey, keyof PlantArrayValues>
+export const ENTITY_NAME_FILTER_DICT: FilterDict<
+  "commonName" | "scientificName"
 > = {
-  hasScrapedData: {
-    dataKey: "hasScrapedData",
-    label: "Has scraped data",
-    inputType: "select-boolean",
-    options: BOOLEAN_OPTIONS,
-    asFieldset: true,
-    order: 3.5,
-  },
   scientificName: {
     dataKey: "scientificName",
     label: "Scientific name contains",
@@ -97,6 +91,20 @@ export const STATIC_FILTER_DICT: FilterDict<
     inputType: "text",
     order: 2,
   },
+};
+
+export const STATIC_FILTER_DICT: FilterDict<
+  Exclude<PlantFilterKey, keyof PlantArrayValues>
+> = {
+  hasScrapedData: {
+    dataKey: "hasScrapedData",
+    label: "Has scraped data",
+    inputType: "select-boolean",
+    options: BOOLEAN_OPTIONS,
+    asFieldset: true,
+    order: 3.5,
+  },
+  ...ENTITY_NAME_FILTER_DICT,
   physicalCharactersticsDump: {
     dataKey: "physicalCharactersticsDump",
     label: "Description keyword search",

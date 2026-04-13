@@ -10,11 +10,13 @@ import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelection
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
+import { capitalize } from "lodash";
 import PlantFilterOpenButton from "../plantDataControls/plantFilters/PlantFilterOpenButton";
 
 const PlantSearchHeader = () => {
   const navigate = useNavigate();
   const {
+    entityType,
     searchStatus,
     isInfiniteScroll,
     setIsInfiniteScroll,
@@ -44,7 +46,7 @@ const PlantSearchHeader = () => {
       </div>
 
       <ItemCountWithLoader
-        label="Plant"
+        label={capitalize(entityType)}
         className="col-start-2 whitespace-nowrap"
         count={totalItems}
         isLoading={searchStatus === "SCRAPING_AND_POLLING"}

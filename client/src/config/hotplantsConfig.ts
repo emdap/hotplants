@@ -7,16 +7,14 @@ export const hotplantsClient = createClient<paths>({
   credentials: "include",
 });
 
-export type PlantSearchParams = Omit<
-  Hotplants.components["schemas"]["EntitySearchParams"],
-  "entityType"
->;
+export type EntitySearchParams =
+  Hotplants.components["schemas"]["EntitySearchParams"];
 
 export type PlantArrayValues =
   // TODO: Omitted habitats from BE as well, not scraping good values
   Omit<Hotplants.components["schemas"]["PlantArrayValuesDocument"], "habitats">;
 
-export type PlantLocationParams = Required<PlantSearchParams>["location"];
-export type PlantNameParam = Required<PlantSearchParams>["entityName"];
+export type PlantLocationParams = Required<EntitySearchParams>["location"];
+export type PlantNameParam = Required<EntitySearchParams>["entityName"];
 
 export type OptionalSearchParamKey = "commonName" | "scientificName";
