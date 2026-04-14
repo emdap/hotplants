@@ -105,6 +105,7 @@ input PlantDataInput {
   bloomTimes: PlantArrayFilterStringInput
   boundingPolyCoords: [[[Float!]!]!]
   commonName: String
+  commonNameIncludes: String
   habitats: PlantArrayFilterStringInput
   hardiness: PlantArrayFilterIntInput
   hasScrapedData: Boolean
@@ -114,6 +115,7 @@ input PlantDataInput {
   maturityTime: String
   physicalCharactersticsDump: String
   scientificName: String
+  scientificNameIncludes: String
   scrapeSources: [String]
   soilTypes: PlantArrayFilterStringInput
   spread: PlantSizeRangeInput
