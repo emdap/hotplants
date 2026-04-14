@@ -85,6 +85,7 @@ const PlantActions = ({
       anchor="bottom end"
       itemsAsCard
       disabled={hasLoadingAction}
+      className={{ menuItemsList: "z-50" }}
       menuButton={
         <Button
           variant="icon-white"
