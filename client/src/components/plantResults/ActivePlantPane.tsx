@@ -40,6 +40,7 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
   const navigate = useNavigate();
   const { searchParams } = useSearchParamsContext();
   const {
+    entityType,
     plantList,
     page,
     pageSize,
@@ -201,6 +202,7 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
 
               <PlantInfo
                 plant={activePlant}
+                entityType={entityType}
                 onTouchEndCapture={(e) => e.stopPropagation()}
               />
             </div>
