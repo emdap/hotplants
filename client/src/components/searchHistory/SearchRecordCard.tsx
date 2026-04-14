@@ -16,6 +16,7 @@ import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
 import pluralize from "pluralize";
 import { ReactNode, useMemo } from "react";
 import { MdDoubleArrow } from "react-icons/md";
+import { RiBearSmileFill, RiPlantFill } from "react-icons/ri";
 import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
 import { locationDisplay, validateLocationParams } from "util/locationUtil";
 import SearchRecordProgressBar from "./SearchRecordProgressBar";
@@ -66,7 +67,7 @@ const SearchRecordCard = ({
         : undefined;
 
     navigate({
-      to: "/browse-plants",
+      to: entityType === "plant" ? "/browse-plants" : "/browse-animals",
       search: { location: locationParams, entityName, page: 1 },
     });
   };
@@ -84,6 +85,11 @@ const SearchRecordCard = ({
         className="border-b border-transparent hover:border-default-text/80 transition-colors cursor-pointer pb-0.5 flex gap-4 justify-between items-center"
         onClick={openSearchRecord}
       >
+        {entityType === "plant" ? (
+          <RiPlantFill size={20} />
+        ) : (
+          <RiBearSmileFill size={20} />
+        )}
         <span>
           <h2>{title}</h2>
           <h4>{subTitle}</h4>
