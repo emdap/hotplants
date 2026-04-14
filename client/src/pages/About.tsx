@@ -14,17 +14,19 @@ const About = () => {
   Lottie.setSpeed(0.25);
 
   return (
-    <main className="page-buffer page-container">
+    <main className="page-buffer page-container max-w-page">
       <motion.div
         {...MOTION_FADE_IN}
-        className="flex items-center gap-4 mb-8 mt-4 max-sm:justify-center sm:ml-8"
+        className="flex items-end gap-4 mb-8 mt-4 max-sm:justify-center sm:ml-8"
       >
         {Lottie.View}
-        <div className="mt-6 flex flex-col items-center max-w-fit font-mono text-left">
-          <FireText className="text-4xl sm:text-6xl big-screen:text-8xl dark:text-red-900 text-orange-700">
+        <div className="mt-6 mb-1 flex flex-col items-center max-w-fit font-mono text-left">
+          <FireText className="text-4xl sm:text-6xl big-screen:text-8xl dark:text-red-900! text-orange-700!">
             Hot Plants
           </FireText>
-          <span className="text-base italic min-w-full">in your area</span>
+          <span className="text-base italic min-w-full text-white!">
+            in your area
+          </span>
         </div>
       </motion.div>
       {ABOUT_SECTIONS.map((section, index) => (

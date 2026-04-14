@@ -33,10 +33,6 @@
   h6 {
     @apply text-default-text;
   }
-
-  a {
-    @apply focus-visible:focus-ring outline-inherit rounded-sm;
-  }
 }
 
 @theme {
@@ -138,9 +134,14 @@
   @apply bg-default-background;
 }
 
-@utility text-mask {
-  @apply bg-clip-text;
-  -webkit-text-fill-color: transparent;
+@utility text-link {
+  @apply focus-visible:focus-ring outline-inherit rounded-sm font-semibold hover:underline underline-offset-4;
+
+  &:visited {
+    @apply text-accent-bright;
+  }
+
+  @apply text-primary-bright;
 }
 
 @utility pretty-background {
