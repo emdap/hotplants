@@ -48,13 +48,13 @@ const SearchHistoryFilterPopover = ({
       anchor="bottom start"
       button={
         <FilterButton size="small" active={hasData}>
-          <span>{POPOVER_LABELS.filter}</span>
+          <span>{POPOVER_LABELS.recordFilter}</span>
         </FilterButton>
       }
     >
       {({ close }) => (
         <SearchHistoryPopoverContentWrapper
-          paramType="filter"
+          paramType="recordFilter"
           {...{ hasData, applyParams, close }}
         >
           {searchHistoryFilters.map(

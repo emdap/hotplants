@@ -16,7 +16,10 @@ import { Entries } from "type-fest";
 import { SearchRecordFilterInput } from "util/graphqlTypes";
 import { SearchHistoryParams, SearchRecordFilter } from "util/routeParamsUtil";
 
-export type SearchHistoryParamType = "sort" | "filter";
+export type SearchHistoryParamType = keyof Pick<
+  SearchHistoryParams,
+  "sort" | "recordFilter"
+>;
 
 export const SEARCH_RECORD_SORT_LIST: {
   field: SearchRecordSortField;
@@ -159,6 +162,6 @@ export type SearchHistoryPopoverProps = {
 };
 
 export const POPOVER_LABELS = {
-  filter: "Filter",
+  recordFilter: "Filter",
   sort: "Sort",
 };
