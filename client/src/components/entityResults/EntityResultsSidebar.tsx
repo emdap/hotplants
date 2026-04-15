@@ -32,7 +32,7 @@ const Entity_FORM_COMPONENTS: Record<
 };
 
 const EntityResultsSidebar = () => {
-  const { searchParams, updateSearchParamsDraft } = useSearchParamsContext();
+  const { entityType, resetSearchParamsDraft } = useSearchParamsContext();
   const {
     searchFormState: { tab, isOpen },
     setSearchFormState,
@@ -87,10 +87,10 @@ const EntityResultsSidebar = () => {
       return (
         <Modal
           key={tabName}
-          title={getFormTitle(tabName, searchParams.entityType)}
+          title={getFormTitle(tabName, entityType)}
           isOpen={modalIsOpen}
           onClose={() => {
-            updateSearchParamsDraft(searchParams);
+            resetSearchParamsDraft();
             toggleIsOpen();
           }}
         >

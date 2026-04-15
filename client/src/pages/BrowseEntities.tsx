@@ -19,13 +19,12 @@ import { Ref, useLayoutEffect } from "react";
 
 const FETCH_MORE_SCROLL_THRESHOLD = 100;
 
-const PlantSearch = ({
+const BrowseEntities = ({
   resultsContainerRef,
 }: {
   resultsContainerRef: Ref<HTMLDivElement>;
 }) => {
   const {
-    entityType,
     hasCurrentResults,
 
     isInfiniteScroll,
@@ -35,9 +34,11 @@ const PlantSearch = ({
     entitySearchQuery: { loading },
     searchRecordQuery,
 
-    fetchMore: fetchMorePlants,
+    fetchMore,
   } = useEntitySearchContext();
-  const { page, lastPage, totalItems } = useEntitySelectionContext();
+  const { entityType, page, lastPage, totalItems } =
+    useEntitySelectionContext();
+
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor({ enabled: searchStatus === "READY" });
 
@@ -55,7 +56,7 @@ const PlantSearch = ({
             scrollContainerElement.clientHeight) <=
           FETCH_MORE_SCROLL_THRESHOLD
       ) {
-        fetchMorePlants();
+        fetchMore();
       }
     };
 
@@ -66,7 +67,7 @@ const PlantSearch = ({
   }, [
     hasNextPage,
     isInfiniteScroll,
-    fetchMorePlants,
+    fetchMore,
     scrollContainer,
     scrollContainerElement,
   ]);
@@ -136,7 +137,7 @@ const PlantSearch = ({
                   />
 
                   {searchRecordQuery.data.status === "READY" && (
-                    <Button className="w-full" onClick={fetchMorePlants}>
+                    <Button className="w-full" onClick={fetchMore}>
                       Gather more data
                     </Button>
                   )}
@@ -150,4 +151,4 @@ const PlantSearch = ({
   );
 };
 
-export default PlantSearch;
+export default BrowseEntities;

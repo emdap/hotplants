@@ -1,6 +1,6 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { EntitySearchParams } from "config/hotplantsConfig";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import {
   SearchParamsContext,
   SearchParamsContextType,
@@ -13,26 +13,35 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
     entityName,
     entityType = "plant",
   } = useSearch({ strict: false });
-  const searchParams = { location, entityName, entityType };
 
   const [isPrefilledSearch, setIsPrefilledSearch] = useState(
-    Boolean(searchParams.location || searchParams.entityName),
+    Boolean(location || entityName),
   );
 
-  const [searchParamsDraft, setSearchParamsDraft] =
-    useState<Partial<EntitySearchParams>>(searchParams);
+  const [searchParamsDraft, setSearchParamsDraft] = useState<
+    Partial<EntitySearchParams>
+  >({ location, entityName, entityType });
 
   const updateSearchParamsDraft: SearchParamsContextType["updateSearchParamsDraft"] =
     (partialParams) =>
       setSearchParamsDraft((prev) => ({ ...prev, ...partialParams }));
 
-  useEffect(() => {
-    updateSearchParamsDraft({ entityName: searchParams.entityName });
-  }, [searchParams.entityName]);
+  const resetSearchParamsDraft = useCallback(
+    () => setSearchParamsDraft({ location, entityName, entityType }),
+    [location, entityName, entityType],
+  );
 
   useEffect(() => {
-    updateSearchParamsDraft({ location: searchParams.location });
-  }, [searchParams.location]);
+    updateSearchParamsDraft({ entityName });
+  }, [entityName]);
+
+  useEffect(() => {
+    updateSearchParamsDraft({ location });
+  }, [location]);
+
+  useEffect(() => {
+    updateSearchParamsDraft({ entityType });
+  }, [entityType]);
 
   const applySearchParams = (params: Partial<EntitySearchParams>) => {
     setIsPrefilledSearch(false);
@@ -49,10 +58,14 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
   return (
     <SearchParamsContext.Provider
       value={{
-        searchParams,
+        location,
+        entityName,
+        entityType,
+
         searchParamsDraft,
         updateSearchParamsDraft,
         applySearchParams,
+        resetSearchParamsDraft,
 
         isPrefilledSearch,
         setIsPrefilledSearch,

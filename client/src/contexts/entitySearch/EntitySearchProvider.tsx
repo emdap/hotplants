@@ -7,18 +7,24 @@ import {
 } from "contexts/entitySearch/EntitySearchContext";
 import EntitySelectionProvider from "contexts/entitySelection/EntitySelectionProvider";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
-import { EntityType } from "generated/graphql/graphql";
 import useAddToGardenActionList from "hooks/entityActionLists/useAddToGardenActionList";
 import useEntitySearchQueries, {
   DEFAULT_PAGE_SIZE,
 } from "hooks/useEntitySearchQueries";
-import PlantSearch from "pages/BrowseEntities";
+import BrowseEntities from "pages/BrowseEntities";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-const EntitySearchProvider = ({ entityType }: { entityType: EntityType }) => {
+const EntitySearchProvider = () => {
   const navigate = useNavigate();
-  const { searchParams, isPrefilledSearch, setIsPrefilledSearch } =
-    useSearchParamsContext();
+  const {
+    entityType,
+    location,
+    entityName,
+
+    isPrefilledSearch,
+    setIsPrefilledSearch,
+  } = useSearchParamsContext();
+
   const {
     plantFilter,
     page = 1,
@@ -31,34 +37,30 @@ const EntitySearchProvider = ({ entityType }: { entityType: EntityType }) => {
     DEFAULT_SEARCH_FORM_STATE(),
   );
 
-  const {
-    searchStatus,
-    entitySearchQuery: plantSearchQuery,
-    searchRecordQuery,
-    scrapeMoreData,
-  } = useEntitySearchQueries(searchParams, plantFilter, {
-    page,
-    pageSize,
-    paginationEnabled: !isInfiniteScroll,
-  });
+  const { searchStatus, entitySearchQuery, searchRecordQuery, scrapeMoreData } =
+    useEntitySearchQueries({ location, entityName, entityType }, plantFilter, {
+      page,
+      pageSize,
+      paginationEnabled: !isInfiniteScroll,
+    });
 
   useEffect(() => {
-    !plantSearchQuery.loading && setIsPrefilledSearch(false);
+    !entitySearchQuery.loading && setIsPrefilledSearch(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plantSearchQuery.loading]);
+  }, [entitySearchQuery.loading]);
 
-  const plantSearchData = plantSearchQuery.data
-    ? plantSearchQuery.data.plantSearch
-    : plantSearchQuery.loading
-      ? plantSearchQuery.previousData?.plantSearch
+  const searchData = entitySearchQuery.data
+    ? entitySearchQuery.data.plantSearch
+    : entitySearchQuery.loading
+      ? entitySearchQuery.previousData?.plantSearch
       : null;
 
   const { totalItems, hasCurrentResults } = useMemo(
     () => ({
-      totalItems: plantSearchData?.count ?? 0,
-      hasCurrentResults: Boolean(plantSearchData?.count),
+      totalItems: searchData?.count ?? 0,
+      hasCurrentResults: Boolean(searchData?.count),
     }),
-    [plantSearchData?.count],
+    [searchData?.count],
   );
 
   const resultsContainerRef = useRef<HTMLDivElement>(null);
@@ -67,31 +69,30 @@ const EntitySearchProvider = ({ entityType }: { entityType: EntityType }) => {
     [],
   );
 
-  const fetchMorePlants = async () => {
+  const fetchMore = async () => {
     if (
       searchStatus !== "READY" ||
-      !plantSearchData?.results ||
-      plantSearchQuery.networkStatus === NetworkStatus.fetchMore
+      !searchData?.results ||
+      entitySearchQuery.networkStatus === NetworkStatus.fetchMore
     ) {
       return;
     }
 
     if (!isInfiniteScroll) {
       return scrapeMoreData();
-    } else if (plantSearchData.results.length < totalItems) {
-      plantSearchQuery.fetchMore({
-        variables: { offset: plantSearchData.results.length },
+    } else if (searchData.results.length < totalItems) {
+      entitySearchQuery.fetchMore({
+        variables: { offset: searchData.results.length },
       });
       navigate({ to: ".", search: (prev) => ({ ...prev, page: page + 1 }) });
     }
   };
 
-  const plantSearchActionList = useAddToGardenActionList();
+  const addToGardenActions = useAddToGardenActionList();
 
   return (
     <EntitySearchContext.Provider
       value={{
-        entityType,
         hasCurrentResults,
 
         isInfiniteScroll,
@@ -99,8 +100,8 @@ const EntitySearchProvider = ({ entityType }: { entityType: EntityType }) => {
 
         searchStatus,
         searchRecordQuery,
-        entitySearchQuery: plantSearchQuery,
-        fetchMore: fetchMorePlants,
+        entitySearchQuery,
+        fetchMore,
 
         searchFormState,
         setSearchFormState,
@@ -112,14 +113,12 @@ const EntitySearchProvider = ({ entityType }: { entityType: EntityType }) => {
         entityType={entityType}
         entityList={
           (isInfiniteScroll
-            ? plantSearchData?.results
-            : plantSearchQuery.data?.plantSearch.results) ?? []
+            ? searchData?.results
+            : entitySearchQuery.data?.plantSearch.results) ?? []
         }
-        entityListLoading={plantSearchQuery.loading}
-        entityActions={
-          entityType === "plant" ? plantSearchActionList : undefined
-        }
-        boundingPolygon={searchParams.location?.boundingPolyCoords}
+        entityListLoading={entitySearchQuery.loading}
+        entityActions={entityType === "plant" ? addToGardenActions : undefined}
+        boundingPolygon={location?.boundingPolyCoords}
         {...{
           page,
           pageSize,
@@ -133,7 +132,7 @@ const EntitySearchProvider = ({ entityType }: { entityType: EntityType }) => {
             queryStatus="CHECKING_STATUS"
           />
         ) : (
-          <PlantSearch resultsContainerRef={resultsContainerRef} />
+          <BrowseEntities resultsContainerRef={resultsContainerRef} />
         )}
       </EntitySelectionProvider>
     </EntitySearchContext.Provider>

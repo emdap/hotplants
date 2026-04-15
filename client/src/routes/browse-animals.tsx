@@ -12,7 +12,7 @@ import {
 
 const BrowseAnimalsRoute = () => (
   <SearchParamsProvider>
-    <EntitySearchProvider entityType="animal" />
+    <EntitySearchProvider />
   </SearchParamsProvider>
 );
 

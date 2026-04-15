@@ -1,4 +1,3 @@
-import { useSearch } from "@tanstack/react-router";
 import { OpenEntityFormProps } from "components/entityForms/entityFormUtil";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import { isEqual } from "lodash";
@@ -8,12 +7,14 @@ import { locationDisplay } from "util/locationUtil";
 import EntityFormOpenButton from "../EntityFormOpenButton";
 
 const LocationOpenButton = (props: OpenEntityFormProps) => {
-  const { searchParamsDraft } = useSearchParamsContext();
-  const { location } = useSearch({ strict: false });
+  const { location: appliedLocation, searchParamsDraft } =
+    useSearchParamsContext();
 
-  const locationName = location ? locationDisplay(location, true).title : null;
+  const locationName = appliedLocation
+    ? locationDisplay(appliedLocation, true).title
+    : null;
   const isActive = Boolean(locationName);
-  const hasChanges = !isEqual(searchParamsDraft?.location, location);
+  const hasChanges = !isEqual(searchParamsDraft?.location, appliedLocation);
 
   return (
     <EntityFormOpenButton

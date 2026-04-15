@@ -8,7 +8,7 @@ const LocationDrawings = ({
 }: {
   locationCustomizeable?: boolean;
 }) => {
-  const { searchParams, updateSearchParamsDraft } = useSearchParamsContext();
+  const { location, updateSearchParamsDraft } = useSearchParamsContext();
 
   const setCustomPolygon: SetCustomPolygonFn = (boundingPolygon) => {
     const center = centroid(boundingPolygon).geometry.coordinates;
@@ -25,10 +25,10 @@ const LocationDrawings = ({
 
   return (
     <>
-      {searchParams.location && (
+      {location && (
         <LocationPolygon
           {...{ locationCustomizeable, setCustomPolygon }}
-          {...searchParams.location}
+          {...location}
         />
       )}
 

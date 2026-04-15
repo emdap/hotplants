@@ -34,12 +34,13 @@ const ICON_DICT: Record<
 
 const EntityNameOpenButton = (props: OpenEntityFormProps) => {
   const {
-    searchParams: { entityName: nameParam, entityType },
+    entityName: appliedEntityName,
+    entityType,
     searchParamsDraft,
   } = useSearchParamsContext();
 
   const nameDraft = getEntityName(searchParamsDraft?.entityName);
-  const appliedName = getEntityName(nameParam);
+  const appliedName = getEntityName(appliedEntityName);
   const isActive = Boolean(appliedName);
 
   return (

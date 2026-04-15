@@ -41,9 +41,8 @@ const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
 
 const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
   const navigate = useNavigate();
-  const { searchParams } = useSearchParamsContext();
+  const { location, entityType } = useSearchParamsContext();
   const {
-    entityType,
     entityList,
     page,
     pageSize,
@@ -60,12 +59,12 @@ const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
   const pageIndexOffset = (page - 1) * pageSize;
 
   const mapCenter = useMemo(() => {
-    if (searchParams.location || !activeEntityMedia.length) {
+    if (location || !activeEntityMedia.length) {
       return undefined;
     }
 
     return swapLatLng([activeEntityMedia[0].occurrenceCoords])[0];
-  }, [searchParams, activeEntityMedia]);
+  }, [location, activeEntityMedia]);
 
   useEffect(() => {
     setOverallIndex(
@@ -195,7 +194,7 @@ const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
               <MapProvider
                 showMarkers
                 className="min-h-60 w-full"
-                locationParams={searchParams.location}
+                locationParams={location}
                 {...(mapCenter && { center: mapCenter })}
               />
             </div>

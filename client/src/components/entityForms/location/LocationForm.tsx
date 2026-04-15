@@ -26,7 +26,7 @@ const EntityLocationForm = ({
   onSubmit,
 }: EntityFormProps) => {
   const {
-    searchParams: { location: appliedLocation },
+    location: appliedLocation,
     searchParamsDraft,
 
     updateSearchParamsDraft,

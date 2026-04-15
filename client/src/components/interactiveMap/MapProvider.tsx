@@ -30,8 +30,8 @@ type MapProviderProps = {
 } & MapContainerProps;
 
 const MapProvider = ({
-  locationParams: searchParams,
-  setLocationParams: setSearchParams,
+  locationParams,
+  setLocationParams,
 
   isLoading,
   showMarkers,
@@ -40,14 +40,14 @@ const MapProvider = ({
   ...containerProps
 }: MapProviderProps) => {
   const setCustomPolygon: SetCustomPolygonFn = (boundingPolygon) => {
-    if (!setSearchParams) {
+    if (!setLocationParams) {
       return;
     }
 
     const center = centroid(boundingPolygon).geometry.coordinates;
     const [lat, lng] = center.map((num) => Math.round(num * 100) / 100);
-    setSearchParams({
-      ...searchParams,
+    setLocationParams({
+      ...locationParams,
       locationName: `${lat}, ${lng}`,
       locationSource: "custom",
       boundingPolyCoords: boundingPolygon.geometry.coordinates,
@@ -77,12 +77,12 @@ const MapProvider = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {searchParams && (
+        {locationParams && (
           <LocationPolygon
             {...{
               locationCustomizeable,
               setCustomPolygon,
-              ...searchParams,
+              ...locationParams,
             }}
           />
         )}

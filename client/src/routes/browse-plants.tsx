@@ -12,7 +12,7 @@ import {
 
 const BrowsePlantsRoute = () => (
   <SearchParamsProvider>
-    <EntitySearchProvider entityType="plant" />
+    <EntitySearchProvider />
   </SearchParamsProvider>
 );
 

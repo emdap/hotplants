@@ -1,9 +1,9 @@
-import { useEntitySearchContext } from "contexts/entitySearch/EntitySearchContext";
 import {
   EntityAction,
   EntityResult,
   useEntitySelectionContext,
 } from "contexts/entitySelection/EntitySelectionContext";
+import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Button from "designSystem/Button";
 import LoadingIcon from "designSystem/LoadingIcon";
 import StyledMenu, { MenuItemData } from "designSystem/StyledMenu";
@@ -18,8 +18,8 @@ const EntityActions = ({
   entity: EntityResult;
   disableDefaultActions?: boolean;
 }) => {
-  const { entityType } = useEntitySearchContext();
-  const { entityActions: plantActions } = useEntitySelectionContext();
+  const { entityType } = useSearchParamsContext();
+  const { entityActions } = useEntitySelectionContext();
   const [hasLoadingAction, setHasLoadingAction] = useState(false);
 
   const defaultActions = useMemo(
@@ -62,13 +62,13 @@ const EntityActions = ({
 
   const mappedActions = useMemo(
     (): MenuItemData[] =>
-      plantActions
-        ? plantActions.map((action) => ({
+      entityActions
+        ? entityActions.map((action) => ({
             ...action,
             onClick: () => handleActionClick(action),
           }))
         : [],
-    [plantActions, handleActionClick],
+    [entityActions, handleActionClick],
   );
 
   const fullActions = useMemo(

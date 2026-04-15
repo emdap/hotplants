@@ -21,7 +21,8 @@ const EntityNameForm = ({
   onSubmit,
 }: EntityFormProps) => {
   const {
-    searchParams: { entityName: appliedPlantName, entityType },
+    entityName: appliedEntityName,
+    entityType,
     searchParamsDraft,
     updateSearchParamsDraft,
     applySearchParams,
@@ -70,9 +71,9 @@ const EntityNameForm = ({
     <EntityFormFooter
       submitButtonProps={{
         disabled:
-          (!commonName && !scientificName && !appliedPlantName) ||
-          isEqual({ commonName }, appliedPlantName) ||
-          isEqual({ scientificName }, appliedPlantName),
+          (!commonName && !scientificName && !appliedEntityName) ||
+          isEqual({ commonName }, appliedEntityName) ||
+          isEqual({ scientificName }, appliedEntityName),
         onClick: submitName,
       }}
       clearButtonProps={{

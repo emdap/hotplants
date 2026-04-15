@@ -3,20 +3,21 @@ import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
 export type SearchParamsContextType = {
-  searchParams: EntitySearchParams;
   searchParamsDraft: Partial<EntitySearchParams>;
   updateSearchParamsDraft: (partialParams: Partial<EntitySearchParams>) => void;
   applySearchParams: (params: Partial<EntitySearchParams>) => void;
+  resetSearchParamsDraft: () => void;
 
   isPrefilledSearch: boolean;
   setIsPrefilledSearch: Dispatch<SetStateAction<boolean>>;
-};
+} & EntitySearchParams;
 
 const DEFAULT_SEARCH_PARAMS_CONTEXT: SearchParamsContextType = {
-  searchParams: { entityType: "plant" },
+  entityType: "plant",
   searchParamsDraft: {},
   updateSearchParamsDraft: VOID_FUNCTION,
   applySearchParams: VOID_FUNCTION,
+  resetSearchParamsDraft: VOID_FUNCTION,
 
   isPrefilledSearch: false,
   setIsPrefilledSearch: VOID_FUNCTION,

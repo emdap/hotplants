@@ -35,11 +35,8 @@ const EntityFilterForm = ({
 }) => {
   const navigate = useNavigate();
 
-  const {
-    entityType,
-    entityListLoading: plantListLoading,
-    totalItems,
-  } = useEntitySelectionContext();
+  const { entityType, entityListLoading, totalItems } =
+    useEntitySelectionContext();
   const { plantFilter } = useSearch({ strict: false });
   const [filterDraft, setFilterDraft] = useState(plantFilter);
 
@@ -120,7 +117,7 @@ const EntityFilterForm = ({
         renderMode === "modal"
           ? {
               onClick: onClose,
-              isLoading: plantListLoading,
+              isLoading: entityListLoading,
               children: (
                 <span className="flex gap-1 relative ">
                   View {pluralize(entityType, totalItems, true)}

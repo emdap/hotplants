@@ -16,14 +16,14 @@ import EntityFilterOpenButton from "../entityForms/entityFilters/EntityFilterOpe
 const EntityResultsHeader = () => {
   const navigate = useNavigate();
   const {
-    entityType,
     searchStatus,
     isInfiniteScroll,
     setIsInfiniteScroll,
     searchFormState,
     setSearchFormState,
   } = useEntitySearchContext();
-  const { page, pageSize, totalItems } = useEntitySelectionContext();
+  const { entityType, page, pageSize, totalItems } =
+    useEntitySelectionContext();
 
   const toggleInfiniteScroll = (enable: boolean) => {
     enable && navigate({ to: ".", search: (prev) => ({ ...prev, page: 1 }) });
