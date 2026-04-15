@@ -49,12 +49,19 @@ export const GET_PLANT = graphql(`
 
 export const SEARCH_PLANTS = graphql(`
   query searchPlants(
+    $entityType: EntityType!
     $limit: Int
     $offset: Int
     $sort: [PlantSortInput!]
     $where: PlantDataInput
   ) {
-    plantSearch(limit: $limit, offset: $offset, sort: $sort, where: $where) {
+    plantSearch(
+      entityType: $entityType
+      limit: $limit
+      offset: $offset
+      sort: $sort
+      where: $where
+    ) {
       count
       results {
         _id

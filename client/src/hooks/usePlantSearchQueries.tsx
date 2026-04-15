@@ -1,4 +1,4 @@
-import { hotplantsClient, PlantSearchParams } from "config/hotplantsConfig";
+import { EntitySearchParams, hotplantsClient } from "config/hotplantsConfig";
 import { QueryPlantSearchArgs } from "generated/graphql/graphql";
 import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
@@ -16,17 +16,18 @@ export const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
 
-const DEFAULT_PLANT_SEARCH_GQL_VARS: QueryPlantSearchArgs = {
-  offset: 0,
-  limit: DEFAULT_PAGE_SIZE,
-  sort: [
-    { field: "updatedTimestamp", value: 1 },
-    { field: "scientificName", value: 1 },
-  ],
-};
+const DEFAULT_PLANT_SEARCH_GQL_VARS: Omit<QueryPlantSearchArgs, "entityType"> =
+  {
+    offset: 0,
+    limit: DEFAULT_PAGE_SIZE,
+    sort: [
+      { field: "updatedTimestamp", value: 1 },
+      { field: "scientificName", value: 1 },
+    ],
+  };
 
 const usePlantSearchQueries = (
-  { location, plantName }: PlantSearchParams,
+  { location, entityName, entityType }: EntitySearchParams,
   plantFilters: PlantDataFilter | undefined,
   {
     paginationEnabled,
@@ -59,9 +60,11 @@ const usePlantSearchQueries = (
     variables: {
       ...DEFAULT_PLANT_SEARCH_GQL_VARS,
       ...paginationVars,
+
+      entityType,
       where: {
         boundingPolyCoords: location?.boundingPolyCoords,
-        ...plantName,
+        ...entityName,
         ...plantFilters,
       },
     },
@@ -73,15 +76,15 @@ const usePlantSearchQueries = (
     );
 
   const searchRecordQuery = useReactQuery({
-    queryKey: ["search-record", location, plantName],
+    queryKey: ["search-record", location, entityName],
     refetchInterval: pollInterval,
-    enabled: Boolean(location || plantName),
+    enabled: Boolean(location || entityName),
 
     queryFn: async () => {
       setStatusFromRunningQuery();
 
-      const { data } = await hotplantsClient.POST("/plants/searchRecord", {
-        body: { location, plantName },
+      const { data } = await hotplantsClient.POST("/searchRecord", {
+        body: { location, entityName, entityType },
       });
 
       if (data?.status !== "SCRAPING" && pollInterval) {
@@ -108,7 +111,7 @@ const usePlantSearchQueries = (
       setStatusFromRunningQuery();
 
       const { data } = await hotplantsClient.GET(
-        "/plants/runSearch/{searchRecordId}",
+        "/runSearch/{searchRecordId}",
         { params: { path: { searchRecordId: searchRecordData!.id } } },
       );
 

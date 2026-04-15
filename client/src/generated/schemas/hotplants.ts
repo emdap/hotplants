@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/plants/searchRecord": {
+    "/searchRecord": {
         parameters: {
             query?: never;
             header?: never;
@@ -20,7 +20,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/plants/runSearch/{searchRecordId}": {
+    "/runSearch/{searchRecordId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -61,6 +61,8 @@ export interface components {
         ObjectId: string;
         "Maybe_number-Array-Array-Array_": number[][][] | null;
         Maybe_string_: string | null;
+        /** @enum {string} */
+        EntityType: "animal" | "plant";
         /** Format: double */
         Maybe_number_: number | null;
         /** @enum {string} */
@@ -78,6 +80,7 @@ export interface components {
             commonName?: components["schemas"]["Maybe_string_"];
             /** Format: double */
             createdTimestamp: number;
+            entityType: components["schemas"]["EntityType"];
             lastRanTimestamp?: components["schemas"]["Maybe_number_"];
             locationName?: components["schemas"]["Maybe_string_"];
             locationSource?: components["schemas"]["Maybe_LocationSource_"];
@@ -99,13 +102,14 @@ export interface components {
             locationSource: "search" | "custom";
             locationName: string;
         };
-        PlantSearchNameParams: {
+        EntityNameParams: {
             commonName: string;
         } | {
             scientificName: string;
         };
-        PlantSearchParams: {
-            plantName?: components["schemas"]["PlantSearchNameParams"];
+        EntitySearchParams: {
+            entityType: components["schemas"]["EntityType"];
+            entityName?: components["schemas"]["EntityNameParams"];
             location?: components["schemas"]["PlantSearchLocationParams"];
         };
         "Maybe_string-Array_": string[] | null;
@@ -136,7 +140,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PlantSearchParams"];
+                "application/json": components["schemas"]["EntitySearchParams"];
             };
         };
         responses: {

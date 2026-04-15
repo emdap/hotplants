@@ -1,3 +1,4 @@
+import { EntityType } from "generated/graphql/graphql";
 import {
   PlantSearchQueriesReturnType,
   PlantSearchQueryStatus,
@@ -17,6 +18,7 @@ export const DEFAULT_SEARCH_FORM_STATE = (): SearchFormState => ({
 });
 
 export type PlantSearchContextType = {
+  entityType: EntityType;
   hasCurrentResults: boolean;
 
   isInfiniteScroll: boolean;
@@ -35,6 +37,7 @@ export type PlantSearchContextType = {
 >;
 
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
+  entityType: "plant",
   hasCurrentResults: false,
 
   isInfiniteScroll: !isSmallScreen(),

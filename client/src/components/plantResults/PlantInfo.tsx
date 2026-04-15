@@ -6,6 +6,8 @@ import { COMPLETE_FILTER_DICT } from "components/plantDataControls/plantFilters/
 import { PlantResult } from "contexts/plantSelection/PlantSelectionContext";
 import { format } from "date-fns";
 import Card, { CardProps } from "designSystem/Card";
+import { EntityType } from "generated/graphql/graphql";
+import { capitalize } from "lodash";
 import { ReactNode } from "react";
 import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
 
@@ -24,10 +26,11 @@ const ORDERED_PLANT_FIELDS = getOrderedFilterEntries({
 
 const PlantInfo = ({
   plant,
+  entityType,
   ...cardProps
-}: { plant: PlantResult } & CardProps) => (
+}: { plant: PlantResult; entityType: EntityType } & CardProps) => (
   <div className="space-y-6">
-    <InfoWrapper title="Plant stats" {...cardProps}>
+    <InfoWrapper title={`${capitalize(entityType)} stats`} {...cardProps}>
       <table className="border-separate border-spacing-4 [&_th,td]:p-2 w-full">
         <tbody>
           {ORDERED_PLANT_FIELDS.map(([key, title]) => {

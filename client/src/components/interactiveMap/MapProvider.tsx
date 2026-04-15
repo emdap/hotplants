@@ -1,6 +1,9 @@
 import { centroid } from "@turf/turf";
 import classNames from "classnames";
-import { PlantLocationParams, PlantSearchParams } from "config/hotplantsConfig";
+import {
+  EntitySearchParams,
+  PlantLocationParams,
+} from "config/hotplantsConfig";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import "leaflet-draw/dist/leaflet.draw.css";
@@ -22,7 +25,7 @@ type MapProviderProps = {
   isLoading?: boolean;
   showMarkers?: boolean;
   locationCustomizeable?: boolean;
-  locationParams: PlantSearchParams["location"];
+  locationParams: EntitySearchParams["location"];
   setLocationParams?: (newParams: PlantLocationParams) => void;
 } & MapContainerProps;
 

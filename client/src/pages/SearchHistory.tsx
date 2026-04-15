@@ -102,6 +102,7 @@ const SearchHistory = () => {
 
       <LoadingOverlay
         transparent
+        showServerStatus
         className="min-h-0! h-dvh-header-2"
         debounceShow={!previousData}
         show={

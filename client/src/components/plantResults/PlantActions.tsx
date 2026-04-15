@@ -1,3 +1,4 @@
+import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import {
   PlantAction,
   PlantResult,
@@ -17,6 +18,7 @@ const PlantActions = ({
   plant: PlantResult;
   disableDefaultActions?: boolean;
 }) => {
+  const { entityType } = usePlantSearchContext();
   const { plantActions } = usePlantSelectionContext();
   const [hasLoadingAction, setHasLoadingAction] = useState(false);
 
@@ -29,12 +31,22 @@ const PlantActions = ({
               label: "Find more occurrences",
               Icon: FaLeaf,
               linkProps: {
-                to: "/browse-plants",
-                search: { plantName: { scientificName: plant.scientificName } },
+                to:
+                  entityType === "plant" ? "/browse-plants" : "/browse-animals",
+                search: {
+                  entityName: plant.commonNames?.length
+                    ? { commonName: plant.commonNames[0] }
+                    : { scientificName: plant.scientificName },
+                },
               },
             },
           ],
-    [plant.scientificName, disableDefaultActions],
+    [
+      entityType,
+      plant.commonNames,
+      plant.scientificName,
+      disableDefaultActions,
+    ],
   );
 
   const handlePlantClick = useCallback(
@@ -73,6 +85,7 @@ const PlantActions = ({
       anchor="bottom end"
       itemsAsCard
       disabled={hasLoadingAction}
+      className={{ menuItemsList: "z-50" }}
       menuButton={
         <Button
           variant="icon-white"

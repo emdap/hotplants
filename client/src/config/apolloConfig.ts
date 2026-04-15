@@ -5,24 +5,28 @@ import {
   FieldMergeFunction,
   HttpLink,
   InMemoryCache,
+  makeVar,
   Observable,
   Reference,
 } from "@apollo/client";
+import { ErrorLink } from "@apollo/client/link/error";
 import {
   PlantOccurrence,
   SearchPlantsQueryVariables,
 } from "generated/graphql/graphql";
+import { FormattedExecutionResult } from "graphql";
 
 type PlantSearchCachedData = { count: number; results: Reference[] };
 
 const mergePlantSearch: FieldMergeFunction<
   PlantSearchCachedData,
-  PlantSearchCachedData,
-  FieldFunctionOptions<
+  PlantSearchCachedData
+> = (existing, incoming, options) => {
+  const { readField, variables } = options as FieldFunctionOptions<
     SearchPlantsQueryVariables,
     SearchPlantsQueryVariables & { paginated?: boolean }
-  >
-> = (existing, incoming, { readField, variables }) => {
+  >;
+
   if (!existing?.results || !variables?.offset) {
     return incoming;
   }
@@ -45,6 +49,8 @@ const mergeOccurrences: FieldMergeFunction<
   PlantOccurrence[]
 > = (_existing, incoming) => incoming;
 
+const CONSISTENT_KEY_ARGS = ["entityType", "where", "sort"];
+
 const cache = new InMemoryCache({
   possibleTypes: {
     PlantDataInterface: ["PlantData", "GardenPlantData"],
@@ -55,8 +61,8 @@ const cache = new InMemoryCache({
         plantSearch: {
           keyArgs: (_args, { variables }) =>
             variables?.paginated
-              ? ["offset", "limit", "where", "sort"]
-              : ["where", "sort"],
+              ? ["offset", "limit", ...CONSISTENT_KEY_ARGS]
+              : CONSISTENT_KEY_ARGS,
           merge: mergePlantSearch,
         },
       },
@@ -73,23 +79,35 @@ const cache = new InMemoryCache({
 
 // Want to pause GraphQl requests until both my proxy server and BE are up-and-running
 // prod servers auto shut down, and take longer to wake up than the FE
-let pendingListeners: Set<() => void> | null = new Set();
-export const setApolloReady = () => {
-  pendingListeners?.forEach((fn) => fn());
-  pendingListeners = null;
-};
+export const apolloReady = makeVar(false);
+let pendingListeners: Set<() => void> = new Set();
 
-export const readinessLink = new ApolloLink((operation, forward) => {
-  if (pendingListeners === null) {
-    return forward(operation);
-  }
-
+const addToPending = (
+  operation: ApolloLink.Operation,
+  forward: ApolloLink.ForwardFunction,
+): Observable<FormattedExecutionResult> => {
   return new Observable((observer) => {
     const onReady = () => forward(operation).subscribe(observer);
 
-    pendingListeners?.add(onReady);
-    return () => pendingListeners?.delete(onReady);
+    pendingListeners.add(onReady);
+    return () => pendingListeners.delete(onReady);
   });
+};
+
+export const setApolloReady = (isReady: boolean) => {
+  apolloReady(isReady);
+  if (isReady) {
+    pendingListeners?.forEach((fn) => fn());
+    pendingListeners = new Set();
+  }
+};
+
+export const readinessLink = new ApolloLink((operation, forward) => {
+  if (apolloReady()) {
+    return forward(operation);
+  }
+
+  return addToPending(operation, forward);
 });
 
 const httpLink = new HttpLink({
@@ -97,7 +115,14 @@ const httpLink = new HttpLink({
   credentials: "include",
 });
 
+const errorLink = new ErrorLink(({ error, operation, forward }) => {
+  if (error.message === "Failed to fetch") {
+    setApolloReady(false);
+    return addToPending(operation, forward);
+  }
+});
+
 export const apolloClient = new ApolloClient({
-  link: ApolloLink.from([readinessLink, httpLink]),
+  link: ApolloLink.from([readinessLink, errorLink, httpLink]),
   cache,
 });

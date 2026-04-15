@@ -1,5 +1,6 @@
 import { MenuItemData } from "designSystem/StyledMenu";
 import {
+  EntityType,
   GardenPlantData,
   PlantData,
   PlantMedia,
@@ -30,6 +31,7 @@ export type PlantAction<R = unknown> = MenuItemData<
 >;
 
 export type PlantSelectionContextType = {
+  entityType: EntityType;
   plantList: PlantResult[];
   plantListLoading?: boolean;
   plantActions?: PlantAction[];
@@ -46,6 +48,7 @@ export type PlantSelectionContextType = {
 } & PaginationData;
 
 const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSelectionContextType = {
+  entityType: "plant",
   plantList: [],
 
   page: 0,

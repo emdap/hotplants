@@ -16,7 +16,7 @@ const SearchRecordProgressBar = ({
   <div className="flex flex-col gap-2 mt-auto w-full">
     <ProgressBar
       title={hideTitle ? undefined : "Scraping progress"}
-      unitTitle="Plant occurrences analyzed"
+      unitTitle="Occurrences analyzed"
       isLoading={status === "SCRAPING"}
       amount={occurrencesOffset}
       total={totalOccurrences}

@@ -6,23 +6,23 @@ import {
 import PlantSearchProvider from "contexts/plantSearch/PlantSearchProvider";
 import SearchParamsProvider from "contexts/searchParams/SearchParamsProvider";
 import {
-  DEFAULT_PLANT_SEARCH_ROUTE_PARAMS,
-  validatePlantSearchParams,
+  DEFAULT_ANIMAL_SEARCH_ROUTE_PARAMS,
+  validateAnimalSearchParams,
 } from "util/routeParamsUtil";
 
-const BrowsePlantsRoute = () => (
+const BrowseAnimalsRoute = () => (
   <SearchParamsProvider>
-    <PlantSearchProvider entityType="plant" />
+    <PlantSearchProvider entityType="animal" />
   </SearchParamsProvider>
 );
 
-export const Route = createFileRoute("/browse-plants")({
-  component: BrowsePlantsRoute,
+export const Route = createFileRoute("/browse-animals")({
+  component: BrowseAnimalsRoute,
   search: {
     middlewares: [
       retainSearchParams(["lastOpened"]),
-      stripSearchParams(DEFAULT_PLANT_SEARCH_ROUTE_PARAMS),
+      stripSearchParams(DEFAULT_ANIMAL_SEARCH_ROUTE_PARAMS),
     ],
   },
-  validateSearch: validatePlantSearchParams,
+  validateSearch: validateAnimalSearchParams,
 });

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useAppContext } from "contexts/AppContext";
+import { useServerReadyContext } from "contexts/serverReady/ServerReadyContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
@@ -7,10 +7,12 @@ import { useLottie } from "lottie-react";
 import { motion } from "motion/react";
 import movingPlant from "placeholderImages/movingPlant.json";
 import stillPlant from "placeholderImages/stillPlant.json";
+import pluralize from "pluralize";
 import { ReactNode, useEffect, useState } from "react";
 
 type PlantAnimationProps = {
-  customMessage?: string;
+  customNoDataMessage?: string;
+  showServerStatus?: boolean;
   queryStatus?: PlantSearchQueryStatus;
   dataType?: string;
   hasCurrentResults?: boolean;
@@ -18,15 +20,16 @@ type PlantAnimationProps = {
 };
 
 const getDescription = (
-  serverReady: boolean | "error",
+  serverReady: boolean | null,
   {
-    customMessage,
+    showServerStatus,
+    customNoDataMessage,
     queryStatus,
     dataType = "plants",
     hasCurrentResults,
   }: Partial<PlantAnimationProps>,
 ): { key: number; text: ReactNode; showLoader?: boolean } => {
-  if (serverReady === "error") {
+  if (showServerStatus && serverReady === null) {
     return {
       key: -2,
       text: (
@@ -37,20 +40,21 @@ const getDescription = (
         </>
       ),
     };
-  } else if (!serverReady) {
+  } else if (showServerStatus && !serverReady) {
     return { key: -1, text: "Waking up server", showLoader: true };
   } else if (queryStatus === "CHECKING_STATUS") {
     return { key: 0, text: "Loading", showLoader: true };
   } else if (queryStatus === "SCRAPING_AND_POLLING") {
     return {
       key: 1,
-      text: `Searching for ${hasCurrentResults ? "more " : ""}${dataType}`,
+      text: `Searching for ${hasCurrentResults ? "more " : ""}${pluralize(dataType)}`,
     };
   } else if (!hasCurrentResults) {
     return {
       key: 2,
       text:
-        customMessage ?? `No ${dataType} found, try adjusting your filters.`,
+        customNoDataMessage ??
+        `No ${pluralize(dataType)} found, try adjusting your filters.`,
     };
   } else {
     return { key: 3, text: "End of results" };
@@ -58,7 +62,7 @@ const getDescription = (
 };
 
 const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
-  const { serverReady } = useAppContext();
+  const { serverReady } = useServerReadyContext();
 
   const [lottieAnimation, setLottieAnimation] = useState<"STILL" | "MOVING">(
     "STILL",

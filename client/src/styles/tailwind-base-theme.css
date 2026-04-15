@@ -15,10 +15,12 @@
 
   --color-primary-faded: #b4abe3;
   --color-primary: #9b7cce;
+  --color-primary-bright: #9b7cce;
   --color-primary-dark: #a577e3;
 
   --color-secondary: #c7c7c7;
   --color-accent: #6f97bc;
+  --color-accent-bright: #6f97bc;
 
   --animate-background-shift: background-shift 40s ease infinite;
 

@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import PlantAnimation from "components/PlantAnimation";
-import { useAppContext } from "contexts/AppContext";
+import { useServerReadyContext } from "contexts/serverReady/ServerReadyContext";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { useDebounce } from "react-use";
@@ -13,6 +13,7 @@ type LoadingOverlayProps = {
   iconSize?: number;
   transparent?: boolean;
   className?: string;
+  showServerStatus?: boolean;
   disableAnimationFallback?: boolean;
 };
 
@@ -22,13 +23,16 @@ const LoadingOverlay = ({
   iconSize = 50,
   transparent,
   className,
+  showServerStatus,
   disableAnimationFallback,
 }: LoadingOverlayProps) => {
+  const { serverReady } = useServerReadyContext();
+
   const [debouncedShow, setDebouncedShow] = useState(false);
-  const { serverReady } = useAppContext();
   useDebounce(() => setDebouncedShow(Boolean(show)), 1000, [show]);
 
-  const showLoader = debounceShow ? debouncedShow : show;
+  const showLoader =
+    (!serverReady && showServerStatus) || (debounceShow ? debouncedShow : show);
 
   return (
     <AnimatePresence>
@@ -45,10 +49,10 @@ const LoadingOverlay = ({
             className,
           )}
         >
-          {serverReady === true || disableAnimationFallback ? (
+          {serverReady || disableAnimationFallback ? (
             <LoadingIcon size={iconSize} className="text-white" />
           ) : (
-            <PlantAnimation />
+            <PlantAnimation showServerStatus />
           )}
         </motion.div>
       )}

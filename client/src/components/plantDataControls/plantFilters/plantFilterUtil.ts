@@ -1,7 +1,9 @@
 import {
+  BOOLEAN_OPTIONS,
   FilterDict,
   FilterInputConfig,
   NON_SPECIFIED_OPTION,
+  SHOW_ALL_OPTION,
   validateFilterValue,
 } from "components/dataControls/filterUtil";
 import { PlantArrayValues } from "config/hotplantsConfig";
@@ -9,6 +11,9 @@ import { ComplexListboxOption } from "designSystem/listbox/listboxUtil";
 import { capitalize, sortBy } from "lodash";
 import { Entries } from "type-fest";
 import { PlantDataFilter } from "util/graphqlTypes";
+import { PlantSearchRouteParams } from "util/routeParamsUtil";
+
+// TODO: Split between generic entity filters and plant filters
 
 export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
   {
@@ -71,21 +76,35 @@ type PlantFilterKey = keyof Omit<
   | "habitats"
 >;
 
-export const STATIC_FILTER_DICT: FilterDict<
-  Exclude<PlantFilterKey, keyof PlantArrayValues>
+export const ENTITY_NAME_FILTER_DICT: FilterDict<
+  "commonNameIncludes" | "scientificNameIncludes"
 > = {
-  scientificName: {
-    dataKey: "scientificName",
+  scientificNameIncludes: {
+    dataKey: "scientificNameIncludes",
     label: "Scientific name contains",
     inputType: "text",
     order: 1,
   },
-  commonName: {
-    dataKey: "commonName",
+  commonNameIncludes: {
+    dataKey: "commonNameIncludes",
     label: "Common name contains",
     inputType: "text",
     order: 2,
   },
+};
+
+export const STATIC_FILTER_DICT: FilterDict<
+  Exclude<PlantFilterKey, keyof PlantArrayValues>
+> = {
+  hasScrapedData: {
+    dataKey: "hasScrapedData",
+    label: "Has scraped data",
+    inputType: "select-boolean",
+    options: BOOLEAN_OPTIONS,
+    asFieldset: true,
+    order: 3.5,
+  },
+  ...ENTITY_NAME_FILTER_DICT,
   physicalCharactersticsDump: {
     dataKey: "physicalCharactersticsDump",
     label: "Description keyword search",
@@ -100,7 +119,7 @@ export const STATIC_FILTER_DICT: FilterDict<
     options: [
       { label: "Perennials only", value: true },
       { label: "Annuals only", value: false },
-      { label: "Show all", value: null },
+      SHOW_ALL_OPTION,
     ],
     asFieldset: true,
   },
@@ -173,3 +192,7 @@ export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
     },
     {} as FilterDict<PlantFilterKey>,
   );
+
+export const PLANTS_WITH_DATA_FILTER: PlantSearchRouteParams = {
+  plantFilter: { hasScrapedData: true },
+};

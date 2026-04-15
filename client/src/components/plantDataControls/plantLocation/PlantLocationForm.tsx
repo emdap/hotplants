@@ -1,10 +1,7 @@
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
 import PlantSearchFormFooter from "components/plantDataControls/PlantDataFormFooter";
-import {
-  PLANT_FORM_TITLES,
-  PlantSearchFormProps,
-} from "components/plantDataControls/plantSearchFormUtil";
+import { PlantSearchFormProps } from "components/plantDataControls/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Card from "designSystem/Card";
@@ -84,6 +81,7 @@ const PlantLocationForm = ({
 
   const reverseLookupQuery = useReactQuery({
     queryKey: ["reverse-lookup", useCurrentLocation],
+    ignoreServerReady: true,
     enabled: Boolean(useCurrentLocation),
     retry: false,
     queryFn: async () => {
@@ -108,6 +106,7 @@ const PlantLocationForm = ({
 
   const locationQuery = useReactQuery({
     queryKey: ["location-search", debouncedInput],
+    ignoreServerReady: true,
     enabled: Boolean(
       !useCurrentLocation &&
       debouncedInput &&
@@ -190,9 +189,7 @@ const PlantLocationForm = ({
           renderMode === "modal",
       })}
     >
-      {renderMode === "card" && (
-        <h2 className="text-center">{PLANT_FORM_TITLES.location}</h2>
-      )}
+      {renderMode === "card" && <h2 className="text-center">Location</h2>}
 
       <div className="space-y-4">
         <div className="space-y-2">

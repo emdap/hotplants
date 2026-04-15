@@ -1,5 +1,5 @@
 import { useLazyQuery } from "@apollo/client/react";
-import { PlantDataInput } from "generated/graphql/graphql";
+import { EntityType, PlantDataInput } from "generated/graphql/graphql";
 import { GET_PLANT } from "graphqlHelpers/plantQueries";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { getLastPage } from "util/generalUtil";
@@ -14,6 +14,7 @@ import {
 // OR: garden context?
 // current use case -- add plants to garden if 'not' in garden; remove plants from garden if 'in' garden, and then refresh plants
 const PlantSelectionProvider = ({
+  entityType,
   plantList: originalPlantList,
   plantListLoading,
   plantActions,
@@ -25,6 +26,7 @@ const PlantSelectionProvider = ({
 
   children,
 }: {
+  entityType: EntityType;
   plantList: PlantResult[];
   plantListLoading?: boolean;
   boundingPolygon?: PlantDataInput["boundingPolyCoords"];
@@ -79,6 +81,7 @@ const PlantSelectionProvider = ({
   return (
     <PlantSelectionContext.Provider
       value={{
+        entityType,
         plantList,
         plantListLoading,
         plantActions,

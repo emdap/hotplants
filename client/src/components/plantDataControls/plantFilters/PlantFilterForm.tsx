@@ -16,11 +16,15 @@ import { useDebounce } from "react-use";
 import { toast } from "sonner";
 import { isSmallScreen } from "util/generalUtil";
 import {
-  PLANT_FORM_TITLES,
+  getPlantFormTitle,
   PlantSearchFormProps,
 } from "../plantSearchFormUtil";
 import PlantFilterOpenButton from "./PlantFilterOpenButton";
-import { constructDynamicFilters, STATIC_FILTER_DICT } from "./plantFilterUtil";
+import {
+  constructDynamicFilters,
+  ENTITY_NAME_FILTER_DICT,
+  STATIC_FILTER_DICT,
+} from "./plantFilterUtil";
 
 const PlantFilterForm = ({
   renderMode: renderModeProp,
@@ -33,7 +37,9 @@ const PlantFilterForm = ({
   popoverIsOpen?: boolean;
 }) => {
   const navigate = useNavigate();
-  const { plantListLoading, totalItems } = usePlantSelectionContext();
+
+  const { entityType, plantListLoading, totalItems } =
+    usePlantSelectionContext();
   const { plantFilter } = useSearch({ strict: false });
   const [filterDraft, setFilterDraft] = useState(plantFilter);
 
@@ -87,6 +93,10 @@ const PlantFilterForm = ({
   });
 
   const orderedFilters = useMemo(() => {
+    if (entityType === "animal") {
+      return getOrderedFilterEntries(ENTITY_NAME_FILTER_DICT);
+    }
+
     const dynamicFilters =
       (filterValuesQuery.data &&
         constructDynamicFilters(filterValuesQuery.data)) ??
@@ -96,10 +106,12 @@ const PlantFilterForm = ({
       ...dynamicFilters,
       ...STATIC_FILTER_DICT,
     });
-  }, [filterValuesQuery.data]);
+  }, [filterValuesQuery.data, entityType]);
 
   const renderMode =
     renderModeProp === "popover" && isSmallScreen() ? "modal" : renderModeProp;
+
+  const formTitle = getPlantFormTitle("filters", entityType);
 
   const plantFilterFooter = (
     <PlantSearchFormFooter
@@ -110,7 +122,7 @@ const PlantFilterForm = ({
               isLoading: plantListLoading,
               children: (
                 <span className="flex gap-1 relative ">
-                  View {pluralize("plant", totalItems, true)}
+                  View {pluralize(entityType, totalItems, true)}
                 </span>
               ),
             }
@@ -131,10 +143,10 @@ const PlantFilterForm = ({
       })}
     >
       {renderMode === "card" ? (
-        <h2 className="text-center">{PLANT_FORM_TITLES.filters}</h2>
+        <h2 className="text-center">{formTitle}</h2>
       ) : (
         renderMode === "popover" && (
-          <h4 className="font-semibold">{PLANT_FORM_TITLES.filters}</h4>
+          <h4 className="font-semibold">{formTitle}</h4>
         )
       )}
 
@@ -152,6 +164,7 @@ const PlantFilterForm = ({
                 key={dataKey}
                 filterInput={filterInput}
                 value={filterDraft?.[dataKey]}
+                highlightFilledFields
                 onChange={(value) =>
                   setFilterDraft({ ...filterDraft, [dataKey]: value })
                 }
@@ -179,11 +192,7 @@ const PlantFilterForm = ({
     </StyledPopover>
   ) : renderModeProp === "popover" && renderMode === "modal" ? (
     <>
-      <Modal
-        title={PLANT_FORM_TITLES["plant-name"]}
-        onClose={onClose}
-        isOpen={popoverIsOpen}
-      >
+      <Modal title={formTitle} onClose={onClose} isOpen={popoverIsOpen}>
         {formWrappedBody}
       </Modal>
       <PlantFilterOpenButton onClick={onOpenPopover} />

@@ -1,5 +1,5 @@
 import { NetworkStatus } from "@apollo/client";
-import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
 import {
   DEFAULT_SEARCH_FORM_STATE,
@@ -7,6 +7,7 @@ import {
 } from "contexts/plantSearch/PlantSearchContext";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
+import { EntityType } from "generated/graphql/graphql";
 import useAddToGardenActionList from "hooks/plantActionLists/useAddToGardenActionList";
 import usePlantSearchQueries, {
   DEFAULT_PAGE_SIZE,
@@ -14,9 +15,7 @@ import usePlantSearchQueries, {
 import PlantSearch from "pages/BrowsePlants";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-const route = getRouteApi("/browse-plants");
-
-const PlantSearchProvider = () => {
+const PlantSearchProvider = ({ entityType }: { entityType: EntityType }) => {
   const navigate = useNavigate();
   const { searchParams, isPrefilledSearch, setIsPrefilledSearch } =
     useSearchParamsContext();
@@ -25,7 +24,7 @@ const PlantSearchProvider = () => {
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
     lastOpened: _lastOpened,
-  } = route.useSearch();
+  } = useSearch({ strict: false });
 
   const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
   const [searchFormState, setSearchFormState] = useState(
@@ -88,6 +87,7 @@ const PlantSearchProvider = () => {
   return (
     <PlantSearchContext.Provider
       value={{
+        entityType,
         hasCurrentResults,
 
         isInfiniteScroll,
@@ -105,13 +105,16 @@ const PlantSearchProvider = () => {
       }}
     >
       <PlantSelectionProvider
+        entityType={entityType}
         plantList={
           (isInfiniteScroll
             ? plantSearchData?.results
             : plantSearchQuery.data?.plantSearch.results) ?? []
         }
         plantListLoading={plantSearchQuery.loading}
-        plantActions={plantSearchActionList}
+        plantActions={
+          entityType === "plant" ? plantSearchActionList : undefined
+        }
         boundingPolygon={searchParams.location?.boundingPolyCoords}
         {...{
           page,
@@ -121,6 +124,7 @@ const PlantSearchProvider = () => {
       >
         {isPrefilledSearch ? (
           <PlantAnimation
+            showServerStatus
             className="h-dvh-header"
             queryStatus="CHECKING_STATUS"
           />

@@ -3,6 +3,11 @@ schema {
   mutation: Mutation
 }
 
+enum EntityType {
+  animal
+  plant
+}
+
 type GardenPlantData implements PlantDataInterface {
   _id: ObjectId!
   addedTimestamp: Float!
@@ -100,14 +105,17 @@ input PlantDataInput {
   bloomTimes: PlantArrayFilterStringInput
   boundingPolyCoords: [[[Float!]!]!]
   commonName: String
+  commonNameIncludes: String
   habitats: PlantArrayFilterStringInput
   hardiness: PlantArrayFilterIntInput
+  hasScrapedData: Boolean
   height: PlantSizeRangeInput
   isPerennial: [Boolean]
   lightLevels: PlantArrayFilterStringInput
   maturityTime: String
   physicalCharactersticsDump: String
   scientificName: String
+  scientificNameIncludes: String
   scrapeSources: [String]
   soilTypes: PlantArrayFilterStringInput
   spread: PlantSizeRangeInput
@@ -193,7 +201,7 @@ type Query {
   allUserGardens(gardenId: String, gardenName: String): [UserGarden!]!
   plant(boundingPolyCoords: [[[Float!]!]!], id: String!): PlantData
   plantOccurrences(id: String!, limit: Int, offset: Int): PlantOccurrencesResults
-  plantSearch(limit: Int, offset: Int, sort: [PlantSortInput!], where: PlantDataInput): PlantSearchQueryResults!
+  plantSearch(entityType: EntityType!, limit: Int, offset: Int, sort: [PlantSortInput!], where: PlantDataInput): PlantSearchQueryResults!
   searchRecord(id: String!): SearchRecord
   searchRecordDataCounts(id: String!): SearchRecordPlantCountResults!
   userGarden(gardenId: String, gardenName: String): UserGarden
@@ -205,6 +213,7 @@ type SearchRecord {
   boundingPolyCoords: [[[Float!]!]!]
   commonName: String
   createdTimestamp: Float!
+  entityType: EntityType!
   lastRanTimestamp: Float
   locationName: String
   locationSource: LocationSource
@@ -257,6 +266,7 @@ enum SearchRecordStatus {
 }
 
 enum SearchRecordStringFilterField {
+  entityType
   locationSource
   status
 }
