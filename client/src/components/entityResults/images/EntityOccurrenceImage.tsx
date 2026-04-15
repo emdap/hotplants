@@ -1,7 +1,7 @@
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
 import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
 import { PlantMedia } from "generated/graphql/graphql";
-import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
+import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/entityQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { useMemo, useRef, useState } from "react";
 
@@ -9,7 +9,7 @@ export type EntityOccurrenceImageProps = Omit<
   ImageWrapperProps,
   "onError" | "imageUrl"
 > & {
-  plantId: string;
+  entityId: string;
   thumbnailUrl?: string | null;
   occurrenceId: number;
   mediaObject: PlantMedia;
@@ -18,19 +18,19 @@ export type EntityOccurrenceImageProps = Omit<
 
 /** Uses thumbnailUrl if it's provided, otherwise uses the PlantMedia object */
 const EntityOccurrenceImage = ({
-  plantId,
+  entityId,
   thumbnailUrl,
   occurrenceId,
   mediaObject,
   containerClass,
   ...imageWrapperProps
 }: EntityOccurrenceImageProps) => {
-  const plantImageRef = useRef<HTMLDivElement>(null);
-  const { syncPlant } = usePlantSelectionContext();
+  const entityImageRef = useRef<HTMLDivElement>(null);
+  const { syncEntity } = useEntitySelectionContext();
   const [useThumbnail, setUseThumbnail] = useState(Boolean(thumbnailUrl));
 
   const [getProxyUrlMutation] = useApolloMutation(REPLACE_WITH_PROXY_URL, {
-    variables: { plantId, occurrenceId, replaceUrl: mediaObject.url },
+    variables: { entityId, occurrenceId, replaceUrl: mediaObject.url },
   });
 
   const handleImgError = async () => {
@@ -38,7 +38,7 @@ const EntityOccurrenceImage = ({
       setUseThumbnail(false);
     } else if (!mediaObject.isProxyUrl) {
       await getProxyUrlMutation();
-      syncPlant(plantId);
+      syncEntity(entityId);
     }
   };
 
@@ -52,7 +52,7 @@ const EntityOccurrenceImage = ({
 
   return (
     <ImageWrapper
-      ref={plantImageRef}
+      ref={entityImageRef}
       className={containerClass}
       imageUrl={imageUrl}
       onError={handleImgError}

@@ -54,7 +54,7 @@ const EntityNameOpenButton = (props: OpenEntityFormProps) => {
           ? capitalize(nameDraft)
           : appliedName
             ? "None"
-            : getFormTitle("plant-name", entityType)}
+            : getFormTitle("entity-name", entityType)}
       </span>
     </EntityFormOpenButton>
   );

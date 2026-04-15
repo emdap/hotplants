@@ -5,8 +5,8 @@ import EntityResultList from "components/entityResults/EntityResultList";
 import EntityResultsHeader from "components/entityResults/EntityResultsHeader";
 import EntityResultsSidebar from "components/entityResults/EntityResultsSidebar";
 import SearchRecordProgressBar from "components/searchHistory/SearchRecordProgressBar";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useEntitySearchContext } from "contexts/entitySearch/EntitySearchContext";
+import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
@@ -32,12 +32,12 @@ const PlantSearch = ({
     searchFormState,
 
     searchStatus,
-    plantSearchQuery: { loading },
+    entitySearchQuery: { loading },
     searchRecordQuery,
 
-    fetchMorePlants,
-  } = usePlantSearchContext();
-  const { page, lastPage, totalItems } = usePlantSelectionContext();
+    fetchMore: fetchMorePlants,
+  } = useEntitySearchContext();
+  const { page, lastPage, totalItems } = useEntitySelectionContext();
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
   const ScrollAnchor = useScrollAnchor({ enabled: searchStatus === "READY" });
 

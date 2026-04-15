@@ -47,7 +47,7 @@ export const GET_PLANT = graphql(`
   }
 `);
 
-export const SEARCH_PLANTS = graphql(`
+export const SEARCH_ENTITIES = graphql(`
   query searchPlants(
     $entityType: EntityType!
     $limit: Int
@@ -73,12 +73,12 @@ export const SEARCH_PLANTS = graphql(`
 
 export const REPLACE_WITH_PROXY_URL = graphql(`
   mutation replaceWithProxyUrl(
-    $plantId: String!
+    $entityId: String!
     $occurrenceId: Float!
     $replaceUrl: String!
   ) {
     replaceWithProxyUrl(
-      plantId: $plantId
+      plantId: $entityId
       occurrenceId: $occurrenceId
       replaceUrl: $replaceUrl
     )

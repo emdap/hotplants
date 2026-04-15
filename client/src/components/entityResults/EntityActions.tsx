@@ -1,9 +1,9 @@
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { useEntitySearchContext } from "contexts/entitySearch/EntitySearchContext";
 import {
-  PlantAction,
-  PlantResult,
-  usePlantSelectionContext,
-} from "contexts/plantSelection/PlantSelectionContext";
+  EntityAction,
+  EntityResult,
+  useEntitySelectionContext,
+} from "contexts/entitySelection/EntitySelectionContext";
 import Button from "designSystem/Button";
 import LoadingIcon from "designSystem/LoadingIcon";
 import StyledMenu, { MenuItemData } from "designSystem/StyledMenu";
@@ -15,11 +15,11 @@ const EntityActions = ({
   entity,
   disableDefaultActions,
 }: {
-  entity: PlantResult;
+  entity: EntityResult;
   disableDefaultActions?: boolean;
 }) => {
-  const { entityType } = usePlantSearchContext();
-  const { plantActions } = usePlantSelectionContext();
+  const { entityType } = useEntitySearchContext();
+  const { entityActions: plantActions } = useEntitySelectionContext();
   const [hasLoadingAction, setHasLoadingAction] = useState(false);
 
   const defaultActions = useMemo(
@@ -50,7 +50,7 @@ const EntityActions = ({
   );
 
   const handleActionClick = useCallback(
-    async (action: PlantAction) => {
+    async (action: EntityAction) => {
       if (action.onClick) {
         setHasLoadingAction(true);
         await action.onClick(entity);

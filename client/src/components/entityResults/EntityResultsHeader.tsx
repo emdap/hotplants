@@ -4,9 +4,9 @@ import EntityNameOpenButton from "components/entityForms/entityName/EntityNameOp
 import LocationOpenButton from "components/entityForms/location/LocationOpenButton";
 import {
   SearchFormTab,
-  usePlantSearchContext,
-} from "contexts/plantSearch/PlantSearchContext";
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+  useEntitySearchContext,
+} from "contexts/entitySearch/EntitySearchContext";
+import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
@@ -22,8 +22,8 @@ const EntityResultsHeader = () => {
     setIsInfiniteScroll,
     searchFormState,
     setSearchFormState,
-  } = usePlantSearchContext();
-  const { page, pageSize, totalItems } = usePlantSelectionContext();
+  } = useEntitySearchContext();
+  const { page, pageSize, totalItems } = useEntitySelectionContext();
 
   const toggleInfiniteScroll = (enable: boolean) => {
     enable && navigate({ to: ".", search: (prev) => ({ ...prev, page: 1 }) });
@@ -41,7 +41,7 @@ const EntityResultsHeader = () => {
     <FloatingHeader className="small-screen:mx-safe-3 big-screen:px-4 overflow-auto">
       <div className="flex lg:gap-4 items-center">
         <LocationOpenButton {...searchTabButtonProps("location")} />
-        <EntityNameOpenButton {...searchTabButtonProps("plant-name")} />
+        <EntityNameOpenButton {...searchTabButtonProps("entity-name")} />
         <EntityFilterOpenButton {...searchTabButtonProps("filters")} />
       </div>
 

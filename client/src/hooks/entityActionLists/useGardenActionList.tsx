@@ -1,7 +1,7 @@
 import {
-  PlantAction,
-  PlantResult,
-} from "contexts/plantSelection/PlantSelectionContext";
+  EntityAction,
+  EntityResult,
+} from "contexts/entitySelection/EntitySelectionContext";
 import { REMOVE_PLANT_FROM_GARDEN } from "graphqlHelpers/gardenQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { FaHeartBroken } from "react-icons/fa";
@@ -15,7 +15,7 @@ export const useGardenActionList = ({
 }: {
   gardenId: string;
   refetchGarden: () => void;
-}): PlantAction[] => {
+}): EntityAction[] => {
   const addToGardenActions = useAddToGardenActionList([gardenId]);
 
   const [removeFromGardenMutation] = useApolloMutation(
@@ -25,7 +25,7 @@ export const useGardenActionList = ({
     },
   );
 
-  const removeFromGarden = async (plant: PlantResult) => {
+  const removeFromGarden = async (plant: EntityResult) => {
     try {
       await removeFromGardenMutation({
         variables: { plantId: plant._id },

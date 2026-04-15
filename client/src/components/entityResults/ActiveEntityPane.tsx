@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import MapProvider from "components/interactiveMap/MapProvider";
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
@@ -44,15 +44,15 @@ const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
   const { searchParams } = useSearchParamsContext();
   const {
     entityType,
-    plantList,
+    entityList,
     page,
     pageSize,
     totalItems,
-    activePlant,
-    activePlantMedia,
-    setActivePlantId,
+    activeEntity,
+    activeEntityMedia,
+    setActiveEntityId,
     setActiveMediaUrl,
-  } = usePlantSelectionContext();
+  } = useEntitySelectionContext();
 
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
@@ -60,29 +60,29 @@ const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
   const pageIndexOffset = (page - 1) * pageSize;
 
   const mapCenter = useMemo(() => {
-    if (searchParams.location || !activePlantMedia.length) {
+    if (searchParams.location || !activeEntityMedia.length) {
       return undefined;
     }
 
-    return swapLatLng([activePlantMedia[0].occurrenceCoords])[0];
-  }, [searchParams, activePlantMedia]);
+    return swapLatLng([activeEntityMedia[0].occurrenceCoords])[0];
+  }, [searchParams, activeEntityMedia]);
 
   useEffect(() => {
     setOverallIndex(
       Math.max(
         0,
-        plantList.findIndex(({ _id }) => _id === activePlant?._id),
+        entityList.findIndex(({ _id }) => _id === activeEntity?._id),
       ) + pageIndexOffset,
     );
-  }, [pageIndexOffset, plantList, activePlant?._id]);
+  }, [pageIndexOffset, entityList, activeEntity?._id]);
 
   const resetActivePlant = () => {
-    setActivePlantId(null);
+    setActiveEntityId(null);
     setActiveMediaUrl(null);
   };
 
-  useCloseOnEscape(resetActivePlant, !!activePlant && !imageModalOpen);
-  useDisableHtmlScroll(Boolean(activePlant));
+  useCloseOnEscape(resetActivePlant, !!activeEntity && !imageModalOpen);
+  useDisableHtmlScroll(Boolean(activeEntity));
   const swipeHandlers = useSwipeable({
     onSwipedRight: ({ event }) => !isLeafletEvent(event) && resetActivePlant(),
   });
@@ -108,26 +108,26 @@ const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
     const iterateDirection = (direction === "prev" ? -1 : 1) * 1;
     const nextPlantIndex = overallIndex - pageIndexOffset + iterateDirection;
 
-    const nextPlant = plantList[nextPlantIndex];
+    const nextPlant = entityList[nextPlantIndex];
     setActiveMediaUrl(null);
     if (!nextPlant) {
-      setActivePlantId(null);
+      setActiveEntityId(null);
       navigate({
         to: ".",
         search: (prev) => ({ ...prev, page: page + iterateDirection }),
       });
     } else {
-      setActivePlantId(nextPlant._id);
+      setActiveEntityId(nextPlant._id);
     }
   };
 
-  const entityDisplayNames = activePlant
-    ? getEntityDisplayNames(activePlant)
+  const entityDisplayNames = activeEntity
+    ? getEntityDisplayNames(activeEntity)
     : null;
 
   return (
     <AnimatePresence>
-      {activePlant && (
+      {activeEntity && (
         <Card
           key="entity-pane"
           className={classNames(
@@ -172,12 +172,12 @@ const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
                   )}
                 </Fragment>
               ))}
-              <EntityActions entity={activePlant} />
+              <EntityActions entity={activeEntity} />
             </div>
           </header>
 
           <div
-            key={activePlant.scientificName}
+            key={activeEntity.scientificName}
             className="flex flex-col small-screen:overflow-auto big-screen:overflow-hidden gap-4 pb-6 px-2"
           >
             <div className="flex flex-col items-center p-2">
@@ -204,7 +204,7 @@ const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
               {children}
 
               <EntityInfo
-                entity={activePlant}
+                entity={activeEntity}
                 entityType={entityType}
                 onTouchEndCapture={(e) => e.stopPropagation()}
               />

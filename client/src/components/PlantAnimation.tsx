@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { useServerReadyContext } from "contexts/serverReady/ServerReadyContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
-import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
+import { SearchQueryStatus } from "hooks/useEntitySearchQueries";
 import movingPlant from "imageAssets/movingPlant.json";
 import stillPlant from "imageAssets/stillPlant.json";
 import { useLottie } from "lottie-react";
@@ -13,7 +13,7 @@ import { ReactNode, useEffect, useState } from "react";
 type PlantAnimationProps = {
   customNoDataMessage?: string;
   showServerStatus?: boolean;
-  queryStatus?: PlantSearchQueryStatus;
+  queryStatus?: SearchQueryStatus;
   dataType?: string;
   hasCurrentResults?: boolean;
   className?: string;

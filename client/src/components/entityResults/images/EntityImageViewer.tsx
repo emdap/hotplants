@@ -1,4 +1,4 @@
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
 import Button from "designSystem/Button";
 import Carousel from "designSystem/Carousel";
 import Modal from "designSystem/Modal";
@@ -14,28 +14,28 @@ const EntityImageViewer = ({
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
 }) => {
-  const { activePlant, activePlantMedia, activeMediaUrl, setActiveMediaUrl } =
-    usePlantSelectionContext();
+  const { activeEntity, activeEntityMedia, activeMediaUrl, setActiveMediaUrl } =
+    useEntitySelectionContext();
 
   const [includeThumbnail, setIncludeThumbnail] = useState(
-    Boolean(activePlant?.thumbnailUrl),
+    Boolean(activeEntity?.thumbnailUrl),
   );
 
-  const { imageList, PlantImages } = useMemo(
+  const { imageList, EntityImages } = useMemo(
     () =>
-      activePlant?._id
+      activeEntity?._id
         ? EntityCarouselImages({
-            plantId: activePlant._id,
-            thumbnailUrl: activePlant.thumbnailUrl,
-            plantMedia: activePlantMedia,
+            entityId: activeEntity._id,
+            thumbnailUrl: activeEntity.thumbnailUrl,
+            entityMedia: activeEntityMedia,
             includeThumbnail,
             setIncludeThumbnail,
           })
-        : { imageList: null, PlantImages: null },
+        : { imageList: null, EntityImages: null },
     [
-      activePlant?._id,
-      activePlant?.thumbnailUrl,
-      activePlantMedia,
+      activeEntity?._id,
+      activeEntity?.thumbnailUrl,
+      activeEntityMedia,
       includeThumbnail,
     ],
   );
@@ -65,8 +65,8 @@ const EntityImageViewer = ({
   }, [carouselIndex, imageList, setActiveMediaUrl]);
 
   return (
-    activePlant &&
-    PlantImages && (
+    activeEntity &&
+    EntityImages && (
       <>
         <div className="aspect-square h-70 flex-col relative">
           <Carousel
@@ -75,7 +75,7 @@ const EntityImageViewer = ({
             setCarouselIndex={setCarouselIndex}
             childrenWrapperProps={{ onDoubleClick: () => setIsModalOpen(true) }}
           >
-            {PlantImages}
+            {EntityImages}
           </Carousel>
 
           <Button
@@ -88,7 +88,7 @@ const EntityImageViewer = ({
         </div>
 
         <Modal
-          {...getEntityDisplayNames(activePlant)}
+          {...getEntityDisplayNames(activeEntity)}
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);
@@ -102,7 +102,7 @@ const EntityImageViewer = ({
             bigButtons
             enableKeyboardEvents
           >
-            {PlantImages}
+            {EntityImages}
           </Carousel>
         </Modal>
       </>

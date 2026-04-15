@@ -2,7 +2,7 @@ import classNames from "classnames";
 import EntityFormFooter from "components/entityForms/EntityFormFooter";
 import { EntityFormProps } from "components/entityForms/entityFormUtil";
 import MapProvider from "components/interactiveMap/MapProvider";
-import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
+import { useEntitySearchContext } from "contexts/entitySearch/EntitySearchContext";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Card from "designSystem/Card";
 import InputField from "designSystem/InputField";
@@ -33,7 +33,7 @@ const EntityLocationForm = ({
     applySearchParams,
   } = useSearchParamsContext();
 
-  const { getResultsContainer } = usePlantSearchContext();
+  const { getResultsContainer } = useEntitySearchContext();
 
   const [locationPending, setLocationPending] = useState(false);
   const [searchInput, setSearchInput] = useState(

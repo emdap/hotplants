@@ -1,4 +1,4 @@
-import { FlattenedPlantMedia } from "contexts/plantSelection/PlantSelectionContext";
+import { FlattenedMedia } from "contexts/entitySelection/EntitySelectionContext";
 import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
 import EntityOccurrenceImage from "./EntityOccurrenceImage";
 
@@ -12,20 +12,20 @@ const DEFAULT_IMAGE_PROPS: Partial<ImageWrapperProps> = {
 
 type CarouselImage =
   | { isThumbnail: true; url: string }
-  | FlattenedPlantMedia[number];
+  | FlattenedMedia[number];
 
 type EntityCarouselImagesProps = {
-  plantId: string;
+  entityId: string;
   thumbnailUrl?: string | null;
-  plantMedia: FlattenedPlantMedia;
+  entityMedia: FlattenedMedia;
   includeThumbnail: boolean;
   setIncludeThumbnail: (includeThumbnail: boolean) => void;
 };
 
 const EntityCarouselImages = ({
-  plantId,
+  entityId,
   thumbnailUrl,
-  plantMedia,
+  entityMedia,
   includeThumbnail,
   setIncludeThumbnail,
 }: EntityCarouselImagesProps) => {
@@ -33,9 +33,9 @@ const EntityCarouselImages = ({
     (includeThumbnail && thumbnailUrl
       ? [{ isThumbnail: true, url: thumbnailUrl }]
       : []) as CarouselImage[]
-  ).concat(plantMedia);
+  ).concat(entityMedia);
 
-  const PlantImages = imageList.map((data) =>
+  const EntityImages = imageList.map((data) =>
     "isThumbnail" in data ? (
       <ImageWrapper
         key="thumbnail"
@@ -48,7 +48,7 @@ const EntityCarouselImages = ({
       <EntityOccurrenceImage
         key={data.url}
         containerClass={CONTAINER_CLASS}
-        plantId={plantId}
+        entityId={entityId}
         occurrenceId={data.occurrenceId}
         mediaObject={data}
         {...DEFAULT_IMAGE_PROPS}
@@ -56,7 +56,7 @@ const EntityCarouselImages = ({
     ),
   );
 
-  return { imageList, PlantImages };
+  return { imageList, EntityImages };
 };
 
 export default EntityCarouselImages;

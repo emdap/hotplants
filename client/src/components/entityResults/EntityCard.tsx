@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import {
-  PlantResult,
-  usePlantSelectionContext,
-} from "contexts/plantSelection/PlantSelectionContext";
+  EntityResult,
+  useEntitySelectionContext,
+} from "contexts/entitySelection/EntitySelectionContext";
 import Card from "designSystem/Card";
 import plantPlaceholder from "imageAssets/plantPlaceholder.png";
 import { useEffect, useRef } from "react";
@@ -10,18 +10,18 @@ import { getEntityDisplayNames } from "util/generalUtil";
 import EntityActions from "./EntityActions";
 import EntityOccurrenceImage from "./images/EntityOccurrenceImage";
 
-const EntityCard = ({ entity }: { entity: PlantResult }) => {
-  const { activePlantId, setActivePlantId } = usePlantSelectionContext();
+const EntityCard = ({ entity }: { entity: EntityResult }) => {
+  const { activeEntityId, setActiveEntityId } = useEntitySelectionContext();
 
   const plantCardRef = useRef<HTMLDivElement>(null);
   const isRightClick = useRef(false);
 
-  const isActive = activePlantId === entity._id;
+  const isActive = activeEntityId === entity._id;
   useEffect(() => {
     isActive && plantCardRef.current?.focus();
   }, [isActive]);
 
-  const setActive = () => setActivePlantId(entity._id);
+  const setActive = () => setActiveEntityId(entity._id);
 
   const firstOccurrence = entity.occurrences[0];
   const firstMedia = firstOccurrence?.media[0];
@@ -76,7 +76,7 @@ const EntityCard = ({ entity }: { entity: PlantResult }) => {
 
       {firstOccurrence && (
         <EntityOccurrenceImage
-          plantId={entity._id}
+          entityId={entity._id}
           thumbnailUrl={entity.thumbnailUrl}
           occurrenceId={firstOccurrence.occurrenceId}
           mediaObject={firstMedia}

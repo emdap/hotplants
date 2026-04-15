@@ -5,7 +5,7 @@ import { getOrderedFilterEntries } from "components/dataControls/filterUtil";
 import EntityFormFooter from "components/entityForms/EntityFormFooter";
 import StyledEntityForm from "components/entityForms/StyledEntityForm";
 import { hotplantsClient } from "config/hotplantsConfig";
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
 import Card from "designSystem/Card";
 import Modal from "designSystem/Modal";
 import StyledPopover from "designSystem/StyledPopover";
@@ -35,8 +35,11 @@ const EntityFilterForm = ({
 }) => {
   const navigate = useNavigate();
 
-  const { entityType, plantListLoading, totalItems } =
-    usePlantSelectionContext();
+  const {
+    entityType,
+    entityListLoading: plantListLoading,
+    totalItems,
+  } = useEntitySelectionContext();
   const { plantFilter } = useSearch({ strict: false });
   const [filterDraft, setFilterDraft] = useState(plantFilter);
 

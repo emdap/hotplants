@@ -95,7 +95,7 @@ const EntityNameForm = ({
       })}
     >
       {renderMode === "card" && (
-        <h2>{getFormTitle("plant-name", entityType)}</h2>
+        <h2>{getFormTitle("entity-name", entityType)}</h2>
       )}
 
       <div className="my-4 min-h-min w-full max-w-[400px]">

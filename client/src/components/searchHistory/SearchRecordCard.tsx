@@ -111,7 +111,7 @@ const SearchRecordCard = ({
           <div className="h-60 w-full md:w-3/7 flex md:justify-center">
             {firstPlant ? (
               <EntityOccurrenceImage
-                plantId={firstPlant._id}
+                entityId={firstPlant._id}
                 occurrenceId={firstPlant.occurrenceId}
                 thumbnailUrl={firstPlant.thumbnailUrl}
                 mediaObject={firstPlant}

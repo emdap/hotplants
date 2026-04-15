@@ -1,7 +1,7 @@
 import { useSearch } from "@tanstack/react-router";
 import classNames from "classnames";
 import { useAppContext } from "contexts/AppContext";
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { motion } from "motion/react";
@@ -21,7 +21,7 @@ const EntityResultList = ({
   const { sidebarExpanded } = useAppContext();
   const { scrollContainerElement } = useGetScrollContainer();
 
-  const { plantList } = usePlantSelectionContext();
+  const { entityList } = useEntitySelectionContext();
 
   const [shrinkCols, setShrinkCols] = useState(false);
 
@@ -45,16 +45,16 @@ const EntityResultList = ({
       className={classNames(
         "gap-4 items-stretch grid",
         {
-          "justify-around": plantList.length > 3,
+          "justify-around": entityList.length > 3,
         },
         className,
       )}
       style={{
         gridTemplateColumns: `repeat(auto-fit, ${shrinkCols ? "minmax(0, 300px)" : "minmax(300px, 1fr))"}`,
-        maxWidth: plantList.length < 4 ? plantList.length * 400 : undefined,
+        maxWidth: entityList.length < 4 ? entityList.length * 400 : undefined,
       }}
     >
-      {plantList.map((entity) => (
+      {entityList.map((entity) => (
         <EntityCard key={`${entity._id}`} entity={entity} />
       ))}
     </motion.div>

@@ -5,7 +5,7 @@ import ActiveEntityPane from "components/entityResults/ActiveEntityPane";
 import EntityResultList from "components/entityResults/EntityResultList";
 import GardenPlantNotes from "components/garden/GardenPlantNotes";
 import PlantAnimation from "components/PlantAnimation";
-import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
+import EntitySelectionProvider from "contexts/entitySelection/EntitySelectionProvider";
 import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
@@ -13,8 +13,8 @@ import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { GET_GARDEN, GET_GARDEN_PLANTS } from "graphqlHelpers/gardenQueries";
-import useGardenActionList from "hooks/plantActionLists/useGardenActionList";
-import { DEFAULT_PAGE_SIZE } from "hooks/usePlantSearchQueries";
+import useGardenActionList from "hooks/entityActionLists/useGardenActionList";
+import { DEFAULT_PAGE_SIZE } from "hooks/useEntitySearchQueries";
 import { useApolloQuery } from "hooks/useQuery";
 import { useState } from "react";
 import { MdArrowBack } from "react-icons/md";
@@ -88,12 +88,12 @@ const Garden = () => {
         className="absolute top-0 left-0"
       />
 
-      <PlantSelectionProvider
+      <EntitySelectionProvider
         entityType="plant"
-        plantList={gardenPlants?.results ?? []}
-        plantListLoading={gardenPlantsQuery.loading}
+        entityList={gardenPlants?.results ?? []}
+        entityListLoading={gardenPlantsQuery.loading}
         totalItems={displayCount}
-        plantActions={gardenActionList}
+        entityActions={gardenActionList}
         {...{ page, pageSize }}
       >
         <FloatingHeader>
@@ -143,7 +143,7 @@ const Garden = () => {
             />
           )}
         </ActiveEntityPane>
-      </PlantSelectionProvider>
+      </EntitySelectionProvider>
     </main>
   );
 };

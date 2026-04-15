@@ -3,8 +3,8 @@ import EntityNameForm from "components/entityForms/entityName/EntityNameForm";
 import EntityLocationForm from "components/entityForms/location/LocationForm";
 import {
   SearchFormTab,
-  usePlantSearchContext,
-} from "contexts/plantSearch/PlantSearchContext";
+  useEntitySearchContext,
+} from "contexts/entitySearch/EntitySearchContext";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Modal from "designSystem/Modal";
 import Sidebar from "designSystem/Sidebar";
@@ -27,7 +27,7 @@ const Entity_FORM_COMPONENTS: Record<
   FunctionComponent<EntityFormProps>
 > = {
   location: EntityLocationForm,
-  "plant-name": EntityNameForm,
+  "entity-name": EntityNameForm,
   filters: EntityFilterForm,
 };
 
@@ -36,7 +36,7 @@ const EntityResultsSidebar = () => {
   const {
     searchFormState: { tab, isOpen },
     setSearchFormState,
-  } = usePlantSearchContext();
+  } = useEntitySearchContext();
   const { scrollContainerElement } = useGetScrollContainer();
 
   const [sidebarContentHeight, setSidebarContentHeight] = useState<

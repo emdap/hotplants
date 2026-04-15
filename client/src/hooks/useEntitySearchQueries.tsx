@@ -1,13 +1,13 @@
 import { EntitySearchParams, hotplantsClient } from "config/hotplantsConfig";
 import { QueryPlantSearchArgs } from "generated/graphql/graphql";
-import { SEARCH_PLANTS } from "graphqlHelpers/plantQueries";
+import { SEARCH_ENTITIES } from "graphqlHelpers/entityQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { PlantDataFilter } from "util/graphqlTypes";
 import { PaginationParams } from "util/routeParamsUtil";
 
-export type PlantSearchQueryStatus =
+export type SearchQueryStatus =
   | "READY"
   | "CHECKING_STATUS"
   | "SCRAPING_AND_POLLING";
@@ -16,18 +16,18 @@ export const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_POLL_INTERVAL = 3000;
 const MAX_POLLS = 10;
 
-const DEFAULT_PLANT_SEARCH_GQL_VARS: Omit<QueryPlantSearchArgs, "entityType"> =
-  {
-    offset: 0,
-    limit: DEFAULT_PAGE_SIZE,
-    sort: [
-      { field: "updatedTimestamp", value: 1 },
-      { field: "scientificName", value: 1 },
-    ],
-  };
+const DEFAULT_SEARCH_ARGS: Omit<QueryPlantSearchArgs, "entityType"> = {
+  offset: 0,
+  limit: DEFAULT_PAGE_SIZE,
+  sort: [
+    { field: "updatedTimestamp", value: 1 },
+    { field: "scientificName", value: 1 },
+  ],
+};
 
-const usePlantSearchQueries = (
+const useEntitySearchQueries = (
   { location, entityName, entityType }: EntitySearchParams,
+  // TODO: split or make generic the filters between plant/animal
   plantFilters: PlantDataFilter | undefined,
   {
     paginationEnabled,
@@ -35,8 +35,7 @@ const usePlantSearchQueries = (
     pageSize,
   }: Required<PaginationParams> & { paginationEnabled: boolean },
 ) => {
-  const [searchStatus, setSearchStatus] =
-    useState<PlantSearchQueryStatus>("READY");
+  const [searchStatus, setSearchStatus] = useState<SearchQueryStatus>("READY");
 
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pollInterval, setPollInterval] = useState(0);
@@ -54,11 +53,11 @@ const usePlantSearchQueries = (
     [paginationEnabled, pageSize, page],
   );
 
-  const plantSearchQuery = useApolloQuery(SEARCH_PLANTS, {
+  const entitySearchQuery = useApolloQuery(SEARCH_ENTITIES, {
     pollInterval,
 
     variables: {
-      ...DEFAULT_PLANT_SEARCH_GQL_VARS,
+      ...DEFAULT_SEARCH_ARGS,
       ...paginationVars,
 
       entityType,
@@ -89,7 +88,7 @@ const usePlantSearchQueries = (
 
       if (data?.status !== "SCRAPING" && pollInterval) {
         stopPolling();
-        plantSearchQuery.refetch();
+        entitySearchQuery.refetch();
       }
 
       return data;
@@ -131,7 +130,7 @@ const usePlantSearchQueries = (
    */
   const someQueryInProgress =
     pollInterval ||
-    plantSearchQuery.loading ||
+    entitySearchQuery.loading ||
     searchRecordQuery.fetchStatus !== "idle" ||
     scrapeOccurrencesQuery.fetchStatus !== "idle";
 
@@ -148,7 +147,7 @@ const usePlantSearchQueries = (
   };
 
   const startPolling = () => {
-    plantSearchQuery.refetch();
+    entitySearchQuery.refetch();
     searchRecordQuery.refetch();
 
     setPollInterval(DEFAULT_POLL_INTERVAL);
@@ -163,13 +162,13 @@ const usePlantSearchQueries = (
   useEffect(() => {
     if (
       searchRecordQuery.error ||
-      plantSearchQuery.error ||
+      entitySearchQuery.error ||
       scrapeOccurrencesQuery.error
     ) {
       stopPolling();
       const errors = [
         searchRecordQuery.error,
-        plantSearchQuery.error,
+        entitySearchQuery.error,
         scrapeOccurrencesQuery.error,
       ];
       console.error(errors);
@@ -185,20 +184,20 @@ const usePlantSearchQueries = (
     }
   }, [
     searchRecordQuery.error,
-    plantSearchQuery.error,
+    entitySearchQuery.error,
     scrapeOccurrencesQuery.error,
   ]);
 
   return {
     searchStatus,
-    plantSearchQuery,
+    entitySearchQuery,
     searchRecordQuery,
     scrapeMoreData,
   };
 };
 
-export type PlantSearchQueriesReturnType = ReturnType<
-  typeof usePlantSearchQueries
+export type EntitySearchQueriesReturnType = ReturnType<
+  typeof useEntitySearchQueries
 >;
 
-export default usePlantSearchQueries;
+export default useEntitySearchQueries;

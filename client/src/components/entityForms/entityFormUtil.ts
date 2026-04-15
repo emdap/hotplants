@@ -1,6 +1,6 @@
 import { FilterInputConfig } from "components/dataControls/filterUtil";
 import { OptionalSearchParamKey } from "config/hotplantsConfig";
-import { SearchFormTab } from "contexts/plantSearch/PlantSearchContext";
+import { SearchFormTab } from "contexts/entitySearch/EntitySearchContext";
 import { EntityType } from "generated/graphql/graphql";
 import { capitalize } from "lodash";
 import pluralize from "pluralize";

@@ -1,8 +1,8 @@
 import { useIsSignedIn } from "config/authConfig";
 import {
-  PlantAction,
-  PlantResult,
-} from "contexts/plantSelection/PlantSelectionContext";
+  EntityAction,
+  EntityResult,
+} from "contexts/entitySelection/EntitySelectionContext";
 import { GraphQLFormattedError } from "graphql";
 import {
   ADD_PLANT_TO_GARDEN,
@@ -18,7 +18,7 @@ import GoToGardenLink from "./GoToGardenLink";
 
 export const useAddToGardenActionList = (
   excludeIds?: string[],
-): PlantAction[] => {
+): EntityAction[] => {
   const isSignedIn = useIsSignedIn();
 
   const customGraphQlErrorHandler = (
@@ -39,7 +39,7 @@ export const useAddToGardenActionList = (
 
   const [addToGardenMutation] = useApolloMutation(ADD_PLANT_TO_GARDEN);
 
-  const addToGarden = async (plant: PlantResult, garden?: UserGarden) => {
+  const addToGarden = async (plant: EntityResult, garden?: UserGarden) => {
     try {
       const { data } = await addToGardenMutation({
         variables: { plantId: plant._id, gardenId: garden?._id },
@@ -64,7 +64,7 @@ export const useAddToGardenActionList = (
     skip: !isSignedIn,
   });
 
-  const addToGardenAction = (garden?: UserGarden): PlantAction => ({
+  const addToGardenAction = (garden?: UserGarden): EntityAction => ({
     label: (
       <span>
         Add to{" "}
@@ -83,12 +83,12 @@ export const useAddToGardenActionList = (
     ) : (
       <TbPlant2 />
     ),
-    onClick: (plant: PlantResult) =>
+    onClick: (plant: EntityResult) =>
       isSignedIn ? addToGarden(plant, garden) : needsAuthenticationToast(),
   });
 
   const gardenActions = userGardensQuery.data?.allUserGardens?.length
-    ? userGardensQuery.data.allUserGardens.reduce<PlantAction[]>(
+    ? userGardensQuery.data.allUserGardens.reduce<EntityAction[]>(
         (prev, cur) => {
           if (excludeIds?.includes(cur._id)) {
             return prev;

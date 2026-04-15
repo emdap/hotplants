@@ -3,7 +3,7 @@ import {
   retainSearchParams,
   stripSearchParams,
 } from "@tanstack/react-router";
-import PlantSearchProvider from "contexts/plantSearch/PlantSearchProvider";
+import EntitySearchProvider from "contexts/entitySearch/EntitySearchProvider";
 import SearchParamsProvider from "contexts/searchParams/SearchParamsProvider";
 import {
   DEFAULT_ANIMAL_SEARCH_ROUTE_PARAMS,
@@ -12,7 +12,7 @@ import {
 
 const BrowseAnimalsRoute = () => (
   <SearchParamsProvider>
-    <PlantSearchProvider entityType="animal" />
+    <EntitySearchProvider entityType="animal" />
   </SearchParamsProvider>
 );
 

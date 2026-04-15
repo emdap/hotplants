@@ -1,13 +1,13 @@
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
 import { Marker, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { swapLatLng } from "util/locationUtil";
 import { MarkerClusterIcon, OccurrenceMarkerIcon } from "./MarkerIcons";
 
-const PlantOccurrenceMarkers = () => {
+const EntityOccurrenceMarkers = () => {
   const map = useMap();
-  const { activePlantMedia, activeMediaUrl, setActiveMediaUrl } =
-    usePlantSelectionContext();
+  const { activeEntityMedia, activeMediaUrl, setActiveMediaUrl } =
+    useEntitySelectionContext();
 
   return (
     <MarkerClusterGroup
@@ -15,11 +15,11 @@ const PlantOccurrenceMarkers = () => {
       zoomToBoundsOnClick={false}
       spiderfyOnEveryZoom
       iconCreateFunction={(data) =>
-        MarkerClusterIcon(data, activePlantMedia[0]?.url)
+        MarkerClusterIcon(data, activeEntityMedia[0]?.url)
       }
       maxClusterRadius={80}
     >
-      {activePlantMedia.map(({ occurrenceCoords, url }, index) => {
+      {activeEntityMedia.map(({ occurrenceCoords, url }, index) => {
         // Encountered case of missing coordinates
         if (occurrenceCoords.length !== 2) {
           return null;
@@ -46,4 +46,4 @@ const PlantOccurrenceMarkers = () => {
   );
 };
 
-export default PlantOccurrenceMarkers;
+export default EntityOccurrenceMarkers;

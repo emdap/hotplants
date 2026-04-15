@@ -3,19 +3,19 @@ import { useNavigate, useSearch } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
 import {
   DEFAULT_SEARCH_FORM_STATE,
-  PlantSearchContext,
-} from "contexts/plantSearch/PlantSearchContext";
-import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
+  EntitySearchContext,
+} from "contexts/entitySearch/EntitySearchContext";
+import EntitySelectionProvider from "contexts/entitySelection/EntitySelectionProvider";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import { EntityType } from "generated/graphql/graphql";
-import useAddToGardenActionList from "hooks/plantActionLists/useAddToGardenActionList";
-import usePlantSearchQueries, {
+import useAddToGardenActionList from "hooks/entityActionLists/useAddToGardenActionList";
+import useEntitySearchQueries, {
   DEFAULT_PAGE_SIZE,
-} from "hooks/usePlantSearchQueries";
+} from "hooks/useEntitySearchQueries";
 import PlantSearch from "pages/BrowseEntities";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-const PlantSearchProvider = ({ entityType }: { entityType: EntityType }) => {
+const EntitySearchProvider = ({ entityType }: { entityType: EntityType }) => {
   const navigate = useNavigate();
   const { searchParams, isPrefilledSearch, setIsPrefilledSearch } =
     useSearchParamsContext();
@@ -31,12 +31,16 @@ const PlantSearchProvider = ({ entityType }: { entityType: EntityType }) => {
     DEFAULT_SEARCH_FORM_STATE(),
   );
 
-  const { searchStatus, plantSearchQuery, searchRecordQuery, scrapeMoreData } =
-    usePlantSearchQueries(searchParams, plantFilter, {
-      page,
-      pageSize,
-      paginationEnabled: !isInfiniteScroll,
-    });
+  const {
+    searchStatus,
+    entitySearchQuery: plantSearchQuery,
+    searchRecordQuery,
+    scrapeMoreData,
+  } = useEntitySearchQueries(searchParams, plantFilter, {
+    page,
+    pageSize,
+    paginationEnabled: !isInfiniteScroll,
+  });
 
   useEffect(() => {
     !plantSearchQuery.loading && setIsPrefilledSearch(false);
@@ -85,7 +89,7 @@ const PlantSearchProvider = ({ entityType }: { entityType: EntityType }) => {
   const plantSearchActionList = useAddToGardenActionList();
 
   return (
-    <PlantSearchContext.Provider
+    <EntitySearchContext.Provider
       value={{
         entityType,
         hasCurrentResults,
@@ -95,8 +99,8 @@ const PlantSearchProvider = ({ entityType }: { entityType: EntityType }) => {
 
         searchStatus,
         searchRecordQuery,
-        plantSearchQuery,
-        fetchMorePlants,
+        entitySearchQuery: plantSearchQuery,
+        fetchMore: fetchMorePlants,
 
         searchFormState,
         setSearchFormState,
@@ -104,15 +108,15 @@ const PlantSearchProvider = ({ entityType }: { entityType: EntityType }) => {
         getResultsContainer,
       }}
     >
-      <PlantSelectionProvider
+      <EntitySelectionProvider
         entityType={entityType}
-        plantList={
+        entityList={
           (isInfiniteScroll
             ? plantSearchData?.results
             : plantSearchQuery.data?.plantSearch.results) ?? []
         }
-        plantListLoading={plantSearchQuery.loading}
-        plantActions={
+        entityListLoading={plantSearchQuery.loading}
+        entityActions={
           entityType === "plant" ? plantSearchActionList : undefined
         }
         boundingPolygon={searchParams.location?.boundingPolyCoords}
@@ -131,9 +135,9 @@ const PlantSearchProvider = ({ entityType }: { entityType: EntityType }) => {
         ) : (
           <PlantSearch resultsContainerRef={resultsContainerRef} />
         )}
-      </PlantSelectionProvider>
-    </PlantSearchContext.Provider>
+      </EntitySelectionProvider>
+    </EntitySearchContext.Provider>
   );
 };
 
-export default PlantSearchProvider;
+export default EntitySearchProvider;

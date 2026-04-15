@@ -1,8 +1,8 @@
 import { EntityType } from "generated/graphql/graphql";
 import {
-  PlantSearchQueriesReturnType,
-  PlantSearchQueryStatus,
-} from "hooks/usePlantSearchQueries";
+  EntitySearchQueriesReturnType,
+  SearchQueryStatus,
+} from "hooks/useEntitySearchQueries";
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import {
   isSmallScreen,
@@ -10,33 +10,33 @@ import {
   VOID_PROMISE_FUNCTION,
 } from "util/generalUtil";
 
-export type SearchFormTab = "location" | "plant-name" | "filters";
+export type SearchFormTab = "location" | "entity-name" | "filters";
 type SearchFormState = { tab: SearchFormTab; isOpen: boolean };
 export const DEFAULT_SEARCH_FORM_STATE = (): SearchFormState => ({
   tab: "location",
   isOpen: !isSmallScreen(),
 });
 
-export type PlantSearchContextType = {
+export type EntitySearchContextType = {
   entityType: EntityType;
   hasCurrentResults: boolean;
 
   isInfiniteScroll: boolean;
   setIsInfiniteScroll: (enabled: boolean) => void;
 
-  searchStatus: PlantSearchQueryStatus;
-  fetchMorePlants: () => Promise<unknown>;
+  searchStatus: SearchQueryStatus;
+  fetchMore: () => Promise<unknown>;
 
   searchFormState: SearchFormState;
   setSearchFormState: Dispatch<SetStateAction<SearchFormState>>;
 
   getResultsContainer: () => HTMLDivElement | null | void;
 } & Pick<
-  PlantSearchQueriesReturnType,
-  "searchRecordQuery" | "plantSearchQuery"
+  EntitySearchQueriesReturnType,
+  "searchRecordQuery" | "entitySearchQuery"
 >;
 
-const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
+const DEFAULT_ENTITY_SEARCH_CONTEXT: EntitySearchContextType = {
   entityType: "plant",
   hasCurrentResults: false,
 
@@ -44,9 +44,9 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   setIsInfiniteScroll: VOID_FUNCTION,
 
   searchStatus: "READY",
-  searchRecordQuery: {} as PlantSearchQueriesReturnType["searchRecordQuery"],
-  plantSearchQuery: {} as PlantSearchQueriesReturnType["plantSearchQuery"],
-  fetchMorePlants: VOID_PROMISE_FUNCTION,
+  searchRecordQuery: {} as EntitySearchQueriesReturnType["searchRecordQuery"],
+  entitySearchQuery: {} as EntitySearchQueriesReturnType["entitySearchQuery"],
+  fetchMore: VOID_PROMISE_FUNCTION,
 
   searchFormState: DEFAULT_SEARCH_FORM_STATE(),
   setSearchFormState: VOID_FUNCTION,
@@ -54,8 +54,8 @@ const DEFAULT_PLANT_SEARCH_CONTEXT: PlantSearchContextType = {
   getResultsContainer: VOID_FUNCTION,
 };
 
-export const PlantSearchContext = createContext<PlantSearchContextType>(
-  DEFAULT_PLANT_SEARCH_CONTEXT,
+export const EntitySearchContext = createContext<EntitySearchContextType>(
+  DEFAULT_ENTITY_SEARCH_CONTEXT,
 );
 
-export const usePlantSearchContext = () => useContext(PlantSearchContext);
+export const useEntitySearchContext = () => useContext(EntitySearchContext);

@@ -3,7 +3,7 @@ import {
   PLANT_UNIT_SHORT_LABELS,
 } from "components/dataControls/filterUtil";
 import { COMPLETE_PLANT_FILTER_DICT } from "components/entityForms/entityFilters/entityFilterUtil";
-import { PlantResult } from "contexts/plantSelection/PlantSelectionContext";
+import { EntityResult } from "contexts/entitySelection/EntitySelectionContext";
 import { format } from "date-fns";
 import Card, { CardProps } from "designSystem/Card";
 import { EntityType } from "generated/graphql/graphql";
@@ -22,13 +22,13 @@ const ORDERED_PLANT_FIELDS = getOrderedFilterEntries({
   updatedTimestamp: { label: "Data last updated" },
 }).map(([key, filterValue]) =>
   filterValue?.label ? [key, filterValue.label] : [],
-) as [keyof PlantResult, string][];
+) as [keyof EntityResult, string][];
 
 const EntityInfo = ({
   entity,
   entityType,
   ...cardProps
-}: { entity: PlantResult; entityType: EntityType } & CardProps) => (
+}: { entity: EntityResult; entityType: EntityType } & CardProps) => (
   <div className="space-y-6">
     <InfoWrapper title={`${capitalize(entityType)} stats`} {...cardProps}>
       <table className="border-separate border-spacing-4 [&_th,td]:p-2 w-full">

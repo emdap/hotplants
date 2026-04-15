@@ -11,8 +11,8 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, MapContainerProps, TileLayer } from "react-leaflet";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.css";
 import "react-leaflet-cluster/dist/assets/MarkerCluster.Default.css";
+import EntityOccurrenceMarkers from "./EntityOccurrenceMarkers";
 import LocationPolygon from "./LocationPolygon";
-import PlantOccurrenceMarkers from "./PlantOccurrenceMarkers";
 import PolygonDrawing, { SetCustomPolygonFn } from "./PolygonDrawing";
 
 const DEFAULT_CONTAINER_PROPS: MapContainerProps = {
@@ -91,7 +91,7 @@ const MapProvider = ({
           <PolygonDrawing setCustomPolygon={setCustomPolygon} />
         )}
 
-        {showMarkers && <PlantOccurrenceMarkers />}
+        {showMarkers && <EntityOccurrenceMarkers />}
       </MapContainer>
     </Card>
   );

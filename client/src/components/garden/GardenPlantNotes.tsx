@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
+import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
 import Button from "designSystem/Button";
 import {
   mergeMotionProps,
@@ -25,7 +25,7 @@ const GardenPlantNotes = ({
   gardenId: string;
   refetchPlants: () => Promise<unknown>;
 }) => {
-  const { activePlant } = usePlantSelectionContext();
+  const { activeEntity: activePlant } = useEntitySelectionContext();
 
   const [isEditable, setIsEditable] = useState(false);
   const [plantNotes, setPlantNotes] = useState(activePlant?.notes ?? "");

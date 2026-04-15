@@ -1,5 +1,5 @@
 import { CombinedGraphQLErrors } from "@apollo/client";
-import { PlantResult } from "contexts/plantSelection/PlantSelectionContext";
+import { EntityResult } from "contexts/entitySelection/EntitySelectionContext";
 import { GraphQLFormattedError } from "graphql";
 import { capitalize } from "lodash";
 import { HTMLMotionProps } from "motion/react";
@@ -13,7 +13,7 @@ export type CommonMotionDivProps = Omit<HTMLMotionProps<"div">, "children"> &
 export const ITERATE_DIRECTION = ["prev", "next"] as const;
 export type IterateDirection = (typeof ITERATE_DIRECTION)[number];
 
-export const getEntityDisplayNames = (entity: PlantResult) => {
+export const getEntityDisplayNames = (entity: EntityResult) => {
   const commonName = entity.commonNames?.[0];
   return {
     title: commonName ? capitalize(commonName) : entity.scientificName,
