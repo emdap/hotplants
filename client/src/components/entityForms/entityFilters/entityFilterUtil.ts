@@ -8,6 +8,7 @@ import {
 } from "components/dataControls/filterUtil";
 import { PlantArrayValues } from "config/hotplantsConfig";
 import { ComplexListboxOption } from "designSystem/listbox/listboxUtil";
+import { EntityType } from "generated/graphql/graphql";
 import { capitalize, sortBy } from "lodash";
 import { Entries } from "type-fest";
 import { PlantDataFilter } from "util/graphqlTypes";
@@ -143,12 +144,19 @@ export const COMPLETE_PLANT_FILTER_DICT = {
   ...PLANT_STATIC_FILTER_DICT,
 };
 
-export const validatePlantFilters = (rawFilters: Record<string, unknown>) => {
+export const validateEntityFilters = (
+  rawFilters: Record<string, unknown>,
+  entityType: EntityType,
+) => {
+  const compareDict =
+    entityType === "plant"
+      ? COMPLETE_PLANT_FILTER_DICT
+      : ENTITY_NAME_FILTER_DICT;
   const validatedFilters = Object.entries(rawFilters).reduce<PlantDataFilter>(
     (prev, [key, value]) => {
-      if (key in COMPLETE_PLANT_FILTER_DICT) {
-        const typesafeKey = key as PlantFilterKey;
-        const filterConfig = COMPLETE_PLANT_FILTER_DICT[typesafeKey];
+      if (key in compareDict) {
+        const typesafeKey = key as keyof typeof compareDict;
+        const filterConfig = compareDict[typesafeKey];
 
         if (
           filterConfig &&
@@ -193,5 +201,5 @@ export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
   );
 
 export const PLANTS_WITH_DATA_FILTER: PlantSearchRouteParams = {
-  plantFilter: { hasScrapedData: true },
+  filter: { hasScrapedData: true },
 };

@@ -20,11 +20,11 @@ const SearchHistoryFilterPopover = ({
 }: SearchHistoryPopoverProps) => {
   const isSignedIn = useIsSignedIn();
 
-  const currentFilter = currentParams?.filter;
+  const currentFilter = currentParams?.recordFilter;
   const hasData = Boolean(currentFilter);
 
-  const applyFilter = (params: SearchHistoryParams["filter"]) =>
-    applyParams({ filter: { ...currentFilter, ...params } });
+  const applyFilter = (params: SearchHistoryParams["recordFilter"]) =>
+    applyParams({ recordFilter: { ...currentFilter, ...params } });
 
   useEffect(
     () => {

@@ -1,5 +1,5 @@
 import { polygon } from "@turf/turf";
-import { validatePlantFilters } from "components/entityForms/entityFilters/entityFilterUtil";
+import { validateEntityFilters } from "components/entityForms/entityFilters/entityFilterUtil";
 import {
   EntitySearchParams,
   PlantLocationParams,
@@ -40,18 +40,24 @@ const DEFAULT_ENTITY_SEARCH_PARAMS = {
 
 export const DEFAULT_PLANT_SEARCH_ROUTE_PARAMS = {
   entityType: "plant" as const,
-  plantFilter: undefined,
+  filter: undefined,
   ...DEFAULT_ENTITY_SEARCH_PARAMS,
 };
 
 export const DEFAULT_ANIMAL_SEARCH_ROUTE_PARAMS = {
   entityType: "animal" as const,
-  animalFilter: undefined,
+  filter: undefined,
   ...DEFAULT_ENTITY_SEARCH_PARAMS,
 };
 
-type EntitySearchRouteParams = PaginationParams & {
-  entityType?: EntityType;
+type EntityFilter<E = EntityType> = E extends "animal"
+  ? AnimalDataFilter
+  : PlantDataFilter;
+
+type EntitySearchRouteParams<E = EntityType> = PaginationParams & {
+  entityType?: E;
+  filter?: EntityFilter<E>;
+
   page?: number;
   pageSize?: number;
 
@@ -60,13 +66,9 @@ type EntitySearchRouteParams = PaginationParams & {
   lastOpened?: string;
 };
 
-export type PlantSearchRouteParams = EntitySearchRouteParams & {
-  plantFilter?: PlantDataFilter;
-};
+export type PlantSearchRouteParams = EntitySearchRouteParams<"plant">;
 
-export type AnimalSearchRouteParams = EntitySearchParams & {
-  animalFilter?: AnimalDataFilter;
-};
+export type AnimalSearchRouteParams = EntitySearchRouteParams<"animal">;
 
 const validateLocation = (
   searchParams: Record<string, unknown>,
@@ -124,16 +126,20 @@ const validatePlantName = (
   return null;
 };
 
-const validatePlantFilterParam = (
+const validateEntityFilterParam = <E = EntityType>(
   params: Record<string, unknown>,
-): { plantFilter?: PlantDataFilter } => {
-  if ("plantFilter" in params && typeof params.plantFilter === "object") {
-    const validatedFilters = validatePlantFilters(
-      params.plantFilter as PlantDataFilter,
+  entityType: E & EntityType,
+) => {
+  let validatedFilters: EntityFilter<E> | undefined;
+
+  if ("filter" in params && typeof params.filter === "object") {
+    validatedFilters = validateEntityFilters(
+      params.filter as EntityFilter<E>,
+      entityType,
     );
-    return { plantFilter: validatedFilters };
   }
-  return { plantFilter: undefined };
+
+  return { filter: validatedFilters };
 };
 
 const getNumParamValue = (param?: unknown) => {
@@ -157,7 +163,7 @@ export const validatePlantSearchParams = (
   params: Record<string, unknown>,
 ): PlantSearchRouteParams => ({
   ...validatePaginationParams(params),
-  ...validatePlantFilterParam(params),
+  ...validateEntityFilterParam(params, "plant"),
   ...validateLocation(params),
   ...validatePlantName(params),
   entityType: "plant",
@@ -165,9 +171,9 @@ export const validatePlantSearchParams = (
 
 export const validateAnimalSearchParams = (
   params: Record<string, unknown>,
-): PlantSearchRouteParams => ({
+): AnimalSearchRouteParams => ({
   ...validatePaginationParams(params),
-  ...validatePlantFilterParam(params),
+  ...validateEntityFilterParam(params, "animal"),
   ...validateLocation(params),
   ...validatePlantName(params),
   entityType: "animal",
@@ -178,13 +184,13 @@ export type SearchRecordFilter = {
 } & { [key in SearchRecordBooleanFilterField]?: boolean };
 
 export type SearchHistoryParams = PaginationParams & {
-  filter?: SearchRecordFilter;
+  recordFilter?: SearchRecordFilter;
   sort?: SearchRecordSortInput[];
   lastOpened?: string;
 };
 
 export const DEFAULT_SEARCH_HISTORY_ROUTE_PARAMS: SearchHistoryParams = {
-  filter: {},
+  recordFilter: {},
   sort: [{ field: "lastRanTimestamp", value: -1 }],
 };
 
@@ -220,11 +226,10 @@ export const validateSearchHistoryParams = (
   };
 };
 
-type GardenParams = Pick<PlantSearchRouteParams, "plantFilter"> &
-  PaginationParams;
+type GardenParams = Pick<PlantSearchRouteParams, "filter"> & PaginationParams;
 export const validateGardenParams = (
   params: Record<string, unknown>,
 ): GardenParams => ({
   ...validatePaginationParams(params),
-  ...validatePlantFilterParam(params),
+  ...validateEntityFilterParam(params, "plant"),
 });

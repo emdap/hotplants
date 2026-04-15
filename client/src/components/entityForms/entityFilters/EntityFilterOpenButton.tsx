@@ -4,10 +4,9 @@ import pluralize from "pluralize";
 import EntityFormOpenButton from "../EntityFormOpenButton";
 import { OpenEntityFormProps } from "../entityFormUtil";
 
-// TODO: pick animal/plant filters based on entityType
 const EntityFilterOpenButton = (props: OpenEntityFormProps) => {
-  const { plantFilter } = useSearch({ strict: false });
-  const appliedFilters = plantFilter ? Object.keys(plantFilter).length : 0;
+  const { filter } = useSearch({ strict: false });
+  const appliedFilters = filter ? Object.keys(filter).length : 0;
   const isActive = Boolean(appliedFilters);
 
   return (

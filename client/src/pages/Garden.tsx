@@ -24,11 +24,7 @@ const route = getRouteApi("/_private/gardens/$gardenName");
 const Garden = () => {
   const navigate = useNavigate();
   const { gardenName } = route.useParams();
-  const {
-    page = 1,
-    pageSize = DEFAULT_PAGE_SIZE,
-    plantFilter,
-  } = route.useSearch();
+  const { page = 1, pageSize = DEFAULT_PAGE_SIZE, filter } = route.useSearch();
 
   const [showFiltersModal, setShowFiltersModal] = useState(false);
 
@@ -42,7 +38,7 @@ const Garden = () => {
       gardenId: userGarden?._id,
       limit: pageSize,
       offset: (page - 1) * pageSize,
-      where: plantFilter,
+      where: filter,
     },
     skip: !userGarden?._id,
     fetchPolicy: "cache-and-network",
@@ -124,11 +120,11 @@ const Garden = () => {
           <div className="flex flex-col items-center gap-4 py-10">
             <PlantAnimation
               customNoDataMessage={
-                plantFilter ? undefined : "No plants added to garden."
+                filter ? undefined : "No plants added to garden."
               }
               className="my-auto"
             />
-            <Link to="/browse-plants" search={{ plantFilter }}>
+            <Link to="/browse-plants" search={{ filter }}>
               <Button>Find more plants</Button>
             </Link>
           </div>

@@ -4,7 +4,7 @@ import { SEARCH_ENTITIES } from "graphqlHelpers/entityQueries";
 import { useApolloQuery, useReactQuery } from "hooks/useQuery";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import { PlantDataFilter } from "util/graphqlTypes";
+import { AnimalDataFilter, PlantDataFilter } from "util/graphqlTypes";
 import { PaginationParams } from "util/routeParamsUtil";
 
 export type SearchQueryStatus =
@@ -27,8 +27,7 @@ const DEFAULT_SEARCH_ARGS: Omit<QueryPlantSearchArgs, "entityType"> = {
 
 const useEntitySearchQueries = (
   { location, entityName, entityType }: EntitySearchParams,
-  // TODO: split or make generic the filters between plant/animal
-  plantFilters: PlantDataFilter | undefined,
+  filter: PlantDataFilter | AnimalDataFilter | undefined,
   {
     paginationEnabled,
     page,
@@ -64,7 +63,7 @@ const useEntitySearchQueries = (
       where: {
         boundingPolyCoords: location?.boundingPolyCoords,
         ...entityName,
-        ...plantFilters,
+        ...filter,
       },
     },
   });

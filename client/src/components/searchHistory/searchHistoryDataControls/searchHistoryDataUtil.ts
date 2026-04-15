@@ -152,7 +152,7 @@ export const parseFilterParams = (filter: SearchRecordFilter) =>
   }, {}) as FilterQueryVars;
 
 export type SearchHistoryPopoverProps = {
-  currentParams?: Pick<SearchHistoryParams, "filter" | "sort">;
+  currentParams?: Pick<SearchHistoryParams, "recordFilter" | "sort">;
   applyParams: (params: SearchHistoryParams) => void;
 };
 

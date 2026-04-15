@@ -37,12 +37,12 @@ const EntityFilterForm = ({
 
   const { entityType, entityListLoading, totalItems } =
     useEntitySelectionContext();
-  const { plantFilter } = useSearch({ strict: false });
-  const [filterDraft, setFilterDraft] = useState(plantFilter);
+  const { filter } = useSearch({ strict: false });
+  const [filterDraft, setFilterDraft] = useState(filter);
 
   useEffect(() => {
-    setFilterDraft(plantFilter);
-  }, [plantFilter]);
+    setFilterDraft(filter);
+  }, [filter]);
 
   const submitFilter = useCallback(() => {
     {
@@ -53,9 +53,9 @@ const EntityFilterForm = ({
 
       navigate({
         to: ".",
-        search: ({ plantFilter: _prevFilter, ...prev }) => ({
+        search: ({ filter: _prevFilter, ...prev }) => ({
           ...prev,
-          ...(filterHasData && { page: 1, plantFilter: filterDraft }),
+          ...(filterHasData && { page: 1, filter: filterDraft }),
         }),
         replace: true,
       });
@@ -69,7 +69,7 @@ const EntityFilterForm = ({
 
     navigate({
       to: ".",
-      search: ({ plantFilter: _prevFilter, ...prev }) => prev,
+      search: ({ filter: _prevFilter, ...prev }) => prev,
       replace: true,
     });
   };
@@ -127,7 +127,7 @@ const EntityFilterForm = ({
           : undefined
       }
       clearButtonProps={{
-        disabled: !plantFilter,
+        disabled: !filter,
         onClick: clearFilter,
         children: "Clear",
       }}
@@ -161,7 +161,7 @@ const EntityFilterForm = ({
               <FilterInput
                 key={dataKey}
                 filterInput={filterInput}
-                value={filterDraft?.[dataKey]}
+                value={filterDraft?.[dataKey as keyof typeof filterDraft]}
                 highlightFilledFields
                 onChange={(value) =>
                   setFilterDraft({ ...filterDraft, [dataKey]: value })

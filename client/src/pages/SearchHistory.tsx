@@ -43,7 +43,8 @@ const SearchHistory = () => {
       offset: (page - 1) * pageSize,
       limit: pageSize,
       sort: queryParams.sort,
-      ...(queryParams.filter && parseFilterParams(queryParams.filter)),
+      ...(queryParams.recordFilter &&
+        parseFilterParams(queryParams.recordFilter)),
     },
     fetchPolicy: "cache-and-network",
   });

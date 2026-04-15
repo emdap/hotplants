@@ -26,7 +26,7 @@ const EntitySearchProvider = () => {
   } = useSearchParamsContext();
 
   const {
-    plantFilter,
+    filter,
     page = 1,
     pageSize = DEFAULT_PAGE_SIZE,
     lastOpened: _lastOpened,
@@ -38,7 +38,7 @@ const EntitySearchProvider = () => {
   );
 
   const { searchStatus, entitySearchQuery, searchRecordQuery, scrapeMoreData } =
-    useEntitySearchQueries({ location, entityName, entityType }, plantFilter, {
+    useEntitySearchQueries({ location, entityName, entityType }, filter, {
       page,
       pageSize,
       paginationEnabled: !isInfiniteScroll,
