@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
-import PlantLocationOpenButton from "components/plantDataControls/plantLocation/PlantLocationOpenButton";
-import PlantNameOpenButton from "components/plantDataControls/plantName/PlantNameOpenButton";
-import { OpenPlantFormProps } from "components/plantDataControls/plantSearchFormUtil";
+import { OpenEntityFormProps } from "components/entityForms/entityFormUtil";
+import EntityNameOpenButton from "components/entityForms/entityName/EntityNameOpenButton";
+import LocationOpenButton from "components/entityForms/location/LocationOpenButton";
 import {
   SearchFormTab,
   usePlantSearchContext,
@@ -11,7 +11,7 @@ import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { capitalize } from "lodash";
-import PlantFilterOpenButton from "../plantDataControls/plantFilters/PlantFilterOpenButton";
+import EntityFilterOpenButton from "../entityForms/entityFilters/EntityFilterOpenButton";
 
 const PlantSearchHeader = () => {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const PlantSearchHeader = () => {
 
   const searchTabButtonProps = (
     tabName: SearchFormTab,
-  ): OpenPlantFormProps => ({
+  ): OpenEntityFormProps => ({
     onClick: () => setSearchFormState({ tab: tabName, isOpen: true }),
     isOpen: searchFormState.isOpen && searchFormState.tab === tabName,
   });
@@ -40,9 +40,9 @@ const PlantSearchHeader = () => {
   return (
     <FloatingHeader className="small-screen:mx-safe-3 big-screen:px-4 overflow-auto">
       <div className="flex lg:gap-4 items-center">
-        <PlantLocationOpenButton {...searchTabButtonProps("location")} />
-        <PlantNameOpenButton {...searchTabButtonProps("plant-name")} />
-        <PlantFilterOpenButton {...searchTabButtonProps("filters")} />
+        <LocationOpenButton {...searchTabButtonProps("location")} />
+        <EntityNameOpenButton {...searchTabButtonProps("plant-name")} />
+        <EntityFilterOpenButton {...searchTabButtonProps("filters")} />
       </div>
 
       <ItemCountWithLoader

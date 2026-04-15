@@ -1,5 +1,5 @@
 import { polygon } from "@turf/turf";
-import { validatePlantFilters } from "components/plantDataControls/plantFilters/plantFilterUtil";
+import { validatePlantFilters } from "components/entityForms/entityFilters/entityFilterUtil";
 import {
   EntitySearchParams,
   PlantLocationParams,

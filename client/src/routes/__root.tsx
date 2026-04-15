@@ -1,6 +1,6 @@
 import { createRootRoute, redirect } from "@tanstack/react-router";
 import App from "App";
-import { PLANTS_WITH_DATA_FILTER } from "components/plantDataControls/plantFilters/plantFilterUtil";
+import { PLANTS_WITH_DATA_FILTER } from "components/entityForms/entityFilters/entityFilterUtil";
 
 export const Route = createRootRoute({
   component: App,

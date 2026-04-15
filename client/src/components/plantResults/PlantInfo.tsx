@@ -2,7 +2,7 @@ import {
   getOrderedFilterEntries,
   PLANT_UNIT_SHORT_LABELS,
 } from "components/dataControls/filterUtil";
-import { COMPLETE_FILTER_DICT } from "components/plantDataControls/plantFilters/plantFilterUtil";
+import { COMPLETE_PLANT_FILTER_DICT } from "components/entityForms/entityFilters/entityFilterUtil";
 import { PlantResult } from "contexts/plantSelection/PlantSelectionContext";
 import { format } from "date-fns";
 import Card, { CardProps } from "designSystem/Card";
@@ -12,7 +12,7 @@ import { ReactNode } from "react";
 import { DEFAULT_DATE_TIME_FORMAT } from "util/generalUtil";
 
 const { physicalCharactersticsDump: _dump, ...plantFilterLabels } =
-  COMPLETE_FILTER_DICT;
+  COMPLETE_PLANT_FILTER_DICT;
 
 const ORDERED_PLANT_FIELDS = getOrderedFilterEntries({
   ...plantFilterLabels,

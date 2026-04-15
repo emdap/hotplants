@@ -2,8 +2,8 @@ import { useNavigate, useSearch } from "@tanstack/react-router";
 import classNames from "classnames";
 import FilterInput from "components/dataControls/FilterInputField";
 import { getOrderedFilterEntries } from "components/dataControls/filterUtil";
-import PlantSearchFormFooter from "components/plantDataControls/PlantDataFormFooter";
-import StyledPlantForm from "components/plantDataControls/StyledPlantForm";
+import EntityFormFooter from "components/entityForms/EntityFormFooter";
+import StyledEntityForm from "components/entityForms/StyledEntityForm";
 import { hotplantsClient } from "config/hotplantsConfig";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
 import Card from "designSystem/Card";
@@ -15,24 +15,21 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { toast } from "sonner";
 import { isSmallScreen } from "util/generalUtil";
-import {
-  getPlantFormTitle,
-  PlantSearchFormProps,
-} from "../plantSearchFormUtil";
-import PlantFilterOpenButton from "./PlantFilterOpenButton";
+import { EntityFormProps, getFormTitle } from "../entityFormUtil";
+import EntityFilterOpenButton from "./EntityFilterOpenButton";
 import {
   constructDynamicFilters,
   ENTITY_NAME_FILTER_DICT,
-  STATIC_FILTER_DICT,
-} from "./plantFilterUtil";
+  PLANT_STATIC_FILTER_DICT,
+} from "./entityFilterUtil";
 
-const PlantFilterForm = ({
+const EntityFilterForm = ({
   renderMode: renderModeProp,
   onClose,
 
   onOpenPopover,
   popoverIsOpen,
-}: PlantSearchFormProps & {
+}: EntityFormProps & {
   onOpenPopover?: () => void;
   popoverIsOpen?: boolean;
 }) => {
@@ -77,8 +74,9 @@ const PlantFilterForm = ({
     });
   };
 
-  const filterValuesQuery = useReactQuery({
-    queryKey: ["plant-filters"],
+  const plantFilterValuesQuery = useReactQuery({
+    queryKey: ["plant-filter-values"],
+    enabled: entityType === "plant",
     refetchOnWindowFocus: false,
     initialData: {},
     queryFn: async () => {
@@ -98,23 +96,23 @@ const PlantFilterForm = ({
     }
 
     const dynamicFilters =
-      (filterValuesQuery.data &&
-        constructDynamicFilters(filterValuesQuery.data)) ??
+      (plantFilterValuesQuery.data &&
+        constructDynamicFilters(plantFilterValuesQuery.data)) ??
       {};
 
     return getOrderedFilterEntries({
       ...dynamicFilters,
-      ...STATIC_FILTER_DICT,
+      ...PLANT_STATIC_FILTER_DICT,
     });
-  }, [filterValuesQuery.data, entityType]);
+  }, [plantFilterValuesQuery.data, entityType]);
 
   const renderMode =
     renderModeProp === "popover" && isSmallScreen() ? "modal" : renderModeProp;
 
-  const formTitle = getPlantFormTitle("filters", entityType);
+  const formTitle = getFormTitle("filters", entityType);
 
-  const plantFilterFooter = (
-    <PlantSearchFormFooter
+  const formFooter = (
+    <EntityFormFooter
       submitButtonProps={
         renderMode === "modal"
           ? {
@@ -136,7 +134,7 @@ const PlantFilterForm = ({
     />
   );
 
-  const plantFilterForm = (
+  const formBody = (
     <div
       className={classNames("grow flex flex-col gap-4", {
         "max-h-full overflow-hidden": renderMode !== "card",
@@ -176,17 +174,17 @@ const PlantFilterForm = ({
   );
 
   const formWrappedBody = (
-    <StyledPlantForm onSubmit={submitFilter}>
-      {plantFilterForm}
-      {plantFilterFooter}
-    </StyledPlantForm>
+    <StyledEntityForm onSubmit={submitFilter}>
+      {formBody}
+      {formFooter}
+    </StyledEntityForm>
   );
 
   return renderMode === "popover" ? (
     <StyledPopover
       anchor="bottom start"
       className="max-h-3/5! max-w-3/4! flex flex-col"
-      button={<PlantFilterOpenButton />}
+      button={<EntityFilterOpenButton />}
     >
       {formWrappedBody}
     </StyledPopover>
@@ -195,16 +193,16 @@ const PlantFilterForm = ({
       <Modal title={formTitle} onClose={onClose} isOpen={popoverIsOpen}>
         {formWrappedBody}
       </Modal>
-      <PlantFilterOpenButton onClick={onOpenPopover} />
+      <EntityFilterOpenButton onClick={onOpenPopover} />
     </>
   ) : renderMode === "card" ? (
-    <StyledPlantForm onSubmit={submitFilter}>
-      <Card className="overflow-auto">{plantFilterForm}</Card>
-      {plantFilterFooter}
-    </StyledPlantForm>
+    <StyledEntityForm onSubmit={submitFilter}>
+      <Card className="overflow-auto">{formBody}</Card>
+      {formFooter}
+    </StyledEntityForm>
   ) : (
     formWrappedBody
   );
 };
 
-export default PlantFilterForm;
+export default EntityFilterForm;

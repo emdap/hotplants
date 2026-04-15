@@ -1,8 +1,8 @@
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
+import EntityFilterForm from "components/entityForms/entityFilters/EntityFilterForm";
 import GardenPlantNotes from "components/garden/GardenPlantNotes";
 import PlantAnimation from "components/PlantAnimation";
-import PlantFilterForm from "components/plantDataControls/plantFilters/PlantFilterForm";
 import ActivePlantPane from "components/plantResults/ActivePlantPane";
 import PlantList from "components/plantResults/PlantList";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
@@ -97,7 +97,7 @@ const Garden = () => {
         {...{ page, pageSize }}
       >
         <FloatingHeader>
-          <PlantFilterForm
+          <EntityFilterForm
             renderMode="popover"
             onOpenPopover={() => setShowFiltersModal(true)}
             onClose={() => setShowFiltersModal(false)}

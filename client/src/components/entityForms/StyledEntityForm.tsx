@@ -2,7 +2,7 @@ import classNames from "classnames";
 import Form from "designSystem/Form";
 import { HTMLProps } from "react";
 
-const StyledPlantForm = ({
+const StyledEntityForm = ({
   className,
   ...props
 }: HTMLProps<HTMLFormElement>) => (
@@ -12,4 +12,4 @@ const StyledPlantForm = ({
   />
 );
 
-export default StyledPlantForm;
+export default StyledEntityForm;

@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
-import PlantLocationForm from "components/plantDataControls/plantLocation/PlantLocationForm";
-import PlantNameForm from "components/plantDataControls/plantName/PlantNameForm";
+import EntityNameForm from "components/entityForms/entityName/EntityNameForm";
+import EntityLocationForm from "components/entityForms/location/LocationForm";
 import { useAppContext } from "contexts/AppContext";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Button from "designSystem/Button";
@@ -109,8 +109,8 @@ const NewSearch = () => {
         ref={paramsContainerRef}
         className="space-y-4 md:w-[450px] lg:w-[500px]"
       >
-        <PlantLocationForm renderMode="card" hideFooter />
-        <PlantNameForm renderMode="card" hideFooter />
+        <EntityLocationForm renderMode="card" hideFooter />
+        <EntityNameForm renderMode="card" hideFooter />
       </div>
       <div
         style={animationContainerStyle}

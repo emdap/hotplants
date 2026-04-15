@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
+import { ENTITY_NAME_FIELDS } from "components/entityForms/entityFormUtil";
 import MapProvider from "components/interactiveMap/MapProvider";
-import { PLANT_NAME_FIELDS } from "components/plantDataControls/plantSearchFormUtil";
 import PlantOccurrenceImage from "components/plantResults/PlantOccurrenceImage";
 import { format } from "date-fns";
 import Card from "designSystem/Card";
@@ -143,7 +143,7 @@ const SearchRecordCard = ({
               }
             />
 
-            {PLANT_NAME_FIELDS.map(({ dataKey, label }) => (
+            {ENTITY_NAME_FIELDS.map(({ dataKey, label }) => (
               <InfoRow
                 key={dataKey}
                 title={label}

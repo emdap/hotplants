@@ -1,6 +1,6 @@
 import { Link, LinkProps, useLocation } from "@tanstack/react-router";
 import classNames from "classnames";
-import { PLANTS_WITH_DATA_FILTER } from "components/plantDataControls/plantFilters/plantFilterUtil";
+import { PLANTS_WITH_DATA_FILTER } from "components/entityForms/entityFilters/entityFilterUtil";
 import { useAppContext } from "contexts/AppContext";
 import BetaTag from "designSystem/BetaTag";
 import Button from "designSystem/Button";

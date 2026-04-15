@@ -5,7 +5,7 @@ import { EntityType } from "generated/graphql/graphql";
 import { capitalize } from "lodash";
 import pluralize from "pluralize";
 
-export type PlantSearchFormProps = {
+export type EntityFormProps = {
   onSubmit?: () => void;
   hideFooter?: boolean;
 } & (
@@ -13,13 +13,13 @@ export type PlantSearchFormProps = {
   | { renderMode: "modal" | "popover"; onClose: () => void }
 );
 
-export type OpenPlantFormProps = {
+export type OpenEntityFormProps = {
   isOpen?: boolean;
   hasChanges?: boolean;
   onClick?: () => void;
 };
 
-export const PLANT_NAME_FIELDS: FilterInputConfig<
+export const ENTITY_NAME_FIELDS: FilterInputConfig<
   "text",
   OptionalSearchParamKey
 >[] = [
@@ -35,12 +35,12 @@ export const PLANT_NAME_FIELDS: FilterInputConfig<
   },
 ];
 
-export const DEFAULT_PLANT_NAME_FIELDS = {
+export const DEFAULT_ENTITY_NAME_FIELDS = {
   commonName: undefined,
   scientificName: undefined,
 };
 
-export const getPlantFormTitle = (
+export const getFormTitle = (
   tabName: SearchFormTab,
   entityType: EntityType,
 ) => {

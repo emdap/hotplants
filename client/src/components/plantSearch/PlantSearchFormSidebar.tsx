@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import PlantLocationForm from "components/plantDataControls/plantLocation/PlantLocationForm";
-import PlantNameForm from "components/plantDataControls/plantName/PlantNameForm";
+import EntityNameForm from "components/entityForms/entityName/EntityNameForm";
+import EntityLocationForm from "components/entityForms/location/LocationForm";
 import {
   SearchFormTab,
   usePlantSearchContext,
@@ -19,19 +19,16 @@ import {
 import { useMount } from "react-use";
 import { Entries } from "type-fest";
 import { isSmallScreen } from "util/generalUtil";
-import PlantFilterForm from "../plantDataControls/plantFilters/PlantFilterForm";
-import {
-  getPlantFormTitle,
-  PlantSearchFormProps,
-} from "../plantDataControls/plantSearchFormUtil";
+import EntityFilterForm from "../entityForms/entityFilters/EntityFilterForm";
+import { EntityFormProps, getFormTitle } from "../entityForms/entityFormUtil";
 
 const PLANT_FORM_COMPONENTS: Record<
   SearchFormTab,
-  FunctionComponent<PlantSearchFormProps>
+  FunctionComponent<EntityFormProps>
 > = {
-  location: PlantLocationForm,
-  "plant-name": PlantNameForm,
-  filters: PlantFilterForm,
+  location: EntityLocationForm,
+  "plant-name": EntityNameForm,
+  filters: EntityFilterForm,
 };
 
 const PlantSearchForm = () => {
@@ -74,7 +71,7 @@ const PlantSearchForm = () => {
   const toggleIsOpen = (isOpen: boolean = false) =>
     setSearchFormState((prev) => ({ ...prev, isOpen }));
 
-  const searchFormProps: PlantSearchFormProps = {
+  const searchFormProps: EntityFormProps = {
     renderMode: isSmallScreen() ? "modal" : "card",
     onClose: () => toggleIsOpen(),
   };
@@ -90,7 +87,7 @@ const PlantSearchForm = () => {
       return (
         <Modal
           key={tabName}
-          title={getPlantFormTitle(tabName, searchParams.entityType)}
+          title={getFormTitle(tabName, searchParams.entityType)}
           isOpen={modalIsOpen}
           onClose={() => {
             updateSearchParamsDraft(searchParams);

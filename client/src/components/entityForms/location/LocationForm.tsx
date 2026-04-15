@@ -1,7 +1,7 @@
 import classNames from "classnames";
+import EntityFormFooter from "components/entityForms/EntityFormFooter";
+import { EntityFormProps } from "components/entityForms/entityFormUtil";
 import MapProvider from "components/interactiveMap/MapProvider";
-import PlantSearchFormFooter from "components/plantDataControls/PlantDataFormFooter";
-import { PlantSearchFormProps } from "components/plantDataControls/plantSearchFormUtil";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Card from "designSystem/Card";
@@ -17,14 +17,14 @@ import {
   reverseLookupLocation,
   validateNominatimLocation,
 } from "util/locationUtil";
-import StyledPlantForm from "../StyledPlantForm";
+import StyledEntityForm from "../StyledEntityForm";
 
-const PlantLocationForm = ({
+const EntityLocationForm = ({
   renderMode,
   hideFooter,
   onClose,
   onSubmit,
-}: PlantSearchFormProps) => {
+}: EntityFormProps) => {
   const {
     searchParams: { location: appliedLocation },
     searchParamsDraft,
@@ -166,8 +166,8 @@ const PlantLocationForm = ({
 
   const draftIsApplied = isEqual(searchParamsDraft?.location, appliedLocation);
 
-  const plantLocationFooter = hideFooter ? null : (
-    <PlantSearchFormFooter
+  const formFooter = hideFooter ? null : (
+    <EntityFormFooter
       submitButtonProps={{
         disabled: locationPending || draftIsApplied,
         onClick: submitSearchLocation,
@@ -182,7 +182,7 @@ const PlantLocationForm = ({
     />
   );
 
-  const plantLocationFields = (
+  const formBody = (
     <div
       className={classNames("flex flex-col gap-4 mb-4", {
         "pt-4 pr-4 overflow-auto md:flex-row justify-between md:items-start":
@@ -243,20 +243,20 @@ const PlantLocationForm = ({
   );
 
   return (
-    <StyledPlantForm onSubmit={submitSearchLocation}>
+    <StyledEntityForm onSubmit={submitSearchLocation}>
       {renderMode === "card" ? (
         <>
-          <Card className="overflow-auto">{plantLocationFields}</Card>
-          {plantLocationFooter}
+          <Card className="overflow-auto">{formBody}</Card>
+          {formFooter}
         </>
       ) : (
         <>
-          {plantLocationFields}
-          {plantLocationFooter}
+          {formBody}
+          {formFooter}
         </>
       )}
-    </StyledPlantForm>
+    </StyledEntityForm>
   );
 };
 
-export default PlantLocationForm;
+export default EntityLocationForm;

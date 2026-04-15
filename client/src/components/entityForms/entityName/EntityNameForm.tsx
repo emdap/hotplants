@@ -1,25 +1,25 @@
 import classNames from "classnames";
 import FilterInput from "components/dataControls/FilterInputField";
-import PlantSearchFormFooter from "components/plantDataControls/PlantDataFormFooter";
+import EntityFormFooter from "components/entityForms/EntityFormFooter";
 import {
-  DEFAULT_PLANT_NAME_FIELDS,
-  getPlantFormTitle,
-  PLANT_NAME_FIELDS,
-  PlantSearchFormProps,
-} from "components/plantDataControls/plantSearchFormUtil";
+  DEFAULT_ENTITY_NAME_FIELDS,
+  ENTITY_NAME_FIELDS,
+  EntityFormProps,
+  getFormTitle,
+} from "components/entityForms/entityFormUtil";
 import { OptionalSearchParamKey, PlantNameParam } from "config/hotplantsConfig";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import Card from "designSystem/Card";
 import { isEqual } from "lodash";
 import { Fragment, useEffect, useState } from "react";
-import StyledPlantForm from "../StyledPlantForm";
+import StyledEntityForm from "../StyledEntityForm";
 
-const PlantNameForm = ({
+const EntityNameForm = ({
   renderMode,
   hideFooter,
   onClose,
   onSubmit,
-}: PlantSearchFormProps) => {
+}: EntityFormProps) => {
   const {
     searchParams: { entityName: appliedPlantName, entityType },
     searchParamsDraft,
@@ -48,15 +48,15 @@ const PlantNameForm = ({
   ) => {
     if (value) {
       const newParam = { [key]: value } as PlantNameParam;
-      setPlantNameSearch({ ...DEFAULT_PLANT_NAME_FIELDS, ...newParam });
+      setPlantNameSearch({ ...DEFAULT_ENTITY_NAME_FIELDS, ...newParam });
       updateSearchParamsDraft({ entityName: newParam });
     } else {
-      setPlantNameSearch(DEFAULT_PLANT_NAME_FIELDS);
+      setPlantNameSearch(DEFAULT_ENTITY_NAME_FIELDS);
       updateSearchParamsDraft({ entityName: undefined });
     }
   };
 
-  const submitPlantName = () => {
+  const submitName = () => {
     if (onSubmit) {
       onSubmit();
       return;
@@ -66,40 +66,40 @@ const PlantNameForm = ({
     renderMode === "modal" && onClose();
   };
 
-  const plantNameFooter = hideFooter ? null : (
-    <PlantSearchFormFooter
+  const formFooter = hideFooter ? null : (
+    <EntityFormFooter
       submitButtonProps={{
         disabled:
           (!commonName && !scientificName && !appliedPlantName) ||
           isEqual({ commonName }, appliedPlantName) ||
           isEqual({ scientificName }, appliedPlantName),
-        onClick: submitPlantName,
+        onClick: submitName,
       }}
       clearButtonProps={{
         disabled: isEqual(
           { scientificName, commonName },
-          DEFAULT_PLANT_NAME_FIELDS,
+          DEFAULT_ENTITY_NAME_FIELDS,
         ),
         onClick: () => {
           updateSearchParamsDraft({ entityName: undefined });
-          setPlantNameSearch(DEFAULT_PLANT_NAME_FIELDS);
+          setPlantNameSearch(DEFAULT_ENTITY_NAME_FIELDS);
         },
       }}
     />
   );
 
-  const plantNameFields = (
+  const formBody = (
     <div
       className={classNames("flex flex-col items-center", {
         "px-4 overflow-auto": renderMode === "modal",
       })}
     >
       {renderMode === "card" && (
-        <h2>{getPlantFormTitle("plant-name", entityType)}</h2>
+        <h2>{getFormTitle("plant-name", entityType)}</h2>
       )}
 
       <div className="my-4 min-h-min w-full max-w-[400px]">
-        {PLANT_NAME_FIELDS.map((field, index) => (
+        {ENTITY_NAME_FIELDS.map((field, index) => (
           <Fragment key={index}>
             <FilterInput<"text">
               filterInput={field}
@@ -120,20 +120,20 @@ const PlantNameForm = ({
   );
 
   return (
-    <StyledPlantForm onSubmit={submitPlantName}>
+    <StyledEntityForm onSubmit={submitName}>
       {renderMode === "card" ? (
         <>
-          <Card className="overflow-auto">{plantNameFields}</Card>
-          {plantNameFooter}
+          <Card className="overflow-auto">{formBody}</Card>
+          {formFooter}
         </>
       ) : (
         <>
-          {plantNameFields}
-          {plantNameFooter}
+          {formBody}
+          {formFooter}
         </>
       )}
-    </StyledPlantForm>
+    </StyledEntityForm>
   );
 };
 
-export default PlantNameForm;
+export default EntityNameForm;

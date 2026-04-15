@@ -1,17 +1,17 @@
 import classNames from "classnames";
-import { OpenPlantFormProps } from "components/plantDataControls/plantSearchFormUtil";
+import { OpenEntityFormProps } from "components/entityForms/entityFormUtil";
 import IconButton, {
   IconButtonProps,
   IconButtonVariantProps,
 } from "designSystem/iconButtons/IconButton";
 import { FunctionComponent } from "react";
 
-const PlantFormOpenButton = ({
+const EntityFormOpenButton = ({
   isOpen,
   hasChanges,
   CustomIconButton,
   ...props
-}: OpenPlantFormProps & {
+}: OpenEntityFormProps & {
   CustomIconButton?: FunctionComponent<IconButtonVariantProps>;
 } & Omit<IconButtonProps, "className" | "size">) => {
   const Component = CustomIconButton ?? IconButton;
@@ -29,4 +29,4 @@ const PlantFormOpenButton = ({
   );
 };
 
-export default PlantFormOpenButton;
+export default EntityFormOpenButton;

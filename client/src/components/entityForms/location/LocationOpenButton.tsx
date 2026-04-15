@@ -1,13 +1,13 @@
 import { useSearch } from "@tanstack/react-router";
-import { OpenPlantFormProps } from "components/plantDataControls/plantSearchFormUtil";
+import { OpenEntityFormProps } from "components/entityForms/entityFormUtil";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import { isEqual } from "lodash";
 import { CiGlobe } from "react-icons/ci";
 import { FaGlobe } from "react-icons/fa";
 import { locationDisplay } from "util/locationUtil";
-import PlantFormOpenButton from "../PlantFormOpenButton";
+import EntityFormOpenButton from "../EntityFormOpenButton";
 
-const PlantLocationOpenButton = (props: OpenPlantFormProps) => {
+const LocationOpenButton = (props: OpenEntityFormProps) => {
   const { searchParamsDraft } = useSearchParamsContext();
   const { location } = useSearch({ strict: false });
 
@@ -16,7 +16,7 @@ const PlantLocationOpenButton = (props: OpenPlantFormProps) => {
   const hasChanges = !isEqual(searchParamsDraft?.location, location);
 
   return (
-    <PlantFormOpenButton
+    <EntityFormOpenButton
       active={isActive}
       icon={isActive ? <FaGlobe /> : <CiGlobe />}
       hasChanges={hasChanges}
@@ -29,8 +29,8 @@ const PlantLocationOpenButton = (props: OpenPlantFormProps) => {
             ? locationName
             : "Location"}
       </span>
-    </PlantFormOpenButton>
+    </EntityFormOpenButton>
   );
 };
 
-export default PlantLocationOpenButton;
+export default LocationOpenButton;

@@ -1,16 +1,17 @@
 import { useSearch } from "@tanstack/react-router";
 import FilterButton from "designSystem/iconButtons/FilterButton";
 import pluralize from "pluralize";
-import PlantFormOpenButton from "../PlantFormOpenButton";
-import { OpenPlantFormProps } from "../plantSearchFormUtil";
+import EntityFormOpenButton from "../EntityFormOpenButton";
+import { OpenEntityFormProps } from "../entityFormUtil";
 
-const PlantFilterOpenButton = (props: OpenPlantFormProps) => {
+// TODO: pick animal/plant filters based on entityType
+const EntityFilterOpenButton = (props: OpenEntityFormProps) => {
   const { plantFilter } = useSearch({ strict: false });
   const appliedFilters = plantFilter ? Object.keys(plantFilter).length : 0;
   const isActive = Boolean(appliedFilters);
 
   return (
-    <PlantFormOpenButton
+    <EntityFormOpenButton
       active={isActive}
       CustomIconButton={FilterButton}
       {...props}
@@ -18,8 +19,8 @@ const PlantFilterOpenButton = (props: OpenPlantFormProps) => {
       <span>
         {isActive ? `${pluralize("filter", appliedFilters, true)}` : "Filter"}
       </span>
-    </PlantFormOpenButton>
+    </EntityFormOpenButton>
   );
 };
 
-export default PlantFilterOpenButton;
+export default EntityFilterOpenButton;

@@ -2,7 +2,7 @@ import Button, { ButtonProps } from "designSystem/Button";
 
 const PROP_KEYS = ["clearButtonProps", "submitButtonProps"] as const;
 
-const PlantSearchFormFooter = (props: {
+const EntityFormFooter = (props: {
   [key in (typeof PROP_KEYS)[number]]?: ButtonProps;
 }) => (
   <footer className="flex gap-2 items-center">
@@ -26,4 +26,4 @@ const PlantSearchFormFooter = (props: {
   </footer>
 );
 
-export default PlantSearchFormFooter;
+export default EntityFormFooter;

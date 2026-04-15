@@ -13,58 +13,57 @@ import { Entries } from "type-fest";
 import { PlantDataFilter } from "util/graphqlTypes";
 import { PlantSearchRouteParams } from "util/routeParamsUtil";
 
-// TODO: Split between generic entity filters and plant filters
-
-export const DYNAMIC_FILTER_DICT: Required<FilterDict<keyof PlantArrayValues>> =
-  {
-    bloomColors: {
-      dataKey: "bloomColors",
-      label: "Bloom color",
-      inputType: "select-color",
-      multiselect: true,
-      matchAllCheckbox: true,
-      asFieldset: true,
-    },
-    bloomTimes: {
-      dataKey: "bloomTimes",
-      label: "Bloom time",
-      inputType: "select-string",
-      multiselect: true,
-      matchAllCheckbox: true,
-      asFieldset: true,
-    },
-    lightLevels: {
-      dataKey: "lightLevels",
-      label: "Light level",
-      inputType: "select-string",
-      multiselect: true,
-      matchAllCheckbox: true,
-      asFieldset: true,
-    },
-    // habitats: {
-    //   dataKey: "habitats",
-    //   label: "Habitat",
-    //   inputType: "select-string",
-    //   multiselect: true,
-    //   matchAllCheckbox: true,
-    // },
-    hardiness: {
-      dataKey: "hardiness",
-      label: "USDA Hardiness Zone",
-      inputType: "select-number",
-      multiselect: true,
-      matchAllCheckbox: true,
-      asFieldset: true,
-    },
-    soilTypes: {
-      dataKey: "soilTypes",
-      label: "Soil type",
-      inputType: "select-string",
-      multiselect: true,
-      matchAllCheckbox: true,
-      asFieldset: true,
-    },
-  };
+export const PLANT_DYNAMIC_FILTER_DICT: Required<
+  FilterDict<keyof PlantArrayValues>
+> = {
+  bloomColors: {
+    dataKey: "bloomColors",
+    label: "Bloom color",
+    inputType: "select-color",
+    multiselect: true,
+    matchAllCheckbox: true,
+    asFieldset: true,
+  },
+  bloomTimes: {
+    dataKey: "bloomTimes",
+    label: "Bloom time",
+    inputType: "select-string",
+    multiselect: true,
+    matchAllCheckbox: true,
+    asFieldset: true,
+  },
+  lightLevels: {
+    dataKey: "lightLevels",
+    label: "Light level",
+    inputType: "select-string",
+    multiselect: true,
+    matchAllCheckbox: true,
+    asFieldset: true,
+  },
+  // habitats: {
+  //   dataKey: "habitats",
+  //   label: "Habitat",
+  //   inputType: "select-string",
+  //   multiselect: true,
+  //   matchAllCheckbox: true,
+  // },
+  hardiness: {
+    dataKey: "hardiness",
+    label: "USDA Hardiness Zone",
+    inputType: "select-number",
+    multiselect: true,
+    matchAllCheckbox: true,
+    asFieldset: true,
+  },
+  soilTypes: {
+    dataKey: "soilTypes",
+    label: "Soil type",
+    inputType: "select-string",
+    multiselect: true,
+    matchAllCheckbox: true,
+    asFieldset: true,
+  },
+};
 
 type PlantFilterKey = keyof Omit<
   PlantDataFilter,
@@ -93,7 +92,7 @@ export const ENTITY_NAME_FILTER_DICT: FilterDict<
   },
 };
 
-export const STATIC_FILTER_DICT: FilterDict<
+export const PLANT_STATIC_FILTER_DICT: FilterDict<
   Exclude<PlantFilterKey, keyof PlantArrayValues>
 > = {
   hasScrapedData: {
@@ -139,17 +138,17 @@ export const STATIC_FILTER_DICT: FilterDict<
   },
 };
 
-export const COMPLETE_FILTER_DICT = {
-  ...DYNAMIC_FILTER_DICT,
-  ...STATIC_FILTER_DICT,
+export const COMPLETE_PLANT_FILTER_DICT = {
+  ...PLANT_DYNAMIC_FILTER_DICT,
+  ...PLANT_STATIC_FILTER_DICT,
 };
 
 export const validatePlantFilters = (rawFilters: Record<string, unknown>) => {
   const validatedFilters = Object.entries(rawFilters).reduce<PlantDataFilter>(
     (prev, [key, value]) => {
-      if (key in COMPLETE_FILTER_DICT) {
+      if (key in COMPLETE_PLANT_FILTER_DICT) {
         const typesafeKey = key as PlantFilterKey;
-        const filterConfig = COMPLETE_FILTER_DICT[typesafeKey];
+        const filterConfig = COMPLETE_PLANT_FILTER_DICT[typesafeKey];
 
         if (
           filterConfig &&
@@ -170,7 +169,7 @@ export const validatePlantFilters = (rawFilters: Record<string, unknown>) => {
 export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
   (Object.entries(filterValues) as Entries<PlantArrayValues>).reduce(
     (prev, [key, values]) => {
-      if (values && key in DYNAMIC_FILTER_DICT) {
+      if (values && key in PLANT_DYNAMIC_FILTER_DICT) {
         const options = sortBy([...values]).map(
           (value): ComplexListboxOption => {
             if (typeof value === "string") {
@@ -183,7 +182,7 @@ export const constructDynamicFilters = (filterValues: PlantArrayValues) =>
         options.push(NON_SPECIFIED_OPTION);
 
         (prev[key] as FilterInputConfig) = {
-          ...DYNAMIC_FILTER_DICT[key],
+          ...PLANT_DYNAMIC_FILTER_DICT[key],
           options,
         };
       }

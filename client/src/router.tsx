@@ -1,5 +1,5 @@
 import { createRouter, Navigate } from "@tanstack/react-router";
-import { PLANTS_WITH_DATA_FILTER } from "components/plantDataControls/plantFilters/plantFilterUtil";
+import { PLANTS_WITH_DATA_FILTER } from "components/entityForms/entityFilters/entityFilterUtil";
 import { routeTree } from "./routeTree.gen";
 
 export const router = createRouter({
