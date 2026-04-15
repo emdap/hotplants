@@ -19,7 +19,7 @@ const EntityFormOpenButton = ({
   return (
     <Component
       size="small"
-      className={classNames("max-w-fit", {
+      className={classNames("max-w-fit whitespace-nowrap", {
         "outline-2 outline-offset-2": isOpen,
         "bg-accent/50! enabled:hover:bg-accent/80! outline-accent!": hasChanges,
         "outline-white/20!": !props.active && !hasChanges,
