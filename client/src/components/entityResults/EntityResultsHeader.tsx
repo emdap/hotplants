@@ -13,7 +13,7 @@ import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { capitalize } from "lodash";
 import EntityFilterOpenButton from "../entityForms/entityFilters/EntityFilterOpenButton";
 
-const PlantSearchHeader = () => {
+const EntityResultsHeader = () => {
   const navigate = useNavigate();
   const {
     entityType,
@@ -65,4 +65,4 @@ const PlantSearchHeader = () => {
   );
 };
 
-export default PlantSearchHeader;
+export default EntityResultsHeader;

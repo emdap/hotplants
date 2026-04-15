@@ -3,10 +3,10 @@ import { useServerReadyContext } from "contexts/serverReady/ServerReadyContext";
 import LoadingIcon from "designSystem/LoadingIcon";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { PlantSearchQueryStatus } from "hooks/usePlantSearchQueries";
+import movingPlant from "imageAssets/movingPlant.json";
+import stillPlant from "imageAssets/stillPlant.json";
 import { useLottie } from "lottie-react";
 import { motion } from "motion/react";
-import movingPlant from "placeholderImages/movingPlant.json";
-import stillPlant from "placeholderImages/stillPlant.json";
 import pluralize from "pluralize";
 import { ReactNode, useEffect, useState } from "react";
 

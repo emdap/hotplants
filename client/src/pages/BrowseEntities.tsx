@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import PlantAnimation from "components/PlantAnimation";
-import ActivePlantPane from "components/plantResults/ActivePlantPane";
-import PlantList from "components/plantResults/PlantList";
-import PlantSearchForm from "components/plantSearch/PlantSearchFormSidebar";
-import PlantSearchHeader from "components/plantSearch/PlantSearchHeader";
+import ActiveEntityPane from "components/entityResults/ActiveEntityPane";
+import EntityResultList from "components/entityResults/EntityResultList";
+import EntityResultsHeader from "components/entityResults/EntityResultsHeader";
+import EntityResultsSidebar from "components/entityResults/EntityResultsSidebar";
 import SearchRecordProgressBar from "components/searchHistory/SearchRecordProgressBar";
 import { usePlantSearchContext } from "contexts/plantSearch/PlantSearchContext";
 import { usePlantSelectionContext } from "contexts/plantSelection/PlantSelectionContext";
@@ -83,10 +83,10 @@ const PlantSearch = ({
         Browse {pluralize(capitalize(entityType))}
       </PageTitle>
 
-      <PlantSearchHeader />
+      <EntityResultsHeader />
 
       <div className="flex grow small-screen:page-buffer small-screen:flex-col small-screen:justify-between small-screen:h-full">
-        <PlantSearchForm />
+        <EntityResultsSidebar />
 
         {page && !isInfiniteScroll && (
           <ScrollAnchor className="scroll-m-header-2" />
@@ -96,7 +96,7 @@ const PlantSearch = ({
           ref={resultsContainerRef}
           className="grow flex flex-col relative scroll-m-header-2 pt-4 pb-10 big-screen:px-4 max-lg:basis-2/3 gap-20"
         >
-          <PlantList
+          <EntityResultList
             key="results-holder"
             parentSidebarExpanded={searchFormState.isOpen}
             showFadeInAnimation={!isInfiniteScroll}
@@ -105,7 +105,7 @@ const PlantSearch = ({
             })}
           />
 
-          <ActivePlantPane />
+          <ActiveEntityPane />
 
           <LoadingOverlay
             className={classNames(

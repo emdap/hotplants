@@ -12,8 +12,7 @@ import {
 import { useApolloMutation, useApolloQuery } from "hooks/useQuery";
 import { TbPlant2 } from "react-icons/tb";
 import { toast } from "sonner";
-import { handleGraphQlError } from "util/generalUtil";
-import { getPlantDisplayNames } from "util/plantUtil";
+import { getEntityDisplayNames, handleGraphQlError } from "util/generalUtil";
 import { needsAuthenticationToast } from "util/toastUtil";
 import GoToGardenLink from "./GoToGardenLink";
 
@@ -49,7 +48,7 @@ export const useAddToGardenActionList = (
 
       toast.success(
         <>
-          Added "{getPlantDisplayNames(plant).title}" to "
+          Added "{getEntityDisplayNames(plant).title}" to "
           {gardenName ?? "garden"}".
           <GoToGardenLink gardenName={gardenName} />
         </>,

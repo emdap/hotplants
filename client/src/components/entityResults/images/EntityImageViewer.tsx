@@ -4,10 +4,10 @@ import Carousel from "designSystem/Carousel";
 import Modal from "designSystem/Modal";
 import { useEffect, useMemo, useState } from "react";
 import { MdFullscreen } from "react-icons/md";
-import { getPlantDisplayNames } from "util/plantUtil";
-import PlantCarouselImages from "./PlantCarouselImages";
+import { getEntityDisplayNames } from "util/generalUtil";
+import EntityCarouselImages from "./EntityCarouselImages";
 
-const PlantImageViewer = ({
+const EntityImageViewer = ({
   isModalOpen,
   setIsModalOpen,
 }: {
@@ -24,7 +24,7 @@ const PlantImageViewer = ({
   const { imageList, PlantImages } = useMemo(
     () =>
       activePlant?._id
-        ? PlantCarouselImages({
+        ? EntityCarouselImages({
             plantId: activePlant._id,
             thumbnailUrl: activePlant.thumbnailUrl,
             plantMedia: activePlantMedia,
@@ -88,7 +88,7 @@ const PlantImageViewer = ({
         </div>
 
         <Modal
-          {...getPlantDisplayNames(activePlant)}
+          {...getEntityDisplayNames(activePlant)}
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);
@@ -110,4 +110,4 @@ const PlantImageViewer = ({
   );
 };
 
-export default PlantImageViewer;
+export default EntityImageViewer;

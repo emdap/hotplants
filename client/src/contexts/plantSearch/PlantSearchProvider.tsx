@@ -12,7 +12,7 @@ import useAddToGardenActionList from "hooks/plantActionLists/useAddToGardenActio
 import usePlantSearchQueries, {
   DEFAULT_PAGE_SIZE,
 } from "hooks/usePlantSearchQueries";
-import PlantSearch from "pages/BrowsePlants";
+import PlantSearch from "pages/BrowseEntities";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const PlantSearchProvider = ({ entityType }: { entityType: EntityType }) => {

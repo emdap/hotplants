@@ -2,9 +2,9 @@ import AboutSection from "components/about/AboutSection";
 import { ABOUT_SECTIONS } from "components/about/aboutSectionFixtures";
 import FireText from "designSystem/FireText";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
+import layingPlant from "imageAssets/layingPlant.json";
 import { useLottie } from "lottie-react";
 import { motion } from "motion/react";
-import layingPlant from "placeholderImages/layingPlant.json";
 
 const About = () => {
   const Lottie = useLottie({

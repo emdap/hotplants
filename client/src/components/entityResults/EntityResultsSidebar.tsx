@@ -22,7 +22,7 @@ import { isSmallScreen } from "util/generalUtil";
 import EntityFilterForm from "../entityForms/entityFilters/EntityFilterForm";
 import { EntityFormProps, getFormTitle } from "../entityForms/entityFormUtil";
 
-const PLANT_FORM_COMPONENTS: Record<
+const Entity_FORM_COMPONENTS: Record<
   SearchFormTab,
   FunctionComponent<EntityFormProps>
 > = {
@@ -31,7 +31,7 @@ const PLANT_FORM_COMPONENTS: Record<
   filters: EntityFilterForm,
 };
 
-const PlantSearchForm = () => {
+const EntityResultsSidebar = () => {
   const { searchParams, updateSearchParamsDraft } = useSearchParamsContext();
   const {
     searchFormState: { tab, isOpen },
@@ -78,8 +78,8 @@ const PlantSearchForm = () => {
 
   return searchFormProps.renderMode === "modal" ? (
     (
-      Object.entries(PLANT_FORM_COMPONENTS) as Entries<
-        typeof PLANT_FORM_COMPONENTS
+      Object.entries(Entity_FORM_COMPONENTS) as Entries<
+        typeof Entity_FORM_COMPONENTS
       >
     ).map(([tabName, Component]) => {
       const modalIsOpen = isOpen && tab === tabName;
@@ -112,7 +112,7 @@ const PlantSearchForm = () => {
       }
     >
       {({ isExpanded }) => {
-        const Component = PLANT_FORM_COMPONENTS[tab];
+        const Component = Entity_FORM_COMPONENTS[tab];
 
         return (
           <div
@@ -133,4 +133,4 @@ const PlantSearchForm = () => {
   );
 };
 
-export default PlantSearchForm;
+export default EntityResultsSidebar;

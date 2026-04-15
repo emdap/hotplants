@@ -1,8 +1,8 @@
 import { useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import { ENTITY_NAME_FIELDS } from "components/entityForms/entityFormUtil";
+import EntityOccurrenceImage from "components/entityResults/images/EntityOccurrenceImage";
 import MapProvider from "components/interactiveMap/MapProvider";
-import PlantOccurrenceImage from "components/plantResults/PlantOccurrenceImage";
 import { format } from "date-fns";
 import Card from "designSystem/Card";
 import LoadingIcon from "designSystem/LoadingIcon";
@@ -12,7 +12,7 @@ import {
   SearchRecordResult,
 } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
-import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
+import plantPlaceholder from "imageAssets/plantPlaceholder.png";
 import pluralize from "pluralize";
 import { ReactNode, useMemo } from "react";
 import { MdDoubleArrow } from "react-icons/md";
@@ -110,7 +110,7 @@ const SearchRecordCard = ({
         ) : (
           <div className="h-60 w-full md:w-3/7 flex md:justify-center">
             {firstPlant ? (
-              <PlantOccurrenceImage
+              <EntityOccurrenceImage
                 plantId={firstPlant._id}
                 occurrenceId={firstPlant.occurrenceId}
                 thumbnailUrl={firstPlant.thumbnailUrl}

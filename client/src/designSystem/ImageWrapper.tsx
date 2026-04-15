@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import imageNotAvailable from "placeholderImages/imageNotAvailable.png";
+import imageNotAvailable from "imageAssets/imageNotAvailable.png";
 import { HTMLProps, ReactNode, useEffect, useRef, useState } from "react";
 import LoadingIcon from "./LoadingIcon";
 

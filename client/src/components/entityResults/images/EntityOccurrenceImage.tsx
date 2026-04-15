@@ -5,7 +5,7 @@ import { REPLACE_WITH_PROXY_URL } from "graphqlHelpers/plantQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { useMemo, useRef, useState } from "react";
 
-export type PlantOccurrenceImageProps = Omit<
+export type EntityOccurrenceImageProps = Omit<
   ImageWrapperProps,
   "onError" | "imageUrl"
 > & {
@@ -17,14 +17,14 @@ export type PlantOccurrenceImageProps = Omit<
 };
 
 /** Uses thumbnailUrl if it's provided, otherwise uses the PlantMedia object */
-const PlantOccurrenceImage = ({
+const EntityOccurrenceImage = ({
   plantId,
   thumbnailUrl,
   occurrenceId,
   mediaObject,
   containerClass,
   ...imageWrapperProps
-}: PlantOccurrenceImageProps) => {
+}: EntityOccurrenceImageProps) => {
   const plantImageRef = useRef<HTMLDivElement>(null);
   const { syncPlant } = usePlantSelectionContext();
   const [useThumbnail, setUseThumbnail] = useState(Boolean(thumbnailUrl));
@@ -61,4 +61,4 @@ const PlantOccurrenceImage = ({
   );
 };
 
-export default PlantOccurrenceImage;
+export default EntityOccurrenceImage;

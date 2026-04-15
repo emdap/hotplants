@@ -1,5 +1,7 @@
 import { CombinedGraphQLErrors } from "@apollo/client";
+import { PlantResult } from "contexts/plantSelection/PlantSelectionContext";
 import { GraphQLFormattedError } from "graphql";
+import { capitalize } from "lodash";
 import { HTMLMotionProps } from "motion/react";
 import { HTMLProps } from "react";
 import { ExternalToast, toast } from "sonner";
@@ -11,25 +13,12 @@ export type CommonMotionDivProps = Omit<HTMLMotionProps<"div">, "children"> &
 export const ITERATE_DIRECTION = ["prev", "next"] as const;
 export type IterateDirection = (typeof ITERATE_DIRECTION)[number];
 
-export const elementInViewport = (
-  element: HTMLElement,
-  { xBuffer = 1, yBuffer = 1 }: { xBuffer?: number; yBuffer?: number } = {},
-) => {
-  const rect = element.getBoundingClientRect();
-
-  const buffedWidth = rect.width * xBuffer;
-  const buffedHeight = rect.height * yBuffer;
-
-  const windowWidth = window.innerWidth || document.documentElement.clientWidth;
-  const windowHeight =
-    window.innerHeight || document.documentElement.clientHeight;
-
-  return (
-    rect.left + buffedWidth >= 0 &&
-    rect.right - buffedWidth <= windowWidth &&
-    rect.top + buffedHeight + 1000 >= 0 &&
-    rect.bottom - buffedHeight - 1000 <= windowHeight
-  );
+export const getEntityDisplayNames = (entity: PlantResult) => {
+  const commonName = entity.commonNames?.[0];
+  return {
+    title: commonName ? capitalize(commonName) : entity.scientificName,
+    subTitle: commonName ? entity.scientificName : undefined,
+  };
 };
 
 export const DEFAULT_DATE_TIME_FORMAT = "LLL d, yyyy 'at' HH:mm";

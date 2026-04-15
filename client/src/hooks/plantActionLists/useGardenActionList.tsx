@@ -6,8 +6,7 @@ import { REMOVE_PLANT_FROM_GARDEN } from "graphqlHelpers/gardenQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import { FaHeartBroken } from "react-icons/fa";
 import { toast } from "sonner";
-import { handleGraphQlError } from "util/generalUtil";
-import { getPlantDisplayNames } from "util/plantUtil";
+import { getEntityDisplayNames, handleGraphQlError } from "util/generalUtil";
 import useAddToGardenActionList from "./useAddToGardenActionList";
 
 export const useGardenActionList = ({
@@ -33,7 +32,7 @@ export const useGardenActionList = ({
       });
 
       toast.success(
-        `Removed "${getPlantDisplayNames(plant).title}" from garden`,
+        `Removed "${getEntityDisplayNames(plant).title}" from garden`,
       );
       refetchGarden();
     } catch (error) {

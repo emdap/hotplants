@@ -11,18 +11,18 @@ import { useCallback, useMemo, useState } from "react";
 import { FaLeaf } from "react-icons/fa";
 import { MdOutlineMoreVert } from "react-icons/md";
 
-const PlantActions = ({
-  plant,
+const EntityActions = ({
+  entity,
   disableDefaultActions,
 }: {
-  plant: PlantResult;
+  entity: PlantResult;
   disableDefaultActions?: boolean;
 }) => {
   const { entityType } = usePlantSearchContext();
   const { plantActions } = usePlantSelectionContext();
   const [hasLoadingAction, setHasLoadingAction] = useState(false);
 
-  const defaultPlantActions = useMemo(
+  const defaultActions = useMemo(
     (): MenuItemData[] =>
       disableDefaultActions
         ? []
@@ -34,49 +34,49 @@ const PlantActions = ({
                 to:
                   entityType === "plant" ? "/browse-plants" : "/browse-animals",
                 search: {
-                  entityName: plant.commonNames?.length
-                    ? { commonName: plant.commonNames[0] }
-                    : { scientificName: plant.scientificName },
+                  entityName: entity.commonNames?.length
+                    ? { commonName: entity.commonNames[0] }
+                    : { scientificName: entity.scientificName },
                 },
               },
             },
           ],
     [
       entityType,
-      plant.commonNames,
-      plant.scientificName,
+      entity.commonNames,
+      entity.scientificName,
       disableDefaultActions,
     ],
   );
 
-  const handlePlantClick = useCallback(
+  const handleActionClick = useCallback(
     async (action: PlantAction) => {
       if (action.onClick) {
         setHasLoadingAction(true);
-        await action.onClick(plant);
+        await action.onClick(entity);
         setHasLoadingAction(false);
       }
     },
-    [plant],
+    [entity],
   );
 
-  const mappedPlantActions = useMemo(
+  const mappedActions = useMemo(
     (): MenuItemData[] =>
       plantActions
         ? plantActions.map((action) => ({
             ...action,
-            onClick: () => handlePlantClick(action),
+            onClick: () => handleActionClick(action),
           }))
         : [],
-    [plantActions, handlePlantClick],
+    [plantActions, handleActionClick],
   );
 
   const fullActions = useMemo(
     () =>
-      mappedPlantActions.length || defaultPlantActions.length
-        ? mappedPlantActions.concat(defaultPlantActions)
+      mappedActions.length || defaultActions.length
+        ? mappedActions.concat(defaultActions)
         : null,
-    [mappedPlantActions, defaultPlantActions],
+    [mappedActions, defaultActions],
   );
 
   return fullActions ? (
@@ -97,4 +97,4 @@ const PlantActions = ({
   ) : null;
 };
 
-export default PlantActions;
+export default EntityActions;

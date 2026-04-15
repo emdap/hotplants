@@ -23,12 +23,15 @@ import {
 import { MdChevronLeft, MdChevronRight, MdClose } from "react-icons/md";
 import { useSwipeable } from "react-swipeable";
 import { useClickAway } from "react-use";
-import { isLeafletEvent, ITERATE_DIRECTION } from "util/generalUtil";
+import {
+  getEntityDisplayNames,
+  isLeafletEvent,
+  ITERATE_DIRECTION,
+} from "util/generalUtil";
 import { swapLatLng } from "util/locationUtil";
-import { getPlantDisplayNames } from "util/plantUtil";
-import PlantActions from "./PlantActions";
-import PlantImageViewer from "./PlantImageViewer";
-import PlantInfo from "./PlantInfo";
+import EntityActions from "./EntityActions";
+import EntityInfo from "./EntityInfo";
+import EntityImageViewer from "./images/EntityImageViewer";
 
 const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
   initial: { right: "-100%" },
@@ -36,7 +39,7 @@ const CARD_SLIDE_IN = mergeMotionProps(MOTION_FADE_IN, {
   exit: { right: "-100%" },
 });
 
-const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
+const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
   const navigate = useNavigate();
   const { searchParams } = useSearchParamsContext();
   const {
@@ -118,15 +121,15 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
     }
   };
 
-  const plantDisplayNames = activePlant
-    ? getPlantDisplayNames(activePlant)
+  const entityDisplayNames = activePlant
+    ? getEntityDisplayNames(activePlant)
     : null;
 
   return (
     <AnimatePresence>
       {activePlant && (
         <Card
-          key="plant-pane"
+          key="entity-pane"
           className={classNames(
             "rounded-r-none py-2 px-safe-2 h-full fixed top-0 z-40",
             "backdrop-blur-2xl small-screen:rounded-l-none small-screen:w-full",
@@ -169,7 +172,7 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
                   )}
                 </Fragment>
               ))}
-              <PlantActions plant={activePlant} />
+              <EntityActions entity={activePlant} />
             </div>
           </header>
 
@@ -178,14 +181,14 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
             className="flex flex-col small-screen:overflow-auto big-screen:overflow-hidden gap-4 pb-6 px-2"
           >
             <div className="flex flex-col items-center p-2">
-              <h2>{plantDisplayNames?.title}</h2>
-              {plantDisplayNames?.subTitle && (
-                <h6 className="italic"> {plantDisplayNames.subTitle}</h6>
+              <h2>{entityDisplayNames?.title}</h2>
+              {entityDisplayNames?.subTitle && (
+                <h6 className="italic"> {entityDisplayNames.subTitle}</h6>
               )}
             </div>
 
             <div className="flex max-lg:flex-col gap-4 justify-between px-2">
-              <PlantImageViewer
+              <EntityImageViewer
                 isModalOpen={imageModalOpen}
                 setIsModalOpen={setImageModalOpen}
               />
@@ -200,8 +203,8 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
             <div className="big-screen:overflow-auto big-screen:pb-8 flex-grow space-y-4 mt-4">
               {children}
 
-              <PlantInfo
-                plant={activePlant}
+              <EntityInfo
+                entity={activePlant}
                 entityType={entityType}
                 onTouchEndCapture={(e) => e.stopPropagation()}
               />
@@ -213,4 +216,4 @@ const ActivePlantPane = ({ children }: { children?: ReactNode }) => {
   );
 };
 
-export default ActivePlantPane;
+export default ActiveEntityPane;

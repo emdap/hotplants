@@ -4,35 +4,35 @@ import {
   usePlantSelectionContext,
 } from "contexts/plantSelection/PlantSelectionContext";
 import Card from "designSystem/Card";
-import plantPlaceholder from "placeholderImages/plantPlaceholder.png";
+import plantPlaceholder from "imageAssets/plantPlaceholder.png";
 import { useEffect, useRef } from "react";
-import { getPlantDisplayNames } from "util/plantUtil";
-import PlantActions from "./PlantActions";
-import PlantOccurrenceImage from "./PlantOccurrenceImage";
+import { getEntityDisplayNames } from "util/generalUtil";
+import EntityActions from "./EntityActions";
+import EntityOccurrenceImage from "./images/EntityOccurrenceImage";
 
-const PlantCard = ({ plant }: { plant: PlantResult }) => {
+const EntityCard = ({ entity }: { entity: PlantResult }) => {
   const { activePlantId, setActivePlantId } = usePlantSelectionContext();
 
   const plantCardRef = useRef<HTMLDivElement>(null);
   const isRightClick = useRef(false);
 
-  const isActive = activePlantId === plant._id;
+  const isActive = activePlantId === entity._id;
   useEffect(() => {
     isActive && plantCardRef.current?.focus();
   }, [isActive]);
 
-  const setActive = () => setActivePlantId(plant._id);
+  const setActive = () => setActivePlantId(entity._id);
 
-  const firstOccurrence = plant.occurrences[0];
+  const firstOccurrence = entity.occurrences[0];
   const firstMedia = firstOccurrence?.media[0];
 
-  const hasCommonName = plant.commonNames?.length;
-  const plantDisplayNames = getPlantDisplayNames(plant);
+  const hasCommonName = entity.commonNames?.length;
+  const plantDisplayNames = getEntityDisplayNames(entity);
 
   return (
     <Card
       ref={plantCardRef}
-      id={plant.scientificName}
+      id={entity.scientificName}
       onClick={setActive}
       onFocus={() => !isRightClick.current && setActive()}
       onMouseDown={(e) => {
@@ -64,7 +64,7 @@ const PlantCard = ({ plant }: { plant: PlantResult }) => {
           onMouseDown={(e) => e.preventDefault()}
           onFocus={(e) => e.stopPropagation()}
         >
-          <PlantActions plant={plant} />
+          <EntityActions entity={entity} />
         </div>
 
         {plantDisplayNames.subTitle && (
@@ -75,9 +75,9 @@ const PlantCard = ({ plant }: { plant: PlantResult }) => {
       </div>
 
       {firstOccurrence && (
-        <PlantOccurrenceImage
-          plantId={plant._id}
-          thumbnailUrl={plant.thumbnailUrl}
+        <EntityOccurrenceImage
+          plantId={entity._id}
+          thumbnailUrl={entity.thumbnailUrl}
           occurrenceId={firstOccurrence.occurrenceId}
           mediaObject={firstMedia}
           containerClass="absolute top-0 w-full h-full flex items-center overflow-hidden z-0"
@@ -101,10 +101,10 @@ const PlantCard = ({ plant }: { plant: PlantResult }) => {
               </>
             )
           }
-        </PlantOccurrenceImage>
+        </EntityOccurrenceImage>
       )}
     </Card>
   );
 };
 
-export default PlantCard;
+export default EntityCard;

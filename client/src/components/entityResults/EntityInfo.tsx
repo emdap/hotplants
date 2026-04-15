@@ -24,17 +24,17 @@ const ORDERED_PLANT_FIELDS = getOrderedFilterEntries({
   filterValue?.label ? [key, filterValue.label] : [],
 ) as [keyof PlantResult, string][];
 
-const PlantInfo = ({
-  plant,
+const EntityInfo = ({
+  entity,
   entityType,
   ...cardProps
-}: { plant: PlantResult; entityType: EntityType } & CardProps) => (
+}: { entity: PlantResult; entityType: EntityType } & CardProps) => (
   <div className="space-y-6">
     <InfoWrapper title={`${capitalize(entityType)} stats`} {...cardProps}>
       <table className="border-separate border-spacing-4 [&_th,td]:p-2 w-full">
         <tbody>
           {ORDERED_PLANT_FIELDS.map(([key, title]) => {
-            const value = plant[key] ?? null;
+            const value = entity[key] ?? null;
             return (
               value !== null && (
                 <tr key={key} className="grid grid-cols-[2fr_3fr]">
@@ -56,9 +56,9 @@ const PlantInfo = ({
       </table>
     </InfoWrapper>
 
-    {plant.physicalCharactersticsDump && (
-      <InfoWrapper title="General plant info" {...cardProps}>
-        {plant.physicalCharactersticsDump}
+    {entity.physicalCharactersticsDump && (
+      <InfoWrapper title={`General ${entityType} info`} {...cardProps}>
+        {entity.physicalCharactersticsDump}
       </InfoWrapper>
     )}
   </div>
@@ -75,4 +75,4 @@ const InfoWrapper = ({
   </div>
 );
 
-export default PlantInfo;
+export default EntityInfo;

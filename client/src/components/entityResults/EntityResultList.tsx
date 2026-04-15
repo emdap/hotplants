@@ -6,9 +6,9 @@ import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { motion } from "motion/react";
 import { useLayoutEffect, useState } from "react";
-import PlantCard from "./PlantCard";
+import EntityCard from "./EntityCard";
 
-const PlantList = ({
+const EntityResultList = ({
   showFadeInAnimation,
   parentSidebarExpanded,
   className,
@@ -54,11 +54,11 @@ const PlantList = ({
         maxWidth: plantList.length < 4 ? plantList.length * 400 : undefined,
       }}
     >
-      {plantList.map((plant) => (
-        <PlantCard key={`${plant._id}`} plant={plant} />
+      {plantList.map((entity) => (
+        <EntityCard key={`${entity._id}`} entity={entity} />
       ))}
     </motion.div>
   );
 };
 
-export default PlantList;
+export default EntityResultList;

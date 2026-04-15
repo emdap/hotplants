@@ -1,6 +1,6 @@
 import { FlattenedPlantMedia } from "contexts/plantSelection/PlantSelectionContext";
 import ImageWrapper, { ImageWrapperProps } from "designSystem/ImageWrapper";
-import PlantOccurrenceImage from "./PlantOccurrenceImage";
+import EntityOccurrenceImage from "./EntityOccurrenceImage";
 
 const CONTAINER_CLASS = "w-full h-full flex justify-center";
 
@@ -14,19 +14,21 @@ type CarouselImage =
   | { isThumbnail: true; url: string }
   | FlattenedPlantMedia[number];
 
-const PlantCarouselImages = ({
-  plantId,
-  thumbnailUrl,
-  plantMedia,
-  includeThumbnail,
-  setIncludeThumbnail,
-}: {
+type EntityCarouselImagesProps = {
   plantId: string;
   thumbnailUrl?: string | null;
   plantMedia: FlattenedPlantMedia;
   includeThumbnail: boolean;
   setIncludeThumbnail: (includeThumbnail: boolean) => void;
-}) => {
+};
+
+const EntityCarouselImages = ({
+  plantId,
+  thumbnailUrl,
+  plantMedia,
+  includeThumbnail,
+  setIncludeThumbnail,
+}: EntityCarouselImagesProps) => {
   const imageList = (
     (includeThumbnail && thumbnailUrl
       ? [{ isThumbnail: true, url: thumbnailUrl }]
@@ -43,7 +45,7 @@ const PlantCarouselImages = ({
         {...DEFAULT_IMAGE_PROPS}
       />
     ) : (
-      <PlantOccurrenceImage
+      <EntityOccurrenceImage
         key={data.url}
         containerClass={CONTAINER_CLASS}
         plantId={plantId}
@@ -57,4 +59,4 @@ const PlantCarouselImages = ({
   return { imageList, PlantImages };
 };
 
-export default PlantCarouselImages;
+export default EntityCarouselImages;

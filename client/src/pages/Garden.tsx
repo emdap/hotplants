@@ -1,10 +1,10 @@
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import classNames from "classnames";
 import EntityFilterForm from "components/entityForms/entityFilters/EntityFilterForm";
+import ActiveEntityPane from "components/entityResults/ActiveEntityPane";
+import EntityResultList from "components/entityResults/EntityResultList";
 import GardenPlantNotes from "components/garden/GardenPlantNotes";
 import PlantAnimation from "components/PlantAnimation";
-import ActivePlantPane from "components/plantResults/ActivePlantPane";
-import PlantList from "components/plantResults/PlantList";
 import PlantSelectionProvider from "contexts/plantSelection/PlantSelectionProvider";
 import Button from "designSystem/Button";
 import FloatingHeader from "designSystem/FloatingHeader";
@@ -134,15 +134,15 @@ const Garden = () => {
           </div>
         )}
 
-        <PlantList showFadeInAnimation className="pb-10" />
-        <ActivePlantPane>
+        <EntityResultList showFadeInAnimation className="pb-10" />
+        <ActiveEntityPane>
           {userGarden && (
             <GardenPlantNotes
               gardenId={userGarden._id}
               refetchPlants={gardenPlantsQuery.refetch}
             />
           )}
-        </ActivePlantPane>
+        </ActiveEntityPane>
       </PlantSelectionProvider>
     </main>
   );
