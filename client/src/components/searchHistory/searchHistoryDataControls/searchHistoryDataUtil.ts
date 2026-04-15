@@ -138,7 +138,9 @@ export const parseFilterParams = (filter: SearchRecordFilter) =>
         : SEARCH_HISTORY_FILTER_DICT[dataKey];
     const filterParamType = filterConfig && getFilterParamType(filterConfig);
 
-    if (!filterParamType || !filterValue) {
+    const filterParsedValue = filterValue ?? null; // Preserve 'false' valued filters
+
+    if (!filterParamType || filterParsedValue === null) {
       return prev;
     }
 
@@ -146,7 +148,7 @@ export const parseFilterParams = (filter: SearchRecordFilter) =>
       prev[filterParamType] = [];
     }
 
-    prev[filterParamType].push({ field: dataKey, value: filterValue });
+    prev[filterParamType].push({ field: dataKey, value: filterParsedValue });
 
     return prev;
   }, {}) as FilterQueryVars;

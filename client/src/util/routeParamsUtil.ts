@@ -197,9 +197,9 @@ export const DEFAULT_SEARCH_HISTORY_ROUTE_PARAMS: SearchHistoryParams = {
 // TODO: actually validate the filter types
 const validateSearchRecordFilter = (
   params: Record<string, unknown>,
-): { filter: SearchRecordFilter } | null => {
-  if ("filter" in params && typeof params.filter === "object") {
-    return { filter: params.filter as SearchRecordFilter };
+): { recordFilter: SearchRecordFilter } | null => {
+  if ("recordFilter" in params && typeof params.recordFilter === "object") {
+    return { recordFilter: params.recordFilter as SearchRecordFilter };
   }
   return null;
 };
