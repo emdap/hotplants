@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import PlantAnimation from "components/PlantAnimation";
 import ActiveEntityPane from "components/entityResults/ActiveEntityPane";
+import AnimalResultsWarning from "components/entityResults/AnimalResultsWarning";
 import EntityResultList from "components/entityResults/EntityResultList";
 import EntityResultsHeader from "components/entityResults/EntityResultsHeader";
 import EntityResultsSidebar from "components/entityResults/EntityResultsSidebar";
@@ -83,6 +84,10 @@ const BrowseEntities = ({
       <PageTitle className="page-buffer">
         Browse {pluralize(capitalize(entityType))}
       </PageTitle>
+
+      {entityType === "animal" && (
+        <AnimalResultsWarning className="mx-4 mt-0 mb-8" />
+      )}
 
       <EntityResultsHeader />
 
