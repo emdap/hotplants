@@ -79,15 +79,15 @@ type PlantFilterKey = keyof Omit<
 export const ENTITY_NAME_FILTER_DICT: FilterDict<
   "commonNameIncludes" | "scientificNameIncludes"
 > = {
-  scientificNameIncludes: {
-    dataKey: "scientificNameIncludes",
-    label: "Scientific name contains",
-    inputType: "text",
-    order: 1,
-  },
   commonNameIncludes: {
     dataKey: "commonNameIncludes",
     label: "Common name contains",
+    inputType: "text",
+    order: 1,
+  },
+  scientificNameIncludes: {
+    dataKey: "scientificNameIncludes",
+    label: "Scientific name contains",
     inputType: "text",
     order: 2,
   },
