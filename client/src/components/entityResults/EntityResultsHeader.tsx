@@ -16,6 +16,7 @@ import EntityFilterOpenButton from "../entityForms/entityFilters/EntityFilterOpe
 const EntityResultsHeader = () => {
   const navigate = useNavigate();
   const {
+    hasCurrentResults,
     searchStatus,
     isInfiniteScroll,
     setIsInfiniteScroll,
@@ -49,7 +50,10 @@ const EntityResultsHeader = () => {
         label={capitalize(entityType)}
         className="col-start-2 whitespace-nowrap"
         count={totalItems}
-        isLoading={searchStatus === "SCRAPING_AND_POLLING"}
+        isLoading={
+          (!hasCurrentResults && searchStatus !== "READY") ||
+          searchStatus === "SCRAPING_AND_POLLING"
+        }
       />
 
       <PaginationControl

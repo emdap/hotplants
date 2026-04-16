@@ -34,7 +34,8 @@ const useEntitySearchQueries = (
     pageSize,
   }: Required<PaginationParams> & { paginationEnabled: boolean },
 ) => {
-  const [searchStatus, setSearchStatus] = useState<SearchQueryStatus>("READY");
+  const [searchStatus, setSearchStatus] =
+    useState<SearchQueryStatus>("CHECKING_STATUS");
 
   const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pollInterval, setPollInterval] = useState(0);
