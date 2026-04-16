@@ -10,6 +10,7 @@ import Card from "designSystem/Card";
 import Modal from "designSystem/Modal";
 import StyledPopover from "designSystem/StyledPopover";
 import { useReactQuery } from "hooks/useQuery";
+import { isEqual } from "lodash";
 import pluralize from "pluralize";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
@@ -117,7 +118,7 @@ const EntityFilterForm = ({
         renderMode === "modal"
           ? {
               onClick: onClose,
-              isLoading: entityListLoading,
+              isLoading: entityListLoading || !isEqual(filterDraft, filter),
               children: (
                 <span className="flex gap-1 relative ">
                   View {pluralize(entityType, totalItems, true)}
