@@ -3,7 +3,7 @@ import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
 export type SearchParamsContextType = {
-  searchParamsDraft: Partial<EntitySearchParams>;
+  searchParamsDraft: EntitySearchParams;
   updateSearchParamsDraft: (partialParams: Partial<EntitySearchParams>) => void;
   applySearchParams: (params: Partial<EntitySearchParams>) => void;
   resetSearchParamsDraft: () => void;
@@ -14,7 +14,7 @@ export type SearchParamsContextType = {
 
 const DEFAULT_SEARCH_PARAMS_CONTEXT: SearchParamsContextType = {
   entityType: "plant",
-  searchParamsDraft: {},
+  searchParamsDraft: { entityType: "plant" },
   updateSearchParamsDraft: VOID_FUNCTION,
   applySearchParams: VOID_FUNCTION,
   resetSearchParamsDraft: VOID_FUNCTION,

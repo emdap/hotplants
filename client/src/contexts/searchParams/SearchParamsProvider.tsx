@@ -1,10 +1,7 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { EntitySearchParams } from "config/hotplantsConfig";
 import { ReactNode, useCallback, useEffect, useState } from "react";
-import {
-  SearchParamsContext,
-  SearchParamsContextType,
-} from "./SearchParamsContext";
+import { SearchParamsContext } from "./SearchParamsContext";
 
 const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
@@ -18,13 +15,12 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
     Boolean(location || entityName),
   );
 
-  const [searchParamsDraft, setSearchParamsDraft] = useState<
-    Partial<EntitySearchParams>
-  >({ location, entityName, entityType });
+  const [searchParamsDraft, setSearchParamsDraft] =
+    useState<EntitySearchParams>({ location, entityName, entityType });
 
-  const updateSearchParamsDraft: SearchParamsContextType["updateSearchParamsDraft"] =
-    (partialParams) =>
-      setSearchParamsDraft((prev) => ({ ...prev, ...partialParams }));
+  const updateSearchParamsDraft = (
+    partialParams: Partial<EntitySearchParams>,
+  ) => setSearchParamsDraft((prev) => ({ ...prev, ...partialParams }));
 
   const resetSearchParamsDraft = useCallback(
     () => setSearchParamsDraft({ location, entityName, entityType }),
@@ -43,11 +39,18 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
     updateSearchParamsDraft({ entityType });
   }, [entityType]);
 
-  const applySearchParams = (params: Partial<EntitySearchParams>) => {
+  const applySearchParams = ({
+    entityType,
+    ...params
+  }: Partial<EntitySearchParams>) => {
     setIsPrefilledSearch(false);
 
     navigate({
-      to: ".",
+      to: !entityType
+        ? "."
+        : entityType === "plant"
+          ? "/browse-plants"
+          : "/browse-animals",
       search: ({ page: _page, ...rest }) => ({
         ...rest,
         ...params,
