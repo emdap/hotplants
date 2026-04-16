@@ -8,6 +8,7 @@ import EntityResultsSidebar from "components/entityResults/EntityResultsSidebar"
 import SearchRecordProgressBar from "components/searchHistory/SearchRecordProgressBar";
 import { useEntitySearchContext } from "contexts/entitySearch/EntitySearchContext";
 import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelectionContext";
+import BetaTag from "designSystem/BetaTag";
 import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
@@ -81,8 +82,9 @@ const BrowseEntities = ({
   return (
     <main className="w-full h-full">
       {!page && <ScrollAnchor id="plant" className="absolute top-0" />}
-      <PageTitle className="page-buffer">
+      <PageTitle className="page-buffer flex gap-6 items-center">
         Browse {pluralize(capitalize(entityType))}
+        {entityType === "animal" && <BetaTag className="scale-150! mt-2" />}
       </PageTitle>
 
       {entityType === "animal" && (
