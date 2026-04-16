@@ -18,7 +18,7 @@ const ORDERED_PLANT_FIELDS = getOrderedFilterEntries({
   ...plantFilterLabels,
   scientificName: { label: "Scientific name", order: -1 },
   commonNames: { label: "Common name", order: -1 },
-  fullOccurrencesCount: { label: "Occurrences found" },
+  fullOccurrencesCount: { label: "Global occurrences found" },
   updatedTimestamp: { label: "Data last updated" },
 }).map(([key, filterValue]) =>
   filterValue?.label ? [key, filterValue.label] : [],
