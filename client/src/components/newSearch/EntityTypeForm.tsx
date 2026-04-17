@@ -16,10 +16,10 @@ const EntityTypeForm = () => {
 
   return (
     <StyledEntityForm onSubmit={() => null}>
-      <Card className="space-y-4">
+      <Card className="flex flex-col items-center">
         <h2 className="text-center">Search type</h2>
 
-        <div className="form-item">
+        <div className="form-item w-full max-w-[400px] my-4">
           <label htmlFor="entity-type">Search for</label>
           <StyledListbox
             name="entity-type"
