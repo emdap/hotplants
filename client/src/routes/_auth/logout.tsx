@@ -48,7 +48,7 @@ const Logout = () => {
           <div className="w-full flex gap-4 justify-center">
             <Link
               to="/browse-plants"
-              search={(prev) => ({ entityType: "plant", prev })}
+              search={(prev) => ({ ...prev, entityType: "plant" as const })}
               replace
               className="flex flex-grow"
             >
