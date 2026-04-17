@@ -32,6 +32,8 @@ const NewSearchAnimatedButton = ({
   const [animationContainerStyle, setAnimationContainerStyle] = useState(
     DEFAULT_ANIMATION_CONTAINER_STYLE,
   );
+  const initialSidebarExpanded = useRef(sidebarExpanded);
+  const [resizeWithSidebar, setResizeWithSidebar] = useState(false);
 
   const paramValues = JSON.stringify(searchParamsDraft);
 
@@ -43,6 +45,12 @@ const NewSearchAnimatedButton = ({
       });
   }, [animation, paramValues]);
 
+  useEffect(() => {
+    if (initialSidebarExpanded.current !== sidebarExpanded) {
+      setResizeWithSidebar(true);
+    }
+  }, [sidebarExpanded]);
+
   const updateContainerStyle = useCallback(() => {
     if (!animationRef.current || !paramsContainerRef.current) {
       setAnimationContainerStyle(DEFAULT_ANIMATION_CONTAINER_STYLE);
@@ -52,6 +60,8 @@ const NewSearchAnimatedButton = ({
         paramsContainerRef.current.clientWidth +
         ANIMATION_GAP;
 
+      console.log(leftOffset);
+
       const availSpace = window.innerWidth - leftOffset;
       const animationWidth = animationRef.current.clientWidth;
 
@@ -59,9 +69,7 @@ const NewSearchAnimatedButton = ({
         setAnimationContainerStyle(DEFAULT_ANIMATION_CONTAINER_STYLE);
       } else {
         setAnimationContainerStyle({
-          right: 10,
           left: leftOffset + (Math.min(availSpace, 1000) - animationWidth) / 2,
-          width: "fit-content",
           transition: "left 300ms ease",
         });
       }
@@ -102,8 +110,8 @@ const NewSearchAnimatedButton = ({
       return DEFAULT_ANIMATION_CONTAINER_STYLE;
     };
 
-    setAnimationContainerStyle(calcNewStyle);
-  }, [sidebarExpanded, updateContainerStyle]);
+    resizeWithSidebar && setAnimationContainerStyle(calcNewStyle);
+  }, [sidebarExpanded, resizeWithSidebar, updateContainerStyle]);
 
   return (
     <div
