@@ -2,6 +2,9 @@ import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
 export const AppContext = createContext({
+  showAnimalImagesWarning: true,
+  hideAnimalImagesWarning: VOID_FUNCTION as (updateStorage?: boolean) => void,
+
   sidebarExpanded: false,
   setSidebarExpanded: VOID_FUNCTION as Dispatch<SetStateAction<boolean>>,
 });

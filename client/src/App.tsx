@@ -6,6 +6,7 @@ import { AppContext } from "contexts/AppContext";
 import { useServerReadyContext } from "contexts/serverReady/ServerReadyContext";
 import { useDarkMode } from "designSystem/darkMode/DarkModeContext";
 import { useEffect, useState } from "react";
+import { useLocalStorage } from "react-use";
 import { Toaster } from "sonner";
 import { BACKGROUND_ANIMATION_ID } from "util/generalUtil";
 
@@ -14,6 +15,17 @@ const App = () => {
   const { serverReady } = useServerReadyContext();
 
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+
+  const [showAnimalImagesWarningStorage, setShowAnimalImagesWarningStorage] =
+    useLocalStorage<boolean | undefined>("ANIMAL_IMAGE_WARNING", true);
+  const [showAnimalImagesWarning, setShowAnimalImagesWarning] = useState(
+    showAnimalImagesWarningStorage ?? true,
+  );
+
+  const hideAnimalImagesWarning = (updateStorage?: boolean) => {
+    setShowAnimalImagesWarning(false);
+    updateStorage && setShowAnimalImagesWarningStorage(false);
+  };
 
   useEffect(() => {
     if (serverReady) {
@@ -24,6 +36,9 @@ const App = () => {
   return (
     <AppContext.Provider
       value={{
+        showAnimalImagesWarning,
+        hideAnimalImagesWarning,
+
         sidebarExpanded,
         setSidebarExpanded,
       }}

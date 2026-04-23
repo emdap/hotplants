@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import PlantAnimation from "components/PlantAnimation";
 import ActiveEntityPane from "components/entityResults/ActiveEntityPane";
-import AnimalResultsWarning from "components/entityResults/AnimalResultsWarning";
+import AnimalImagesWarning from "components/entityResults/AnimalImagesWarning";
 import EntityResultList from "components/entityResults/EntityResultList";
 import EntityResultsHeader from "components/entityResults/EntityResultsHeader";
 import EntityResultsSidebar from "components/entityResults/EntityResultsSidebar";
@@ -88,7 +88,7 @@ const BrowseEntities = ({
       </PageTitle>
 
       {entityType === "animal" && (
-        <AnimalResultsWarning className="mx-4 mt-0 mb-8" />
+        <AnimalImagesWarning className="mx-4 mt-0 mb-8" />
       )}
 
       <EntityResultsHeader />
