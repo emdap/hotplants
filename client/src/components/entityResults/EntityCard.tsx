@@ -4,8 +4,9 @@ import {
   useEntitySelectionContext,
 } from "contexts/entitySelection/EntitySelectionContext";
 import Card from "designSystem/Card";
+import { useEscapeKeyListener } from "hooks/useEscapeKeyListener";
 import plantPlaceholder from "imageAssets/plantPlaceholder.png";
-import { useEffect, useRef } from "react";
+import { KeyboardEvent, useEffect, useRef } from "react";
 import { getEntityDisplayNames } from "util/generalUtil";
 import EntityActions from "./EntityActions";
 import EntityOccurrenceImage from "./images/EntityOccurrenceImage";
@@ -14,14 +15,23 @@ const EntityCard = ({ entity }: { entity: EntityResult }) => {
   const { activeEntityId, setActiveEntityId } = useEntitySelectionContext();
 
   const plantCardRef = useRef<HTMLDivElement>(null);
-  const isRightClick = useRef(false);
 
   const isActive = activeEntityId === entity._id;
+
   useEffect(() => {
     isActive && plantCardRef.current?.focus();
   }, [isActive]);
 
+  useEscapeKeyListener(() => plantCardRef.current?.blur(), true);
+
   const setActive = () => setActiveEntityId(entity._id);
+
+  const openOnKeyDown = (e: KeyboardEvent) => {
+    if ([" ", "Enter"].includes(e.key)) {
+      e.preventDefault();
+      setActive();
+    }
+  };
 
   const firstOccurrence = entity.occurrences[0];
   const firstMedia = firstOccurrence?.media[0];
@@ -34,18 +44,13 @@ const EntityCard = ({ entity }: { entity: EntityResult }) => {
       ref={plantCardRef}
       id={entity.scientificName}
       onClick={setActive}
-      onFocus={() => !isRightClick.current && setActive()}
-      onMouseDown={(e) => {
-        if (e.button === 2) {
-          isRightClick.current = true;
-        }
-      }}
-      onMouseUp={() => (isRightClick.current = false)}
+      onKeyDown={openOnKeyDown}
       tabIndex={1}
       className={classNames(
-        "cursor-pointer h-40 big-screen:h-60 outline-white/60 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent",
-
-        isActive ? "active-card focus-ring outline-2 outline-offset-2" : "m-0",
+        "cursor-pointer focus-ring h-40 big-screen:h-60 relative p-0 overflow-hidden rounded-lg group bg-clip-padding border-transparent bg-transparent outline-offset-2 outline-white/80",
+        {
+          "active-card": isActive,
+        },
       )}
     >
       <div className="flex flex-col w-full gap-2 pt-2 px-4 md:px-6 min-h-1/4 md:min-h-20 justify-center bg-accent/80 text-shadow-glow relative z-10">
