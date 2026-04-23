@@ -97,22 +97,32 @@ const AppSidebar = () => {
             >
               <Button
                 variant="icon-white"
+                tabIndex={1}
                 className={classNames(
                   "transition-all outline-none overflow-hidden focus:bg-white/20 h-12 justify-start w-[calc(100%-1rem)] big-screen:mx-0!",
                   {
                     "pl-6 big-screen:rounded-l-none": isExpanded,
                     "big-screen:p-2 big-screen:pl-2 big-screen:rounded-none  big-screen:w-full":
                       !isExpanded,
-                    "bg-white/10": isActiveLink(item.linkProps),
+                    "bg-white/15 hover:bg-white/15 shadow-xs hover:shadow-xs":
+                      isActiveLink(item.linkProps),
                   },
                 )}
-                icon={<Icon size={24} />}
+                icon={
+                  <Icon
+                    className={classNames(
+                      "transition-[margin]",
+                      item.isBeta && !isExpanded && "-mt-2",
+                    )}
+                    size={24}
+                  />
+                }
               >
                 {item.isBeta && !isExpanded && (
                   <motion.div {...MOTION_FADE_IN}>
                     <BetaTag
                       key={`${index}-beta`}
-                      className="-translate-x-full translate-y-full mt-1"
+                      className="-translate-x-full translate-y-full"
                     />
                   </motion.div>
                 )}
