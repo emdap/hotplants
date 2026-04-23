@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { useCloseOnEscape } from "hooks/useCloseOnEscape";
+import { useEscapeKeyListener } from "hooks/useEscapeKeyListener";
 import { AnimatePresence } from "motion/react";
 import { ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -35,7 +35,7 @@ const Modal = ({
   className,
   ...bodyProps
 }: ModalProps) => {
-  useCloseOnEscape(
+  useEscapeKeyListener(
     (e) => {
       if (onClose) {
         e.stopPropagation();

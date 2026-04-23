@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import Button from "designSystem/Button";
 import OverlayMask from "designSystem/OverlayMask";
-import { useCloseOnEscape } from "hooks/useCloseOnEscape";
+import { useEscapeKeyListener } from "hooks/useEscapeKeyListener";
 import { AnimatePresence } from "motion/react";
 import { HTMLAttributes, ReactNode, RefObject } from "react";
 import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
@@ -40,7 +40,11 @@ const Sidebar = ({
   const swipeHandlers = useSwipeable({
     onSwipedLeft: ({ event }) => !isLeafletEvent(event) && setIsExpanded(false),
   });
-  useCloseOnEscape(() => setIsExpanded(false), isExpanded);
+
+  useEscapeKeyListener((e) => {
+    e.stopImmediatePropagation();
+    setIsExpanded(false);
+  }, isExpanded);
 
   const refPassthrough = (el: HTMLElement) => {
     swipeHandlers.ref(el);

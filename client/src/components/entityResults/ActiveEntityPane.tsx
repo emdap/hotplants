@@ -9,8 +9,8 @@ import {
   mergeMotionProps,
   MOTION_FADE_IN,
 } from "designSystem/motionTransitions";
-import { useCloseOnEscape } from "hooks/useCloseOnEscape";
 import { useDisableHtmlScroll } from "hooks/useDisableHtmlScroll";
+import { useEscapeKeyListener } from "hooks/useEscapeKeyListener";
 import { AnimatePresence } from "motion/react";
 import {
   Fragment,
@@ -80,7 +80,14 @@ const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
     setActiveMediaUrl(null);
   };
 
-  useCloseOnEscape(resetActivePlant, !!activeEntity && !imageModalOpen);
+  useEscapeKeyListener(
+    (e) => {
+      e.stopPropagation();
+      resetActivePlant();
+    },
+    !!activeEntity && !imageModalOpen,
+    true,
+  );
   useDisableHtmlScroll(Boolean(activeEntity));
   const swipeHandlers = useSwipeable({
     onSwipedRight: ({ event }) => !isLeafletEvent(event) && resetActivePlant(),
