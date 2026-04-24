@@ -60,8 +60,6 @@ const NewSearchAnimatedButton = ({
         paramsContainerRef.current.clientWidth +
         ANIMATION_GAP;
 
-      console.log(leftOffset);
-
       const availSpace = window.innerWidth - leftOffset;
       const animationWidth = animationRef.current.clientWidth;
 
