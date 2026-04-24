@@ -19,11 +19,19 @@ const EntityFormOpenButton = ({
   return (
     <Component
       size="small"
-      className={classNames("max-w-fit whitespace-nowrap", {
-        "outline-2 outline-offset-2": isOpen,
-        "bg-accent/50! enabled:hover:bg-accent/80! outline-accent!": hasChanges,
-        "outline-white/20!": !props.active && !hasChanges,
-      })}
+      className={classNames(
+        "max-w-fit whitespace-nowrap outline-none",
+        isOpen && {
+          "bg-accent/80!": hasChanges,
+          "bg-primary-dark! dark:bg-primary!": props.active && !hasChanges,
+          "bg-white/20": !props.active && !hasChanges,
+        },
+
+        {
+          "shadow-sm": isOpen,
+          "bg-accent/50! enabled:hover:bg-accent/80!": hasChanges,
+        },
+      )}
       {...props}
     />
   );
