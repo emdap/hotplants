@@ -122,7 +122,7 @@ const AppSidebar = () => {
                   <motion.div {...MOTION_FADE_IN}>
                     <BetaTag
                       key={`${index}-beta`}
-                      className="-translate-x-full translate-y-full"
+                      className="-translate-x-full translate-y-full -ml-0.5"
                     />
                   </motion.div>
                 )}
