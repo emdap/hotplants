@@ -62,7 +62,7 @@ const EntityNameForm = ({
       return;
     }
 
-    applySearchParams({ entityName: searchParamsDraft?.entityName });
+    applySearchParams(searchParamsDraft);
     renderMode === "modal" && onClose();
   };
 

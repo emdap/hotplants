@@ -158,7 +158,7 @@ const EntityLocationForm = ({
       return;
     }
 
-    applySearchParams({ location: searchParamsDraft?.location });
+    applySearchParams(searchParamsDraft);
     getResultsContainer()?.scrollIntoView();
 
     renderMode === "modal" && onClose();
