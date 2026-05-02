@@ -37,9 +37,9 @@ const UserGardens = () => {
       />
 
       <div className="grid grid-cols-[repeat(auto-fit,_minmax(min-content,400px))] gap-4">
-        {allUserGardens?.map((garden, index) => (
+        {allUserGardens?.map((garden) => (
           <Card
-            key={index}
+            key={garden._id}
             className="space-y-2 cursor-pointer min-w-xs"
             solidOnHover
             onClick={() =>
@@ -72,6 +72,7 @@ const UserGardens = () => {
 
       <DeleteGardenModal
         garden={showDeleteGardenModal}
+        key={showDeleteGardenModal?._id}
         isOpen={Boolean(showDeleteGardenModal)}
         onClose={(gardenDeleted) => {
           setShowDeleteGardenModal(null);
@@ -79,6 +80,7 @@ const UserGardens = () => {
         }}
       />
       <CreateGardenModal
+        key={showCreateGardenModal ? 1 : 0}
         isOpen={showCreateGardenModal}
         onClose={(gardenCreated) => {
           setShowCreateGardenModal(false);

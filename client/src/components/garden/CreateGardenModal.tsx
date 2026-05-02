@@ -4,7 +4,7 @@ import InputField from "designSystem/InputField";
 import Modal from "designSystem/Modal";
 import { CREATE_GARDEN } from "graphqlHelpers/gardenQueries";
 import { useApolloMutation } from "hooks/useQuery";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { defaultErrorToast } from "util/toastUtil";
 
@@ -16,10 +16,6 @@ const CreateGardenModal = ({
   onClose: (gardenCreated?: boolean) => void;
 }) => {
   const [gardenName, setGardenName] = useState("");
-
-  useEffect(() => {
-    !isOpen && setGardenName("");
-  }, [isOpen]);
 
   const [createGarden, { loading, error }] = useApolloMutation(CREATE_GARDEN);
 

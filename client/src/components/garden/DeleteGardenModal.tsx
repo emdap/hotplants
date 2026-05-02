@@ -5,7 +5,7 @@ import Modal from "designSystem/Modal";
 import { DELETE_GARDEN, UserGarden } from "graphqlHelpers/gardenQueries";
 import { useApolloMutation } from "hooks/useQuery";
 import pluralize from "pluralize";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { defaultErrorToast } from "util/toastUtil";
 
@@ -18,10 +18,6 @@ const DeleteGardenModal = ({
   onClose: (gardenDeleted?: boolean) => void;
 }) => {
   const [deleteGardenName, setDeleteGardenName] = useState("");
-
-  useEffect(() => {
-    !isOpen && setDeleteGardenName("");
-  }, [isOpen]);
 
   const [deleteGarden, { loading, error }] = useApolloMutation(DELETE_GARDEN);
 

@@ -2,7 +2,6 @@ import classNames from "classnames";
 import {
   ReactNode,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -30,29 +29,28 @@ const SelectedOptions = ({
 
   const hiddenValues = maxVisible ? listboxValue.length - maxVisible : 0;
 
-  useEffect(() => {
-    if (maxVisible !== undefined && listboxValue.length <= maxVisible) {
-      setMaxVisible(undefined);
-    }
-  }, [listboxValue.length, maxVisible]);
-
   const checkMaxVisible = useCallback(() => {
     if (listboxValue.length && containerRef.current) {
       const { offsetWidth, scrollWidth } = containerRef.current;
 
       if (scrollWidth > offsetWidth) {
-        setMaxVisible((prev) => Math.max(1, (prev || listboxValue.length) - 2));
+        setMaxVisible((prev) => {
+          if (prev !== undefined && listboxValue.length <= prev) {
+            return undefined;
+          }
+          return Math.max(1, (prev || listboxValue.length) - 2);
+        });
       }
     }
   }, [listboxValue.length]);
 
-  const checkMaxTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const checkMaxTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useLayoutEffect(() => {
     checkMaxVisible();
 
     const checkOnResize = () => {
-      checkMaxTimeout.current && clearTimeout(checkMaxTimeout.current);
-      checkMaxTimeout.current = setTimeout(checkMaxVisible, 1000);
+      checkMaxTimeoutRef.current && clearTimeout(checkMaxTimeoutRef.current);
+      checkMaxTimeoutRef.current = setTimeout(checkMaxVisible, 1000);
     };
 
     window.addEventListener("resize", checkOnResize);

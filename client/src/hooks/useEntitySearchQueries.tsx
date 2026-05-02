@@ -37,7 +37,9 @@ const useEntitySearchQueries = (
   const [searchStatus, setSearchStatus] =
     useState<SearchQueryStatus>("CHECKING_STATUS");
 
-  const stopPollingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const stopPollingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   const [pollInterval, setPollInterval] = useState(0);
 
   // #region Queries
@@ -136,13 +138,16 @@ const useEntitySearchQueries = (
 
   useEffect(() => {
     if (!someQueryInProgress) {
+      // eslint-disable-next-line @eslint-react/set-state-in-effect
       setSearchStatus("READY");
     }
   }, [someQueryInProgress]);
   // #endregion
 
   const stopPolling = () => {
-    stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
+    stopPollingTimeoutRef.current &&
+      clearTimeout(stopPollingTimeoutRef.current);
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     setPollInterval(0);
   };
 
@@ -152,8 +157,9 @@ const useEntitySearchQueries = (
 
     setPollInterval(DEFAULT_POLL_INTERVAL);
 
-    stopPollingTimeout.current && clearTimeout(stopPollingTimeout.current);
-    stopPollingTimeout.current = setTimeout(
+    stopPollingTimeoutRef.current &&
+      clearTimeout(stopPollingTimeoutRef.current);
+    stopPollingTimeoutRef.current = setTimeout(
       stopPolling,
       DEFAULT_POLL_INTERVAL * MAX_POLLS,
     );

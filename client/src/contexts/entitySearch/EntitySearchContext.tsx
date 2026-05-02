@@ -2,19 +2,16 @@ import {
   EntitySearchQueriesReturnType,
   SearchQueryStatus,
 } from "hooks/useEntitySearchQueries";
-import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { createContext, Dispatch, SetStateAction, use } from "react";
 import {
   isSmallScreen,
   VOID_FUNCTION,
   VOID_PROMISE_FUNCTION,
 } from "util/generalUtil";
+import { DEFAULT_SEARCH_FORM_STATE } from "./defaultEntitySearchFormState";
 
 export type SearchFormTab = "location" | "entity-name" | "filters";
-type SearchFormState = { tab: SearchFormTab; isOpen: boolean };
-export const DEFAULT_SEARCH_FORM_STATE = (): SearchFormState => ({
-  tab: "location",
-  isOpen: !isSmallScreen(),
-});
+export type SearchFormState = { tab: SearchFormTab; isOpen: boolean };
 
 export type EntitySearchContextType = {
   hasCurrentResults: boolean;
@@ -55,4 +52,4 @@ export const EntitySearchContext = createContext<EntitySearchContextType>(
   DEFAULT_ENTITY_SEARCH_CONTEXT,
 );
 
-export const useEntitySearchContext = () => useContext(EntitySearchContext);
+export const useEntitySearchContext = () => use(EntitySearchContext);

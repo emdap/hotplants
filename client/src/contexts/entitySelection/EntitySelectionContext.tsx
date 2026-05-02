@@ -6,7 +6,7 @@ import {
   PlantMedia,
   PlantOccurrence,
 } from "generated/graphql/graphql";
-import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { createContext, Dispatch, SetStateAction, use } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
 export type EntityResult = Omit<
@@ -71,5 +71,4 @@ export const EntitySelectionContext = createContext<EntitySelectionContextType>(
   DEFAULT_ENTITY_SELECTION_CONTEXT,
 );
 
-export const useEntitySelectionContext = () =>
-  useContext(EntitySelectionContext);
+export const useEntitySelectionContext = () => use(EntitySelectionContext);

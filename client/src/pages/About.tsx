@@ -2,7 +2,7 @@ import AboutSection from "components/about/AboutSection";
 import { ABOUT_SECTIONS } from "components/about/aboutSectionFixtures";
 import FireText from "designSystem/FireText";
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
-import { useScrollAnchor } from "hooks/useScrollAnchor";
+import { ScrollAnchor } from "designSystem/ScrollAnchor";
 import layingPlant from "imageAssets/layingPlant.json";
 import { useLottie } from "lottie-react";
 import { motion } from "motion/react";
@@ -13,8 +13,6 @@ const About = () => {
     className: "w-[175px] sm:w-[250px] big-screen:w-[300px]",
   });
   Lottie.setSpeed(0.25);
-
-  const ScrollAnchor = useScrollAnchor();
 
   return (
     <main className="page-buffer page-container max-w-page">

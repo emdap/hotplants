@@ -35,6 +35,7 @@ const ImageWrapper = ({
 
   useEffect(() => {
     setIsLoaded(Boolean(imgRef.current?.complete));
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     imageUrl && setIsError(false);
   }, [imageUrl]);
 

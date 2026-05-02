@@ -13,8 +13,8 @@ import Button from "designSystem/Button";
 import Card from "designSystem/Card";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
+import { ScrollAnchor } from "designSystem/ScrollAnchor";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
-import { useScrollAnchor } from "hooks/useScrollAnchor";
 import { capitalize } from "lodash";
 import pluralize from "pluralize";
 import { Ref, useLayoutEffect } from "react";
@@ -42,7 +42,6 @@ const BrowseEntities = ({
     useEntitySelectionContext();
 
   const { scrollContainer, scrollContainerElement } = useGetScrollContainer();
-  const ScrollAnchor = useScrollAnchor({ enabled: searchStatus === "READY" });
 
   const hasNextPage = page < lastPage;
 
@@ -74,14 +73,19 @@ const BrowseEntities = ({
     scrollContainerElement,
   ]);
 
+  const searchIsReady = searchStatus === "READY";
   const showLoader =
-    (loading || (isInfiniteScroll && hasNextPage)) && searchStatus === "READY";
+    (loading || (isInfiniteScroll && hasNextPage)) && searchIsReady;
   const showPlantAnimation =
     searchStatus !== "READY" || (!loading && !hasNextPage);
 
   return (
     <main className="w-full h-full">
-      {!page && <ScrollAnchor id="plant" className="absolute top-0" />}
+      <ScrollAnchor
+        enabled={!page && searchIsReady}
+        id="plant"
+        className="absolute top-0"
+      />
       <PageTitle className="page-buffer flex gap-6 items-center">
         Browse {pluralize(capitalize(entityType))}
         {entityType === "animal" && <BetaTag className="scale-150! mt-2" />}
@@ -97,7 +101,7 @@ const BrowseEntities = ({
         <EntityResultsSidebar />
 
         {page && !isInfiniteScroll && (
-          <ScrollAnchor className="scroll-m-header-2" />
+          <ScrollAnchor enabled={searchIsReady} className="scroll-m-header-2" />
         )}
 
         <div

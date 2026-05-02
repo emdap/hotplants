@@ -1,10 +1,7 @@
 import { NetworkStatus } from "@apollo/client";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import PlantAnimation from "components/PlantAnimation";
-import {
-  DEFAULT_SEARCH_FORM_STATE,
-  EntitySearchContext,
-} from "contexts/entitySearch/EntitySearchContext";
+import { EntitySearchContext } from "contexts/entitySearch/EntitySearchContext";
 import EntitySelectionProvider from "contexts/entitySelection/EntitySelectionProvider";
 import { useSearchParamsContext } from "contexts/searchParams/SearchParamsContext";
 import useAddToGardenActionList from "hooks/entityActionLists/useAddToGardenActionList";
@@ -12,7 +9,15 @@ import useEntitySearchQueries, {
   DEFAULT_PAGE_SIZE,
 } from "hooks/useEntitySearchQueries";
 import BrowseEntities from "pages/BrowseEntities";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { DEFAULT_SEARCH_FORM_STATE } from "./defaultEntitySearchFormState";
 
 const EntitySearchProvider = () => {
   const navigate = useNavigate();
@@ -33,7 +38,7 @@ const EntitySearchProvider = () => {
   } = useSearch({ strict: false });
 
   const [isInfiniteScroll, setIsInfiniteScroll] = useState(false);
-  const [searchFormState, setSearchFormState] = useState(
+  const [searchFormState, setSearchFormState] = useState(() =>
     DEFAULT_SEARCH_FORM_STATE(),
   );
 
@@ -44,9 +49,12 @@ const EntitySearchProvider = () => {
       paginationEnabled: !isInfiniteScroll,
     });
 
+  const resetPrefilledSearch = useEffectEvent(() =>
+    setIsPrefilledSearch(false),
+  );
+
   useEffect(() => {
-    !entitySearchQuery.loading && setIsPrefilledSearch(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    !entitySearchQuery.loading && resetPrefilledSearch();
   }, [entitySearchQuery.loading]);
 
   const searchData = entitySearchQuery.data
@@ -91,7 +99,7 @@ const EntitySearchProvider = () => {
   const addToGardenActions = useAddToGardenActionList();
 
   return (
-    <EntitySearchContext.Provider
+    <EntitySearchContext
       value={{
         hasCurrentResults,
 
@@ -135,7 +143,7 @@ const EntitySearchProvider = () => {
           <BrowseEntities resultsContainerRef={resultsContainerRef} />
         )}
       </EntitySelectionProvider>
-    </EntitySearchContext.Provider>
+    </EntitySearchContext>
   );
 };
 

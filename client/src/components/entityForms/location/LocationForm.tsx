@@ -1,3 +1,4 @@
+/* eslint-disable @eslint-react/set-state-in-effect */
 import classNames from "classnames";
 import EntityFormFooter from "components/entityForms/EntityFormFooter";
 import { EntityFormProps } from "components/entityForms/entityFormUtil";
@@ -19,7 +20,7 @@ import {
 } from "util/locationUtil";
 import StyledEntityForm from "../StyledEntityForm";
 
-const EntityLocationForm = ({
+const LocationForm = ({
   renderMode,
   hideFooter,
   onClose,
@@ -259,4 +260,4 @@ const EntityLocationForm = ({
   );
 };
 
-export default EntityLocationForm;
+export default LocationForm;

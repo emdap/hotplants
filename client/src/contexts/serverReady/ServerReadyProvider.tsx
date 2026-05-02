@@ -2,7 +2,7 @@ import { useReactiveVar } from "@apollo/client/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { apolloReady, setApolloReady } from "config/apolloConfig";
 import { useReactQuery } from "hooks/useQuery";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useEffectEvent, useRef, useState } from "react";
 import { useMount } from "react-use";
 import { ServerReadyContext, ServerReadyStatus } from "./ServerReadyContext";
 
@@ -92,19 +92,16 @@ export const ServerReadyProvider = ({ children }: { children: ReactNode }) => {
   });
 
   useEffect(() => {
-    serverReadyQuery.isError && setServerReady(null);
-  }, [serverReadyQuery.isError]);
-
-  useEffect(() => {
     serverReadyRef.current = serverReady;
   }, [serverReady]);
+
+  const refetchServerReady = useEffectEvent(() => serverReadyQuery.refetch());
 
   useEffect(() => {
     if (serverReadyRef.current && !isApolloReady) {
       serverReadyRef.current = true;
-      serverReadyQuery.refetch();
+      refetchServerReady();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isApolloReady]);
 
   useMount(() => {
@@ -120,8 +117,6 @@ export const ServerReadyProvider = ({ children }: { children: ReactNode }) => {
   });
 
   return (
-    <ServerReadyContext.Provider value={{ serverReady }}>
-      {children}
-    </ServerReadyContext.Provider>
+    <ServerReadyContext value={{ serverReady }}>{children}</ServerReadyContext>
   );
 };

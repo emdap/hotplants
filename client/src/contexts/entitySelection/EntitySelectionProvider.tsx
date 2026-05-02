@@ -33,6 +33,7 @@ const EntitySelectionProvider = ({
   const [activeMediaUrl, setActiveMediaUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     setEntityList(originalEntityList);
   }, [originalEntityList]);
 
@@ -72,7 +73,7 @@ const EntitySelectionProvider = ({
   const lastPage = getLastPage(pageSize, totalItems);
 
   return (
-    <EntitySelectionContext.Provider
+    <EntitySelectionContext
       value={{
         entityType,
         entityList,
@@ -96,7 +97,7 @@ const EntitySelectionProvider = ({
       }}
     >
       {children}
-    </EntitySelectionContext.Provider>
+    </EntitySelectionContext>
   );
 };
 

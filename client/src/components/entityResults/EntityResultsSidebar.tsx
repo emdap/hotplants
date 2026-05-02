@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import EntityNameForm from "components/entityForms/entityName/EntityNameForm";
-import EntityLocationForm from "components/entityForms/location/LocationForm";
+import LocationForm from "components/entityForms/location/LocationForm";
 import {
   SearchFormTab,
   useEntitySearchContext,
@@ -26,7 +26,7 @@ const Entity_FORM_COMPONENTS: Record<
   SearchFormTab,
   FunctionComponent<EntityFormProps>
 > = {
-  location: EntityLocationForm,
+  location: LocationForm,
   "entity-name": EntityNameForm,
   filters: EntityFilterForm,
 };

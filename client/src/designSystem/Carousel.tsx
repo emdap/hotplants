@@ -36,6 +36,7 @@ const Carousel = ({
   const childrenInDom = Math.ceil(maxRenderedChildren / 2);
 
   useEffect(() => {
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     setActiveIndex(carouselIndex);
   }, [carouselIndex]);
 

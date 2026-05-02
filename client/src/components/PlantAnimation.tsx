@@ -82,9 +82,11 @@ const PlantAnimation = ({ className, ...props }: PlantAnimationProps) => {
       Lottie.setDirection(1);
 
       if (props.queryStatus === "SCRAPING_AND_POLLING") {
+        // eslint-disable-next-line @eslint-react/set-state-in-effect
         setLottieAnimation("MOVING");
         Lottie.setSpeed(1);
       } else {
+        // eslint-disable-next-line @eslint-react/set-state-in-effect
         setLottieAnimation("STILL");
         Lottie.setSpeed(0.25);
       }

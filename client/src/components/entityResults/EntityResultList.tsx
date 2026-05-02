@@ -5,7 +5,7 @@ import { useEntitySelectionContext } from "contexts/entitySelection/EntitySelect
 import { MOTION_FADE_IN } from "designSystem/motionTransitions";
 import { useGetScrollContainer } from "hooks/useGetScrollContainer";
 import { motion } from "motion/react";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import EntityCard from "./EntityCard";
 
 const EntityResultList = ({
@@ -25,8 +25,10 @@ const EntityResultList = ({
 
   const [shrinkCols, setShrinkCols] = useState(false);
 
+  const shrinkColTimeoutRef = useRef<NodeJS.Timeout>(null);
   useLayoutEffect(() => {
-    setTimeout(() => {
+    shrinkColTimeoutRef.current && clearTimeout(shrinkColTimeoutRef.current);
+    shrinkColTimeoutRef.current = setTimeout(() => {
       if (
         scrollContainerElement &&
         scrollContainerElement.scrollWidth > scrollContainerElement.offsetWidth

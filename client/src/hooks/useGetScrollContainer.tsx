@@ -17,10 +17,11 @@ export const useGetScrollContainer = () => {
     }
   };
 
-  const [scrollElements, setElements] = useState(getElements());
+  const [scrollElements, setScrollElements] = useState(() => getElements());
 
   useLayoutEffect(() => {
-    const setScrollContainer = () => setElements(getElements());
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
+    const setScrollContainer = () => setScrollElements(getElements());
 
     setScrollContainer();
     window.addEventListener("resize", setScrollContainer);

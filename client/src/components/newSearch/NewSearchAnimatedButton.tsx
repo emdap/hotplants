@@ -32,7 +32,7 @@ const NewSearchAnimatedButton = ({
   const [animationContainerStyle, setAnimationContainerStyle] = useState(
     DEFAULT_ANIMATION_CONTAINER_STYLE,
   );
-  const initialSidebarExpanded = useRef(sidebarExpanded);
+  const initialSidebarExpandedRef = useRef(sidebarExpanded);
   const [resizeWithSidebar, setResizeWithSidebar] = useState(false);
 
   const paramValues = JSON.stringify(searchParamsDraft);
@@ -46,7 +46,7 @@ const NewSearchAnimatedButton = ({
   }, [animation, paramValues]);
 
   useEffect(() => {
-    if (initialSidebarExpanded.current !== sidebarExpanded) {
+    if (initialSidebarExpandedRef.current !== sidebarExpanded) {
       setResizeWithSidebar(true);
     }
   }, [sidebarExpanded]);
@@ -81,6 +81,7 @@ const NewSearchAnimatedButton = ({
     return () => window.removeEventListener("resize", updateContainerStyle);
   }, [updateContainerStyle]);
 
+  const containerTimeoutRef = useRef<NodeJS.Timeout>(null);
   useLayoutEffect(() => {
     const calcNewStyle = (prevStyle: React.CSSProperties) => {
       if (animationRef.current && prevStyle.left && Number(prevStyle.left)) {
@@ -101,13 +102,15 @@ const NewSearchAnimatedButton = ({
       }
 
       // Try to reset back to default position after sidebar is finished animating
-      setTimeout(() => {
+      containerTimeoutRef.current && clearTimeout(containerTimeoutRef.current);
+      containerTimeoutRef.current = setTimeout(() => {
         updateContainerStyle();
       }, 500);
 
       return DEFAULT_ANIMATION_CONTAINER_STYLE;
     };
 
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     resizeWithSidebar && setAnimationContainerStyle(calcNewStyle);
   }, [sidebarExpanded, resizeWithSidebar, updateContainerStyle]);
 

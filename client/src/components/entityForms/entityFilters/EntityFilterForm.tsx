@@ -42,6 +42,7 @@ const EntityFilterForm = ({
   const [filterDraft, setFilterDraft] = useState(filter);
 
   useEffect(() => {
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     setFilterDraft(filter);
   }, [filter]);
 

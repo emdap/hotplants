@@ -67,6 +67,7 @@ const ActiveEntityPane = ({ children }: { children?: ReactNode }) => {
   }, [location, activeEntityMedia]);
 
   useEffect(() => {
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     setOverallIndex(
       Math.max(
         0,

@@ -8,10 +8,10 @@ import FloatingHeader from "designSystem/FloatingHeader";
 import ItemCountWithLoader from "designSystem/ItemCountWithLoader";
 import LoadingOverlay from "designSystem/LoadingOverlay";
 import PageTitle from "designSystem/PageTitle";
+import { ScrollAnchor } from "designSystem/ScrollAnchor";
 import { PaginationControl } from "designSystem/pagination/PaginationControl";
 import { GET_ALL_SEARCH_RECORDS } from "graphqlHelpers/searchRecordQueries";
 import { useApolloQuery } from "hooks/useQuery";
-import { useScrollAnchor } from "hooks/useScrollAnchor";
 import { useLayoutEffect } from "react";
 import { SearchHistoryParams } from "util/routeParamsUtil";
 
@@ -32,7 +32,6 @@ const SearchHistory = () => {
     lastOpened,
     ...queryParams
   } = route.useSearch();
-  const ScrollAnchor = useScrollAnchor();
 
   const {
     data: { allSearchRecords } = {},

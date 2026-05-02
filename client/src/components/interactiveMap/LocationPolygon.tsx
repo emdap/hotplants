@@ -44,6 +44,7 @@ const LocationPolygon = ({
   const [localPolygon, setLocalPolygon] = useState(boundingPolygon);
 
   useEffect(() => {
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     setLocalPolygon(boundingPolygon);
   }, [boundingPolygon]);
 

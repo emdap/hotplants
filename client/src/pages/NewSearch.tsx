@@ -1,5 +1,5 @@
 import EntityNameForm from "components/entityForms/entityName/EntityNameForm";
-import EntityLocationForm from "components/entityForms/location/LocationForm";
+import LocationForm from "components/entityForms/location/LocationForm";
 import EntityTypeForm from "components/newSearch/EntityTypeForm";
 import NewSearchAnimatedButton from "components/newSearch/NewSearchAnimatedButton";
 import PageTitle from "designSystem/PageTitle";
@@ -15,7 +15,7 @@ const NewSearch = () => {
         ref={paramsContainerRef}
         className="space-y-4 md:w-[450px] lg:w-[500px]"
       >
-        <EntityLocationForm renderMode="card" hideFooter />
+        <LocationForm renderMode="card" hideFooter />
         <EntityTypeForm />
         <EntityNameForm renderMode="card" hideFooter />
       </div>

@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { createContext, Dispatch, SetStateAction, use } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
 export const deviceDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
@@ -15,4 +15,4 @@ export const DarkModeContext = createContext<DarkModeContextType>({
   setToSystem: VOID_FUNCTION,
 });
 
-export const useDarkMode = () => useContext(DarkModeContext);
+export const useDarkMode = () => use(DarkModeContext);

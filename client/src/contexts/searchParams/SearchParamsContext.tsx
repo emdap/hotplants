@@ -1,5 +1,5 @@
 import { EntitySearchParams } from "config/hotplantsConfig";
-import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { createContext, Dispatch, SetStateAction, use } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
 export type SearchParamsContextType = {
@@ -27,4 +27,4 @@ export const SearchParamsContext = createContext<SearchParamsContextType>(
   DEFAULT_SEARCH_PARAMS_CONTEXT,
 );
 
-export const useSearchParamsContext = () => useContext(SearchParamsContext);
+export const useSearchParamsContext = () => use(SearchParamsContext);

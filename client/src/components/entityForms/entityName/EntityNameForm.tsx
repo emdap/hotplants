@@ -39,6 +39,7 @@ const EntityNameForm = ({
   });
 
   useEffect(() => {
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     setPlantNameSearch({ scientificName, commonName });
   }, [scientificName, commonName]);
 

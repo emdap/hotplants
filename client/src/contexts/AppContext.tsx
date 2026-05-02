@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { createContext, Dispatch, SetStateAction, use } from "react";
 import { VOID_FUNCTION } from "util/generalUtil";
 
 export const AppContext = createContext({
@@ -9,4 +9,4 @@ export const AppContext = createContext({
   setSidebarExpanded: VOID_FUNCTION as Dispatch<SetStateAction<boolean>>,
 });
 
-export const useAppContext = () => useContext(AppContext);
+export const useAppContext = () => use(AppContext);

@@ -10,12 +10,12 @@ const LONG_PRESS_TIME = 500;
 const DarkModeToggle = () => {
   const { isDarkMode, setIsDarkMode, setToSystem } = useDarkMode();
 
-  const mouseDownTime = useRef<number>(0);
+  const mouseDownTimeRef = useRef<number>(0);
 
-  const startTimer = () => (mouseDownTime.current = Date.now());
+  const startTimer = () => (mouseDownTimeRef.current = Date.now());
 
   const stopTimer = () => {
-    const timeDiff = Date.now() - mouseDownTime.current;
+    const timeDiff = Date.now() - mouseDownTimeRef.current;
     if (timeDiff > LONG_PRESS_TIME) {
       setToSystem();
     } else {

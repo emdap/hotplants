@@ -54,11 +54,13 @@ const EntityImageViewer = ({
   );
 
   useEffect(() => {
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
     setCarouselIndex(activeMediaIndex);
   }, [activeMediaIndex]);
 
   useEffect(() => {
     if (imageList) {
+      // eslint-disable-next-line @eslint-react/set-state-in-effect
       setLargeCarouselIndex(carouselIndex);
       setActiveMediaUrl(imageList[carouselIndex].url);
     }

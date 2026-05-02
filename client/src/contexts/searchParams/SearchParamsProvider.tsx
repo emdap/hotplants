@@ -20,6 +20,7 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
 
   const updateSearchParamsDraft = (
     partialParams: Partial<EntitySearchParams>,
+    // eslint-disable-next-line @eslint-react/set-state-in-effect
   ) => setSearchParamsDraft((prev) => ({ ...prev, ...partialParams }));
 
   const resetSearchParamsDraft = useCallback(
@@ -59,7 +60,7 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <SearchParamsContext.Provider
+    <SearchParamsContext
       value={{
         location,
         entityName,
@@ -75,7 +76,7 @@ const SearchParamsProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-    </SearchParamsContext.Provider>
+    </SearchParamsContext>
   );
 };
 

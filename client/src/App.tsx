@@ -34,7 +34,7 @@ const App = () => {
   }, [serverReady]);
 
   return (
-    <AppContext.Provider
+    <AppContext
       value={{
         showAnimalImagesWarning,
         hideAnimalImagesWarning,
@@ -61,7 +61,7 @@ const App = () => {
         <AppSidebar />
         <Outlet />
       </div>
-    </AppContext.Provider>
+    </AppContext>
   );
 };
 
